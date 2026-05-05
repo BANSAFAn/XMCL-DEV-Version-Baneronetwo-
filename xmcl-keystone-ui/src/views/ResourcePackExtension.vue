@@ -1,11 +1,7 @@
 <template>
   <div class="mb-0 flex flex-col">
-    <div
-      class="flex flex-1 flex-grow-0 flex-row items-center justify-center"
-    >
-      <div
-        class="flex flex-grow-0 flex-row items-center justify-center gap-1"
-      >
+    <div class="flex flex-1 flex-grow-0 flex-row items-center justify-center">
+      <div class="flex flex-grow-0 flex-row items-center justify-center gap-1">
         <AvatarItemList :items="extensionItems" />
       </div>
       <div class="flex-grow" />
@@ -23,39 +19,48 @@
         :game-version.sync="gameVersion"
         :mode.sync="filterMode"
         :collection.sync="selectedCollection"
+        resource-type="resourcePack"
       />
     </div>
-    <MarketExtensions
-    />
+    <MarketExtensions />
   </div>
 </template>
 
-<script lang=ts setup>
-import AvatarItemList from '@/components/AvatarItemList.vue'
-import MarketExtensions from '@/components/MarketExtensions.vue'
-import MarketTextFieldWithMenu from '@/components/MarketTextFieldWithMenu.vue'
-import { kInstance } from '@/composables/instance'
-import { kInstanceResourcePacks } from '@/composables/instanceResourcePack'
-import { kResourcePackSearch } from '@/composables/resourcePackSearch'
-import { kSearchModel } from '@/composables/search'
-import { getExtensionItemsFromRuntime } from '@/util/extensionItems'
-import { injection } from '@/util/inject'
+<script lang="ts" setup>
+import AvatarItemList from "@/components/AvatarItemList.vue";
+import MarketExtensions from "@/components/MarketExtensions.vue";
+import MarketTextFieldWithMenu from "@/components/MarketTextFieldWithMenu.vue";
+import { kInstance } from "@/composables/instance";
+import { kInstanceResourcePacks } from "@/composables/instanceResourcePack";
+import { kResourcePackSearch } from "@/composables/resourcePackSearch";
+import { kSearchModel } from "@/composables/search";
+import { getExtensionItemsFromRuntime } from "@/util/extensionItems";
+import { injection } from "@/util/inject";
 
-const { path, runtime } = injection(kInstance)
-const { enabled } = injection(kInstanceResourcePacks)
+const { path, runtime } = injection(kInstance);
+const { enabled } = injection(kInstanceResourcePacks);
 const extensionItems = computed(() => {
-  return [...getExtensionItemsFromRuntime({ minecraft: runtime.value.minecraft }), {
-    icon: 'palette',
-    title: t('resourcepack.name', 2),
-    text: t('resourcepack.enable', { count: enabled.value.length }),
-  }]
-})
+  return [
+    ...getExtensionItemsFromRuntime({ minecraft: runtime.value.minecraft }),
+    {
+      icon: "palette",
+      title: t("resourcepack.name", 2),
+      text: t("resourcepack.enable", { count: enabled.value.length }),
+    },
+  ];
+});
 const {
-  keyword, modrinthCategories, curseforgeCategory,
-  isCurseforgeActive, isModrinthActive, source: filterMode, selectedCollection,
-  sort, gameVersion,
-} = injection(kSearchModel)
-const { sortBy } = injection(kResourcePackSearch)
+  keyword,
+  modrinthCategories,
+  curseforgeCategory,
+  isCurseforgeActive,
+  isModrinthActive,
+  source: filterMode,
+  selectedCollection,
+  sort,
+  gameVersion,
+} = injection(kSearchModel);
+const { sortBy } = injection(kResourcePackSearch);
 
-const { t } = useI18n()
+const { t } = useI18n();
 </script>

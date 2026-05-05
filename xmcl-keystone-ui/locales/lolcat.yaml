@@ -1201,12 +1201,21 @@ setting:
     none: NONE
     particle: PARTICLE
     video: VIDEO
+    screenshot: SCREENSHOTZ
   backgroundVideo: BACKGROUND VIDEO
   backgroundVideoDescription: PICK OR CLEAR VIDEO
   backgroundVideoUrl: VIDEO URL
   backgroundVideoUrlPlaceholder: ENTER HTTP/HTTPS URL FUR VIDEO
   backgroundVideoVolume: VOLUME
   backgroundVideoVolumeDescription: DRAG TO ADJUST VOLUME
+  screenshotInterval: SCREENSHOTZ INTERVAL
+  screenshotIntervalDescription: TIEMZ IN SECONDZ BETWEEN SCREENSHOTZ CHANGEZ (NO SCREENSHOTZ - BLACK BACKGROUND)
+  screenshotTransition: TRANSITION EFFECT
+  screenshotTransitionDescription: ANIMASHUN WEN CHANGIN SCREENSHOTZ
+  screenshotTransitions:
+    fade: FADE
+    slide: SLIDE
+    zoom: ZOOM
   browseRoot: BROWSE
   checkUpdate: CHECK UPDAT
   colorTheme:

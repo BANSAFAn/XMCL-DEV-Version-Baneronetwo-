@@ -37,10 +37,11 @@ import {
 type InstanceFile = _InstanceFile & { downloads: string[]; icon?: string }
 
 export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
-  const modrinth = new ModrinthV2Client({ fetch: (...args) => app.fetch(...args) })
+  const logger = app.getLogger('MarketProvider')
+  const modrinth = new ModrinthV2Client({ fetch: ((...args) => app.fetch(...args)) as typeof fetch })
   app.registry.register(ModrinthV2Client, modrinth)
   const curseforge = new CurseforgeV1Client(process.env.CURSEFORGE_API_KEY || '', {
-    fetch: (...args) => app.fetch(...args),
+    fetch: ((...args) => app.fetch(...args)) as typeof fetch,
   })
   app.registry.register(CurseforgeV1Client, curseforge)
 
@@ -113,6 +114,9 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
     domainDir: string,
     downloadOptions: DownloadBaseOptions,
   ) {
+    logger.log(`Starting download for file: ${instFile.path}`)
+    logger.log(`Download URLs: ${JSON.stringify(instFile.downloads)}`)
+    
     const snapshoted = await getSnapshotByUris(instFile, domainDir)
     const filePath = join(domainDir, instFile.path)
     const uris = instFile.downloads
@@ -163,6 +167,15 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
     }
 
     if (instFile.modrinth) {
+      if (!instFile.downloads || instFile.downloads.length === 0) {
+        logger.error(new Error(`No download URLs available for Modrinth file: ${instFile.path}`))
+        throw new Error(`No download URLs available for Modrinth file: ${instFile.path} (project: ${instFile.modrinth.projectId}, version: ${instFile.modrinth.versionId})`)
+      }
+
+      logger.log(`Creating Modrinth download task for ${instFile.path}`)
+      logger.log(`URLs: ${instFile.downloads.join(', ')}`)
+      logger.log(`Destination: ${filePath}`)
+
       const task = tasks.create<InstallModrinthFileTask>({
         type: 'installModrinthFile',
         key: `installModrinthFile-${instFile.modrinth.projectId}-${instFile.modrinth.versionId}`,
@@ -174,6 +187,7 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
       const tracker = getTracker<InstallModrinthFileTrackerEvents>(task)
 
       try {
+        logger.log(`Starting download from Modrinth: ${instFile.downloads[0]}`)
         await download({
           url: instFile.downloads,
           destination: filePath,
@@ -181,12 +195,23 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
           tracker: onDownloadSingle(tracker, 'download', {}),
           ...downloadOptions,
         })
+        logger.log(`Download completed successfully: ${instFile.path}`)
         task.complete()
       } catch (error) {
+        logger.error(error as Error, `Download failed for ${instFile.path}`)
         task.fail(error)
         throw error
       }
     } else {
+      if (!instFile.downloads || instFile.downloads.length === 0) {
+        logger.error(new Error(`No download URLs available for CurseForge file: ${instFile.path}`))
+        throw new Error(`No download URLs available for CurseForge file: ${instFile.path} (project: ${instFile.curseforge!.projectId}, file: ${instFile.curseforge!.fileId})`)
+      }
+
+      logger.log(`Creating CurseForge download task for ${instFile.path}`)
+      logger.log(`URLs: ${instFile.downloads.join(', ')}`)
+      logger.log(`Destination: ${filePath}`)
+
       const task = tasks.create<InstallCurseforgeFileTask>({
         type: 'installCurseforgeFile',
         key: `installCurseforgeFile-${instFile.curseforge!.projectId}-${instFile.curseforge!.fileId}`,
@@ -197,6 +222,7 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
       const tracker: Tracker<InstallCurseforgeFileTrackerEvents> = getTracker(task)
 
       try {
+        logger.log(`Starting download from CurseForge: ${instFile.downloads[0]}`)
         await download({
           url: instFile.downloads,
           destination: filePath,
@@ -204,8 +230,10 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
           tracker: onDownloadSingle(tracker, 'download', {}),
           ...downloadOptions,
         })
+        logger.log(`Download completed successfully: ${instFile.path}`)
         task.complete()
       } catch (error) {
+        logger.error(error as Error, `Download failed for ${instFile.path}`)
         task.fail(error)
         throw error
       }
@@ -318,44 +346,85 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
     if (options.market === 0) {
       const versions = Array.isArray(options.version) ? options.version : [options.version]
       const versionsDict = Object.fromEntries(versions.map((v) => [v.versionId, v]))
-      const modrinthVersions = await modrinth.getProjectVersionsById(
-        versions.map((v) => v.versionId),
-      )
-      const result = modrinthVersions.map((version) =>
-        getModrinthFile(
-          domain,
-          version,
-          versionsDict[version.id].filename,
-          versionsDict[version.id].icon,
-        ),
-      )
-      return result
+      
+      try {
+        logger.log(`Fetching Modrinth versions: ${versions.map((v) => v.versionId).join(', ')}`)
+        const modrinthVersions = await modrinth.getProjectVersionsById(
+          versions.map((v) => v.versionId),
+        )
+
+        if (!modrinthVersions || modrinthVersions.length === 0) {
+          logger.error(new Error(`No versions returned from Modrinth API`))
+          throw new Error(`No versions returned from Modrinth API for version IDs: ${versions.map((v) => v.versionId).join(', ')}`)
+        }
+
+        logger.log(`Received ${modrinthVersions.length} versions from Modrinth`)
+        const result = modrinthVersions.map((version) => {
+          if (!version.files || version.files.length === 0) {
+            logger.error(new Error(`Modrinth version ${version.id} has no files`))
+            throw new Error(`Modrinth version ${version.id} (project: ${version.project_id}) has no files available`)
+          }
+          logger.log(`Processing Modrinth version ${version.id} with ${version.files.length} files`)
+          return getModrinthFile(
+            domain,
+            version,
+            versionsDict[version.id].filename,
+            versionsDict[version.id].icon,
+          )
+        })
+        logger.log(`Successfully prepared ${result.length} Modrinth files for download`)
+        return result
+      } catch (error) {
+        logger.error(error as Error, `Failed to get Modrinth files`)
+        throw new Error(`Failed to get Modrinth files: ${error instanceof Error ? error.message : String(error)}`)
+      }
     } else {
       const curseforgeFiles = Array.isArray(options.file) ? options.file : [options.file]
-      const files = await curseforge.getFiles(curseforgeFiles.map((f) => f.fileId))
-      const fileDict = Object.fromEntries(curseforgeFiles.map((f) => [f.fileId, f]))
-      const result = files.map((file) => getCurseforgeFile(domain, file, fileDict[file.id].icon))
-      return result
+      
+      try {
+        logger.log(`Fetching CurseForge files: ${curseforgeFiles.map((f) => f.fileId).join(', ')}`)
+        const files = await curseforge.getFiles(curseforgeFiles.map((f) => f.fileId))
+
+        if (!files || files.length === 0) {
+          logger.error(new Error(`No files returned from CurseForge API`))
+          throw new Error(`No files returned from CurseForge API for file IDs: ${curseforgeFiles.map((f) => f.fileId).join(', ')}`)
+        }
+
+        logger.log(`Received ${files.length} files from CurseForge`)
+        const fileDict = Object.fromEntries(curseforgeFiles.map((f) => [f.fileId, f]))
+        const result = files.map((file) => getCurseforgeFile(domain, file, fileDict[file.id].icon))
+        logger.log(`Successfully prepared ${result.length} CurseForge files for download`)
+        return result
+      } catch (error) {
+        logger.error(error as Error, `Failed to get CurseForge files`)
+        throw new Error(`Failed to get CurseForge files: ${error instanceof Error ? error.message : String(error)}`)
+      }
     }
   }
 
   app.registry.register(kMarketProvider, {
     installFile: async (options) => {
+      logger.log(`installFile called for market ${options.market}`)
       const downloadOptions = await app.registry.get(kDownloadOptions)
 
       const files = await getFiles(options)
+      logger.log(`Got ${files.length} files to download`)
 
       const result = await Promise.all(
         files.map(async (file) => {
+          logger.log(`Processing file: ${file.path}`)
           const result = await downloadFile(file, options.directory, downloadOptions)
           await postprocess(result, options.directory, file.icon)
           return result
         }),
       )
+      logger.log(`All ${result.length} files processed successfully`)
       return result
     },
     installInstanceFile: async (options: InstallMarketInstanceOptions) => {
+      logger.log(`installInstanceFile called for instance ${options.instancePath}`)
       const files = await getFiles(options)
+      logger.log(`Got ${files.length} files to install`)
 
       await installService.installInstanceFiles({
         path: options.instancePath,
@@ -372,6 +441,7 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
         },
       }))
 
+      logger.log(`Instance files installed successfully`)
       return result
     },
   })

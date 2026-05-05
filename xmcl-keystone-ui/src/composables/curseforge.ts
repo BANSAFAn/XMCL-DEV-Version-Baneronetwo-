@@ -154,6 +154,8 @@ export function useCurseforgeProjectFiles(projectId: Ref<number>, gameVersion: R
     }, inject(kSWRVConfig))
   watch(_data, (f) => {
     if (f) {
+      // Sort files by ID in descending order (newer files have higher IDs)
+      f.data.sort((a, b) => b.id - a.id)
       files.value = markRaw(f.data.map(markRaw))
       data.index = f.pagination.index
       data.pageSize = f.pagination.pageSize
@@ -187,6 +189,9 @@ export function getCurseforgeProjectFilesModel(projectId: Ref<number | undefined
       gameVersion: gameVersion.value,
       modLoaderType: modLoaderType.value === 0 ? undefined : modLoaderType.value,
     }).then(v => {
+      // Sort files by ID in descending order (newer files have higher IDs)
+      v.data.sort((a, b) => b.id - a.id)
+      
       for (const d of v.data) {
         markRaw(d)
       }

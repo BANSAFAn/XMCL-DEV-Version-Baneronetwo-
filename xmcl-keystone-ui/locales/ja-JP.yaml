@@ -1119,13 +1119,22 @@ setting:
     none: なし
     particle: パーティクル
     video: ビデオ
-  backgroundVideo: 背景のビデオ
+    screenshot: スクリーンショット
+  backgroundVideo: 背景動画
   backgroundVideoDescription: 映像を選ぶかクリアする
   backgroundVideoUrl: 動画のURL
   backgroundVideoUrlPlaceholder: ビデオのHTTP/HTTPS URLを入力してください
   backgroundVideoVolume: 音量
-  backgroundVideoVolumeDescription: ドラッグして音量を調整
-  browseRoot: 見る
+  backgroundVideoVolumeDescription: ドラッグして音量を調整します
+  screenshotInterval: スクリーンショット切り替え間隔
+  screenshotIntervalDescription: スクリーンショット切り替え間隔（秒）（スクリーンショットなし - 黒い背景）
+  screenshotTransition: トランジション効果
+  screenshotTransitionDescription: スクリーンショット切り替え時のアニメーション
+  screenshotTransitions:
+    fade: フェード
+    slide: スライド
+    zoom: ズーム
+  browseRoot: 変更
   checkUpdate: アップデートを確認
   colorTheme:
     appBarColor: アプリバー

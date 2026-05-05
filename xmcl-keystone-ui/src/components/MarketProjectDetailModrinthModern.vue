@@ -143,7 +143,9 @@ const dependencies = computed(() => {
           }
           return undefined;
         });
-        const { progress, total, task } = useModrinthTask(computed(() => recommendedVersion.id));
+        const { progress, total, task } = useModrinthTask(
+          computed(() => recommendedVersion.id)
+        );
         const dep: ProjectDependency = reactive({
           id: project.id,
           icon: project.icon_url,
@@ -197,6 +199,11 @@ const onInstall = async (v: ProjectDetailVersion) => {
       deps.value ?? []
     );
     notify({ title: t("shared.installed"), level: "success" });
+  } catch (error: any) {
+    // Silently ignore InstanceUpstreamError - it's handled by retry mechanism
+    if (error.name !== "InstanceUpstreamError") {
+      throw error;
+    }
   } finally {
     installing.value = false;
   }
@@ -515,7 +522,15 @@ const isInstallDisabled = computed(() => !selectedVersion.value);
                 :src="img.url"
                 aspect-ratio="1.7778"
                 class="rounded-xl cursor-pointer hover:ring-2 ring-[#4caf50] transition-all shadow-lg bg-[#212121]"
-                @click="imageDialog.showAll(model.galleries.map(g => ({ src: g.rawUrl || g.url, description: g.title || '' })), idx)"
+                @click="
+                  imageDialog.showAll(
+                    model.galleries.map((g) => ({
+                      src: g.rawUrl || g.url,
+                      description: g.title || '',
+                    })),
+                    idx
+                  )
+                "
               ></v-img>
             </div>
 

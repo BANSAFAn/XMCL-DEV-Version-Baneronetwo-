@@ -1235,14 +1235,23 @@ setting:
     halo: Гало
     image: Сурет
     none: Жоқ
-    particle: Бөлшек
-    video: Видео
-  backgroundVideo: Фондық видео
-  backgroundVideoDescription: Видеоны таңдаңыз немесе тазалаңыз
-  backgroundVideoUrl: Видео URL-і
-  backgroundVideoUrlPlaceholder: Видео үшін HTTP/HTTPS URL-ін енгізіңіз
+    particle: Бөлшектер
+    video: Бейне
+    screenshot: Скриншоттар
+  backgroundVideo: Фондық бейне
+  backgroundVideoDescription: Бейнені таңдау немесе тазалау
+  backgroundVideoUrl: Бейне URL-і
+  backgroundVideoUrlPlaceholder: Бейне үшін HTTP/HTTPS URL-ін енгізіңіз
   backgroundVideoVolume: дыбыс деңгейі
-  backgroundVideoVolumeDescription: дыбыс деңгейін реттеу үшін тартыңыз
+  backgroundVideoVolumeDescription: дыбыс деңгейін реттеу үшін сүйреңіз
+  screenshotInterval: Скриншот ауыстыру интервалы
+  screenshotIntervalDescription: Скриншоттар ауысу уақыты секундпен (скриншоттар жоқ - қара фон)
+  screenshotTransition: Ауысу эффектісі
+  screenshotTransitionDescription: Скриншоттар ауысқанда анимация
+  screenshotTransitions:
+    fade: Өшу
+    slide: Сырғу
+    zoom: Масштабтау
   browseRoot: Шолу
   checkUpdate: Жаңартуды тексеру
   colorTheme:

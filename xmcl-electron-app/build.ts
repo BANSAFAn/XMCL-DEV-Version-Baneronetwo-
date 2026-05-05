@@ -100,12 +100,13 @@ async function start() {
   const config: Configuration = {
     ...electronBuilderConfig,
     async beforeBuild(context) {
+      const buildPath = context.appDir || resolve(__dirname)
+      console.log(`  ${chalk.blue('•')} rebuild buildPath=${buildPath}`)
       const rebuildProcess = rebuild({
-        buildPath: context.appDir,
+        buildPath,
         electronVersion: context.electronVersion,
         arch: context.arch,
-        types: ['dev'],
-        onlyModules: ['node_datachannel'],
+        force: true,
       })
       rebuildProcess.lifecycle.on('module-found', (path: string) => {
         console.log(`  ${chalk.blue('•')} rebuild module ${chalk.blue('path')}=${path}`)

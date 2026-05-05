@@ -1242,12 +1242,21 @@ setting:
     none: Nenhum
     particle: Partícula
     video: Vídeo
+    screenshot: Capturas de tela
   backgroundVideo: Vídeo de fundo
   backgroundVideoDescription: selecionar ou limpar vídeo
   backgroundVideoUrl: URL do vídeo
   backgroundVideoUrlPlaceholder: Insira o URL HTTP/HTTPS do vídeo
   backgroundVideoVolume: Volume
   backgroundVideoVolumeDescription: Arraste para ajustar o volume
+  screenshotInterval: Intervalo de troca de capturas
+  screenshotIntervalDescription: Tempo em segundos entre as trocas de capturas (sem capturas - fundo preto)
+  screenshotTransition: Efeito de transição
+  screenshotTransitionDescription: Animação ao trocar capturas de tela
+  screenshotTransitions:
+    fade: Fade
+    slide: Deslizar
+    zoom: Zoom
   browseRoot: Procurar
   checkUpdate: Verificar atualização
   colorTheme:

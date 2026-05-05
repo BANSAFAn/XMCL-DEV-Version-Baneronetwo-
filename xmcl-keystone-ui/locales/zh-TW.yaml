@@ -1117,13 +1117,22 @@ setting:
     none: 無
     particle: 粒子
     video: 影片
+    screenshot: 截圖
   backgroundVideo: 背景影片
   backgroundVideoDescription: 選擇一個背景影片或清空目前
   backgroundVideoUrl: 視頻網址
   backgroundVideoUrlPlaceholder: 輸入視頻的 HTTP/HTTPS URL
-  backgroundVideoVolume: 影片音量
-  backgroundVideoVolumeDescription: 拖動以調整音量
-  browseRoot: 更改
+  backgroundVideoVolume: 音量
+  backgroundVideoVolumeDescription: 拖曳以調整音量
+  screenshotInterval: 截圖切換間隔
+  screenshotIntervalDescription: 截圖切換間隔時間（秒）（無截圖時顯示黑色背景）
+  screenshotTransition: 過渡效果
+  screenshotTransitionDescription: 切換截圖時的動畫效果
+  screenshotTransitions:
+    fade: 淡入淡出
+    slide: 滑動
+    zoom: 縮放
+  browseRoot: 瀏覽
   checkUpdate: 檢查更新
   colorTheme:
     appBarColor: 頂端欄

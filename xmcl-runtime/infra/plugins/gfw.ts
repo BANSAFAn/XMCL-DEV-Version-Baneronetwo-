@@ -7,7 +7,7 @@ export const pluginGFW: LauncherAppPlugin = (app) => {
   async function updateGFW() {
     const taobao = new Client('https://registry.npmmirror.com')
     const google = new Client('https://www.google.com')
-    const yandex = new Client('https://www.yandex.com')
+    const cloudflare = new Client('https://www.cloudflare.com')
     const networkEnv = await Promise.any([
       taobao
         .request({
@@ -31,7 +31,7 @@ export const pluginGFW: LauncherAppPlugin = (app) => {
           () => 'global' as const,
           () => 'global' as const,
         ),
-      yandex
+      cloudflare
         .request({
           method: 'HEAD',
           path: '/',
@@ -39,7 +39,7 @@ export const pluginGFW: LauncherAppPlugin = (app) => {
           headersTimeout: 5000,
         })
         .then(
-          () => 'yandex' as const,
+          () => 'global' as const,
           () => 'global' as const,
         ),
     ])
@@ -50,7 +50,7 @@ export const pluginGFW: LauncherAppPlugin = (app) => {
     )
     taobao.close()
     google.close()
-    yandex.close()
+    cloudflare.close()
     return networkEnv
   }
   app.registry.register(kGFW, new GFW(updateGFW()))

@@ -29,7 +29,11 @@ export interface ModrinthProjectHeader {
 }
 
 export function getModrinthVersionUrl(version: ProjectVersion) {
-  return version.files[0].url
+  if (!version.files || version.files.length === 0) {
+    throw new Error(`No files found for Modrinth version ${version.id}`)
+  }
+  const primaryFile = getModrinthPrimaryFile(version)
+  return primaryFile.url
 }
 export function getModrinthVersionUri(version: Pick<ProjectVersion, 'project_id' | 'id'>) {
   return `modrinth:${version.project_id}:${version.id}`
@@ -45,11 +49,17 @@ export function getModrinthVersionFileUri(version: Pick<ProjectVersion, 'project
  * If there are no file marked as primary, it will try to find mrpack or jar file instead of zip file first.
  */
 export function getModrinthPrimaryFile(version: ProjectVersion) {
+  if (!version.files || version.files.length === 0) {
+    throw new Error(`No files found for Modrinth version ${version.id}`)
+  }
   const primaryFiles = version.files.filter(f => f.primary)
   let files = primaryFiles.length === 0 ? version.files : primaryFiles
   if (files.some(f => f.filename.endsWith('.zip')) &&
     files.some(f => f.filename.endsWith('.mrpack') || f.filename.endsWith('.jar'))) {
     files = files.filter(f => f.filename.endsWith('.mrpack') || f.filename.endsWith('.jar'))
+  }
+  if (files.length === 0) {
+    throw new Error(`No valid files found for Modrinth version ${version.id}`)
   }
   return files[0]
 }

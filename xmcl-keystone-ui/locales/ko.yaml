@@ -1098,12 +1098,21 @@ setting:
     none: 없음
     particle: 파티클
     video: 비디오
+    screenshot: 스크린샷
   backgroundVideo: 배경 비디오
   backgroundVideoDescription: 비디오 선택 또는 지우기
   backgroundVideoUrl: 비디오 URL
   backgroundVideoUrlPlaceholder: 동영상의 HTTP/HTTPS URL을 입력하세요.
   backgroundVideoVolume: 볼륨
   backgroundVideoVolumeDescription: 드래그하여 볼륨 조절
+  screenshotInterval: 스크린샷 전환 간격
+  screenshotIntervalDescription: 스크린샷 전환 간격 시간(초) (스크린샷 없음 - 검은색 배경)
+  screenshotTransition: 전환 효과
+  screenshotTransitionDescription: 스크린샷 전환 시 애니메이션
+  screenshotTransitions:
+    fade: 페이드
+    slide: 슬라이드
+    zoom: 줌
   browseRoot: 찾아보기
   checkUpdate: 업데이트 확인
   colorTheme:

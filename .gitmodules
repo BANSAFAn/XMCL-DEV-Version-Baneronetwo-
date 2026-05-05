@@ -1,0 +1,3 @@
+[submodule "xmcl"]
+	path = xmcl
+	url = https://github.com/BANSAFAn/minecraft-launcher-core-node

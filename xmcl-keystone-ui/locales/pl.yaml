@@ -1198,13 +1198,22 @@ setting:
     image: Obraz
     none: Brak
     particle: Cząsteczka
-    video: wideo
+    video: Wideo
+    screenshot: Zrzuty ekranu
   backgroundVideo: Wideo w tle
   backgroundVideoDescription: Wybierz lub wyczyść wideo
   backgroundVideoUrl: Adres URL filmu
   backgroundVideoUrlPlaceholder: Wprowadź adres URL HTTP/HTTPS dla wideo
-  backgroundVideoVolume: objętość
+  backgroundVideoVolume: głośność
   backgroundVideoVolumeDescription: przeciągnij, aby dostosować głośność
+  screenshotInterval: Interwał zmiany zrzutów ekranu
+  screenshotIntervalDescription: Czas w sekundach między zmianami zrzutów (brak zrzutów - czarne tło)
+  screenshotTransition: Efekt przejścia
+  screenshotTransitionDescription: Animacja podczas zmiany zrzutów ekranu
+  screenshotTransitions:
+    fade: Zanikanie
+    slide: Przesuwanie
+    zoom: Powiększenie
   browseRoot: Przeglądaj
   checkUpdate: Sprawdź aktualizację
   colorTheme:

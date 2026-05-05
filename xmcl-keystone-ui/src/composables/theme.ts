@@ -23,6 +23,7 @@ export enum BackgroundType {
   HALO = 'halo',
   IMAGE = 'image',
   VIDEO = 'video',
+  SCREENSHOT = 'screenshot',
 }
 
 export interface UIThemeDataV1 {
@@ -69,6 +70,8 @@ export interface UIThemeDataV1 {
   font?: MediaData
   fontSize?: number
   particleMode?: ParticleMode
+  screenshotInterval?: number // interval in seconds for screenshot slideshow
+  screenshotTransition?: 'fade' | 'slide' | 'zoom' // transition effect for screenshots
 }
 
 export function getDefaultTheme(): UIThemeDataV1 {
@@ -107,6 +110,8 @@ export function getDefaultTheme(): UIThemeDataV1 {
     backgroundType: BackgroundType.NONE,
     font: undefined,
     fontSize: 16,
+    screenshotInterval: 5,
+    screenshotTransition: 'fade',
     blur: {
       background: 3,
       card: 20,
@@ -168,6 +173,8 @@ export interface UIThemeData {
   font?: MediaData
   fontSize?: number
   particleMode?: ParticleMode
+  screenshotInterval?: number
+  screenshotTransition?: 'fade' | 'slide' | 'zoom'
   blur: number
   blurSidebar?: number
   blurAppBar?: number
@@ -574,6 +581,24 @@ export function useThemeWritter(
       writeTheme()
     },
   })
+  const screenshotInterval = computed({
+    get() {
+      return currentTheme.value.screenshotInterval ?? 5
+    },
+    set(v: number) {
+      currentTheme.value.screenshotInterval = v
+      writeTheme()
+    },
+  })
+  const screenshotTransition = computed({
+    get() {
+      return currentTheme.value.screenshotTransition ?? 'fade'
+    },
+    set(v: 'fade' | 'slide' | 'zoom') {
+      currentTheme.value.screenshotTransition = v
+      writeTheme()
+    },
+  })
 
   function resetDarkToDefault() {
     const colors = currentTheme.value.colors
@@ -759,6 +784,8 @@ export function useThemeWritter(
     cardColor,
     font,
     fontSize,
+    screenshotInterval,
+    screenshotTransition,
     resetDarkToDefault,
     resetLightToDefault,
     resetToDefault,
@@ -918,6 +945,8 @@ export function useTheme(
   )
   const font = computed(() => targetTheme.value.font)
   const fontSize = computed(() => targetTheme.value.fontSize ?? 16)
+  const screenshotInterval = computed(() => targetTheme.value.screenshotInterval ?? 5)
+  const screenshotTransition = computed(() => targetTheme.value.screenshotTransition ?? 'fade')
   watch(
     isDark,
     (dark) => {
@@ -1061,6 +1090,8 @@ export function useTheme(
     cardColor,
     font,
     fontSize,
+    screenshotInterval,
+    screenshotTransition,
     saveCurrentTheme,
     saveToStore,
     loadFromStore,

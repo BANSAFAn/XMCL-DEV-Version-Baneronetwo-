@@ -1326,15 +1326,24 @@ setting:
   backgroundTypes:
     halo: Halo
     image: Bild.
-    none: Nichts
+    none: Keine
     particle: Partikel
-    video: Video.
+    video: Video
+    screenshot: Screenshots
   backgroundVideo: Hintergrund-Video
   backgroundVideoDescription: Ein Video auswählen oder löschen
   backgroundVideoUrl: Video-URL
   backgroundVideoUrlPlaceholder: Geben Sie die HTTP/HTTPS-URL für das Video ein
   backgroundVideoVolume: Band
   backgroundVideoVolumeDescription: Ziehen, um die Lautstärke einzustellen
+  screenshotInterval: Screenshot-Wechselintervall
+  screenshotIntervalDescription: Zeit in Sekunden zwischen Screenshot-Wechsel (keine Screenshots - schwarzer Hintergrund)
+  screenshotTransition: Übergangseffekt
+  screenshotTransitionDescription: Animation beim Wechseln von Screenshots
+  screenshotTransitions:
+    fade: Einblenden
+    slide: Gleiten
+    zoom: Zoomen
   browseRoot: Überblick.
   checkUpdate: Nach Aktualisierungen suchen
   colorTheme:

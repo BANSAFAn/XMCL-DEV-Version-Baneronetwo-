@@ -1226,13 +1226,22 @@ setting:
     image: Immagine
     none: Nessuno
     particle: Particella
-    video: video
+    video: Video
+    screenshot: Screenshot
   backgroundVideo: Video di sfondo
   backgroundVideoDescription: seleziona o cancella il video
   backgroundVideoUrl: URL del video
   backgroundVideoUrlPlaceholder: Inserisci l'URL HTTP/HTTPS per il video
   backgroundVideoVolume: volume
   backgroundVideoVolumeDescription: trascina per regolare il volume
+  screenshotInterval: Intervallo di cambio screenshot
+  screenshotIntervalDescription: Tempo in secondi tra i cambi di screenshot (nessuno screenshot - sfondo nero)
+  screenshotTransition: Effetto di transizione
+  screenshotTransitionDescription: Animazione durante il cambio di screenshot
+  screenshotTransitions:
+    fade: Dissolvenza
+    slide: Scorrimento
+    zoom: Zoom
   browseRoot: Sfoglia
   checkUpdate: Controlla aggiornamenti
   colorTheme:

@@ -1,4 +1,5 @@
 import { BaseService } from '@xmcl/runtime/app'
+import { BackupService } from '@xmcl/runtime/backup'
 import { AuthlibInjectorService } from '@xmcl/runtime/authlibInjector'
 import { ElyByService } from '@xmcl/runtime/elyby'
 import { InstallService, VersionMetadataService } from '@xmcl/runtime/install'
@@ -25,7 +26,6 @@ import { LaunchService, VersionService } from '@xmcl/runtime/launch'
 import { ProjectMappingService } from '@xmcl/runtime/moddb'
 import { ModMetadataService } from '@xmcl/runtime/moddb/ModMetadataService'
 import { ModpackService } from '@xmcl/runtime/modpack'
-import { PeerService } from '@xmcl/runtime/peer'
 import { PresenceService } from '@xmcl/runtime/presence'
 import { ResourcePackPreviewService } from '@xmcl/runtime/resourcePack'
 import { ServerStatusService } from '@xmcl/runtime/serverStatus'
@@ -35,6 +35,7 @@ import { OfficialUserService, UserService } from '@xmcl/runtime/user'
 export const definedServices = [
   VersionMetadataService,
   BaseService,
+  BackupService,
   AuthlibInjectorService,
   InstallService,
   ProjectMappingService,
@@ -62,7 +63,6 @@ export const definedServices = [
   VersionService,
   InstanceInstallService,
   ModMetadataService,
-  PeerService,
   ThemeService,
   InstanceThemeService,
 ]

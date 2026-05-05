@@ -86,9 +86,12 @@ export async function resolveInstanceFiles(
         if (!p.downloads) {
           p.downloads = []
         }
-        if (p.downloads.indexOf(r.files[0].url) === -1) {
-          p.downloads.push(r.files[0].url)
-          hasUpdate = true
+        if (r.files && r.files.length > 0) {
+          const primaryFile = r.files.find(f => f.primary) || r.files[0]
+          if (primaryFile && p.downloads.indexOf(primaryFile.url) === -1) {
+            p.downloads.push(primaryFile.url)
+            hasUpdate = true
+          }
         }
       }
     }
@@ -110,20 +113,22 @@ export async function resolveInstanceFiles(
         })
       for (const [sha1, version] of Object.entries(result)) {
         const instanceFile = chunk.find((p) => p.hashes.sha1 === sha1)!
-        const file = version.files.find((f) => f.hashes.sha1 === sha1) ?? version.files[0]
-        if (!instanceFile.downloads) {
-          instanceFile.downloads = []
-        }
-        if (instanceFile.downloads.indexOf(file.url) === -1) {
-          instanceFile.downloads.push(file.url)
-          hasUpdate = true
-        }
-        if (!instanceFile.modrinth) {
-          instanceFile.modrinth = {
-            projectId: version.project_id,
-            versionId: version.id,
+        if (version.files && version.files.length > 0) {
+          const file = version.files.find((f) => f.hashes.sha1 === sha1) ?? version.files[0]
+          if (!instanceFile.downloads) {
+            instanceFile.downloads = []
           }
-          hasUpdate = true
+          if (file && instanceFile.downloads.indexOf(file.url) === -1) {
+            instanceFile.downloads.push(file.url)
+            hasUpdate = true
+          }
+          if (!instanceFile.modrinth) {
+            instanceFile.modrinth = {
+              projectId: version.project_id,
+              versionId: version.id,
+            }
+            hasUpdate = true
+          }
         }
       }
     }

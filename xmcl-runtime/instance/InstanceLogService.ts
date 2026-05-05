@@ -1,14 +1,14 @@
-import { InstanceLogServiceKey, type InstanceLogService as IInstanceLogService } from '@xmcl/runtime-api'
-import { readFile, unlink } from 'fs-extra'
-import { isAbsolute, join } from 'path'
-import { Inject, LauncherAppKey } from '~/app'
-import { kEncodingWorker, type EncodingWorker } from '~/encoding'
-import { AbstractService, ExposeServiceKey, Singleton } from '~/service'
-import { LauncherApp } from '../app/LauncherApp'
-import { UTF8 } from '../util/encoding'
-import { AnyError, isSystemError } from '@xmcl/utils'
-import { ENOENT_ERROR, readdirIfPresent } from '../util/fs'
-import { gunzip } from '../util/zip'
+import { InstanceLogServiceKey, type InstanceLogService as IInstanceLogService } from '@xmcl/runtime-api';
+import { AnyError, isSystemError } from '@xmcl/utils';
+import { readFile, unlink } from 'fs-extra';
+import { isAbsolute, join } from 'path';
+import { Inject, LauncherAppKey } from '~/app';
+import { kEncodingWorker, type EncodingWorker } from '~/encoding';
+import { AbstractService, ExposeServiceKey, Singleton } from '~/service';
+import { LauncherApp } from '../app/LauncherApp';
+import { UTF8 } from '../util/encoding';
+import { ENOENT_ERROR, readdirIfPresent } from '../util/fs';
+import { gunzip } from '../util/zip';
 
 /**
  * Provide the ability to list/read/remove log and crash reports of a instance.
@@ -49,12 +49,12 @@ export class InstanceLogService extends AbstractService implements IInstanceLogS
   async getLogContent(instancePath: string, name: string) {
     try {
       const filePath = join(instancePath, 'logs', name)
-      let buf: any = await readFile(filePath)
+      let buf = await readFile(filePath)
       if (name.endsWith('.gz')) {
-        buf = await gunzip(buf)
+        buf = (await gunzip(buf)) as any
       }
-      const encoding = await this.encoder.guessEncodingByBuffer(buf as any).catch(e => undefined)
-      const result = await this.encoder.decode(buf as any, encoding || UTF8)
+      const encoding = await this.encoder.guessEncodingByBuffer(buf.subarray(0, 512 * 128)).catch(e => undefined)
+      const result = await this.encoder.decode(buf, encoding || UTF8)
       return result
     } catch (e) {
       return ''
@@ -101,12 +101,12 @@ export class InstanceLogService extends AbstractService implements IInstanceLogS
       filePath = join(instancePath, 'crash-reports', name)
     }
     try {
-      let buf: any = await readFile(filePath.trim())
+      let buf = await readFile(filePath.trim())
       if (name.endsWith('.gz')) {
-        buf = await gunzip(buf)
+        buf = (await gunzip(Buffer.from(buf))) as any
       }
-      const encoding = await this.encoder.guessEncodingByBuffer(buf as any).catch(() => undefined)
-      const result = await this.encoder.decode(buf as any, encoding || UTF8)
+      const encoding = await this.encoder.guessEncodingByBuffer(buf.subarray(0, 512 * 128)).catch(() => undefined)
+      const result = await this.encoder.decode(buf, encoding || UTF8)
       return result
     } catch (e) {
       if (isSystemError(e) && e.code === ENOENT_ERROR) {

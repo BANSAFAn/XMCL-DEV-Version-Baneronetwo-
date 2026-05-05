@@ -1256,12 +1256,21 @@ setting:
     none: Нет
     particle: Частицы
     video: Видео
+    screenshot: Скриншоты
   backgroundVideo: Фоновое видео
   backgroundVideoDescription: Изменить или очистить видео.
   backgroundVideoUrl: URL-адрес видео
   backgroundVideoUrlPlaceholder: Введите URL-адрес HTTP/HTTPS для видео
   backgroundVideoVolume: Громкость
   backgroundVideoVolumeDescription: Перетащите, чтобы отрегулировать громкость.
+  screenshotInterval: Интервал смены скриншотов
+  screenshotIntervalDescription: Время в секундах между сменой скриншотов (нет скриншотов - чёрный фон)
+  screenshotTransition: Эффект перехода
+  screenshotTransitionDescription: Анимация при смене скриншотов
+  screenshotTransitions:
+    fade: Затухание
+    slide: Скольжение
+    zoom: Масштабирование
   browseRoot: Изменить
   checkUpdate: Проверить обновление
   colorTheme:

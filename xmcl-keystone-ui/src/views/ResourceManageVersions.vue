@@ -53,7 +53,7 @@
             </v-icon>
           </v-btn>
           <v-btn
-            v-shared-tooltip="() => t('localVersion.refresh')"
+            v-shared-tooltip="_ => t('localVersion.refresh')"
             icon
             :loading="refreshing"
             @click="refresh"

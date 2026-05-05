@@ -50,6 +50,11 @@ export async function getNormalizeException(e: unknown) {
       type: 'cancelled',
     })
   }
+  // InstanceUpstreamError is expected when instance is locked by another operation
+  // Return it as-is so it's treated as a known exception and not logged as error
+  if (e instanceof Error && e.name === 'InstanceUpstreamError') {
+    return e
+  }
   if (isSystemError(e)) {
     return getNomralizedSystemError(e)
   }

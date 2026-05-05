@@ -18,7 +18,7 @@ AppShareInstanceDialog:
   downloadTitle: Download files from other peers
   filesToDownload: Choose files to download
   filesToShare: Choose files to share
-  instanceShare: '{user} just shared the current instance to you'
+  instanceShare: "{user} just shared the current instance to you"
   share: Share
   shareNotifyTitle: Share Instance
   shareTitle: Share game files to other player
@@ -28,7 +28,7 @@ HomeJavaIssueDialog:
   incompatibleJava: Incompatible Java
   incompatibleJavaHint: Current Java might be incompatible with selected Minecraft!
   missingJava: Missing Java
-  missingJavaHint: 'The Launcher cannot detect any java in your computer. You can:'
+  missingJavaHint: "The Launcher cannot detect any java in your computer. You can:"
   optionSwitch:
     name: Switch to {version}
 HomeLaunchMultiInstanceDialog:
@@ -52,10 +52,10 @@ HomeSyncDialogPush:
 SettingMigrationDialog:
   selectRootDirectory: Select Root Directory
 ago:
-  day: '{duration} day ago | {duration} days ago'
-  hour: '{duration} hour ago | {duration} hours ago'
-  minute: '{duration} minute ago | {duration} minutes ago'
-  second: '{duration} second ago | {duration} seconds ago'
+  day: "{duration} day ago | {duration} days ago"
+  hour: "{duration} hour ago | {duration} hours ago"
+  minute: "{duration} minute ago | {duration} minutes ago"
+  second: "{duration} second ago | {duration} seconds ago"
 askAICrash:
   copyPrompt: Copy the prompt to ask AI
   description: >-
@@ -149,8 +149,8 @@ dataMigration:
   waitReload: Migrating data. Please don't close the Launcher or you will lose your data.
 delete:
   name: Delete {name}
-  'no': 'No'
-  'yes': Delete
+  "no": "No"
+  "yes": Delete
 dependencies:
   embedded: Embedded
   incompatible: Incompatible
@@ -206,7 +206,7 @@ difficulty:
 disk:
   available: Available
   used: Used
-downloadCount: '{count} downloads'
+downloadCount: "{count} downloads"
 downloadModMetadataDb:
   name: Download Mod Metadata Database
 downloadUpdate:
@@ -214,10 +214,10 @@ downloadUpdate:
 duplicateInstance:
   name: Duplicate Instance
 duration:
-  day: '{duration} day | {duration} days'
-  hour: '{duration} hour | {duration} hours'
-  minute: '{duration} minute | {duration} minutes'
-  second: '{duration} second | {duration} seconds'
+  day: "{duration} day | {duration} days"
+  hour: "{duration} hour | {duration} hours"
+  minute: "{duration} minute | {duration} minutes"
+  second: "{duration} second | {duration} seconds"
 env:
   select:
     all: Select All
@@ -227,7 +227,7 @@ errors:
   BadForgeInstallerJarError: >-
     Cannot parse forge installer jar file. Maybe the forge has new installer
     file format? Contact developers if this issue persists.
-  BadInstanceType: 'Not a valid instance: {type}'
+  BadInstanceType: "Not a valid instance: {type}"
   BodyTimeoutError: HTTP Body timeout
   ChecksumNotMatchError: Checksum not matched! Expected {expect}. Actual {actual}.
   ConnectTimeoutError: Connection timeout to server.
@@ -379,11 +379,6 @@ instance:
   name: Profile Name
   nameHint: The name of the modpack
   nameNoCyrillic: The name cannot contain Cyrillic characters
-  nameInvalidChars: 'The name cannot contain these characters: < > : " / \\ | ? *'
-  nameReservedName: This name is reserved by the system and cannot be used
-  namePathTraversal: The name cannot contain path traversal ("..")
-  nameWhitespaceOnly: The name cannot be only whitespace or dots
-  nameTrailingDotOrSpace: The name cannot end with a dot or space
   neverPlayed: Never Played
   openCrashReportFolder: Open Crash Report Folder
   openLogFolder: Open Log Folder
@@ -395,6 +390,7 @@ instance:
   requireName: The name is required
   resolution: Resolution
   resolutionPreset: Resolution Preset
+  server: Server
   showInstance: Show game folder
   updates: Updates
   useSharedOptions: Use shared game settings
@@ -487,8 +483,8 @@ instances:
   loadingFiles: Loading Modpack Files
   refreshServers: Refresh Servers
 items:
-  count: '{count} items'
-  total: '{total} total'
+  count: "{count} items"
+  total: "{total} total"
 java:
   allocatedLong: Use system default java
   allocatedShort: Auto Allocated
@@ -503,7 +499,7 @@ java:
   minMemory: Min Memory
   noMemory: Do not limit memory usage
   refresh: Refresh Local Java
-  systemMemory: 'System Free Memory: {free} / {total}'
+  systemMemory: "System Free Memory: {free} / {total}"
 labyMod:
   disable: Disable LabyMod
   empty: LabyMod does not support current Minecraft
@@ -622,7 +618,7 @@ loginError:
     is down!
   checkOwnershipFailed: Fail to check game ownership. Please try again.
   connectionReset: Fail to login since connection is reset by server
-  fetchMinecraftProfileFailed: 'Fail to fetch Minecraft profile: {reason}'
+  fetchMinecraftProfileFailed: "Fail to fetch Minecraft profile: {reason}"
   illegalEmail: E-mail must be valid
   invalidCredentials: Invalid credentials. Invalid username or password.
   loginMinecraftByXboxFailed: >-
@@ -672,12 +668,12 @@ mod:
   description: Description
   disableAll: Disable All
   dropHint: Drop mod's .jar/.litemod here to import.
-  duplicatedDetected: '{count} duplicated mods'
+  duplicatedDetected: "{count} duplicated mods"
   duplicatedDetectedDescription: >-
     Found mods with same mod id but different files. This might cause Minecraft
     crash. Please select the file you want to keep.
   enableAll: Enable All
-  enabled: '{count} Mods enabled'
+  enabled: "{count} Mods enabled"
   filter: Filter Mods
   group: Group up
   groupInstalled: Group Installed Mods
@@ -693,7 +689,7 @@ mod:
   maybeCompatible: Maybe Compatible.
   modloaderSelectHint: The mod support following mod loaders. Please select one to install.
   modloaderSelectNotSupported: Not found {modloader} for Minecraft {minecraft}
-  mods: '{count} Mods'
+  mods: "{count} Mods"
   name: Mod | Mods
   newFolder: New Folder
   noGroupsFound: No groups found
@@ -709,7 +705,7 @@ mod:
   showInModrinth: Show {name} in Modrinth
   switchDefaultSource: Default Mod Source
   syncGroupRules: Save grouping rules
-  toUpdate: '{count} updates'
+  toUpdate: "{count} updates"
   ungroup: Ungroup
   versions: Versions
 modFilter:
@@ -727,9 +723,9 @@ modInstall:
     description: >-
       You have changed the Minecraft version. Would you like to automatically
       update compatible mods to versions that match Minecraft {version}?
-    'no': Skip
+    "no": Skip
     title: Update Mods?
-    'yes': Update Mods
+    "yes": Update Mods
   checkDependencies: Check Dependencies
   checkUpgrade: Check Mods Update
   checkedDependencies: Checked Dependencies
@@ -931,7 +927,7 @@ modrinth:
   projectMembers: Project Members
   projectType:
     modpack: Modpack
-  projects: '{count} projects'
+  projects: "{count} projects"
   serverSide: Server Side
   sort:
     downloads: Download counts
@@ -972,7 +968,7 @@ multiplayer:
     11)">multiple</span> connections.</span>"
   createLocalToken: Create Local Token
   currentIpTitle: Detected Public IP
-  currentNatTitle: 'Current network (NAT):'
+  currentNatTitle: "Current network (NAT):"
   difficultyLevelHint: The level of difficulty creating a connection
   disconnect: Disconnect
   disconnectDescription: Are you sure you want to disconnect with user {user}({id})?
@@ -1072,7 +1068,7 @@ peerSignalingState:
   have-local-offer: Waiting peer description
 presence:
   instance: Idle in Instance {instance}
-  instanceSetting: 'Edit Instance Setting: {instance}'
+  instanceSetting: "Edit Instance Setting: {instance}"
   mod: Viewing Mods in {instance}
   modrinthProject: Viewing {name} in Modrinth
   resourcePack: Viewing Resource Packs in {instance}
@@ -1097,7 +1093,7 @@ resourcepack:
       Are you sure you want to do this?
     title: Delete the resource pack
   dropHint: Drop Resource Pack's folder/zip here to import.
-  enable: '{count} resource packs enabled'
+  enable: "{count} resource packs enabled"
   incompatible: >-
     Incompatible Resource Pack format({format}). Fitin {accept}. Current
     {actual}.
@@ -1106,7 +1102,7 @@ resourcepack:
   search: Search Resource Packs...
   searchHint: Search resource packs
   searchOnCurseforge: Search {name} in curseforge
-  searchOnModrinth: '@:mod.searchOnModrinth'
+  searchOnModrinth: "@:mod.searchOnModrinth"
   selected: Selected Resource Packs
   showDirectory: Show resource pack directory
   showFile: Show resource pack in folder {file}
@@ -1136,7 +1132,7 @@ save:
   levelName: Level Name
   loadMap: Load Map
   mapError: Map Error
-  mapInfo: 'Interactive 3D world preview:'
+  mapInfo: "Interactive 3D world preview:"
   mapLoaded: Map Loaded
   mapPreview: Map Preview
   name: Save | Saves
@@ -1164,6 +1160,10 @@ search:
   favorate: Collection
   local: Installed
   market: Mod Market
+  modMarket: Mod Market
+  shaderMarket: Shader Market
+  resourcePackMarket: Resource Pack Market
+  mapMarket: Map Market
 server:
   acceptingMinecraftVersion: Accepting Minecraft Version
   creationHint: Please Fill the server address and ping the server
@@ -1200,6 +1200,11 @@ server:
   upload: Upload Server
   version: Server Requires Version
   versionHint: The Minecraft Version To Ping
+  joinServer: Join Server
+  address: Server Address
+  addressHint: "Enter server address (e.g., play.hypixel.net)"
+  serverName: Server Name
+  nameHint: Optional display name for this server
 serverStatus:
   nohost: §4Cannot find host!
   ping: Ping...
@@ -1252,12 +1257,21 @@ setting:
     none: None
     particle: Particle
     video: Video
+    screenshot: Screenshots
   backgroundVideo: Background Video
   backgroundVideoDescription: Select or clear video
   backgroundVideoUrl: Video URL
   backgroundVideoUrlPlaceholder: Enter HTTP/HTTPS URL for video
   backgroundVideoVolume: volume
   backgroundVideoVolumeDescription: drag to adjust volume
+  screenshotInterval: Screenshot Interval
+  screenshotIntervalDescription: Time in seconds between screenshot changes (no screenshots - black background)
+  screenshotTransition: Transition Effect
+  screenshotTransitionDescription: Animation when changing screenshots
+  screenshotTransitions:
+    fade: Fade
+    slide: Slide
+    zoom: Zoom
   themeStore:
     name: Theme Store
     description: Save and manage global themes
@@ -1337,6 +1351,50 @@ setting:
   maxSocketsTitle: Max HTTP sockets
   memoryAssignment: Memory Assignment
   migrateFromOther: Import from other launcher
+  backup: Backup & Restore
+  backupDescription: Create and restore launcher backups
+  createBackup: Create Backup
+  restoreBackup: Restore Backup
+  backupFileName: Backup File Name
+  backupFileNameRequired: File name is required
+  backupFileNameHint: The backup will be saved as .xmclsettings format
+  includeInstances: Include Instances
+  includeInstancesDesc: Backup all game instances and their data
+  selectInstances: Select Instances to Backup
+  selectedInstances: "Selected: {count} / {total}"
+  includeSettings: Include Settings
+  includeSettingsDesc: Backup launcher settings and configurations
+  includeScreenshots: Include Screenshots
+  includeScreenshotsDesc: Backup instance screenshots
+  saveBackupFile: Save Backup File
+  backupFailed: Failed to create backup
+  selectBackupFile: Select Backup File
+  selectBackupFileHint: Choose a .xmclsettings backup file to restore
+  backupInfo: Backup Information
+  backupInstances: "Instances: {count}"
+  backupCreated: "Created: {date}"
+  backupSize: "Size: {size}"
+  restoreWarning: "Warning: Restoring will overwrite your current data. This action cannot be undone!"
+  restoreFailed: Failed to restore backup
+  restoreComplete: Restore Complete
+  restoreCompleteMessage: Backup has been restored successfully.
+  restoreRestartHint: Please restart the launcher for theme and settings changes to take effect.
+  backupProgress: Backup Progress
+  backupPhaseCopyingInstances: Copying instances
+  backupPhaseCopyingSettings: Copying settings
+  backupPhaseCopyingScreenshots: Copying screenshots
+  backupPhaseCreatingArchive: Creating archive
+  backupPhaseFinalizing: Finalizing
+  backupFilesProgress: "Files: {copied} / {total}"
+  backupLog: Backup Log
+  cancelBackupTitle: Cancel Backup?
+  cancelBackupWarning: Are you sure you want to cancel? A partial backup will be saved with the files copied so far.
+  cancelBackupFinalizingWarning: Cannot cancel during finalization. Please wait for the backup to complete.
+  cancelBackup: Cancel Backup
+  backupCancelled: Backup was cancelled. Partial backup may have been saved.
+  backupCompleteTitle: Backup Complete
+  backupCompleteMessage: Your backup has been created successfully.
+  backupCompleteHint: The backup file has been saved to your selected location.
   minecraftOptions: Minecraft Options
   name: Global Setting | Global Settings
   network: Network Settings
@@ -1362,7 +1420,7 @@ setting:
   resetAllSettingsConfirmTitle: Reset All Settings?
   resetAllSettingsHint: Reset launcher to factory defaults (deletes everything)
   resetAllSettingsSuccess: All settings have been reset. The launcher will restart.
-  resetSettingsError: 'Error resetting settings: {error}'
+  resetSettingsError: "Error resetting settings: {error}"
   resetToDefault: Reset to Default
   select: Select
   settingsExported: Settings exported successfully
@@ -1384,6 +1442,11 @@ setting:
   sidebarStyleHint: Choose between classic and modern notch design
   streamerMode: Streaming Mode
   streamerModeDescription: This will hide your private information like email in launcher.
+  spotlightShortcut: Spotlight Shortcut
+  spotlightShortcutDescription: Keyboard shortcut to open Spotlight search
+  changeShortcut: Change
+  resetShortcut: Reset
+  recordingShortcut: Press keys...
   theme:
     dark: Dark Theme
     light: Light Theme
@@ -1418,7 +1481,7 @@ setup:
     name: Add Game Account
     skip: Skip for now
   appearance:
-    name: '@:setting.appearance'
+    name: "@:setting.appearance"
   dataRoot:
     description: >-
       The data root is not a common .minecraft directory. Since XMCL data
@@ -1483,6 +1546,7 @@ shared:
   browse: Browse
   cancel: Cancel
   client: Client
+  continue: Continue
   description: Description
   disable: Disable
   download: Download
@@ -1495,15 +1559,18 @@ shared:
   manage: Manage
   name: Name
   next: Next
-  'no': 'No'
+  "no": "No"
   ok: OK
   previous: Previous
   refresh: Refresh
   remove: Remove
+  restart: Restart
+  save: Save
   search: Search
   server: Server
   skipForNow: Skip for now
-  'yes': 'Yes'
+  later: Later
+  "yes": "Yes"
 sidebar:
   pin: Pin
   unpin: Unpin
@@ -1536,7 +1603,7 @@ task:
   empty: No Running Tasks
   failed: Failed
   manager: Task Manager
-  nTaskRunning: '{count} tasks are running'
+  nTaskRunning: "{count} tasks are running"
   name: Task | Tasks
   pause: Pause
 theme:
@@ -1593,7 +1660,7 @@ tutorial:
     searchTitle: Search Mods
   multiplayer:
     contentDescription: Connections between you and your peers will be listed here.
-    contentTitle: '@:multiplayer.connections'
+    contentTitle: "@:multiplayer.connections"
     groupDescription: >-
       You can create or join a group with other players. The launcher will try
       to create P2P connections between you and your friends according to the
@@ -1702,3 +1769,29 @@ versionType:
   beta: Beta
   name: Status
   release: Release
+spotlight:
+  placeholder: Search mods, instances...
+  navigate: Navigate
+  select: Select
+  noResults: No results found
+  installing: Installing...
+  installed: Installed
+  install: Install
+  installFailed: Failed
+  noModLoader: Current instance has no mod loader
+  sections:
+    instances: Instances
+    mods: Mods
+    localMods: Installed Mods
+    quickActions: Quick Actions
+    recent: Recent
+  globalSettings: Settings
+  mods: Mods
+  store: Modpack Market
+
+unauthenticatedWarning:
+  title: Not Logged In
+  description: You are not logged into any account. The game will launch in demo mode. To access full features, please register an account.
+  playAnyway: Play Anyway
+  cancel: Cancel
+  support: Tech Support

@@ -279,6 +279,33 @@
       />
     </v-list-item>
     <v-divider v-if="!props.dense && backgroundType === BackgroundType.VIDEO" class="my-3" />
+    <v-list-item v-if="backgroundType === BackgroundType.SCREENSHOT">
+      <v-list-item-content>
+        <v-list-item-title>
+          {{
+            t("setting.screenshotInterval")
+          }}
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          {{
+            t("setting.screenshotIntervalDescription")
+          }}
+        </v-list-item-subtitle>
+      </v-list-item-content>
+      <v-slider
+        v-model="screenshotInterval"
+        step="1"
+        :min="1"
+        :max="30"
+        :always-dirty="true"
+        thumb-label="always"
+      >
+        <template #thumb-label="{ value }">
+          {{ value }}s
+        </template>
+      </v-slider>
+    </v-list-item>
+    <v-divider v-if="!props.dense && backgroundType === BackgroundType.SCREENSHOT" class="my-3" />
     <v-list-item>
       <v-list-item-title>
         {{
@@ -661,7 +688,7 @@ const {
   setBackgroundImage, setBackgroundImageUrl, clearBackgroundImage, exportTheme, importTheme, resetToDefault, setFont, setFontUrl, resetFont, removeMusic, addMusic, addMusicUrl,
   appBarColor, sideBarColor, primaryColor, cardColor, backgroundColor, warningColor, errorColor,
   blurAppBar, blurSidebar, blurCard, blur,
-  backgroundColorOverlay, backgroundType, particleMode, backgroundImageFit, volume, fontSize,
+  backgroundColorOverlay, backgroundType, particleMode, backgroundImageFit, volume, fontSize, screenshotInterval, screenshotTransition,
   dark,
 } = useThemeWritter(computed(() => props.theme), () => emit('save'), { instancePath: props.instancePath })
 
@@ -754,6 +781,10 @@ const backgroundTypes = computed(() => [
   { value: BackgroundType.PARTICLE, text: t('setting.backgroundTypes.particle') },
   { value: BackgroundType.HALO, text: t('setting.backgroundTypes.halo') },
   { value: BackgroundType.VIDEO, text: t('setting.backgroundTypes.video') },
+  { value: BackgroundType.SCREENSHOT, text: t('setting.backgroundTypes.screenshot') },
+])
+const screenshotTransitions = computed(() => [
+  { value: 'fade', text: t('setting.screenshotTransitions.fade') },
 ])
 function selectImage() {
   showOpenDialog({

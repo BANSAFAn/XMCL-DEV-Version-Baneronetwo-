@@ -1,11 +1,11 @@
 
 ### Tech Stack & Some Background
 
-<kbd>[<img title="Ukraine" alt="Ukraine" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/1280px-Flag_of_Ukraine.svg.png" width="22">](i18n/CONTRIBUTING.ua.md)</kbd>
-<kbd>[<img title="Russia" alt="Russia" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/1280px-Flag_of_Russia.svg.png" width="22">](i18n/CONTRIBUTING.ru.md)</kbd>
-<kbd>[<img title="Polish" alt="Polish" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Flag_of_Poland.svg/250px-Flag_of_Poland.svg.png" width="22">](i18n/CONTRIBUTING.pl)</kbd>
-<kbd>[<img title="Deutsch" alt="Deutsch" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2uEryZuDlXosocJnvXBB0kYWkrtTNNINFaaJQySlzoRRolztbc2Pgrw7u3WLxVqcpC4k&usqp=CAU" width="22">](i18n/CONTRIBUTING.de.md)</kbd>
-<kbd>[<img title="Korean" alt="Korean" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/640px-Flag_of_South_Korea.svg.png" width="22">](i18n/CONTRIBUTING.ko.md)</kbd>
+<kbd>[<img title="Ukraine" alt="Ukraine" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/1280px-Flag_of_Ukraine.svg.png" width="22">](contributing/CONTRIBUTING.ua.md)</kbd>
+<kbd>[<img title="Russia" alt="Russia" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/1280px-Flag_of_Russia.svg.png" width="22">](contributing/CONTRIBUTING.ru.md)</kbd>
+<kbd>[<img title="Polish" alt="Polish" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Flag_of_Poland.svg/250px-Flag_of_Poland.svg.png" width="22">](contributing/CONTRIBUTING.pl)</kbd>
+<kbd>[<img title="Deutsch" alt="Deutsch" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2uEryZuDlXosocJnvXBB0kYWkrtTNNINFaaJQySlzoRRolztbc2Pgrw7u3WLxVqcpC4k&usqp=CAU" width="22">](contributing/CONTRIBUTING.de.md)</kbd>
+<kbd>[<img title="Korean" alt="Korean" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/640px-Flag_of_South_Korea.svg.png" width="22">](contributing/CONTRIBUTING.ko.md)</kbd>
 
 
 Here we have a overview of the toolchain & runtime of this project
@@ -14,7 +14,7 @@ For the whole project, we have
 
 - [Node.js >=18.17.0](https://nodejs.org/). The core libraries base environment.
 - [Electron 27](https://electron.atom.io). The actual runtime of the launcher.
-- [pnpm](https://pnpm.io/). Used for monorepo package management.
+- [bun](https://bun.sh/). Used for monorepo package management.
 - [TypeScript](https://www.typescriptlang.org/). The whole project uses as much TypeScript as possible.
 
 For main process (Electron), we have
@@ -98,21 +98,21 @@ git submodule update
 
 #### Install
 
-Install the project using [pnpm](https://pnpm.io):
+Install the project using [bun](https://bun.sh):
 
 ```
-pnpm install
+bun install
 ```
 
 <details>
   <summary> 解决中国国内安装依赖（如 Electron）太慢的办法 </summary>
 
-  打开你的 git bash，在 `pnpm i` 前面加上 `registry=https://registry.npm.taobao.org electron_mirror="https://npm.taobao.org/mirrors/electron/"`。使用国内阿里提供的 npm 以及 Electron 的镜像。
+  打开你的 git bash，在 `bun install` 前面加上 `registry=https://registry.npm.taobao.org electron_mirror="https://npm.taobao.org/mirrors/electron/"`。使用国内阿里提供的 npm 以及 Electron 的镜像。
 
   最终输入的 command 也就是
 
   ```bash
-  registry=https://registry.npm.taobao.org electron_mirror="https://npm.taobao.org/mirrors/electron/" pnpm i
+  registry=https://registry.npm.taobao.org electron_mirror="https://npm.taobao.org/mirrors/electron/" bun install
   ```
 </details>
 
@@ -132,18 +132,10 @@ Go `Run and Debug` section, use the profile `Electron: Main (launch)` to start t
 
 #### For non VSCode
 
-Open one terminal
+Open terminal
 
 ```bash
-# Start a dev server for UI
-npm run dev:renderer
-```
-
-Open another terminal
-
-``` bash
-# Start watching main process code
-npm run dev:main
+bun run dev
 ```
 
 #### Code "Hot" Change
@@ -222,7 +214,7 @@ The current launcher require to run 2 commands to build
 First, you need to build the frontend code:
 
 ```bash
-pnpm build:renderer
+bun build:renderer
 ```
 
 Unless the code under `xmcl-keystone-ui` changed, you don't need to build this again.
@@ -230,7 +222,8 @@ Unless the code under `xmcl-keystone-ui` changed, you don't need to build this a
 Then, you can build Electron bundling with frontend you just build:
 
 ```bash
-pnpm build:all
+bun build:all
 ```
 
-If you want a debug build, you can use `pnpm build:dir` which only build the directory result, and won't pack them up to different release format.
+If you want a debug build, you can use `bun build:dir` which only build the directory result, and won't pack them up to different release format.
+

@@ -29,30 +29,43 @@ export function useCurseforgeInstaller(
     file: File
     files: File[]
     project: Mod
-  }>) {
-    const _path = path.value
-    const _runtime = runtime.value
-    const _allFiles = allFiles.value
-    if (isNoModLoader(runtime.value)) {
-      // forge, fabric, quilt or neoforge
-      await installDefaultModLoader(_path, _runtime, loaders)
-    }
+  }>, retryCount = 0) {
+    const maxRetries = 5
+    const retryDelay = 1000
+    
+    try {
+      const _path = path.value
+      const _runtime = runtime.value
+      const _allFiles = allFiles.value
+      if (isNoModLoader(runtime.value)) {
+        // forge, fabric, quilt or neoforge
+        await installDefaultModLoader(_path, _runtime, loaders)
+      }
 
-    const toUninstalls = [...installed]
-    const files = deps
-      ?.filter((v) => v.type === FileRelationType.RequiredDependency)
-      .filter(v => _allFiles.every(m => m.curseforge?.fileId !== v.project.id))
-      .map((v) => ({
-        fileId: v.file.id,
-        icon: v.project.logo?.url as string | undefined,
-      }))
+      const toUninstalls = [...installed]
+      const files = deps
+        ?.filter((v) => v.type === FileRelationType.RequiredDependency)
+        .filter(v => _allFiles.every(m => m.curseforge?.fileId !== v.project.id))
+        .map((v) => ({
+          fileId: v.file.id,
+          icon: v.project.logo?.url as string | undefined,
+        }))
 
-    files.push({ fileId, icon })
+      files.push({ fileId, icon })
 
-    await install(files)
+      await install(files)
 
-    if (toUninstalls.length > 0) {
-      uninstallResource(toUninstalls, _path)
+      if (toUninstalls.length > 0) {
+        uninstallResource(toUninstalls, _path)
+      }
+    } catch (error: any) {
+      if (error.name === 'InstanceUpstreamError' && retryCount < maxRetries) {
+        // Wait and retry
+        await new Promise(resolve => setTimeout(resolve, retryDelay))
+        return installWithDependencies(fileId, loaders, icon, installed, deps, retryCount + 1)
+      }
+      // Re-throw other errors or if max retries reached
+      throw error
     }
   }
 

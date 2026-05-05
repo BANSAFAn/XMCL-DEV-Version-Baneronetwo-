@@ -1278,14 +1278,23 @@ setting:
     halo: Halo
     image: Kép
     none: Nincs
-    particle: Részecskék
+    particle: Részecske
     video: Videó
-  backgroundVideo: Háttér videó
+    screenshot: Képernyőképek
+  backgroundVideo: Háttérvideó
   backgroundVideoDescription: válassz vagy törölj videót
   backgroundVideoUrl: Videó URL-je
   backgroundVideoUrlPlaceholder: Adja meg a videó HTTP/HTTPS URL-címét
   backgroundVideoVolume: hangerő
   backgroundVideoVolumeDescription: húzd a hangerő beállításához
+  screenshotInterval: Képernyőkép váltási intervallum
+  screenshotIntervalDescription: Idő másodpercben a képernyőképek váltásához (nincs képernyőkép - fekete háttér)
+  screenshotTransition: Átmenet effektus
+  screenshotTransitionDescription: Animáció a képernyőképek váltásakor
+  screenshotTransitions:
+    fade: Elhalványulás
+    slide: Csúsztatás
+    zoom: Nagyítás
   browseRoot: Böngészés
   checkUpdate: Frissítés keresése
   colorTheme:

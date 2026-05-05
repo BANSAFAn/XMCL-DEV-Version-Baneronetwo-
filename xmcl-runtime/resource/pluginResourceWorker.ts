@@ -31,7 +31,9 @@ import { ImageStorage, ZipManager, kFlights } from '~/infra'
 import { ServiceStateManager } from '~/service'
 import { kSettings } from '~/settings'
 import { kResourceContext, kResourceManager } from './index'
+// eslint-disable-next-line import/default
 import createResourceWorker from './resource.worker?worker'
+// eslint-disable-next-line import/default
 import createDbWorker from './sqlite.worker?worker'
 import { ResourceWorker, kResourceWorker } from './worker'
 
@@ -184,6 +186,7 @@ export const pluginResourceWorker: LauncherAppPlugin = async (app) => {
     parse: resourceWorker.parse,
     hashAndFileType: resourceWorker.hashAndFileType,
     onError: (e) => {
+      if (e instanceof Error && e.name === 'ParseException') return
       logger.error(e)
     },
     throwException: ({ type, code }) => {

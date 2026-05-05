@@ -23,26 +23,39 @@ export function useModrinthInstaller(
     })
   }
 
-  async function installWithDependencies(versionId: string, loaders: string[], icon: string | undefined, installed: ProjectFile[], deps: Array<{ recommendedVersion: ProjectVersion; project: Project; type: string }>) {
-    const _path = path.value
-    const _runtime = runtime.value
-    const _allFiles = allFiles.value
-    const success = await installDefaultModLoader(_path, _runtime, loaders)
-    if (!success) {
-      return false
-    }
-    const files = [...installed]
-    const versions = deps
-      ?.filter((v) => v.type === 'required')
-      .filter(v => _allFiles.every(m => m.modrinth?.projectId !== v.project.id))
-      .map((v) => ({ versionId: v.recommendedVersion.id, icon: v.project.icon_url }))
+  async function installWithDependencies(versionId: string, loaders: string[], icon: string | undefined, installed: ProjectFile[], deps: Array<{ recommendedVersion: ProjectVersion; project: Project; type: string }>, retryCount = 0) {
+    const maxRetries = 5
+    const retryDelay = 1000
+    
+    try {
+      const _path = path.value
+      const _runtime = runtime.value
+      const _allFiles = allFiles.value
+      const success = await installDefaultModLoader(_path, _runtime, loaders)
+      if (!success) {
+        return false
+      }
+      const files = [...installed]
+      const versions = deps
+        ?.filter((v) => v.type === 'required')
+        .filter(v => _allFiles.every(m => m.modrinth?.projectId !== v.project.id))
+        .map((v) => ({ versionId: v.recommendedVersion.id, icon: v.project.icon_url }))
 
-    versions.push({ versionId, icon })
-    await install(versions, _path)
-    if (files.length > 0) {
-      uninstallFiles(files, _path)
+      versions.push({ versionId, icon })
+      await install(versions, _path)
+      if (files.length > 0) {
+        uninstallFiles(files, _path)
+      }
+      return true
+    } catch (error: any) {
+      if (error.name === 'InstanceUpstreamError' && retryCount < maxRetries) {
+        // Wait and retry
+        await new Promise(resolve => setTimeout(resolve, retryDelay))
+        return installWithDependencies(versionId, loaders, icon, installed, deps, retryCount + 1)
+      }
+      // Re-throw other errors or if max retries reached
+      throw error
     }
-    return true
   }
 
   return { installWithDependencies, install }

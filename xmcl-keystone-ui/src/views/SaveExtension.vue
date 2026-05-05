@@ -13,7 +13,7 @@
     </div>
     <v-spacer />
     <MarketTextFieldWithMenu
-     :placeholder="t('save.search')"
+      :placeholder="t('save.search')"
       :keyword.sync="keyword"
       :curseforge-category.sync="curseforgeCategory"
       curseforge-category-filter="worlds"
@@ -23,35 +23,43 @@
       :sort.sync="sort"
       :mode.sync="source"
       :game-version.sync="gameVersion"
+      resource-type="map"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import AvatarItemList from '@/components/AvatarItemList.vue'
-import MarketTextFieldWithMenu from '@/components/MarketTextFieldWithMenu.vue'
-import { kInstance } from '@/composables/instance'
-import { kInstanceSave } from '@/composables/instanceSave'
-import { kCompact } from '@/composables/scrollTop'
-import { kSearchModel } from '@/composables/search'
-import { getExtensionItemsFromRuntime } from '@/util/extensionItems'
-import { injection } from '@/util/inject'
+import AvatarItemList from "@/components/AvatarItemList.vue";
+import MarketTextFieldWithMenu from "@/components/MarketTextFieldWithMenu.vue";
+import { kInstance } from "@/composables/instance";
+import { kInstanceSave } from "@/composables/instanceSave";
+import { kCompact } from "@/composables/scrollTop";
+import { kSearchModel } from "@/composables/search";
+import { getExtensionItemsFromRuntime } from "@/util/extensionItems";
+import { injection } from "@/util/inject";
 
-const { keyword, source, gameVersion, curseforgeCategory, isCurseforgeActive, sort } = injection(kSearchModel)
+const {
+  keyword,
+  source,
+  gameVersion,
+  curseforgeCategory,
+  isCurseforgeActive,
+  sort,
+} = injection(kSearchModel);
 
-const { runtime: version } = injection(kInstance)
-const { isInstanceLinked } = injection(kInstanceSave)
-const { t } = useI18n()
+const { runtime: version } = injection(kInstance);
+const { isInstanceLinked } = injection(kInstanceSave);
+const { t } = useI18n();
 
 const items = computed(() => {
   return [
     ...getExtensionItemsFromRuntime({ minecraft: version.value.minecraft }),
     {
-      icon: isInstanceLinked.value ? 'account_tree' : 'looks_one',
-      title: t('save.name', 2),
-      text: isInstanceLinked.value ? t('save.shared') : t('save.independent'),
+      icon: isInstanceLinked.value ? "account_tree" : "looks_one",
+      title: t("save.name", 2),
+      text: isInstanceLinked.value ? t("save.shared") : t("save.independent"),
     },
-  ]
-})
-const compact = injection(kCompact)
+  ];
+});
+const compact = injection(kCompact);
 </script>

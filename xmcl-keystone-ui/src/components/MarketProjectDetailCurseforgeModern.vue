@@ -389,7 +389,9 @@ const dependencies = computed(() =>
   !curseforgeFile.value
     ? []
     : deps.value?.map((resolvedDep) => {
-        const { task, progress, total } = useCurseforgeTask(computed(() => resolvedDep.file.id));
+        const { task, progress, total } = useCurseforgeTask(
+          computed(() => resolvedDep.file.id)
+        );
         const file = computed(() => {
           for (const file of props.allFiles) {
             if (file.curseforge?.fileId === resolvedDep.file.id) {
@@ -444,6 +446,11 @@ const onInstall = async (mod: ProjectVersion) => {
       deps.value ?? []
     );
     notify({ title: t("shared.installed"), level: "success" });
+  } catch (error: any) {
+    // Silently ignore InstanceUpstreamError - it's handled by retry mechanism
+    if (error.name !== "InstanceUpstreamError") {
+      throw error;
+    }
   } finally {
     installing.value = false;
   }

@@ -14,40 +14,51 @@
     <template #actions>
       <v-subheader class="flex gap-1 items-center">
         <div class="mods-count">
-          <span class="mods-count-main">{{ t('mod.mods', { count: items.length }) }}</span>
-          <span v-if="!isLocalView && totalAvailable > 0" class="text-gray-400"> / {{ t('items.total', { total: totalAvailable }) }}</span>
+          <span class="mods-count-main">{{
+            t("mod.mods", { count: items.length })
+          }}</span>
+          <span v-if="!isLocalView && totalAvailable > 0" class="text-gray-400">
+            / {{ t("items.total", { total: totalAvailable }) }}</span
+          >
         </div>
         <v-spacer />
 
         <v-btn
           id="default-source-button"
-          v-shared-tooltip="() => t('mod.switchDefaultSource') + ' ' + defaultSource"
+          v-shared-tooltip="
+            (_) => t('mod.switchDefaultSource') + ' ' + defaultSource
+          "
           icon
-          @click="defaultSource = defaultSource === 'curseforge' ? 'modrinth' : 'curseforge'"
+          @click="
+            defaultSource =
+              defaultSource === 'curseforge' ? 'modrinth' : 'curseforge'
+          "
         >
-          <v-icon> {{ defaultSource === 'modrinth' ? '$vuetify.icons.modrinth' : '$vuetify.icons.curseforge' }} </v-icon>
+          <v-icon>
+            {{
+              defaultSource === "modrinth"
+                ? "$vuetify.icons.modrinth"
+                : "$vuetify.icons.curseforge"
+            }}
+          </v-icon>
         </v-btn>
         <v-btn
-          v-shared-tooltip="() => t('mod.groupInstalled')"
-          :class="{'v-list-item--active': groupInstalled}"
+          v-shared-tooltip="(_) => t('mod.groupInstalled')"
+          :class="{ 'v-list-item--active': groupInstalled }"
           icon
           @click="groupInstalled = !groupInstalled"
         >
           <v-icon> layers </v-icon>
         </v-btn>
         <v-btn
-          v-shared-tooltip="() => t('mod.denseView')"
+          v-shared-tooltip="(_) => t('mod.denseView')"
           icon
           @click="denseView = !denseView"
         >
-          <v-icon> {{ denseView ? 'reorder' : 'list' }} </v-icon>
+          <v-icon> {{ denseView ? "reorder" : "list" }} </v-icon>
         </v-btn>
       </v-subheader>
-      <v-alert
-        v-if="upgradeError"
-        dense
-        type="error"
-      >
+      <v-alert v-if="upgradeError" dense type="error">
         {{ updateErrorMessage }}
       </v-alert>
       <v-alert
@@ -62,7 +73,7 @@
     </template>
     <template #item="{ item, hasUpdate, checked, selectionMode, selected, on }">
       <ModItem
-        v-if="(typeof item === 'object' && 'id' in item)"
+        v-if="typeof item === 'object' && 'id' in item"
         :item="item"
         :key="`item-${item.id}`"
         :indent="!!isInGroup(item.installed?.[0]?.fileName)"
@@ -75,11 +86,11 @@
         :install="onInstallProject"
         :dense="denseView"
         :get-context-menu-items="getContextMenuItems"
-        @click="on.click"
+        @click="onItemClick($event, item, on.click)"
         @click-dependency="onClickDependency"
       />
       <ModGroupEntryItem
-        v-else-if="(typeof item === 'object')"
+        v-else-if="typeof item === 'object'"
         :key="`folder-${item.name}-${item.projects.length}`"
         :items="item.projects"
         :height="itemHeight"
@@ -87,7 +98,9 @@
         :expanded="!groupCollapsedState[item.name]"
         :dense="denseView"
         @ungroup="ungroup(item.name)"
-        @expand="groupCollapsedState = { ...groupCollapsedState, [item.name]: $event }"
+        @expand="
+          groupCollapsedState = { ...groupCollapsedState, [item.name]: $event }
+        "
         @setting="renameGroup(item.name, $event.name)"
         @enable-all="enableAll(item)"
         @disable-all="disableAll(item)"
@@ -112,15 +125,39 @@
       </v-subheader>
     </template>
     <template #placeholder>
-      <Hint key="info" v-if="isLocalView && !keyword.trim() && !hasActiveFilters" :text="t('modSearch.noModsInstalled')" icon="info" />
-      <Hint key="search" v-else-if="isLocalView && keyword.trim()" :text="t('modSearch.noLocalModsFound')" icon="search">
+      <Hint
+        key="info"
+        v-if="isLocalView && !keyword.trim() && !hasActiveFilters"
+        :text="t('modSearch.noModsInstalled')"
+        icon="info"
+      />
+      <Hint
+        key="search"
+        v-else-if="isLocalView && keyword.trim()"
+        :text="t('modSearch.noLocalModsFound')"
+        icon="search"
+      >
         <div>
-          <v-btn color="primary" @click="switchToMarketWithKeyword">{{ t('modSearch.searchInMarket', { keyword: keyword.trim() || 'mods' }) }}</v-btn>
+          <v-btn color="primary" @click="switchToMarketWithKeyword">{{
+            t("modSearch.searchInMarket", { keyword: keyword.trim() || "mods" })
+          }}</v-btn>
         </div>
       </Hint>
-      <Hint key="no-mods" v-else :text="t('modSearch.noModsFound')" icon="search" />
+      <Hint
+        key="no-mods"
+        v-else
+        :text="t('modSearch.noModsFound')"
+        icon="search"
+      />
     </template>
-    <template #content="{ selectedItem, selectedModrinthId, selectedCurseforgeId, updating }">
+    <template
+      #content="{
+        selectedItem,
+        selectedModrinthId,
+        selectedCurseforgeId,
+        updating,
+      }"
+    >
       <Hint
         v-if="dragover"
         key="dragover"
@@ -130,11 +167,19 @@
         class="h-full"
       />
       <MarketProjectDetailModrinth
-        v-else-if="shouldShowModrinth(selectedItem, selectedModrinthId, selectedCurseforgeId)"
+        v-else-if="
+          shouldShowModrinth(
+            selectedItem,
+            selectedModrinthId,
+            selectedCurseforgeId
+          )
+        "
         :key="selectedModrinthId"
         :modrinth="selectedItem?.modrinth"
         :project-id="selectedModrinthId"
-        :installed="selectedItem?.installed || getInstalledModrinth(selectedModrinthId)"
+        :installed="
+          selectedItem?.installed || getInstalledModrinth(selectedModrinthId)
+        "
         :loader="modLoader"
         :categories="modrinthCategories"
         :all-files="mods"
@@ -147,11 +192,20 @@
         @category="toggleCategory"
       />
       <MarketProjectDetailCurseforge
-        v-else-if="shouldShowCurseforge(selectedItem, selectedModrinthId, selectedCurseforgeId)"
+        v-else-if="
+          shouldShowCurseforge(
+            selectedItem,
+            selectedModrinthId,
+            selectedCurseforgeId
+          )
+        "
         :key="selectedCurseforgeId"
         :curseforge="selectedItem?.curseforge"
         :curseforge-id="Number(selectedCurseforgeId)"
-        :installed="selectedItem?.installed || getInstalledCurseforge(selectedCurseforgeId)"
+        :installed="
+          selectedItem?.installed ||
+          getInstalledCurseforge(selectedCurseforgeId)
+        "
         :game-version="gameVersion"
         :loader="modLoader"
         :category="curseforgeCategory"
@@ -186,10 +240,7 @@
         @curseforge="curseforgeCategory = $event.id"
       />
     </template>
-    <v-dialog
-      v-model="wizardModel"
-      width="600"
-    >
+    <v-dialog v-model="wizardModel" width="600">
       <v-card>
         <v-card-title>
           <!-- {{ t('mod.noModLoaderHint') }} -->
@@ -205,25 +256,19 @@
               @click="i.onSelect"
             >
               <v-list-item-avatar>
-                <img :src="i.icon">
+                <img :src="i.icon" />
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
                   {{ i.title }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  <a
-                    :href="i.url"
-                    @click.stop
-                  >{{ i.url }}</a>
+                  <a :href="i.url" @click.stop>{{ i.url }}</a>
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          <v-alert
-            v-if="wizardError"
-            type="error"
-          >
+          <v-alert v-if="wizardError" type="error">
             <span v-if="'loader' in wizardError">
               <!-- {{ t('mod.modloaderSelectNotSupported', { loader: wizardError.loader, minecraft: wizardError.minecraft }) }} -->
               {{ localizedTexts.mod.modloaderSelectNotSupported }}
@@ -241,89 +286,107 @@
   </MarketBase>
 </template>
 
-<script lang=ts setup>
-import Hint from '@/components/Hint.vue'
-import MarketBase from '@/components/MarketBase.vue'
-import MarketProjectDetailCurseforge from '@/components/MarketProjectDetailCurseforge.vue'
-import MarketProjectDetailModrinth from '@/components/MarketProjectDetailModrinth.vue'
-import MarketRecommendation from '@/components/MarketRecommendation.vue'
-import { useService } from '@/composables'
-import { ContextMenuItem } from '@/composables/contextMenu'
-import { kCurseforgeInstaller, useCurseforgeInstaller } from '@/composables/curseforgeInstaller'
-import { useDialog } from '@/composables/dialog'
-import { useGlobalDrop } from '@/composables/dropHandler'
-import { kInstance } from '@/composables/instance'
-import { kInstanceDefaultSource } from '@/composables/instanceDefaultSource'
-import { kInstanceModsContext } from '@/composables/instanceMods'
-import { ProjectGroup, useModGroups } from '@/composables/modGroup'
-import { kModsSearch } from '@/composables/modSearch'
-import { kModUpgrade } from '@/composables/modUpgrade'
-import { useModWizard } from '@/composables/modWizard'
-import { kModrinthInstaller, useModrinthInstaller } from '@/composables/modrinthInstaller'
-import { usePresence } from '@/composables/presence'
-import { useProjectInstall } from '@/composables/projectInstall'
-import { kCompact } from '@/composables/scrollTop'
-import { useToggleCategories } from '@/composables/toggleCategories'
-import { useTutorial } from '@/composables/tutorial'
-import { vSharedTooltip } from '@/directives/sharedTooltip'
-import { injection } from '@/util/inject'
-import { ModFile } from '@/util/mod'
-import { ProjectEntry, ProjectFile } from '@/util/search'
-import { InstanceModsServiceKey } from '@xmcl/runtime-api'
-import debounce from 'lodash.debounce'
-import ModDetailOptifine from './ModDetailOptifine.vue'
-import ModDetailResource from './ModDetailResource.vue'
-import ModDuplicatedDialog from './ModDuplicatedDialog.vue'
-import ModGroupEntryItem from './ModGroupEntryItem.vue'
-import ModGroupSelectDialog from './ModGroupSelectDialog.vue'
-import ModIncompatibileDialog from './ModIncompatibileDialog.vue'
-import ModItem from './ModItem.vue'
-import { kModDependenciesCheck } from '@/composables/modDependenciesCheck'
-import { kModLibCleaner } from '@/composables/modLibCleaner'
-import { basename } from '@/util/basename'
-import { kSearchModel } from '@/composables/search'
+<script lang="ts" setup>
+import Hint from "@/components/Hint.vue";
+import MarketBase from "@/components/MarketBase.vue";
+import MarketProjectDetailCurseforge from "@/components/MarketProjectDetailCurseforge.vue";
+import MarketProjectDetailModrinth from "@/components/MarketProjectDetailModrinth.vue";
+import MarketRecommendation from "@/components/MarketRecommendation.vue";
+import { useService } from "@/composables";
+import { ContextMenuItem } from "@/composables/contextMenu";
+import {
+  kCurseforgeInstaller,
+  useCurseforgeInstaller,
+} from "@/composables/curseforgeInstaller";
+import { useDialog } from "@/composables/dialog";
+import { useGlobalDrop } from "@/composables/dropHandler";
+import { kInstance } from "@/composables/instance";
+import { kInstanceDefaultSource } from "@/composables/instanceDefaultSource";
+import { kInstanceModsContext } from "@/composables/instanceMods";
+import { ProjectGroup, useModGroups } from "@/composables/modGroup";
+import { kModsSearch } from "@/composables/modSearch";
+import { kModUpgrade } from "@/composables/modUpgrade";
+import { useModWizard } from "@/composables/modWizard";
+import {
+  kModrinthInstaller,
+  useModrinthInstaller,
+} from "@/composables/modrinthInstaller";
+import { usePresence } from "@/composables/presence";
+import { useProjectInstall } from "@/composables/projectInstall";
+import { kCompact } from "@/composables/scrollTop";
+import { useToggleCategories } from "@/composables/toggleCategories";
+import { useTutorial } from "@/composables/tutorial";
+import { vSharedTooltip } from "@/directives/sharedTooltip";
+import { injection } from "@/util/inject";
+import { ModFile } from "@/util/mod";
+import { ProjectEntry, ProjectFile } from "@/util/search";
+import { InstanceModsServiceKey } from "@xmcl/runtime-api";
+import debounce from "lodash.debounce";
+import ModDetailOptifine from "./ModDetailOptifine.vue";
+import ModDetailResource from "./ModDetailResource.vue";
+import ModDuplicatedDialog from "./ModDuplicatedDialog.vue";
+import ModGroupEntryItem from "./ModGroupEntryItem.vue";
+import ModGroupSelectDialog from "./ModGroupSelectDialog.vue";
+import ModIncompatibileDialog from "./ModIncompatibileDialog.vue";
+import ModItem from "./ModItem.vue";
+import { kModDependenciesCheck } from "@/composables/modDependenciesCheck";
+import { kModLibCleaner } from "@/composables/modLibCleaner";
+import { basename } from "@/util/basename";
+import { kSearchModel } from "@/composables/search";
 
-const localizedTexts = computed(() => markRaw({
-  mod: {
-    mods: t('mod.mods'),
-    group: t('mod.group'),
-    delete: {
-      name: t('delete.name'),
+const localizedTexts = computed(() =>
+  markRaw({
+    mod: {
+      mods: t("mod.mods"),
+      group: t("mod.group"),
+      delete: {
+        name: t("delete.name"),
+      },
+      enable: t("shared.enable"),
+      disabe: t("shared.disable"),
+      denseView: t("mod.denseView"),
+      groupInstalled: t("mod.groupInstalled"),
+      switchDefaultSource: t("mod.switchDefaultSource"),
+      checkDependencies: t("modInstall.checkDependencies"),
+      checkedDependencies: t("modInstall.checkedDependencies"),
+      installDependencies: t("modInstall.installDependencies"),
+      scanUnusedLibraries: t("modInstall.scanUnusedLibraries"),
+      removeUnusedLibraries: t("modInstall.removeUnusedLibraries"),
+      checkUpgrade: t("modInstall.checkUpgrade"),
+      checkedUpgrade: t("modInstall.checkedUpgrade"),
+      upgrade: t("modInstall.upgrade"),
+      skipVersion: t("modInstall.skipVersion"),
+      noModLoaderHint: t("mod.noModLoaderHint"),
+      modloaderSelectHint: t("mod.modloaderSelectHint"),
+      modloaderSelectNotSupported: t("mod.modloaderSelectNotSupported"),
+      duplicatedDetected: t("mod.duplicatedDetected", {
+        count: Object.keys(conflicted.value).length,
+      }),
+      incompatibleHint: t("mod.incompatibleHint"),
+      search: t("modInstall.search"),
+      unsupported: t("modrinth.environments.unsupported"),
+      dropHint: t("mod.dropHint"),
     },
-    enable: t('shared.enable'),
-    disabe: t('shared.disable'),
-    denseView: t('mod.denseView'),
-    groupInstalled: t('mod.groupInstalled'),
-    switchDefaultSource: t('mod.switchDefaultSource'),
-    checkDependencies: t('modInstall.checkDependencies'),
-    checkedDependencies: t('modInstall.checkedDependencies'),
-    installDependencies: t('modInstall.installDependencies'),
-    scanUnusedLibraries: t('modInstall.scanUnusedLibraries'),
-    removeUnusedLibraries: t('modInstall.removeUnusedLibraries'),
-    checkUpgrade: t('modInstall.checkUpgrade'),
-    checkedUpgrade: t('modInstall.checkedUpgrade'),
-    upgrade: t('modInstall.upgrade'),
-    skipVersion: t('modInstall.skipVersion'),
-    noModLoaderHint: t('mod.noModLoaderHint'),
-    modloaderSelectHint: t('mod.modloaderSelectHint'),
-    modloaderSelectNotSupported: t('mod.modloaderSelectNotSupported'),
-    duplicatedDetected: t('mod.duplicatedDetected', { count: Object.keys(conflicted.value).length }),
-    incompatibleHint: t('mod.incompatibleHint'),
-    search: t('modInstall.search'),
-    unsupported: t('modrinth.environments.unsupported'),
-    dropHint: t('mod.dropHint'),
-  },
-  modUpgradePolicy: {
-    modrinth: t('modUpgradePolicy.modrinth'),
-    curseforge: t('modUpgradePolicy.curseforge'),
-    modrinthOnly: t('modUpgradePolicy.modrinthOnly'),
-    curseforgeOnly: t('modUpgradePolicy.curseforgeOnly'),
-  },
-}))
+    modUpgradePolicy: {
+      modrinth: t("modUpgradePolicy.modrinth"),
+      curseforge: t("modUpgradePolicy.curseforge"),
+      modrinthOnly: t("modUpgradePolicy.modrinthOnly"),
+      curseforgeOnly: t("modUpgradePolicy.curseforgeOnly"),
+    },
+  })
+);
 
-const { runtime, path } = injection(kInstance)
+const { runtime, path } = injection(kInstance);
 
-const { keyword, modrinthCategories, curseforgeCategory, modLoader, gameVersion, currentView, source } = injection(kSearchModel)
+const {
+  keyword,
+  modrinthCategories,
+  curseforgeCategory,
+  modLoader,
+  gameVersion,
+  currentView,
+  source,
+} = injection(kSearchModel);
 
 // Ensure mod search effect is applied
 const {
@@ -337,374 +400,485 @@ const {
   localFilter,
   loadMore,
   totalAvailable,
-} = injection(kModsSearch)
+} = injection(kModsSearch);
 
-effect()
+effect();
 
-const { effect: onDependenciesEffect, installation } = injection(kModDependenciesCheck)
-onDependenciesEffect()
+const { effect: onDependenciesEffect, installation } = injection(
+  kModDependenciesCheck
+);
+onDependenciesEffect();
 
-const { unusedMods } = injection(kModLibCleaner)
+const { unusedMods } = injection(kModLibCleaner);
 
 const isLocalView = computed(() => {
-  return currentView.value === 'local'
-})
+  return currentView.value === "local";
+});
 
 const hasActiveFilters = computed(() => {
-  return !!localFilter.value
-})
+  return !!localFilter.value;
+});
 
-const { localGroupedItems, groupCollapsedState, renameGroup, ungroup, group, addToGroup, isInGroup, getGroupColor, getContextMenuItemsForGroup, groups, groupsRaw, groupModCounts, updateGroupFilenames } = useModGroups(isLocalView, path, items, sortBy)
+const {
+  localGroupedItems,
+  groupCollapsedState,
+  renameGroup,
+  ungroup,
+  group,
+  addToGroup,
+  isInGroup,
+  getGroupColor,
+  getContextMenuItemsForGroup,
+  groups,
+  groupsRaw,
+  groupModCounts,
+  updateGroupFilenames,
+} = useModGroups(isLocalView, path, items, sortBy);
 
 function enableAll(group: ProjectGroup) {
-  const files = group.projects.filter(p => p.installed?.[0]).map(p => p.installed?.[0]?.path).filter(Boolean)
-  enable({ path: path.value, files })
+  const files = group.projects
+    .filter((p) => p.installed?.[0])
+    .map((p) => p.installed?.[0]?.path)
+    .filter(Boolean);
+  enable({ path: path.value, files });
 }
 
 function disableAll(group: ProjectGroup) {
-  const files = group.projects.filter(p => p.installed?.[0]).map(p => p.installed?.[0]?.path).filter(Boolean)
-  disable({ path: path.value, files })
+  const files = group.projects
+    .filter((p) => p.installed?.[0])
+    .map((p) => p.installed?.[0]?.path)
+    .filter(Boolean);
+  disable({ path: path.value, files });
 }
 
 function isIncompatible(p: ProjectEntry<ModFile>) {
-  const modId = p.installed?.[0]?.modId
+  const modId = p.installed?.[0]?.modId;
   if (!modId) {
-    return false
+    return false;
   }
-  const items = compatibility.value[modId]
+  const items = compatibility.value[modId];
   if (!items) {
-    return false
+    return false;
   }
   for (const i of items) {
     if (i.compatible !== true) {
-      return true
+      return true;
     }
   }
 
-  return false
+  return false;
 }
 
 // Mapping of modloader filter values to modloader names
 const MODLOADER_FILTER_MAP: Record<string, string> = {
-  forgeOnly: 'forge',
-  neoforgeOnly: 'neoforge',
-  fabricOnly: 'fabric',
-  quiltOnly: 'quilt',
-}
-const MODLOADER_FILTERS = Object.keys(MODLOADER_FILTER_MAP)
+  forgeOnly: "forge",
+  neoforgeOnly: "neoforge",
+  fabricOnly: "fabric",
+  quiltOnly: "quilt",
+};
+const MODLOADER_FILTERS = Object.keys(MODLOADER_FILTER_MAP);
 
 // Helper function to check if a mod matches the modloader filter
-function matchesModLoaderFilter(item: ProjectEntry<ModFile>, filterValue: string): boolean {
-  const mod = item.installed?.[0]
-  if (!mod) return true // If no installed mod, don't filter it out
-  
-  const modLoaders = mod.modLoaders || []
-  const targetLoader = MODLOADER_FILTER_MAP[filterValue]
-  return targetLoader ? modLoaders.includes(targetLoader) : true
+function matchesModLoaderFilter(
+  item: ProjectEntry<ModFile>,
+  filterValue: string
+): boolean {
+  const mod = item.installed?.[0];
+  if (!mod) return true; // If no installed mod, don't filter it out
+
+  const modLoaders = mod.modLoaders || [];
+  const targetLoader = MODLOADER_FILTER_MAP[filterValue];
+  return targetLoader ? modLoaders.includes(targetLoader) : true;
 }
 
 const groupedItems = computed(() => {
-  const result = items.value
+  const result = items.value;
 
-  const installationSet = new Set(installation.value.map(([_, file]) => basename(file.path)))
-  const unusedSet = new Set(unusedMods.value.map((file) => basename(file.path, '/')))
+  const installationSet = new Set(
+    installation.value.map(([_, file]) => basename(file.path))
+  );
+  const unusedSet = new Set(
+    unusedMods.value.map((file) => basename(file.path, "/"))
+  );
 
   if (isLocalView.value) {
-    const sortableEntity = localGroupedItems.value
-    const localResult: Array<ProjectEntry<ModFile> | string | ProjectGroup> = []
+    const sortableEntity = localGroupedItems.value;
+    const localResult: Array<ProjectEntry<ModFile> | string | ProjectGroup> =
+      [];
     for (const i of sortableEntity) {
-      if ('projects' in i) {
-        localResult.push(markRaw(i))
+      if ("projects" in i) {
+        localResult.push(markRaw(i));
         if (!groupCollapsedState.value[i.name]) {
           for (const p of i.projects) {
-            if (localFilter.value === 'disabledOnly' && !p.disabled) {
-              continue
+            if (localFilter.value === "disabledOnly" && !p.disabled) {
+              continue;
             }
-            if (localFilter.value === 'incompatibleOnly' && !isIncompatible(p)) {
-              continue
+            if (
+              localFilter.value === "incompatibleOnly" &&
+              !isIncompatible(p)
+            ) {
+              continue;
             }
-            if (localFilter.value === 'hasUpdateOnly' && !plans.value[p.id]) {
-              continue
+            if (localFilter.value === "hasUpdateOnly" && !plans.value[p.id]) {
+              continue;
             }
-            if (p.installed[0] && localFilter.value === 'dependenciesInstallOnly' && !installationSet.has(basename(p.installed[0].path))) {
-              continue
+            if (
+              p.installed[0] &&
+              localFilter.value === "dependenciesInstallOnly" &&
+              !installationSet.has(basename(p.installed[0].path))
+            ) {
+              continue;
             }
-            if (p.installed[0] && localFilter.value === 'unusedOnly' && !unusedSet.has(basename(p.installed[0].path))) {
-              continue
+            if (
+              p.installed[0] &&
+              localFilter.value === "unusedOnly" &&
+              !unusedSet.has(basename(p.installed[0].path))
+            ) {
+              continue;
             }
             // Modloader filters
-            if (MODLOADER_FILTERS.includes(localFilter.value) && !matchesModLoaderFilter(p, localFilter.value)) {
-              continue
+            if (
+              MODLOADER_FILTERS.includes(localFilter.value) &&
+              !matchesModLoaderFilter(p, localFilter.value)
+            ) {
+              continue;
             }
-            localResult.push(p)
+            localResult.push(p);
           }
         }
       } else {
-        if (localFilter.value === 'disabledOnly' && !i.disabled) {
-          continue
+        if (localFilter.value === "disabledOnly" && !i.disabled) {
+          continue;
         }
-        if (localFilter.value === 'incompatibleOnly' && !isIncompatible(i)) {
-          continue
+        if (localFilter.value === "incompatibleOnly" && !isIncompatible(i)) {
+          continue;
         }
-        if (localFilter.value === 'hasUpdateOnly' && !plans.value[i.id]) {
-          continue
+        if (localFilter.value === "hasUpdateOnly" && !plans.value[i.id]) {
+          continue;
         }
-        if (localFilter.value === 'dependenciesInstallOnly' && i.installed[0] && !installationSet.has(basename(i.installed[0].path))) {
-          continue
+        if (
+          localFilter.value === "dependenciesInstallOnly" &&
+          i.installed[0] &&
+          !installationSet.has(basename(i.installed[0].path))
+        ) {
+          continue;
         }
-        if (localFilter.value === 'unusedOnly' && i.installed[0] && !unusedSet.has(basename(i.installed[0].path))) {
-          continue
+        if (
+          localFilter.value === "unusedOnly" &&
+          i.installed[0] &&
+          !unusedSet.has(basename(i.installed[0].path))
+        ) {
+          continue;
         }
         // Modloader filters
-        if (MODLOADER_FILTERS.includes(localFilter.value) && !matchesModLoaderFilter(i, localFilter.value)) {
-          continue
+        if (
+          MODLOADER_FILTERS.includes(localFilter.value) &&
+          !matchesModLoaderFilter(i, localFilter.value)
+        ) {
+          continue;
         }
-        localResult.push(i)
+        localResult.push(i);
       }
     }
 
-    return localResult
+    return localResult;
   }
 
-  const transformed: Array<ProjectEntry<ModFile> | string> = []
-  let rest = result
+  const transformed: Array<ProjectEntry<ModFile> | string> = [];
+  let rest = result;
 
   if (groupInstalled.value) {
-    const [installed, uninstalled] = rest.reduce((acc, i) => {
-      if (i.installed.length > 0) {
-        acc[0].push(i)
-      } else {
-        acc[1].push(i)
-      }
-      return acc
-    }, [[], []] as [ProjectEntry<ModFile>[], ProjectEntry<ModFile>[]])
-    transformed.push(...installed)
-    rest = uninstalled
+    const [installed, uninstalled] = rest.reduce(
+      (acc, i) => {
+        if (i.installed.length > 0) {
+          acc[0].push(i);
+        } else {
+          acc[1].push(i);
+        }
+        return acc;
+      },
+      [[], []] as [ProjectEntry<ModFile>[], ProjectEntry<ModFile>[]]
+    );
+    transformed.push(...installed);
+    rest = uninstalled;
   }
 
-  const [supported, unsupported] = rest.reduce((acc, i) => {
-    if (!i.unsupported) {
-      acc[0].push(i)
-    } else {
-      acc[1].push(i)
-    }
-    return acc
-  }, [[], []] as [ProjectEntry<ModFile>[], ProjectEntry<ModFile>[]])
+  const [supported, unsupported] = rest.reduce(
+    (acc, i) => {
+      if (!i.unsupported) {
+        acc[0].push(i);
+      } else {
+        acc[1].push(i);
+      }
+      return acc;
+    },
+    [[], []] as [ProjectEntry<ModFile>[], ProjectEntry<ModFile>[]]
+  );
 
   return [
     ...transformed,
-    ...(supported.length > 0 ? ['search', ...supported] : []),
-    ...(unsupported.length > 0 ? ['unsupported' as string, ...unsupported] : []),
-  ]
-})
+    ...(supported.length > 0 ? ["search", ...supported] : []),
+    ...(unsupported.length > 0
+      ? ["unsupported" as string, ...unsupported]
+      : []),
+  ];
+});
 
-const isModProject = (v: ProjectEntry<ProjectFile> | undefined): v is (ProjectEntry<ModFile> & { files: ModFile[] }) =>
-  !!v?.files
-const isOptifineProject = (v: ProjectEntry<ProjectFile> | undefined): v is ProjectEntry<ModFile> =>
-  v?.id === 'OptiFine'
+const isModProject = (
+  v: ProjectEntry<ProjectFile> | undefined
+): v is ProjectEntry<ModFile> & { files: ModFile[] } => !!v?.files;
+const isOptifineProject = (
+  v: ProjectEntry<ProjectFile> | undefined
+): v is ProjectEntry<ModFile> => v?.id === "OptiFine";
 
 // Upgrade
-const { plans, error: upgradeError, upgradeFilenameMappings, upgrading } = injection(kModUpgrade)
+const {
+  plans,
+  error: upgradeError,
+  upgradeFilenameMappings,
+  upgrading,
+} = injection(kModUpgrade);
 
 // When upgrade completes successfully, update group membership if filenames changed
 watch(upgrading, (isUpgrading, wasUpgrading) => {
   if (wasUpgrading && !isUpgrading) {
     // Upgrade just completed
-    const mappings = upgradeFilenameMappings.value
+    const mappings = upgradeFilenameMappings.value;
     if (Object.keys(mappings).length > 0) {
-      updateGroupFilenames(mappings)
+      updateGroupFilenames(mappings);
       // Clear the mappings after use
-      upgradeFilenameMappings.value = {}
+      upgradeFilenameMappings.value = {};
     }
   }
-})
+});
 
 const updateErrorMessage = computed(() => {
-  if (upgradeError) return (upgradeError.value as any).message
-  return ''
-})
+  if (upgradeError) return (upgradeError.value as any).message;
+  return "";
+});
 
-const defaultSource = injection(kInstanceDefaultSource)
-const shouldShowModrinth = (selectedItem: undefined | ProjectEntry, selectedModrinthId: string, selectedCurseforgeId: number | undefined) => {
+const defaultSource = injection(kInstanceDefaultSource);
+const shouldShowModrinth = (
+  selectedItem: undefined | ProjectEntry,
+  selectedModrinthId: string,
+  selectedCurseforgeId: number | undefined
+) => {
   if (selectedItem?.modrinth) {
-    return true
+    return true;
   }
   if (selectedItem?.curseforge) {
-    return false
+    return false;
   }
-  const hasModrinth = selectedItem?.modrinth || selectedModrinthId
-  if (!hasModrinth) return false
-  const hasCurseforge = selectedItem?.curseforge || selectedCurseforgeId
-  if (defaultSource.value === 'curseforge' && hasCurseforge) {
-    return false
+  const hasModrinth = selectedItem?.modrinth || selectedModrinthId;
+  if (!hasModrinth) return false;
+  const hasCurseforge = selectedItem?.curseforge || selectedCurseforgeId;
+  if (defaultSource.value === "curseforge" && hasCurseforge) {
+    return false;
   }
-  return true
-}
-const shouldShowCurseforge = (selectedItem: undefined | ProjectEntry, selectedModrinthId: string, selectedCurseforgeId: number | undefined) => {
+  return true;
+};
+const shouldShowCurseforge = (
+  selectedItem: undefined | ProjectEntry,
+  selectedModrinthId: string,
+  selectedCurseforgeId: number | undefined
+) => {
   if (selectedItem?.curseforge) {
-    return true
+    return true;
   }
-  const hasCurseforge = selectedItem?.curseforge || selectedCurseforgeId
-  if (!hasCurseforge) return false
-  const hasModrinth = selectedItem?.modrinth || selectedModrinthId
-  if (defaultSource.value === 'modrinth' && hasModrinth) {
-    return false
+  const hasCurseforge = selectedItem?.curseforge || selectedCurseforgeId;
+  if (!hasCurseforge) return false;
+  const hasModrinth = selectedItem?.modrinth || selectedModrinthId;
+  if (defaultSource.value === "modrinth" && hasModrinth) {
+    return false;
   }
-  return true
-}
+  return true;
+};
 
-const { mods, conflicted, revalidate, incompatible, compatibility } = injection(kInstanceModsContext)
+const { mods, conflicted, revalidate, incompatible, compatibility } =
+  injection(kInstanceModsContext);
 
-const { show: showDuplicatedDialog } = useDialog('mod-duplicated')
-const { show: showIncompatibleDialog } = useDialog('mod-incompatible')
+const { show: showDuplicatedDialog } = useDialog("mod-duplicated");
+const { show: showIncompatibleDialog } = useDialog("mod-incompatible");
 
 const getInstalledModrinth = (projectId: string) => {
-  return mods.value.filter((m) => m.modrinth?.projectId === projectId)
-}
+  return mods.value.filter((m) => m.modrinth?.projectId === projectId);
+};
 const getInstalledCurseforge = (modId: number | undefined) => {
-  return mods.value.filter((m) => m.curseforge?.projectId === modId)
-}
+  return mods.value.filter((m) => m.curseforge?.projectId === modId);
+};
 
-const route = useRoute()
-watch(computed(() => route.fullPath), () => {
-  keyword.value = route.query.keyword as string ?? ''
-}, { immediate: true })
+const route = useRoute();
+watch(
+  computed(() => route.fullPath),
+  () => {
+    keyword.value = (route.query.keyword as string) ?? "";
+  },
+  { immediate: true }
+);
 
-const onLoad = loadMore
+const onLoad = loadMore;
 
 const switchToMarketWithKeyword = () => {
-  source.value = 'remote'
-}
+  source.value = "remote";
+};
+
+// Handle mod item click: always show detail panel
+const onItemClick = (
+  event: MouseEvent,
+  item: ProjectEntry,
+  showDetail: (event: MouseEvent) => void
+) => {
+  // Always show detail panel, let user decide whether to install
+  showDetail(event);
+};
 
 const onClickDependency = (modId: string) => {
   // Switch to remote (market) view and set the keyword to search for the dependency
-  source.value = 'remote'
-  keyword.value = modId
-}
+  source.value = "remote";
+  keyword.value = modId;
+};
 
 // install / uninstall / enable / disable
-const { install, uninstall, enable, disable, installFromMarket } = useService(InstanceModsServiceKey)
+const { install, uninstall, enable, disable, installFromMarket } = useService(
+  InstanceModsServiceKey
+);
 const onUninstall = (f: ProjectFile[], _path?: string) => {
-  uninstall({ path: _path ?? path.value, files: f.map(f => f.path) }).then(() => {
-    setTimeout(revalidate, 1500)
-  })
-}
+  uninstall({ path: _path ?? path.value, files: f.map((f) => f.path) }).then(
+    () => {
+      setTimeout(revalidate, 1500);
+    }
+  );
+};
 const onEnable = async (f: ProjectFile, _path?: string) => {
   if (await wizardHandleOnEnable(f as ModFile, _path || path.value)) {
-    return
+    return;
   }
   enable({ path: _path ?? path.value, files: [f.path] }).then(() => {
-    setTimeout(revalidate, 1500)
-  })
-}
+    setTimeout(revalidate, 1500);
+  });
+};
 const onDisable = (f: ProjectFile, _path?: string) => {
   disable({ path: _path ?? path.value, files: [f.path] }).then(() => {
-    setTimeout(revalidate, 1500)
-  })
-}
+    setTimeout(revalidate, 1500);
+  });
+};
 
 // Categories
-const toggleCategory = useToggleCategories(modrinthCategories)
+const toggleCategory = useToggleCategories(modrinthCategories);
 
 // View
-const itemHeight = computed(() => denseView.value ? 40 : 90)
-const selections = ref({} as Record<string, boolean>)
+const itemHeight = computed(() => (denseView.value ? 40 : 90));
+const selections = ref({} as Record<string, boolean>);
 
-provide('selections', selections)
+provide("selections", selections);
 
-const { show: showGroupSelectDialog } = useDialog('mod-group-select')
+const { show: showGroupSelectDialog } = useDialog("mod-group-select");
 
 function showGroupDialog(fileNames: string[]) {
-  console.log(groupsRaw.value)
+  console.log(groupsRaw.value);
   showGroupSelectDialog({
     groups: groupsRaw.value,
     groupModCounts: groupModCounts.value,
     onSelect: (groupName: string | null, newName?: string) => {
       if (groupName) {
         // Add to existing group
-        addToGroup(fileNames, groupName)
+        addToGroup(fileNames, groupName);
       } else if (newName) {
         // Create new group with custom name
-        group(fileNames, newName)
+        group(fileNames, newName);
       }
     },
-  })
+  });
 }
 
 const getContextMenuItems = (proj: ProjectEntry<ModFile>) => {
-  const result = [] as ContextMenuItem[]
+  const result = [] as ContextMenuItem[];
 
-  const selectMultiple = Object.values(selections.value).filter(v => v).length > 1
+  const selectMultiple =
+    Object.values(selections.value).filter((v) => v).length > 1;
 
   if (!selectMultiple) {
-    result.push(...getContextMenuItemsForGroup(proj, showGroupDialog))
-    return result
+    result.push(...getContextMenuItemsForGroup(proj, showGroupDialog));
+    return result;
   }
-  const selected = new Set(Object.keys(selections.value).filter((k) => selections.value[k]))
-  const files = items.value.filter(i => selected.has(i.id)).map(v => v.installed).flat()
-  const allEnabled = files.every(v => v.enabled)
-  const mods = files.map(v => v.path)
-  const text = t('mod.mods', { count: selected.size })
+  const selected = new Set(
+    Object.keys(selections.value).filter((k) => selections.value[k])
+  );
+  const files = items.value
+    .filter((i) => selected.has(i.id))
+    .map((v) => v.installed)
+    .flat();
+  const allEnabled = files.every((v) => v.enabled);
+  const mods = files.map((v) => v.path);
+  const text = t("mod.mods", { count: selected.size });
   // delete and disable items
   result.push({
-    text: t('delete.name', { name: text }),
-    icon: 'delete',
-    color: 'error',
+    text: t("delete.name", { name: text }),
+    icon: "delete",
+    color: "error",
     onClick: () => {
-      uninstall({ path: path.value, files: mods })
+      uninstall({ path: path.value, files: mods });
     },
-  })
+  });
   result.push({
-    text: allEnabled ? t('shared.disable') + ' ' + text : t('shared.enable') + ' ' + text,
-    icon: allEnabled ? 'flash_off' : 'flash_on',
-    color: 'grey',
+    text: allEnabled
+      ? t("shared.disable") + " " + text
+      : t("shared.enable") + " " + text,
+    icon: allEnabled ? "flash_off" : "flash_on",
+    color: "grey",
     onClick: () => {
       if (allEnabled) {
-        disable({ path: path.value, files: mods })
+        disable({ path: path.value, files: mods });
       } else {
-        enable({ path: path.value, files:  mods })
+        enable({ path: path.value, files: mods });
       }
     },
-  })
+  });
   if (isLocalView.value) {
     result.push({
-      text: t('mod.group'),
-      icon: 'label',
+      text: t("mod.group"),
+      icon: "label",
       onClick: () => {
-        showGroupDialog(files.map(v => v.fileName))
+        showGroupDialog(files.map((v) => v.fileName));
       },
-    })
+    });
   }
-  return result
-}
+  return result;
+};
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 // Page compact
-const compact = injection(kCompact)
+const compact = injection(kCompact);
 onMounted(() => {
-  compact.value = true
-})
+  compact.value = true;
+});
 
 // Reset all filter
 onUnmounted(() => {
-  modrinthCategories.value = []
-  curseforgeCategory.value = undefined
-})
+  modrinthCategories.value = [];
+  curseforgeCategory.value = undefined;
+});
 
 // Drop
 const { dragover } = useGlobalDrop({
   onDrop: async (t) => {
-    const paths = [] as string[]
+    const paths = [] as string[];
     for (const f of t.files) {
-      paths.push(f.path)
+      paths.push(f.path);
     }
-    await install({ path: path.value, files: paths })
+    await install({ path: path.value, files: paths });
   },
-})
+});
 
 // Install modloader wizard
-const { onInstallModRuntime, wizardModel, wizardHandleOnEnable, wizardError, wizardModItems } = useModWizard()
+const {
+  onInstallModRuntime,
+  wizardModel,
+  wizardHandleOnEnable,
+  wizardError,
+  wizardModItems,
+} = useModWizard();
 
 // modrinth installer
 const modrinthInstaller = useModrinthInstaller(
@@ -713,9 +887,9 @@ const modrinthInstaller = useModrinthInstaller(
   mods,
   installFromMarket,
   onUninstall,
-  onInstallModRuntime,
-)
-provide(kModrinthInstaller, modrinthInstaller)
+  onInstallModRuntime
+);
+provide(kModrinthInstaller, modrinthInstaller);
 
 // curseforge installer
 const curseforgeInstaller = useCurseforgeInstaller(
@@ -724,9 +898,9 @@ const curseforgeInstaller = useCurseforgeInstaller(
   mods,
   installFromMarket,
   onUninstall,
-  onInstallModRuntime,
-)
-provide(kCurseforgeInstaller, curseforgeInstaller)
+  onInstallModRuntime
+);
+provide(kCurseforgeInstaller, curseforgeInstaller);
 
 const onInstallProject = useProjectInstall(
   runtime,
@@ -734,77 +908,90 @@ const onInstallProject = useProjectInstall(
   curseforgeInstaller,
   modrinthInstaller,
   (file) => {
-    install({ path: path.value, files: [file.path] })
-  },
-)
+    install({ path: path.value, files: [file.path] });
+  }
+);
 
 const updateSearch = debounce(() => {
-  const buffer = keywordBuffer.value
+  const buffer = keywordBuffer.value;
   if (buffer) {
-    const isSuperQuery = buffer.startsWith('@')
+    const isSuperQuery = buffer.startsWith("@");
     if (isSuperQuery) {
-      const query = buffer.substring(1)
-      const isCurseforgeProjectId = /^\d+$/.test(query) && query.length < 10
-      const isModrinthProject = /^[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]+$/.test(query) && query.length === 8
+      const query = buffer.substring(1);
+      const isCurseforgeProjectId = /^\d+$/.test(query) && query.length < 10;
+      const isModrinthProject =
+        /^[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]+$/.test(
+          query
+        ) && query.length === 8;
       if (isCurseforgeProjectId) {
-        if (route.query.id === `curseforge:${query}`) return
-        replace({ query: { ...route.query, id: `curseforge:${query}` } })
+        if (route.query.id === `curseforge:${query}`) return;
+        replace({ query: { ...route.query, id: `curseforge:${query}` } });
       } else if (isModrinthProject) {
-        if (route.query.id === `modrinth:${query}`) return
-        replace({ query: { ...route.query, id: `modrinth:${query}` } })
+        if (route.query.id === `modrinth:${query}`) return;
+        replace({ query: { ...route.query, id: `modrinth:${query}` } });
       } else {
-        if (route.query.keyword === query) return
-        replace({ query: { ...route.query, keyword: query } })
+        if (route.query.keyword === query) return;
+        replace({ query: { ...route.query, keyword: query } });
       }
     } else {
-      if (route.query.keyword === buffer) return
-      replace({ query: { ...route.query, keyword: buffer } })
+      if (route.query.keyword === buffer) return;
+      replace({ query: { ...route.query, keyword: buffer } });
     }
   } else {
-    if (route.query.keyword === '') return
-    replace({ query: { ...route.query, keyword: '' } })
+    if (route.query.keyword === "") return;
+    replace({ query: { ...route.query, keyword: "" } });
   }
-}, 500)
-const { replace } = useRouter()
-const keywordBuffer = ref(route.query.keyword as string)
+}, 500);
+const { replace } = useRouter();
+const keywordBuffer = ref(route.query.keyword as string);
 onMounted(() => {
-  keywordBuffer.value = route.query.keyword as string ?? ''
-})
+  keywordBuffer.value = (route.query.keyword as string) ?? "";
+});
 
-watch(keywordBuffer, (v, old) => {
-  if (v !== old) {
-    updateSearch()
-  }
-}, { immediate: true })
+watch(
+  keywordBuffer,
+  (v, old) => {
+    if (v !== old) {
+      updateSearch();
+    }
+  },
+  { immediate: true }
+);
 
-
-useTutorial(computed(() => [{
-  element: '#search-text-field',
-  popover: {
-    title: t('tutorial.mod.searchTitle') + ' (ctrl + f)',
-    description: t('tutorial.mod.searchDescription'),
-  },
-}, {
-  element: '#left-pane',
-  popover: {
-    title: t('tutorial.mod.listTitle'),
-    description: t('tutorial.mod.listDescription'),
-  },
-}, {
-  element: '#right-pane',
-  popover: {
-    title: t('tutorial.mod.detailTitle'),
-    description: t('tutorial.mod.detailDescription'),
-  },
-}, {
-  element: '#default-source-button',
-  popover: {
-    title: t('tutorial.mod.defaultSourceTitle'),
-    description: t('tutorial.mod.defaultSourceDescription'),
-  },
-}]))
+useTutorial(
+  computed(() => [
+    {
+      element: "#search-text-field",
+      popover: {
+        title: t("tutorial.mod.searchTitle") + " (ctrl + f)",
+        description: t("tutorial.mod.searchDescription"),
+      },
+    },
+    {
+      element: "#left-pane",
+      popover: {
+        title: t("tutorial.mod.listTitle"),
+        description: t("tutorial.mod.listDescription"),
+      },
+    },
+    {
+      element: "#right-pane",
+      popover: {
+        title: t("tutorial.mod.detailTitle"),
+        description: t("tutorial.mod.detailDescription"),
+      },
+    },
+    {
+      element: "#default-source-button",
+      popover: {
+        title: t("tutorial.mod.defaultSourceTitle"),
+        description: t("tutorial.mod.defaultSourceDescription"),
+      },
+    },
+  ])
+);
 // Presense
-usePresence(computed(() => t('presence.mod')))
+usePresence(computed(() => t("presence.mod")));
 </script>
 
 <style scoped>

@@ -1,11 +1,14 @@
-import VueI18n from '@intlify/unplugin-vue-i18n/vite'
-import createVuePlugin from '@vitejs/plugin-vue2'
-import { readdirSync } from 'fs'
-import { join, resolve } from 'path'
-import { visualizer } from "rollup-plugin-visualizer"
-import UnoCSS from 'unocss/vite'
-import AutoImport from 'unplugin-auto-import/vite'
-import { defineConfig } from 'vite'
+﻿import _VueI18n from '@intlify/unplugin-vue-i18n/vite';
+const VueI18n = (typeof _VueI18n === 'function' ? _VueI18n : (_VueI18n as any).default);
+import _createVuePlugin from '@vitejs/plugin-vue2';
+const createVuePlugin = (typeof _createVuePlugin === 'function' ? _createVuePlugin : (_createVuePlugin as any).default);
+import { readdirSync } from 'fs';
+import { join, resolve } from 'path';
+import _UnoCSS from 'unocss/vite';
+const UnoCSS = (typeof _UnoCSS === 'function' ? _UnoCSS : (_UnoCSS as any).default);
+import _AutoImport from 'unplugin-auto-import/vite';
+const AutoImport = (typeof _AutoImport === 'function' ? _AutoImport : (_AutoImport as any).default);
+import { defineConfig } from 'vite';
 
 const entries = readdirSync(join(__dirname, './src'))
   .filter((f) => f.endsWith('.html'))
@@ -19,7 +22,7 @@ export default defineConfig({
     port: 3000,
   },
   root: join(__dirname, './src'),
-  base: '', // has to set to empty string so the html assets path will be relative
+  base: '',
   build: {
     rollupOptions: {
       input: entries,
@@ -35,6 +38,7 @@ export default defineConfig({
     assetsInlineLimit: 0,
   },
   define: {
+    '__defProp': 'Object.defineProperty',
   },
   resolve: {
     alias: {
@@ -44,30 +48,24 @@ export default defineConfig({
       '~logger': join(__dirname, './src/windows/logger'),
       '~setup': join(__dirname, './src/windows/setup'),
       '@vue/composition-api': 'vue',
+      'vue-demi': resolve(__dirname, '../node_modules/vue-demi/lib/index.mjs'),
       'vue-i18n-bridge':
         'vue-i18n-bridge/dist/vue-i18n-bridge.runtime.esm-bundler.js',
     },
   },
   optimizeDeps: {
-    exclude: ['electron', '@xmcl/utils', '@xmcl/resource'],
+    exclude: ['electron', '@xmcl/utils', '@xmcl/resource', '@microsoft/applicationinsights-web'],
     esbuildOptions: {
       minify: false,
       keepNames: true,
+      supported: {
+        'dynamic-import': true,
+      },
     },
   },
   plugins: [
     createVuePlugin(),
     UnoCSS(),
-    // WindiCSS({
-    //   config: {
-    //     important: true,
-    //   },
-    //   scan: {
-    //     dirs: [join(__dirname, './src')],
-    //     fileExtensions: ['vue', 'ts'],
-    //   },
-    // }),
-
     VueI18n({
       include: [
         resolve(__dirname, 'locales/**'),
@@ -76,7 +74,6 @@ export default defineConfig({
       strictMessage: false,
       bridge: false,
     }),
-
     AutoImport({
       imports: [
         'vue',
@@ -94,9 +91,12 @@ export default defineConfig({
       exclude: ['node_modules', /xmcl\/packages.+/],
       eslintrc: {
         enabled: true,
-        filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
-        globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+        filepath: './.eslintrc-auto-import.json',
+        globalsPropValue: true,
       },
     }),
   ],
 })
+
+
+

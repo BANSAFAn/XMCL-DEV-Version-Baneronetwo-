@@ -1261,12 +1261,21 @@ setting:
     none: Geen
     particle: Deeltje
     video: Video
-  backgroundVideo: Achtergrondvideo
+    screenshot: Screenshots
+  backgroundVideo: Achtergrond Video
   backgroundVideoDescription: Selecteer of wis video
   backgroundVideoUrl: Video URL
   backgroundVideoUrlPlaceholder: Voer HTTP/HTTPS URL in voor video
   backgroundVideoVolume: volume
-  backgroundVideoVolumeDescription: sleep om het volume aan te passen
+  backgroundVideoVolumeDescription: sleep om volume aan te passen
+  screenshotInterval: Screenshot wissel interval
+  screenshotIntervalDescription: Tijd in seconden tussen screenshot wisseling (geen screenshots - zwarte achtergrond)
+  screenshotTransition: Overgangseffect
+  screenshotTransitionDescription: Animatie bij het wisselen van screenshots
+  screenshotTransitions:
+    fade: Vervagen
+    slide: Schuiven
+    zoom: Zoomen
   browseRoot: Bladeren
   checkUpdate: Controleer Update
   colorTheme:

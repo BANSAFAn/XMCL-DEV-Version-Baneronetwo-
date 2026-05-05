@@ -1236,12 +1236,21 @@ setting:
     none: Yok
     particle: Parçacık
     video: Video
+    screenshot: Ekran Görüntüleri
   backgroundVideo: Arka Plan Videosu
   backgroundVideoDescription: Video seçin veya temizleyin
   backgroundVideoUrl: Video URL'si
   backgroundVideoUrlPlaceholder: Video için HTTP/HTTPS URL'si girin
   backgroundVideoVolume: ses seviyesi
   backgroundVideoVolumeDescription: ses seviyesini ayarlamak için sürükleyin
+  screenshotInterval: Ekran görüntüsü değişim aralığı
+  screenshotIntervalDescription: Ekran görüntüsü değişim süresi (saniye) (ekran görüntüsü yok - siyah arka plan)
+  screenshotTransition: Geçiş efekti
+  screenshotTransitionDescription: Ekran görüntüsü değişirken animasyon
+  screenshotTransitions:
+    fade: Solma
+    slide: Kaydırma
+    zoom: Yakınlaştırma
   browseRoot: Gözat
   checkUpdate: Güncellemeyi Kontrol Et
   colorTheme:

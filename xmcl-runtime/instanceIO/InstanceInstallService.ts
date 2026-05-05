@@ -38,7 +38,6 @@ import { Inject, LauncherApp, LauncherAppKey } from '~/app'
 import { ZipManager, kTasks, type Tasks } from '~/infra'
 import { InstanceService } from '~/instance/InstanceService'
 import { kDownloadOptions } from '~/network'
-import { kPeerFacade } from '~/peer'
 import { kResourceManager, kResourceWorker, type ResourceWorker } from '~/resource'
 import { AbstractService, ExposeServiceKey, ServiceStateManager } from '~/service'
 import { downloadInstanceFiles } from './utils/downloadInstanceFiles'
@@ -197,8 +196,9 @@ export class InstanceInstallService extends AbstractService implements IInstance
     }> = []
     const downloadOptions = await this.app.registry.get(kDownloadOptions)
 
+    this.log(`[#install] About to acquire lock for instance: ${instancePath}`)
     const lock = this.mutex.of(LockKey.instance(instancePath))
-    const logger = this
+    this.log(`[#install] Lock acquired for instance: ${instancePath}`)
 
     const updateResources = async () => {
       try {
@@ -239,6 +239,7 @@ export class InstanceInstallService extends AbstractService implements IInstance
       }
     }
 
+    this.log(`[#install] Creating install task for instance: ${instancePath}`)
     // Track the task at service level
     const task = this.tasks.create<InstallInstanceTask>({
       type: 'installInstance',
@@ -275,10 +276,7 @@ export class InstanceInstallService extends AbstractService implements IInstance
             .getSnapshotByHash(sha1)
             .then((r) => (r ? this.resourceManager.validateSnapshotFile(r) : undefined))
             .then((r) => r?.path),
-        getPeerActualUrl: (url) =>
-          this.app.registry
-            .getIfPresent(kPeerFacade)
-            .then((peers) => peers?.getHttpDownloadUrl(url)),
+        getPeerActualUrl: () => Promise.resolve(undefined),
         unzipFiles: (payloads, finished, signal) =>
           unzipInstanceFiles(zipManager, payloads, finished, signal, tracker),
         downloadFiles: (payloads, finished, signal) =>
@@ -303,21 +301,25 @@ export class InstanceInstallService extends AbstractService implements IInstance
     )
 
     const runInstallTasks = async () => {
+      this.log(`[#install] Starting runInstallTasks for instance: ${instancePath}`)
       try {
+        this.log(`[#install] Processing file delta, count: ${fileDelta.length}`)
         const newAddedFiles = fileDelta
           .filter((f) => f.operation === 'add' || f.operation === 'backup-add')
           .map((f) => f.file)
 
+        this.log(`[#install] Calling resolveInstanceFiles for ${newAddedFiles.length} files`)
         const hasUpdate = await resolveInstanceFiles(
           newAddedFiles,
           curseforgeClient,
           modrinthClient,
           task.controller.signal,
         )
+        this.log(`[#install] resolveInstanceFiles completed, hasUpdate: ${hasUpdate}`)
 
         if (hasUpdate) {
           // save current state
-          logger.log('Save current state due to refresh', instancePath)
+          this.log('Save current state due to refresh', instancePath)
           await writeJson(
             currentStatePath,
             InstanceInstallLock.parse({
@@ -331,10 +333,11 @@ export class InstanceInstallService extends AbstractService implements IInstance
       }
 
       try {
+        this.log(`[#install] Calling prepareInstallFiles with ${fileDelta.length} files`)
         await handlerWithTracker.prepareInstallFiles(fileDelta, task.controller.signal)
-        logger.log('Finished install tasks')
+        this.log('[#install] Finished install tasks')
       } catch (e) {
-        logger.warn('Install instance files error', e)
+        this.warn('Install instance files error', e)
         await writeJson(
           currentStatePath,
           InstanceInstallLock.parse({
@@ -352,9 +355,13 @@ export class InstanceInstallService extends AbstractService implements IInstance
     }
 
     try {
+      this.log(`[#install] Entering lock.runExclusive for instance: ${instancePath}`)
       await lock.runExclusive(async () => {
+        this.log(`[#install] Inside lock.runExclusive, starting runInstallTasks`)
         await runInstallTasks()
+        this.log(`[#install] runInstallTasks completed successfully`)
       })
+      this.log(`[#install] Exited lock.runExclusive for instance: ${instancePath}`)
 
       // update the lock file
       if (!noLock) {
