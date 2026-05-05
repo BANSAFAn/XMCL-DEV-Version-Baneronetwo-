@@ -32,7 +32,7 @@
     "@xmcl/utils": "workspace:*",
     "chokidar": "^4.0.3",
     "file-type": "^16.5.4",
-    "kysely": "^0.26.1",
+    "kysely": "^0.28.14",
     "fs-extra": "^11.1.0",
     "vitest": "^2.1.8"
   }

@@ -1,4 +1,4 @@
-import fxparser from 'fast-xml-parser'
+import { XMLParser } from 'fast-xml-parser'
 import { Client, request } from 'undici'
 import { IncomingMessage, request as hrequest } from 'http'
 import url from 'url'
@@ -97,7 +97,7 @@ export class Device {
 
     const data = await res.body.text()
 
-    const info = new fxparser.XMLParser().parse(data)
+    const info = new XMLParser().parse(data)
 
     const device = info.root.device as DeviceInfo
 
@@ -174,7 +174,7 @@ export class Device {
 
     if (res.status !== 200) {
       // let body = ''
-      const parser = new fxparser.XMLParser()
+      const parser = new XMLParser()
       if (res.headers.get('content-length') && Number(res.headers.get('content-length')) > 0) {
         const error = parser.parse(await res.text())['s:Envelope']['s:Body']['s:Fault']
         throw Object.assign(
@@ -187,7 +187,7 @@ export class Device {
     }
 
     const data = await res.text()
-    const parser = new fxparser.XMLParser({ parseAttributeValue: true, ignoreAttributes: false })
+    const parser = new XMLParser({ parseAttributeValue: true, ignoreAttributes: false })
 
     const parsedData = parser.parse(data)
 

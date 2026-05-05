@@ -41,6 +41,9 @@
             "node-datachannel",
             "ssh2",
             "vue-demi"
-        ]
+        ],
+        "overrides": {
+            "postcss": ">=8.5.10"
+        }
     }
 }
