@@ -66,11 +66,18 @@ export function parseJavaVersion(
     }
     const match = /(\d+)\.(\d)+\.(\d+)(_\d+)?/.exec(str)
     if (match === null) {
-      const openjdkMatch = /openjdk version "(\d+)"/.exec(str)
-      if (openjdkMatch) {
+      // Fallback: handle modern major-only version strings such as
+      //   java version "25" 2025-09-16 LTS         (Oracle JDK)
+      //   openjdk version "25" 2025-09-16          (OpenJDK / Zulu / etc.)
+      //   JAVA_VERSION="25"                        (release file)
+      // The previous fallback only matched the literal "openjdk" keyword which
+      // missed Oracle JDK's `java version "<n>"` output, breaking detection of
+      // any GA build that has no dotted patch component.
+      const majorOnlyMatch = /(?:openjdk|java)(?:[ _]version)?[ =]"?(\d+)"?/i.exec(str)
+      if (majorOnlyMatch) {
         return {
-          version: openjdkMatch[1],
-          majorVersion: Number.parseInt(openjdkMatch[1]),
+          version: majorOnlyMatch[1],
+          majorVersion: Number.parseInt(majorOnlyMatch[1]),
           patch: -1,
         }
       }

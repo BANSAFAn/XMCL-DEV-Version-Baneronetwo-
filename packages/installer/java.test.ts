@@ -28,5 +28,28 @@ OpenJDK Runtime Environment (build 1.8.0-262-b10)
 OpenJDK 64-Bit Server VM (build 25.71-b10, mixed mode)`)
       expect(inf).toEqual({ version: '1.8.0', majorVersion: 8, patch: -1 })
     })
+    test('should resolve Oracle JDK 25 GA (no patch component)', () => {
+      const version = `java version "25" 2025-09-16 LTS
+Java(TM) SE Runtime Environment (build 25+36-LTS-3489)
+Java HotSpot(TM) 64-Bit Server VM (build 25+36-LTS-3489, mixed mode, sharing)`
+      const inf = parseJavaVersion(version)
+      expect(inf).toEqual({ version: '25', majorVersion: 25, patch: -1 })
+    })
+    test('should resolve OpenJDK 25 GA (no patch component)', () => {
+      const version = `openjdk version "25" 2025-09-16
+OpenJDK Runtime Environment (build 25+36-3489)
+OpenJDK 64-Bit Server VM (build 25+36-3489, mixed mode)`
+      const inf = parseJavaVersion(version)
+      expect(inf).toEqual({ version: '25', majorVersion: 25, patch: -1 })
+    })
+    test('should resolve Oracle JDK 21 GA (no patch component)', () => {
+      const version = 'java version "21" 2023-09-19 LTS'
+      const inf = parseJavaVersion(version)
+      expect(inf).toEqual({ version: '21', majorVersion: 21, patch: -1 })
+    })
+    test('should resolve JAVA_VERSION line from JDK release file with major-only version', () => {
+      const inf = parseJavaVersion('JAVA_VERSION="25"')
+      expect(inf).toEqual({ version: '25', majorVersion: 25, patch: -1 })
+    })
   })
 })
