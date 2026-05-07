@@ -65,9 +65,14 @@ export async function linkInstanceFiles(
     files.map(async (job) => {
       signal.throwIfAborted()
       return handleLink(job, platform, finished, progress).catch((e) => {
-        if (isSystemError(e) && e.name === ENOENT_ERROR) {
-          // Only the not found error can continue
+        if (isSystemError(e) && e.code === ENOENT_ERROR) {
+          // The source file is missing (e.g., the cached resource was
+          // evicted between resource discovery and linking). Route this
+          // file to the `unhandled` list so the caller can fall back to
+          // downloading or unzipping. Treat it as a non-error here so a
+          // single missing source does not abort the whole install.
           unhandled.push(job.file)
+          return
         }
         throw e
       })

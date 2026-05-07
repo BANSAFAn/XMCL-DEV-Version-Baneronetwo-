@@ -5,7 +5,7 @@ import {
   HashAlgo,
   guessCurseforgeFileUrl,
 } from '@xmcl/curseforge'
-import { DownloadBaseOptions, download } from '@xmcl/file-transfer'
+import { DownloadBaseOptions } from '@xmcl/file-transfer'
 import { diagnoseFile, onDownloadSingle, Tracker } from '@xmcl/installer'
 import { InstanceFile as _InstanceFile } from '@xmcl/instance'
 import { ModrinthV2Client, ProjectVersion } from '@xmcl/modrinth'
@@ -27,6 +27,7 @@ import { kDownloadOptions } from '~/network'
 import { kResourceManager, kResourceWorker } from '~/resource'
 import { hardLinkFiles } from '~/util/fs'
 import { getTracker } from '~/util/taskHelper'
+import { downloadStaged } from './downloadStaged'
 import {
   InstallMarketDirectoryOptions,
   InstallMarketInstanceOptions,
@@ -174,10 +175,9 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
       const tracker = getTracker<InstallModrinthFileTrackerEvents>(task)
 
       try {
-        await download({
+        await downloadStaged({
           url: instFile.downloads,
           destination: filePath,
-          pendingFile: filePath + '.pending',
           tracker: onDownloadSingle(tracker, 'download', {}),
           ...downloadOptions,
         })
@@ -197,10 +197,9 @@ export const pluginMarketProvider: LauncherAppPlugin = async (app) => {
       const tracker: Tracker<InstallCurseforgeFileTrackerEvents> = getTracker(task)
 
       try {
-        await download({
+        await downloadStaged({
           url: instFile.downloads,
           destination: filePath,
-          pendingFile: filePath + '.pending',
           tracker: onDownloadSingle(tracker, 'download', {}),
           ...downloadOptions,
         })

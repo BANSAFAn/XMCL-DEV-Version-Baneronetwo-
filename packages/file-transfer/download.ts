@@ -1,8 +1,7 @@
-import { rename, close as sclose, mkdir as smkdir, open as sopen, unlink } from 'fs'
+import { close as sclose, mkdir as smkdir, open as sopen, unlink } from 'fs'
 import { dirname } from 'path'
 import { Dispatcher } from 'undici'
 import { promisify } from 'util'
-import { isNativeError } from 'util/types'
 import { getDefaultAgent } from './agent'
 import { ProgressTrackerMultiple, ProgressTrackerSingle } from './progress'
 import { RangeRequestHandler } from './range_handler'
@@ -43,10 +42,6 @@ export interface DownloadOptions extends DownloadBaseOptions {
    */
   signal?: AbortSignal
   /**
-   * Will first download to pending file and then rename to actual file
-   */
-  pendingFile?: string
-  /**
    * The expected total size of the file.
    */
   expectedTotal?: number
@@ -54,7 +49,7 @@ export interface DownloadOptions extends DownloadBaseOptions {
 
 export type DownloadMultipleOption = Pick<
   DownloadOptions,
-  'url' | 'headers' | 'destination' | 'pendingFile' | 'expectedTotal'
+  'url' | 'headers' | 'destination' | 'expectedTotal'
 >
 
 export interface DownloadMultipleOptions extends DownloadBaseOptions {
@@ -101,7 +96,6 @@ export async function download(options: DownloadOptions): Promise<void> {
   const headers = options.headers || {}
   const destination = options.destination
   const tracker = options.tracker
-  const pendingFile = options.pendingFile
   const signal = options.signal
   const expectedTotal = options.expectedTotal
   const { dispatcher, rangePolicy } = getDownloadBaseOptions(options)
@@ -113,11 +107,15 @@ export async function download(options: DownloadOptions): Promise<void> {
     tracker.expectedTotal = expectedTotal
   }
 
-  const fd = await openFd(options.pendingFile || options.destination)
-  signal?.throwIfAborted()
+  const fd = await openFd(options.destination)
+  // Move the post-open abort check inside the try/finally so an abort
+  // race here (signal fires between openFd resolving and this line)
+  // still results in fd being closed.
   const errors = []
 
   try {
+    signal?.throwIfAborted()
+
     for (const url of urls) {
       const parsedUrl = new URL(url)
       const ops = {
@@ -152,13 +150,6 @@ export async function download(options: DownloadOptions): Promise<void> {
       throw new AggregateError(errors, 'All urls failed to download')
     }
 
-    if (pendingFile) {
-      await renameAsync(pendingFile, destination).catch((e) => {
-        if (isNativeError(e) && 'code' in e && e.code === 'EEXIST') {
-          return unlinkAsync(destination).then(() => renameAsync(pendingFile, destination))
-        }
-      })
-    }
     await close(fd).catch(() => {})
   } catch (e) {
     decorateError(e as any, urls, headers, destination)
@@ -169,7 +160,6 @@ export async function download(options: DownloadOptions): Promise<void> {
 }
 
 const unlinkAsync = promisify(unlink)
-const renameAsync = promisify(rename)
 const mkdir = promisify(smkdir)
 const open = promisify(sopen)
 const close = promisify(sclose)

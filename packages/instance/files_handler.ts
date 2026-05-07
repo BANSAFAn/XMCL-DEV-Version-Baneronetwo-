@@ -82,6 +82,14 @@ export class InstanceFileOperationHandler {
    * Extra files need to be copied or linked
    */
   #linkQueue: Array<FileOperationPayload> = []
+  /**
+   * Files that are already complete in the workspace (e.g. resumed from
+   * a prior install run). They do not need any phase-1 work, but phase
+   * 3 must still move them from the workspace into the instance —
+   * otherwise the workspace folder is removed at the end of phase 3 and
+   * the files are silently lost.
+   */
+  #readyQueue: Array<InstanceFile> = []
 
   /**
    * Store the unresolvable files.
@@ -120,7 +128,7 @@ export class InstanceFileOperationHandler {
 
     for (const file of unhandled) {
       if (await this.#handleUnzip(file, join(this.workspacePath, file.path))) continue
-      if (await this.#handleHttp(file, join(this.workspacePath, file.path))) continue
+      if (await this.#handleHttp(file, join(this.workspacePath, file.path), file.hashes.sha1)) continue
       this.unresolvable.push(file)
     }
 
@@ -139,28 +147,37 @@ export class InstanceFileOperationHandler {
    */
   async backupAndRename() {
     // phase 2, create the backup
-    const finished = [] as [string, string][]
+    const phase2Finished = [] as [string, string][]
     try {
       for (const file of this.#backupQueue) {
         const src = join(this.instancePath, file.path)
         const dest = join(this.backupPath, file.path)
 
         await ensureDir(dirname(dest))
-        await rename(src, dest)
-        finished.push([src, dest])
+        try {
+          await rename(src, dest)
+        } catch (e: any) {
+          // The file may have been removed between delta computation
+          // and now (user race, antivirus, etc). Treat as already-gone
+          // — there's nothing to back up — and continue. Any other error
+          // still triggers rollback.
+          if (e && e.code === 'ENOENT') {
+            continue
+          }
+          throw e
+        }
+        phase2Finished.push([src, dest])
       }
     } catch (e) {
       // rollback with best effort
       this.context.logger.warn('Rollback due to backup files failed', e)
-      for (const [src, dest] of finished) {
+      for (const [src, dest] of phase2Finished) {
         await rename(dest, src).catch(() => undefined)
       }
 
       throw e
     }
-    this.context.logger.log('Backup stage finished ' + finished.length)
-
-    finished.splice(0, finished.length)
+    this.context.logger.log('Backup stage finished ' + phase2Finished.length)
 
     // phase 3, move the workspace files to instance location
     await ensureDir(this.instancePath)
@@ -168,8 +185,10 @@ export class InstanceFileOperationHandler {
       ...this.#linkQueue.map((f) => f.file),
       ...this.#unzipQueue.map((f) => f.file),
       ...this.#httpsQueue.map((f) => f.file),
+      ...this.#readyQueue,
     ]
 
+    const phase3Finished = [] as [string, string][]
     try {
       const dirToCreate = Array.from(
         new Set(files.map((file) => dirname(join(this.instancePath, file.path)))),
@@ -181,19 +200,28 @@ export class InstanceFileOperationHandler {
           const src = join(this.workspacePath, file.path)
           const dest = join(this.instancePath, file.path)
           await rename(src, dest)
-          finished.push([src, dest])
+          phase3Finished.push([src, dest])
         }),
       )
     } catch (e) {
       // rollback with best effort
       this.context.logger.warn('Rollback due to rename files failed', e)
-      for (const [src, dest] of finished) {
+      // Undo phase 3: move successfully renamed files back to workspace.
+      for (const [src, dest] of phase3Finished) {
+        await rename(dest, src).catch(() => undefined)
+      }
+      // Undo phase 2: move backed-up files back to the instance. Without
+      // this, files from `backup-add` operations whose phase-3 rename
+      // never happened would leave the instance with a missing file
+      // (old version trapped in backup/, new version stranded in the
+      // workspace).
+      for (const [src, dest] of phase2Finished) {
         await rename(dest, src).catch(() => undefined)
       }
 
       throw e
     }
-    this.context.logger.log('Rename stage finished ' + finished.length)
+    this.context.logger.log('Rename stage finished ' + phase3Finished.length)
 
     for (const file of this.#removeQueue) {
       const dest = join(this.backupPath, file.path)
@@ -312,8 +340,32 @@ export class InstanceFileOperationHandler {
         const filePath = fileURLToPath(file.downloads[0])
         const fStat = await stat(filePath).catch(() => undefined)
         if (fStat && fStat.isFile()) {
-          this.#linkQueue.push({ file, src: filePath, destination })
-          return true
+          // Verify the source file's content matches the manifest's
+          // declared hash before linking. Without this check a
+          // malicious modpack can use a file:// URL to read ANY file
+          // the launcher process can read (e.g. ~/.ssh/id_rsa) and
+          // exfiltrate it through the user's mod folder.
+          const expectedSha1 = file.hashes.sha1
+          if (!expectedSha1) {
+            // No hash means we cannot verify the source: refuse the
+            // file:// branch and fall through to other handlers.
+            // (file:// without a hash is indistinguishable from a
+            // bait-and-switch attack.)
+            this.context.logger.warn(
+              `Rejecting file:// URL for ${file.path}: no sha1 hash to verify against`,
+            )
+          } else {
+            const actualSha1 = await this.context.worker
+              .checksum(filePath, 'sha1')
+              .catch(() => undefined)
+            if (actualSha1 === expectedSha1) {
+              this.#linkQueue.push({ file, src: filePath, destination })
+              return true
+            }
+            this.context.logger.warn(
+              `Rejecting file:// URL for ${file.path}: hash mismatch (expected ${expectedSha1}, got ${actualSha1})`,
+            )
+          }
         }
       }
     }
@@ -336,22 +388,36 @@ export class InstanceFileOperationHandler {
       if (file.hashes.sha1) {
         const existingSha1 = await this.context.worker.checksum(destination, 'sha1')
         if (existingSha1 === file.hashes.sha1) {
+          this.#readyQueue.push(file)
+          this.finished.add(file.path)
           return
         }
       }
       if (file.hashes.crc32) {
         const existingCrc32 = await this.context.worker.checksum(destination, 'crc32')
         if (existingCrc32 === file.hashes.crc32) {
+          this.#readyQueue.push(file)
+          this.finished.add(file.path)
           return
         }
       }
       if (file.hashes.sha256) {
         const existingSha256 = await this.context.worker.checksum(destination, 'sha256')
         if (existingSha256 === file.hashes.sha256) {
+          this.#readyQueue.push(file)
+          this.finished.add(file.path)
           return
         }
       }
     }
+
+    // The workspace copy is missing or its content does not match the
+    // expected hash. Drop any stale "finished" marker that may have
+    // been seeded from `.install-profile.finishedPath` — otherwise the
+    // phase-1 link/download/unzip helpers will skip this file (because
+    // they short-circuit on `finished.has`) and phase 3 will then fail
+    // trying to rename a workspace file that was never re-materialised.
+    this.finished.delete(file.path)
 
     if (await this.#handleLink(file, destination, sha1)) return
 

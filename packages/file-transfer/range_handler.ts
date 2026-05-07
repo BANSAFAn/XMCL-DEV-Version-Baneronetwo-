@@ -23,6 +23,17 @@ export class RangeRequestHandler extends FileHandler {
     tracker?: ProgressTrackerSingle,
   ) {
     super(options.signal, fd)
+    // If the parent's response fails before `onHeaderParsed` runs
+    // (e.g. HTTP 4xx/5xx, malformed headers, network error), we will
+    // never spawn child range requests and the existing code paths
+    // would leave `childrenResolvers` pending forever — leaking the
+    // promise pair and preventing `tracker.done` from ever being set.
+    // Folding children to "resolved" on parent rejection is safe: if
+    // children were never spawned there is nothing to wait for, and
+    // if they were spawned the inner `Promise.all` wiring will settle
+    // them independently (subsequent calls on an already-settled
+    // resolver are no-ops).
+    this.resolvers.promise.catch(() => this.childrenResolvers.resolve())
     if (tracker) {
       tracker.setAccessor(this.rangeInfo)
       this.rangeInfo.url = options.origin + options.path

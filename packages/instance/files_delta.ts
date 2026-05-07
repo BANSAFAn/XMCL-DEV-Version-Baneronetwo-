@@ -68,12 +68,46 @@ export async function computeFileUpdates(
                 ? oldFilesMap[p]?.size !== file.size
                 : undefined
 
+      // Compare the on-disk file against the desired new file. Used both
+      // when the file is unchanged from the last install (cheap update
+      // check) AND when the user touched it (so we can avoid an
+      // unnecessary backup if their content already matches the new
+      // modpack version).
+      const isFileDiffFromNew = async (toAddFile: InstanceFile): Promise<boolean> => {
+        if ('sha1' in toAddFile.hashes) {
+          return (
+            (currentSha1 || (currentSha1 = await fs.getSha1(instancePath, file))) !==
+            toAddFile.hashes.sha1
+          )
+        }
+        const crcDiff =
+          'crc32' in toAddFile.hashes
+            ? (currentCrc32 || (currentCrc32 = await fs.getCrc32(instancePath, file))) !==
+              Number.parseInt(toAddFile.hashes.crc32)
+            : undefined
+        const sizeDiff = 'size' in toAddFile ? file.size !== toAddFile.size : undefined
+
+        if (crcDiff || sizeDiff) {
+          return true
+        }
+        if (crcDiff === undefined && sizeDiff === undefined) {
+          // No way to determine difference
+          return true
+        }
+        return false
+      }
+
       if (isFileChangedComparedToOldFile) {
-        // File was modified
+        // File was modified by the user since the last install
         if (toAdd[p]) {
+          // The file is also in the new manifest. If the user's
+          // current content already matches the new desired content,
+          // there's nothing to do — and we should NOT create a backup
+          // of an identical file.
+          const isDifferent = await isFileDiffFromNew(toAdd[p])
           result.push({
             file: toAdd[p],
-            operation: 'backup-add',
+            operation: isDifferent ? 'backup-add' : 'keep',
           })
         } else {
           result.push({
@@ -83,33 +117,8 @@ export async function computeFileUpdates(
         }
       } else {
         if (toAdd[p]) {
-          const toAddFile = toAdd[p]
-
-          const isFileDiff = async (): Promise<boolean> => {
-            if ('sha1' in toAddFile.hashes) {
-              return (
-                (currentSha1 || (await fs.getSha1(instancePath, file))) !== toAdd[p].hashes.sha1
-              )
-            }
-            const crcDiff =
-              'crc32' in toAddFile.hashes
-                ? (currentCrc32 || (currentCrc32 = await fs.getCrc32(instancePath, file))) !==
-                  Number.parseInt(toAdd[p].hashes.crc32)
-                : undefined
-            const sizeDiff = 'size' in toAddFile ? file.size !== toAdd[p].size : undefined
-
-            if (crcDiff || sizeDiff) {
-              return true
-            }
-            if (crcDiff === undefined && sizeDiff === undefined) {
-              // No way to determine difference
-              return true
-            }
-            return false
-          }
-
           const dontKnowOldFile = isFileChangedComparedToOldFile === undefined
-          const isFileDifferent = await isFileDiff()
+          const isFileDifferent = await isFileDiffFromNew(toAdd[p])
 
           result.push({
             file: toAdd[p],

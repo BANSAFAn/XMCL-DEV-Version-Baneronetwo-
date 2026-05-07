@@ -73,6 +73,18 @@ export class FileHandler implements Dispatcher.DispatchHandler {
     if (statusCode === 206) {
       // Server returned partial content, it supports range requests
       acceptRangesFlag = true
+      // Defensive: a misbehaving server can return 206 without a
+      // Content-Range header. Without this guard, the next line would
+      // throw a raw TypeError ("Cannot read property 'match' of
+      // undefined") instead of a clean HTTP error.
+      if (!contentRange) {
+        this.resolvers.reject(
+          new Error(
+            `HTTP Error: 206 Partial Content with no Content-Range header (statusText=${statusText})`,
+          ),
+        )
+        return false
+      }
       const match = contentRange.match(/bytes\s+(\d+)-(\d+)\/(\d+|\*)/)
       if (match) {
         this.position = parseInt(match[1], 10)
