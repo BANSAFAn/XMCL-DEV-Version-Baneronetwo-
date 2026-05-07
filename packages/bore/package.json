@@ -13,8 +13,8 @@
   },
   "scripts": {
     "build:type": "tsc",
-    "build:cjs": "esbuild --target=es2020 --platform=neutral --sourcemap --format=cjs --bundle --outfile=dist/index.js index.ts",
-    "build:esm": "esbuild --target=es2020 --platform=neutral --sourcemap --format=esm --bundle --outfile=dist/index.mjs index.ts"
+    "build:cjs": "esbuild --target=es2020 --platform=node --sourcemap --format=cjs --bundle --outfile=dist/index.js index.ts",
+    "build:esm": "esbuild --target=es2020 --platform=node --sourcemap --format=esm --bundle --outfile=dist/index.mjs index.ts"
   },
   "repository": {
     "type": "git",
