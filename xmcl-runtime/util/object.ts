@@ -5,11 +5,6 @@ export function requireString(object: unknown, message?: any): asserts object is
   if (typeof object !== 'string') throw new TypeError(message || `Require a string! But get ${typeof object} ${JSON.stringify(object)}`)
 }
 
-export function compareDate(a: Date, b: Date) {
-  // @ts-ignore
-  return a - b
-}
-
 export function toRecord<T, K extends string | symbol | number>(array: T[], key: (v: T) => K) {
   const result: Record<K, T> = {} as any
   for (const i of array) {

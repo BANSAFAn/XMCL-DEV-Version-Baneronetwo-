@@ -5,7 +5,7 @@ import { createHash } from 'crypto'
 import { constants, existsSync } from 'fs'
 import { access, close, copyFile, ensureDir, ensureFile, link, open, read, readdir, stat, symlink, unlink } from 'fs-extra'
 import { platform } from 'os'
-import { extname, join, resolve } from 'path'
+import { join, resolve } from 'path'
 import { Readable, pipeline } from 'stream'
 import { promisify } from 'util'
 import { Logger } from '~/infra'
@@ -20,10 +20,6 @@ export function isPathDiskRootPath(path: string): boolean {
   } else {
     return path === '/'
   }
-}
-
-export function isNotFoundError(e: any) {
-  return isSystemError(e) && e.code === 'ENOENT'
 }
 
 export async function checksumFromStream(s: Readable, alg: string) {
@@ -79,7 +75,7 @@ export async function copyPassively(src: string, dest: string, filter: (name: st
 /**
  * This link will not replace existed files.
  */
-export async function linkPassively(src: string, dest: string, filter: (name: string) => boolean = () => true) {
+async function linkPassively(src: string, dest: string, filter: (name: string) => boolean = () => true) {
   const s = await stat(src).catch(() => { })
   if (!s) { return }
   if (!filter(src)) { return }
@@ -94,16 +90,6 @@ export async function linkPassively(src: string, dest: string, filter: (name: st
       }
     })
   }
-}
-
-export async function clearDirectoryNarrow(dir: string) {
-  const files = await readdir(dir)
-  await Promise.all(files.map(async (f) => {
-    const file = join(dir, f)
-    if (await exists(file) && !(await isDirectory(file))) {
-      await unlink(join(dir, f))
-    }
-  }))
 }
 
 /**
@@ -130,12 +116,7 @@ export async function linkDirectory(srcPath: string, destPath: string, logger: L
   }
 }
 
-export function swapExt(path: string, ext: string) {
-  const existedExt = extname(path)
-  return path.substring(0, path.length - existedExt.length) + ext
-}
-
-export async function isSameFile(file1: string, file2: string) {
+async function isSameFile(file1: string, file2: string) {
   if (file1 === file2) return true
   const stat1 = await stat(file1).catch(() => undefined)
   const stat2 = await stat(file2).catch(() => undefined)
@@ -194,7 +175,7 @@ export function linkOrCopyFile(from: string, to: string) {
   return link(from, to).then(() => to).catch((e) => onLinkFileError(e, false))
 }
 
-export function linkWithTimeout(from: string, to: string, timeout = 1500) {
+function linkWithTimeout(from: string, to: string, timeout = 1500) {
   return new Promise<void>((resolve, reject) => {
     link(from, to).then(resolve, reject)
     setTimeout(() => reject(new AnyError('TimeoutError')), timeout)
@@ -221,11 +202,6 @@ export async function linkWithTimeoutOrCopy(from: string, to: string, timeout = 
     return e
   }
 }
-
-/**
- * An existing file was the target of an operation that required that the target not exist
- */
-export const EEXIST_ERROR = 'EEXIST'
 
 /**
  * No such file or directory: Commonly raised by fs operations to indicate that a component
