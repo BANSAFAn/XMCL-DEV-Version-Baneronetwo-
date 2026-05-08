@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isShown" :width="1200">
     <v-card>
-      <v-toolbar color="warning">
+      <v-toolbar class="select-none" color="warning">
         <v-toolbar-title class="text-white">
           {{ t("logsCrashes.title") }}
         </v-toolbar-title>

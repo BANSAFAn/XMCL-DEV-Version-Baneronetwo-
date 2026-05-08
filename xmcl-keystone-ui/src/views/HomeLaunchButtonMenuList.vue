@@ -1,5 +1,5 @@
 <template>
-  <v-list density="compact" min-width="200">
+  <v-list min-width="300">
     <v-list-item :title="text" @click="onStartLocalhost">
       <template #prepend>
         <v-icon size="20">

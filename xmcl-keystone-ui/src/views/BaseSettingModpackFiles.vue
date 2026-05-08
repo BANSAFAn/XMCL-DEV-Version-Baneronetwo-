@@ -18,7 +18,7 @@
 
   <SettingCard :title="t('modpack.includes', 1)" icon="folder_zip">
     <template #header-action>
-      <div class="flex flex-1 items-center gap-2 min-w-0">
+      <div class="flex items-center gap-2 min-w-0">
         <v-text-field
           v-model="filterText"
           :label="t('shared.filter')"
@@ -27,7 +27,7 @@
           hide-details
           clearable
           prepend-inner-icon="search"
-          class="flex-1 min-w-0"
+          class="flex-grow min-w-0 w-40"
         />
         <div class="text-sm whitespace-nowrap opacity-70">
           ~{{ getExpectedSize(totalSize) }}
