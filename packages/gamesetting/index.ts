@@ -404,29 +404,45 @@ export function parse(str: string, strict?: boolean): GameSetting | Frame {
       } else if (booleanPattern.test(value)) {
         newValue = value === 'true'
       } else if (value.startsWith('[') && value.endsWith(']')) {
-        const raw = value.slice(1, -1)
-        if (raw.length === 0) {
-          newValue = []
-        } else {
-          // parse the sequence of string might wrapped by "", but it could contain space inside the ""
-          const result = [] as string[]
-          let buffer = ''
-          let inQuote = false
-          for (let i = 0; i < raw.length; i++) {
-            const char = raw[i]
-            if (char === '"') {
-              inQuote = !inQuote
-            } else if (char === ',' && !inQuote) {
-              result.push(buffer)
-              buffer = ''
-            } else {
-              buffer += char
+        // Vanilla Minecraft writes arrays as JSON, so try JSON.parse first.
+        // This correctly decodes escape sequences (\uXXXX, \\, \", \n, ...)
+        // produced by the matching JSON.stringify in `stringify()` below.
+        //
+        // Without this, names containing characters that JSON.stringify
+        // encoded (e.g. resource packs with `§` in their filename) would
+        // be re-read as literal `\u00a7`, then re-escaped on write to
+        // `\\u00a7`, then `\\\\u00a7`, and so on — adding a backslash on
+        // every save until the file is hopelessly corrupted (gh #1379).
+        //
+        // The pre-existing custom parser is kept as a fallback for
+        // non-standard formats (e.g. MultiMC's unquoted `[foo,bar]`).
+        try {
+          newValue = JSON.parse(value)
+        } catch {
+          const raw = value.slice(1, -1)
+          if (raw.length === 0) {
+            newValue = []
+          } else {
+            // parse the sequence of string might wrapped by "", but it could contain space inside the ""
+            const result = [] as string[]
+            let buffer = ''
+            let inQuote = false
+            for (let i = 0; i < raw.length; i++) {
+              const char = raw[i]
+              if (char === '"') {
+                inQuote = !inQuote
+              } else if (char === ',' && !inQuote) {
+                result.push(buffer)
+                buffer = ''
+              } else {
+                buffer += char
+              }
             }
+            if (buffer.length > 0) {
+              result.push(buffer)
+            }
+            newValue = result
           }
-          if (buffer.length > 0) {
-            result.push(buffer)
-          }
-          newValue = result
         }
       } else {
         newValue = value

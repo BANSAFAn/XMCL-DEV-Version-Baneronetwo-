@@ -190,4 +190,51 @@ modelPart_hat:true
     const str = GameSetting.stringify(setting)
     expect(str.indexOf('undefined:undefined')).toEqual(-1)
   })
+
+  describe('parse arrays (gh #1379)', () => {
+    test('decodes JSON unicode escapes in array values', () => {
+      // What stringify() produces for a resource pack name containing `§`
+      const text = 'resourcePacks:["xali\\u00a7r-enchanted-books.zip"]'
+      const set = GameSetting.parse(text)
+      expect(set.resourcePacks).toStrictEqual(['xali§r-enchanted-books.zip'])
+    })
+
+    test('parse -> stringify round-trip is stable for special characters', () => {
+      // Resource pack name with characters that JSON.stringify encodes
+      const original: GameSetting.Frame = {
+        resourcePacks: ['xali§r-enchanted-books.zip', 'plain.zip'],
+      }
+      const firstWrite = GameSetting.stringify(original)
+      // Subsequent cycles must produce byte-identical output (no backslash
+      // doubling): once the value lands in its escaped serialized form it
+      // should stay there forever.
+      let text = firstWrite
+      for (let i = 0; i < 5; i++) {
+        const parsed = GameSetting.parse(text)
+        const next = GameSetting.stringify(parsed)
+        expect(next).toBe(text)
+        text = next
+      }
+    })
+
+    test('falls back to custom parser for unquoted MMC-style arrays', () => {
+      const text = 'resourcePacks:[foo,bar baz]'
+      const set = GameSetting.parse(text)
+      expect(set.resourcePacks).toStrictEqual(['foo', 'bar baz'])
+    })
+
+    test('parses empty arrays', () => {
+      const set = GameSetting.parse('incompatibleResourcePacks:[]')
+      expect(set.incompatibleResourcePacks).toStrictEqual([])
+    })
+
+    test('decodes \\\\ inside array values without doubling backslashes', () => {
+      // Simulates a name that was double-escaped at some point and survived
+      // a previous corrupt save: it should now decode to a single backslash
+      // rather than re-doubling.
+      const text = 'resourcePacks:["a\\\\b.zip"]'
+      const set = GameSetting.parse(text)
+      expect(set.resourcePacks).toStrictEqual(['a\\b.zip'])
+    })
+  })
 })
