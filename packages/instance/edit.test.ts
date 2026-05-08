@@ -87,16 +87,32 @@ describe('Instance Assignment Utils', () => {
         expect(hasChanges).toBe(false)
       })
 
-      it('should skip undefined values', () => {
-        const target = { name: 'old', author: 'author1' }
-        const source = { name: 'new', author: undefined, description: 'desc' }
+      it('should assign undefined values when the key is explicitly present', () => {
+        // Setting a key to `undefined` is the supported way to clear an
+        // optional instance field (so the global setting takes over).
+        // See gh issue: clearing vmOptions / prependCommand / mcOptions /
+        // preExecuteCommand from the UI was being silently dropped.
+        const target = {
+          name: 'old',
+          author: 'author1',
+          vmOptions: ['-Xmx4G'] as string[] | undefined,
+        }
+        const source: Partial<typeof target> = { vmOptions: undefined }
 
         const hasChanges = assignShallow(target, source)
 
         expect(hasChanges).toBe(true)
-        expect(target.name).toBe('new')
-        expect(target.author).toBe('author1') // unchanged due to undefined
-        expect((target as any).description).toBe('desc')
+        expect(target.vmOptions).toBeUndefined()
+        expect(target.name).toBe('old')
+      })
+
+      it('should not report changes when assigning undefined to an already-undefined key', () => {
+        const target = { vmOptions: undefined as string[] | undefined }
+        const source: Partial<typeof target> = { vmOptions: undefined }
+
+        const hasChanges = assignShallow(target, source)
+
+        expect(hasChanges).toBe(false)
       })
     })
 
@@ -644,6 +660,58 @@ describe('Instance Assignment Utils', () => {
       expect(instance.runtime.forge).toBe('') // preserved
       expect(instance.runtime.fabricLoader).toBe('0.14.21') // added
       expect(instance.runtime.quiltLoader).toBe('') // preserved
+    })
+
+    it('should clear vmOptions / mcOptions / prependCommand / preExecuteCommand when set to undefined', () => {
+      // Reproduces the bug where resetting these launch fields to "global"
+      // from the UI never persisted because applyInstanceChanges silently
+      // dropped undefined values.
+      const populated: InstanceDataWithTime = {
+        ...createInstanceTemplate(),
+        vmOptions: ['-Xmx4G'],
+        mcOptions: ['--demo'],
+        prependCommand: 'echo before',
+        preExecuteCommand: 'echo pre',
+      }
+
+      const changes: Partial<InstanceDataWithTime> = {
+        vmOptions: undefined,
+        mcOptions: undefined,
+        prependCommand: undefined,
+        preExecuteCommand: undefined,
+      }
+
+      applyInstanceChanges(populated, changes)
+
+      expect(populated.vmOptions).toBeUndefined()
+      expect(populated.mcOptions).toBeUndefined()
+      expect(populated.prependCommand).toBeUndefined()
+      expect(populated.preExecuteCommand).toBeUndefined()
+    })
+
+    it('end-to-end compute -> apply clears launch fields', async () => {
+      const populated: InstanceDataWithTime = {
+        ...createInstanceTemplate(),
+        vmOptions: ['-Xmx4G'],
+        mcOptions: ['--demo'],
+        prependCommand: 'echo before',
+        preExecuteCommand: 'echo pre',
+      }
+
+      const editOptions: EditInstanceOptions = {
+        vmOptions: undefined,
+        mcOptions: undefined,
+        prependCommand: undefined,
+        preExecuteCommand: undefined,
+      }
+
+      const changes = await computeInstanceEditChanges(populated, editOptions, async (s) => s)
+      applyInstanceChanges(populated, changes)
+
+      expect(populated.vmOptions).toBeUndefined()
+      expect(populated.mcOptions).toBeUndefined()
+      expect(populated.prependCommand).toBeUndefined()
+      expect(populated.preExecuteCommand).toBeUndefined()
     })
   })
 

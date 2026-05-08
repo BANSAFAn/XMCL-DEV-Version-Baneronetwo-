@@ -6,16 +6,26 @@ import {
 } from './instance'
 
 /**
- * Safely assign properties from source to target, only updating if values differ
+ * Safely assign properties from source to target.
+ *
+ * A property is considered "provided" when the key is an own property of
+ * `source` — even when its value is `undefined`. Setting a key to `undefined`
+ * is therefore the supported way to clear/reset an optional instance field
+ * (so the global setting takes over). Previously this function silently
+ * ignored `undefined`, which made it impossible to reset fields like
+ * `vmOptions`, `mcOptions`, `prependCommand` and `preExecuteCommand` from
+ * the UI — the persisted `instance.json` kept the old value.
  */
 export function assignShallow<T extends Record<string, any>>(
   target: T,
   source: Partial<T>,
 ): boolean {
   let hasChanges = false
-  for (const key in source) {
-    if (source[key] !== undefined && target[key] !== source[key]) {
-      target[key] = source[key]!
+  for (const key of Object.keys(source) as Array<keyof T>) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) continue
+    const next = source[key]
+    if (target[key] !== next) {
+      target[key] = next as any
       hasChanges = true
     }
   }

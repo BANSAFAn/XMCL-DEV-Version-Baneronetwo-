@@ -61,6 +61,9 @@ export function useInstances() {
       if ('mcOptions' in settings) {
         inst.mcOptions = settings.mcOptions
       }
+      if ('preExecuteCommand' in settings) {
+        inst.preExecuteCommand = settings.preExecuteCommand
+      }
       super.instanceEdit(settings)
 
       const idx = this.instances.indexOf(inst)
@@ -78,7 +81,13 @@ export function useInstances() {
   })
 
   async function edit(options: EditInstanceOptions & { instancePath: string }) {
-    await editInstance(options)
+    await editInstance({
+      ...options,
+      env: {
+        ...(options.env ? JSON.parse(JSON.stringify(options.env)) : undefined),
+      },
+      resolution: options.resolution ? JSON.parse(JSON.stringify(options.resolution)) : undefined,
+    })
   }
   async function remove(instancePath: string, deleteData = true) {
     const index = instances.value.findIndex(i => i.path === instancePath)
