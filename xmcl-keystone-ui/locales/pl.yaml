@@ -1255,6 +1255,12 @@ setting:
   useProxy: HTTP Proxy
   useProxyDescription: Adres serwera proxy dla żądania http
   viewBackgroundMusic: Wyświetl muzykę
+  setAsBackground:
+    global: Ustaw jako tło launchera
+    instance: Ustaw jako tło instancji
+    successGlobal: Tło zaktualizowane.
+    successInstance: Tło instancji zaktualizowane.
+    failed: Nie udało się ustawić tła
 settingLabel:
   global: Globalny
   globalHint: To ustawienie będzie zgodne z ustawieniem globalnym

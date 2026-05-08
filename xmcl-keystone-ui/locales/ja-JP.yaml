@@ -1237,6 +1237,12 @@ setting:
   useProxy: HTTPプロキシ
   useProxyDescription: HTTPリクエストのためのプロキシサーバーのアドレス
   viewBackgroundMusic: BGMフォルダを見る
+  setAsBackground:
+    global: ランチャーの背景に設定
+    instance: インスタンスの背景に設定
+    successGlobal: 背景画像を更新しました。
+    successInstance: インスタンスの背景画像を更新しました。
+    failed: 背景画像の設定に失敗しました
 settingLabel:
   global: グローバル
   globalHint: グローバル設定に従います

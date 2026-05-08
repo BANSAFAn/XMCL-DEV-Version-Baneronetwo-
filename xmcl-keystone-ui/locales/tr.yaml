@@ -1260,6 +1260,12 @@ setting:
   useProxy: HTTP Proxy
   useProxyDescription: Http isteği için proxy sunucu adresi
   viewBackgroundMusic: Müzikleri Görüntüle
+  setAsBackground:
+    global: Başlatıcı arka planı yap
+    instance: Örnek arka planı yap
+    successGlobal: Arka plan resmi güncellendi.
+    successInstance: Örnek arka plan resmi güncellendi.
+    failed: Arka plan resmi ayarlanamadı
 settingLabel:
   global: Global
   globalHint: Bu ayar global ayarı takip edecektir

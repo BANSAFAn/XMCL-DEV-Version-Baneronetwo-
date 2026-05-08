@@ -1269,6 +1269,12 @@ setting:
   useProxy: HTTP Proxy
   useProxyDescription: Het proxy serveradres voor het http-verzoek
   viewBackgroundMusic: Bekijk Muziek
+  setAsBackground:
+    global: Establecer como fondo do lanzador
+    instance: Establecer como fondo da instancia
+    successGlobal: Imaxe de fondo actualizada.
+    successInstance: Imaxe de fondo da instancia actualizada.
+    failed: Non se puido establecer a imaxe de fondo
 settingLabel:
   global: Globaal
   globalHint: Deze instelling volgt de globale instelling

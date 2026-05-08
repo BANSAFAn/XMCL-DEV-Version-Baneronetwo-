@@ -1266,6 +1266,12 @@ setting:
   useProxy: HTTP прокси
   useProxyDescription: HTTP сұраныстары үшін прокси сервер мекенжайы
   viewBackgroundMusic: Музыкаларды қарау
+  setAsBackground:
+    global: Іске қосушының фоны етіп орнату
+    instance: Дана фоны етіп орнату
+    successGlobal: Фон суреті жаңартылды.
+    successInstance: Дана фон суреті жаңартылды.
+    failed: Фон суретін орнату сәтсіз аяқталды
 settingLabel:
   global: Глобалды
   globalHint: Бұл баптау глобалды баптауға ереді

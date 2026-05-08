@@ -1275,6 +1275,12 @@ setting:
   useProxy: Proxy HTTP
   useProxyDescription: Endereço do servidor proxy para a solicitação HTTP
   viewBackgroundMusic: Visualizar Músicas
+  setAsBackground:
+    global: Definir como plano de fundo do launcher
+    instance: Definir como plano de fundo da instância
+    successGlobal: Imagem de fundo atualizada.
+    successInstance: Imagem de fundo da instância atualizada.
+    failed: Falha ao definir a imagem de fundo
 settingLabel:
   global: Global
   globalHint: Esta configuração seguirá a configuração global

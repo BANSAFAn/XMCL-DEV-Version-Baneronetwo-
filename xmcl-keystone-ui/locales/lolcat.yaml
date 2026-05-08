@@ -1251,6 +1251,12 @@ setting:
   useProxy: HTTP PROXY
   useProxyDescription: TEH PROXY SERVR ADDWESS FUR DA HTTP REQUEST
   viewBackgroundMusic: VUE MUSICS
+  setAsBackground:
+    global: MAEK LANCHRZ BAKGROUND
+    instance: MAEK INSTNCE BAKGROUND
+    successGlobal: Bakgrnd pic chaengd.
+    successInstance: Instnce bakgrnd pic chaengd.
+    failed: Cudnt set bakgrnd pic
 settingLabel:
   global: GLOBAL
   globalHint: THIS SETTING WILL FOLLOW DA GLOBAL SETTING

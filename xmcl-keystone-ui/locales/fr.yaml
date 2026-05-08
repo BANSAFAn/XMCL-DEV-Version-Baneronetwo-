@@ -1294,6 +1294,12 @@ setting:
   useProxy: Proxy HTTP
   useProxyDescription: L'adresse du serveur proxy pour la requête http
   viewBackgroundMusic: Voir les musiques
+  setAsBackground:
+    global: Définir comme fond du lanceur
+    instance: Définir comme fond de l'instance
+    successGlobal: Image de fond mise à jour.
+    successInstance: Image de fond de l'instance mise à jour.
+    failed: Impossible de définir l'image de fond
 settingLabel:
   global: Global
   globalHint: Ce réglage sera global

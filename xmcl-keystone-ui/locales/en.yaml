@@ -1130,6 +1130,12 @@ setting:
   backgroundMusicUrlPlaceholder: Enter HTTP/HTTPS URL for music
   backgroundType: Background Type
   backgroundTypeDescription: Show special effect on background (This may impact performance)
+  setAsBackground:
+    global: Set as launcher background
+    instance: Set as instance background
+    successGlobal: Background image updated.
+    successInstance: Instance background image updated.
+    failed: Failed to set background image
   backgroundTypes:
     halo: Halo
     image: Image
