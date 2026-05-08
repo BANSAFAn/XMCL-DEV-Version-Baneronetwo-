@@ -21,6 +21,7 @@
     </div>
     <AppContextMenu />
     <AppNotifier />
+    <AppCommandPalette />
     <AppFeedbackDialog />
     <AppTaskDialog />
     <AppAddInstanceDialog />
@@ -53,6 +54,7 @@ import AppImageDialog from '@/components/AppImageDialog.vue'
 import AppSharedTooltip from '@/components/AppSharedTooltip.vue'
 import { useAuthProfileImportNotification } from '@/composables/authProfileImport'
 import { useLocalStorageCacheBool } from '@/composables/cache'
+import { useCommandPaletteHotkey } from '@/composables/commandPalette'
 import { useDefaultErrorHandler } from '@/composables/errorHandler'
 import { kInstance } from '@/composables/instance'
 import { kLaunchButton, useLaunchButton } from '@/composables/launchButton'
@@ -68,6 +70,7 @@ import { basename } from '@/util/basename'
 import { injection } from '@/util/inject'
 import AppAddInstanceDialog from '@/views/AppAddInstanceDialog.vue'
 import AppBackground from '@/views/AppBackground.vue'
+import AppCommandPalette from '@/views/AppCommandPalette.vue'
 import AppContextMenu from '@/views/AppContextMenu.vue'
 import AppExportServerDialog from '@/views/AppExportServerDialog.vue'
 import AppFeedbackDialog from '@/views/AppFeedbackDialog.vue'
@@ -98,6 +101,9 @@ const { state } = injection(kSettingsState)
 provide('streamerMode', useLocalStorageCacheBool('streamerMode', false))
 provide(kLocalizedContent, useLocalizedContentControl())
 provide(kInstanceLauncher, useInstanceLauncher())
+
+// Bind Ctrl/Cmd+K to toggle the command palette.
+useCommandPaletteHotkey()
 
 const defaultColor = useInstanceGroupDefaultColor()
 

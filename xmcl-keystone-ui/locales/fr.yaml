@@ -232,6 +232,35 @@ fabricVersion:
   showSnapshot: Afficher les Snapshots
   stable: Stable
   unstable: Instable
+command:
+  instance:
+    launch:
+      title: Lancer l'instance
+    create:
+      title: Créer une instance
+    delete:
+      title: Supprimer l'instance
+  user:
+    login:
+      title: Connexion utilisateur
+    refresh:
+      title: Actualiser l'utilisateur
+commandPalette:
+  placeholder: Rechercher commandes, instances, mods…
+  commands: Commandes
+  instances: Instances
+  modrinth: Modrinth
+  recent: Récents
+  open: Action rapide
+  openHint: Ouvrir la palette de commandes ({shortcut})
+  empty: Tapez pour rechercher.
+  noResults: Aucun résultat.
+  searching: Recherche…
+  hintNavigate: naviguer
+  hintInvoke: exécuter
+  hintEnter: entrer
+  hintBack: retour
+  hintClose: fermer
 feedback:
   channel: Salons
   description: J'ai trouvé un bug ou je veux faire une suggestion...

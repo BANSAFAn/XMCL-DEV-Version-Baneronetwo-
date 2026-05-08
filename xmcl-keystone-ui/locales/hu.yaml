@@ -234,6 +234,35 @@ fabricVersion:
   showSnapshot: Pillanatkép megjelenítése
   stable: Stabil
   unstable: Instabil
+command:
+  instance:
+    launch:
+      title: Példány indítása
+    create:
+      title: Példány létrehozása
+    delete:
+      title: Példány törlése
+  user:
+    login:
+      title: Felhasználó bejelentkezése
+    refresh:
+      title: Felhasználó frissítése
+commandPalette:
+  placeholder: Parancsok, példányok, modok keresése…
+  commands: Parancsok
+  instances: Példányok
+  modrinth: Modrinth
+  recent: Legutóbbi
+  open: Gyors művelet
+  openHint: Parancspaletta megnyitása ({shortcut})
+  empty: Írj a kereséshez.
+  noResults: Nincs találat.
+  searching: Keresés…
+  hintNavigate: navigálás
+  hintInvoke: végrehajtás
+  hintEnter: belépés
+  hintBack: vissza
+  hintClose: bezárás
 feedback:
   channel: Csatornák
   description: Találtam egy hibát, vagy szeretnék javasolni valamit

@@ -29,14 +29,29 @@
       v-if="!noDebug"
       class="ml-22"
     />
-    <div class="grow " />
 
-    <TaskSpeedMonitor v-if="!noTask" />
+    <div class="flex-grow"/>
+
+    <AppSystemBarBadge
+      v-if="!noUser"
+      v-shared-tooltip.bottom="() => t('commandPalette.openHint', { shortcut: paletteShortcut })"
+      icon="search"
+      :text="t('commandPalette.open')"
+      can-hide-text
+      @click="openPalette"
+    >
+      <template #append>
+        <kbd class="palette-hotkey">{{ paletteShortcut }}</kbd>
+      </template>
+    </AppSystemBarBadge>
+
+
     <AppSystemBarBadge
       v-if="!noTask"
+      v-shared-tooltip.bottom="() => taskTooltip"
       icon="assignment"
-      :can-hide-text="count === 0"
-      :text="count === 0 ? t('task.empty') : t('task.nTaskRunning', { count })"
+      :can-hide-text="!taskInlineText"
+      :text="taskInlineText"
       @click="showTaskDialog()"
     />
     <AppSystemBarAvatar
@@ -90,7 +105,6 @@
 import { useDialog } from '../composables/dialog'
 import { useTaskCount } from '../composables/task'
 
-import TaskSpeedMonitor from '../components/TaskSpeedMonitor.vue'
 import { injection } from '@/util/inject'
 import { useWindowStyle } from '@/composables/windowStyle'
 import AppSystemBarAvatar from './AppSystemBarUserMenu.vue'
@@ -98,6 +112,10 @@ import { kTutorial } from '@/composables/tutorial'
 import AppSystemBarBadge from '@/components/AppSystemBarBadge.vue'
 import AppAudioPlayer from '@/components/AppAudioPlayer.vue'
 import { kTheme } from '@/composables/theme'
+import { useCommandPaletteBus } from '@/composables/commandPalette'
+import { kNetworkStatus } from '@/composables/useNetworkStatus'
+import { vSharedTooltip } from '@/directives/sharedTooltip'
+import { getExpectedSize } from '@/util/size'
 
 const props = defineProps<{
   noUser?: boolean
@@ -113,7 +131,28 @@ const { show: showFeedbackDialog } = useDialog('feedback')
 const { show: showTaskDialog } = useDialog('task')
 const { t } = useI18n()
 const { count } = useTaskCount()
+const { status: networkStatus } = injection(kNetworkStatus)
 const tutor = inject(kTutorial, undefined)
+
+const taskSpeedText = computed(() => networkStatus.value?.downloadSpeed
+  ? `${getExpectedSize(networkStatus.value.downloadSpeed)}/s`
+  : '')
+const taskCountText = computed(() => count.value === 0
+  ? t('task.empty')
+  : t('task.nTaskRunning', { count: count.value }))
+const taskInlineText = computed(() => {
+  if (count.value === 0) return ''
+  return taskSpeedText.value || taskCountText.value
+})
+const taskTooltip = computed(() => {
+  if (count.value === 0) return t('task.empty')
+  if (taskSpeedText.value) return `${taskCountText.value} · ${taskSpeedText.value}`
+  return taskCountText.value
+})
+
+const paletteBus = useCommandPaletteBus()
+const paletteShortcut = computed(() => navigator.platform.toLowerCase().includes('mac') ? '⌘K' : 'Ctrl+K')
+const openPalette = () => paletteBus.emit('show')
 
 const router = useRouter()
 const onBack = () => {
@@ -125,5 +164,24 @@ const onBack = () => {
   @apply  h-full top-0 mr-0 flex cursor-pointer select-none items-center px-3 py-1 after:hidden! w-[40px] min-w-[40px];
   font-size: 16px !important;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+
+.palette-hotkey {
+  margin-left: 8px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(125, 125, 125, 0.18);
+  border: 1px solid rgba(125, 125, 125, 0.28);
+  color: inherit;
+  opacity: 0.75;
+}
+
+@media (max-width: 880px) {
+  .palette-hotkey {
+    margin-left: 4px;
+  }
 }
 </style>

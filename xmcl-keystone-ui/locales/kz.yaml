@@ -228,6 +228,35 @@ fabricVersion:
   showSnapshot: Snapshot-ты көрсету
   stable: Тұрақты
   unstable: Тұрақсыз
+command:
+  instance:
+    launch:
+      title: Дананы іске қосу
+    create:
+      title: Дана құру
+    delete:
+      title: Дананы жою
+  user:
+    login:
+      title: Пайдаланушымен кіру
+    refresh:
+      title: Пайдаланушыны жаңарту
+commandPalette:
+  placeholder: Командаларды, даналарды, модтарды іздеу…
+  commands: Командалар
+  instances: Даналар
+  modrinth: Modrinth
+  recent: Жуырдағы
+  open: Жылдам әрекет
+  openHint: Команда палитрасын ашу ({shortcut})
+  empty: Іздеу үшін жазыңыз.
+  noResults: Сәйкес нәтижелер жоқ.
+  searching: Іздеу…
+  hintNavigate: жылжу
+  hintInvoke: іске қосу
+  hintEnter: ашу
+  hintBack: артқа
+  hintClose: жабу
 feedback:
   channel: Арналар
   description: Мен қате таптым немесе ұсыныс жасағым келеді

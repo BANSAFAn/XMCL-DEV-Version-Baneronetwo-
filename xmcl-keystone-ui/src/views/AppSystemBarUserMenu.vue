@@ -3,7 +3,7 @@
     v-model="isShown"
     :close-on-content-click="false"
     transition="slide-y-transition"
-    location="bottom"
+    location="bottom center"
   >
     <template #activator="{ props: activatorProps }">
       <div
@@ -24,11 +24,13 @@
     <UserCard
       class="user-menu w-[600px] max-w-[600px] overflow-y-auto"
       :show="isShown"
+      :login-request="loginRequest"
     />
   </v-menu>
 </template>
 <script lang="ts" setup>
 import PlayerAvatar from '@/components/PlayerAvatar.vue'
+import { useUserMenuControl } from '@/composables/userMenu'
 import { kUserContext } from '@/composables/user'
 import UserCard from '@/components/UserCard.vue'
 import { UserSkinRenderPaused } from '@/composables/userSkin'
@@ -36,8 +38,17 @@ import { injection } from '@/util/inject'
 
 const { t } = useI18n()
 const isShown = ref(false)
+const loginRequest = ref(0)
 const { gameProfile: selectedUserGameProfile, users } = injection(kUserContext)
 const needLogin = computed(() => users.value.length === 0 || !selectedUserGameProfile.value?.name)
+const userMenu = useUserMenuControl()
+
+userMenu.on((mode) => {
+  isShown.value = true
+  if (mode === 'login') {
+    loginRequest.value += 1
+  }
+})
 
 provide(UserSkinRenderPaused, computed(() => !isShown.value))
 </script>

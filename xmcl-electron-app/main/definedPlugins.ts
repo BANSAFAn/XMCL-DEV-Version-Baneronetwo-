@@ -6,10 +6,11 @@ import { pluginPowerMonitor } from './pluginPowerMonitor'
 import { pluginApiFallback } from '@xmcl/runtime/app/pluginApiFallback'
 import { pluginCommonProtocol } from '@xmcl/runtime/app/pluginCommonProtocol'
 import { pluginMediaProtocol } from '@xmcl/runtime/app/pluginMediaProtocol'
+import { pluginCli } from '@xmcl/runtime/commands/pluginCli'
+import { pluginCommandHost } from '@xmcl/runtime/commands/pluginCommandHost'
 import { elyByPlugin } from '@xmcl/runtime/elyby/elyByPlugin'
 import { pluginEncodingWorker } from '@xmcl/runtime/encoding/pluginEncodingWorker'
 import { pluginClientToken, pluginFlights, pluginGFW, pluginImageStorage, pluginLogConsumer, pluginTasks, pluginTelemetry, pluginUncaughtError } from '@xmcl/runtime/infra/plugins'
-import { pluginDirectLaunch } from '@xmcl/runtime/launch/pluginDirectLaunch'
 import { pluginLaunchPrecheck } from '@xmcl/runtime/launch/pluginLaunchPrecheck'
 import { pluginMarketProvider } from '@xmcl/runtime/market/pluginMarketProvider'
 import { pluginNativeReplacer } from '@xmcl/runtime/nativeReplacer/pluginNativeReplacer'
@@ -32,7 +33,8 @@ import { LauncherAppPlugin } from '~/app'
 import { definedServices } from './definedServices'
 
 export const definedPlugins: LauncherAppPlugin[] = [
-  pluginDirectLaunch,
+  pluginCommandHost({ services: definedServices }),
+  pluginCli,
   pluginAutoUpdate,
   pluginPowerMonitor,
   pluginIconProtocol,

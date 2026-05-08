@@ -226,6 +226,35 @@ fabricVersion:
   showSnapshot: SHOW SNAPSHOT
   stable: STABLE
   unstable: WOBBLY
+command:
+  instance:
+    launch:
+      title: LAUNCH INSTANCEZ
+    create:
+      title: MAEK NEW INSTANCEZ
+    delete:
+      title: DELETEZ INSTANCEZ
+  user:
+    login:
+      title: LOG IN USERZ
+    refresh:
+      title: REFRESHEZ USERZ
+commandPalette:
+  placeholder: SEARCH COMMANDZ, INSTANCEZ, MODZ…
+  commands: COMMANDZ
+  instances: INSTANCEZ
+  modrinth: MODRINTH
+  recent: RECENT STUFFZ
+  open: KWIK MEOW
+  openHint: OPENZ COMMAND PALETTE ({shortcut})
+  empty: TYPE 2 SEARCH
+  noResults: NO MATCH OH NOEZ
+  searching: SEARCHIN…
+  hintNavigate: MOVE
+  hintInvoke: DO IT
+  hintEnter: GO IN
+  hintBack: GO BAK
+  hintClose: BAI
 feedback:
   channel: CHANNELZ
   description: I FOUND A BUG OR I WANT TO MAKE A SUGGESTSHUN

@@ -95,7 +95,7 @@ import UserCardUserItem from './UserCardUserItem.vue'
 import UserCardYggdrasil from './UserCardYggdrasil.vue'
 import UserLoginForm from './UserLoginForm.vue'
 
-const props = defineProps<{ show: boolean }>()
+const props = defineProps<{ show: boolean; loginRequest?: number }>()
 
 const { t } = useI18n()
 const { users, select, userProfile: selected } = injection(kUserContext)
@@ -177,6 +177,16 @@ watch(
     login.value = users.value.length === 0
     addService.value = false
   },
+)
+
+watch(
+  () => props.loginRequest,
+  (value) => {
+    if (!value) return
+    login.value = true
+    addService.value = false
+  },
+  { immediate: true },
 )
 
 const usersToSwitch = computed(() =>

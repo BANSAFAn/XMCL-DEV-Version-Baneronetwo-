@@ -218,6 +218,35 @@ fabricVersion:
   showSnapshot: スナップショットを表示
   stable: 安定版
   unstable: 不安定版
+command:
+  instance:
+    launch:
+      title: インスタンスを起動
+    create:
+      title: インスタンスを作成
+    delete:
+      title: インスタンスを削除
+  user:
+    login:
+      title: ユーザーログイン
+    refresh:
+      title: ユーザーを更新
+commandPalette:
+  placeholder: コマンド、インスタンス、Mod を検索…
+  commands: コマンド
+  instances: インスタンス
+  modrinth: Modrinth
+  recent: 最近使用
+  open: クイック操作
+  openHint: コマンドパレットを開く ({shortcut})
+  empty: 検索するには入力してください。
+  noResults: 一致する結果がありません。
+  searching: 検索中…
+  hintNavigate: 移動
+  hintInvoke: 実行
+  hintEnter: 開く
+  hintBack: 戻る
+  hintClose: 閉じる
 feedback:
   channel: チャンネル
   description: バグを見つけました / 提案があります

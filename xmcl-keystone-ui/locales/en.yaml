@@ -234,6 +234,35 @@ fabricVersion:
   showSnapshot: Show Snapshot
   stable: Stable
   unstable: Unstable
+command:
+  instance:
+    launch:
+      title: Launch Instance
+    create:
+      title: Create Instance
+    delete:
+      title: Delete Instance
+  user:
+    login:
+      title: Login User
+    refresh:
+      title: Refresh User
+commandPalette:
+  placeholder: Search commands, instances, mods…
+  commands: Commands
+  instances: Instances
+  modrinth: Modrinth
+  recent: Recent
+  open: Quick Action
+  openHint: Open command palette ({shortcut})
+  empty: Type to search.
+  noResults: No matching results.
+  searching: Searching…
+  hintNavigate: navigate
+  hintInvoke: invoke
+  hintEnter: enter
+  hintBack: back
+  hintClose: close
 feedback:
   channel: Channels
   description: I found a Bug or I want to make a suggestion

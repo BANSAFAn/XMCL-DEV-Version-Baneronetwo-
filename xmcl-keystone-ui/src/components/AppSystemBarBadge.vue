@@ -23,6 +23,7 @@
     >
       {{ text }}
     </span>
+    <slot name="append" />
   </div>
 </template>
 <script setup lang="ts">

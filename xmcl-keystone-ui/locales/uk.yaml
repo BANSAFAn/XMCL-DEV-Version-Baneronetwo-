@@ -225,6 +225,35 @@ fabricVersion:
   showSnapshot: Показати знімки стану (Snapshot)
   stable: Стабільна
   unstable: Нестабільна
+command:
+  instance:
+    launch:
+      title: Запустити екземпляр
+    create:
+      title: Створити екземпляр
+    delete:
+      title: Видалити екземпляр
+  user:
+    login:
+      title: Увійти як користувач
+    refresh:
+      title: Оновити користувача
+commandPalette:
+  placeholder: Пошук команд, екземплярів, модів…
+  commands: Команди
+  instances: Екземпляри
+  modrinth: Modrinth
+  recent: Нещодавні
+  open: Швидка дія
+  openHint: Відкрити палітру команд ({shortcut})
+  empty: Введіть запит для пошуку.
+  noResults: Немає збігів.
+  searching: Пошук…
+  hintNavigate: навігація
+  hintInvoke: виконати
+  hintEnter: відкрити
+  hintBack: назад
+  hintClose: закрити
 feedback:
   channel: Канали
   description: Я знайшов помилку або хочу внести пропозицію

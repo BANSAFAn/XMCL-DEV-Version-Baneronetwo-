@@ -184,6 +184,35 @@ fabricVersion:
   showSnapshot: Mostrar versión Snapshot
   stable: Estable
   unstable: Inestable
+command:
+  instance:
+    launch:
+      title: Iniciar instancia
+    create:
+      title: Crear instancia
+    delete:
+      title: Eliminar instancia
+  user:
+    login:
+      title: Iniciar sesión de usuario
+    refresh:
+      title: Actualizar usuario
+commandPalette:
+  placeholder: Buscar comandos, instancias, mods…
+  commands: Comandos
+  instances: Instancias
+  modrinth: Modrinth
+  recent: Reciente
+  open: Acción rápida
+  openHint: Abrir paleta de comandos ({shortcut})
+  empty: Escribe para buscar.
+  noResults: Sin resultados.
+  searching: Buscando…
+  hintNavigate: navegar
+  hintInvoke: ejecutar
+  hintEnter: entrar
+  hintBack: atrás
+  hintClose: cerrar
 feedback:
   channel: Canales
   description: Encontré un error o quiero hacer una sugerencia

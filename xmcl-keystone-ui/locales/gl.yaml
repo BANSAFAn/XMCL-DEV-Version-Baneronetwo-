@@ -228,6 +228,35 @@ fabricVersion:
   showSnapshot: Toon Snapshot
   stable: Stabiel
   unstable: Instabiel
+command:
+  instance:
+    launch:
+      title: Iniciar instancia
+    create:
+      title: Crear instancia
+    delete:
+      title: Eliminar instancia
+  user:
+    login:
+      title: Iniciar sesión
+    refresh:
+      title: Actualizar usuario
+commandPalette:
+  placeholder: Buscar comandos, instancias, mods…
+  commands: Comandos
+  instances: Instancias
+  modrinth: Modrinth
+  recent: Recente
+  open: Acción rápida
+  openHint: Abrir paleta de comandos ({shortcut})
+  empty: Escribe para buscar.
+  noResults: Sen resultados.
+  searching: Buscando…
+  hintNavigate: navegar
+  hintInvoke: executar
+  hintEnter: entrar
+  hintBack: atrás
+  hintClose: pechar
 feedback:
   channel: Kanalen
   description: Ik heb een Bug gevonden of ik wil een suggestie doen

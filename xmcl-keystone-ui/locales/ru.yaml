@@ -229,6 +229,35 @@ fabricVersion:
   showSnapshot: Показывать снапшоты
   stable: Стабильная
   unstable: Нестабильная
+command:
+  instance:
+    launch:
+      title: Запустить экземпляр
+    create:
+      title: Создать экземпляр
+    delete:
+      title: Удалить экземпляр
+  user:
+    login:
+      title: Вход пользователя
+    refresh:
+      title: Обновить пользователя
+commandPalette:
+  placeholder: Поиск команд, экземпляров, модов…
+  commands: Команды
+  instances: Экземпляры
+  modrinth: Modrinth
+  recent: Недавние
+  open: Быстрое действие
+  openHint: Открыть палитру команд ({shortcut})
+  empty: Введите запрос для поиска.
+  noResults: Нет совпадений.
+  searching: Поиск…
+  hintNavigate: навигация
+  hintInvoke: выполнить
+  hintEnter: открыть
+  hintBack: назад
+  hintClose: закрыть
 feedback:
   channel: Каналы
   description: Сообщите о своей проблеме/идее здесь.

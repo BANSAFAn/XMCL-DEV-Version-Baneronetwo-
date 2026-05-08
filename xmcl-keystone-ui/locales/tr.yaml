@@ -228,6 +228,35 @@ fabricVersion:
   showSnapshot: Snapshot Göster
   stable: Kararlı
   unstable: Kararsız
+command:
+  instance:
+    launch:
+      title: Sürümü başlat
+    create:
+      title: Sürüm oluştur
+    delete:
+      title: Sürümü sil
+  user:
+    login:
+      title: Kullanıcı giriişi
+    refresh:
+      title: Kullanıcıyı yenile
+commandPalette:
+  placeholder: Komutları, sürümleri, modları ara…
+  commands: Komutlar
+  instances: Sürümler
+  modrinth: Modrinth
+  recent: Son kullanılanlar
+  open: Hızlı eylem
+  openHint: Komut paletini aç ({shortcut})
+  empty: Aramak için yaz.
+  noResults: Eşleşen sonuç yok.
+  searching: Aranıyor…
+  hintNavigate: gez
+  hintInvoke: çalıştır
+  hintEnter: aç
+  hintBack: geri
+  hintClose: kapat
 feedback:
   channel: Kanallar
   description: Bir Hata buldum veya bir öneride bulunmak istiyorum

@@ -232,6 +232,35 @@ fabricVersion:
   showSnapshot: 显示快照版
   stable: 稳定版
   unstable: 预览版
+command:
+  instance:
+    launch:
+      title: 启动实例
+    create:
+      title: 创建实例
+    delete:
+      title: 删除实例
+  user:
+    login:
+      title: 用户登录
+    refresh:
+      title: 刷新用户
+commandPalette:
+  placeholder: 搜索命令、实例、模组…
+  commands: 命令
+  instances: 实例
+  modrinth: Modrinth
+  recent: 最近
+  open: 快速操作
+  openHint: 打开命令面板 ({shortcut})
+  empty: 输入以搜索。
+  noResults: 没有匹配的结果。
+  searching: 搜索中…
+  hintNavigate: 浏览
+  hintInvoke: 执行
+  hintEnter: 进入
+  hintBack: 返回
+  hintClose: 关闭
 feedback:
   channel: 联系渠道
   description: 我找到了漏洞/我想反馈

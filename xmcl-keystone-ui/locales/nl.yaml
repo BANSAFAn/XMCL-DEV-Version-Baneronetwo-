@@ -229,6 +229,35 @@ fabricVersion:
   showSnapshot: Toon Snapshots
   stable: Stabiel
   unstable: Instabiel
+command:
+  instance:
+    launch:
+      title: Instantie starten
+    create:
+      title: Instantie aanmaken
+    delete:
+      title: Instantie verwijderen
+  user:
+    login:
+      title: Gebruiker inloggen
+    refresh:
+      title: Gebruiker vernieuwen
+commandPalette:
+  placeholder: Zoek opdrachten, instanties, mods…
+  commands: Opdrachten
+  instances: Instanties
+  modrinth: Modrinth
+  recent: Recent
+  open: Snelle actie
+  openHint: Opdrachtenpalet openen ({shortcut})
+  empty: Typ om te zoeken.
+  noResults: Geen resultaten.
+  searching: Zoeken…
+  hintNavigate: navigeren
+  hintInvoke: uitvoeren
+  hintEnter: openen
+  hintBack: terug
+  hintClose: sluiten
 feedback:
   channel: Kanalen
   description: Ik heb een bug gevonden of ik wil een suggestie doen

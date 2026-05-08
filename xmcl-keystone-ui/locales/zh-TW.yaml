@@ -222,6 +222,35 @@ fabricVersion:
   showSnapshot: 顯示快照版
   stable: 穩定版
   unstable: 預覽版
+command:
+  instance:
+    launch:
+      title: 啟動執行個體
+    create:
+      title: 建立執行個體
+    delete:
+      title: 刪除執行個體
+  user:
+    login:
+      title: 用戶登入
+    refresh:
+      title: 刷新用戶
+commandPalette:
+  placeholder: 搜尋命令、執行個體、模組…
+  commands: 命令
+  instances: 執行個體
+  modrinth: Modrinth
+  recent: 最近
+  open: 快速操作
+  openHint: 開啟命令面板 ({shortcut})
+  empty: 輸入以搜尋。
+  noResults: 沒有符合的結果。
+  searching: 搜尋中…
+  hintNavigate: 瀏覽
+  hintInvoke: 執行
+  hintEnter: 進入
+  hintBack: 返回
+  hintClose: 關閉
 feedback:
   channel: 聯絡管道
   description: 我找到了漏洞/我想提出建議

@@ -212,6 +212,35 @@ fabricVersion:
   showSnapshot: 스냅샷 표시
   stable: 안정
   unstable: 불안정
+command:
+  instance:
+    launch:
+      title: 인스턴스 실행
+    create:
+      title: 인스턴스 생성
+    delete:
+      title: 인스턴스 삭제
+  user:
+    login:
+      title: 사용자 로그인
+    refresh:
+      title: 사용자 새로 고침
+commandPalette:
+  placeholder: 명령, 인스턴스, 모드 검색…
+  commands: 명령
+  instances: 인스턴스
+  modrinth: Modrinth
+  recent: 최근 항목
+  open: 빠른 작업
+  openHint: 명령 팔레트 열기 ({shortcut})
+  empty: 검색하려면 입력하세요.
+  noResults: 일치하는 결과가 없습니다.
+  searching: 검색 중…
+  hintNavigate: 이동
+  hintInvoke: 실행
+  hintEnter: 열기
+  hintBack: 뒤로
+  hintClose: 닫기
 feedback:
   channel: 채널
   description: 버그를 발견했거나 제안을 하고 싶어요
