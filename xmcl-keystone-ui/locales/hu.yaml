@@ -188,7 +188,8 @@ disk:
   available: Elérhető
   used: Használva
 downloadCount: '{count} letöltés'
-downloadUpdate: Frissítés letöltése
+downloadUpdate:
+  name: 'Frissítés letöltése: {version}'
 duration:
   day: '{duration} nap | {duration} nap'
   hour: '{duration} óra | {duration} óra'
@@ -365,6 +366,11 @@ instance:
   vmVar: Környezeti változók
   vmVarHint: Kattintson a gombra környezeti változók hozzáadásához
   width: Szélesség
+  envVarKey: Kulcs
+  envVarValue: Érték
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: érték
+  fileApiPlaceholder: Add meg itt a távoli szinkronizáció URL-jét, ha meg szeretnéd tartani az erőforrás-szinkronizálást
 instanceAge:
   older: Régebbi
   threeDay: Három napon belül
@@ -445,6 +451,7 @@ instances:
   folderSetting: Mappa beállításai
   importFolderDescription: Minecraft importálása a Launcherbe
   loadingFiles: Modcsomag fájlok betöltése
+  addPrismDescription: Meglévő PrismLauncher-példány importálása.
 items:
   count: '{count} elem'
   total: '{total} összesen'
@@ -463,6 +470,12 @@ java:
   noMemory: Ne korlátozza a memória használatát
   refresh: Helyi Java frissítése
   systemMemory: 'Rendszermentes memória: {free} / {total}'
+  allocation: Lefoglalva
+  autoHint: A minimum a telepített modok számával nő; a maximum a rendelkezésre álló rendszermemóriát használja.
+  change: Módosítás
+  locationHint: Nincs Java kiválasztva — a rendszer alapértelmezettjét használja
+  openFolder: Java mappa megnyitása
+  presets: Előbeállítások
 labyMod:
   disable: LabyMod letiltása
   empty: A LabyMod nem támogatja a jelenlegi Minecraftot
@@ -473,6 +486,7 @@ launch:
   killServer: Öld meg a Localhost szervert
   launch: Indítás
   launchAnyway: Indítsa el egyébként
+  forceKill: Erőltetett kilépés
 launchBlocked:
   launchBadVersion:
     description: A verzió {version} json hibás. Talán telepítsd újra ezt a verziót?
@@ -648,6 +662,7 @@ mod:
   syncGroupRules: A csoportosítási szabályok mentése
   toUpdate: '{count} frissítendő'
   ungroup: Csoportosítás
+  description: Leírás
 modFilter:
   clear: Átlátszó szűrő
   dependenciesInstallOnly: Csak az elmulasztott függőségi modokat mutatja be
@@ -828,7 +843,7 @@ modrinth:
   description: Leírás
   downloads: Letöltések
   environments:
-    all: Összes
+    all: Mind
     default: Alapértelmezett
     name: Környezet
     optional: Opcionális
@@ -941,6 +956,11 @@ multiplayer:
   sharingNotificationTitle: Egy társ megosztja a játék konfigurációját
   start: Indítás
   startNewP2PConnection: Kattints az Indítás gombra egy új kapcsolat létrehozásához.
+  connectionError: Kapcsolódási hiba
+  connectionFailedHint: >-
+    Nem sikerült kapcsolatot létesíteni. Ellenőrizze, hogy mindkét fél kompatibilis NAT-típussal rendelkezik-e.
+  natWarning: >-
+    A NAT-típusod akadályozhatja a közvetlen kapcsolatot. Próbáld engedélyezni a továbbító szervert a beállításokban, vagy kérd meg a barátodat, hogy ő legyen a házigazda.
 myStuff: Dolgaid
 natType:
   blocked: Blokkolva
@@ -1013,6 +1033,8 @@ resourcepack:
   showFile: '{file} megjelenítése fájlkezelőben'
   showInCurseforge: '{name} megjelenítése curseforge-on'
   unselected: Nem kiválasztott forráscsomagok
+  noPacks: Nem található erőforráscsomag
+  search: Erőforráscsomagok keresése...
 save:
   allowCheats: Csalások engedélyezése
   copy:
@@ -1046,10 +1068,16 @@ save:
   useCurrent: Használja a jelenlegi világot
   useMouseRotate: Egér használata a nézet forgatásához
   useScrollZoom: Görgetés a nagyításhoz
+  openFolder: Mentések mappájának megnyitása
+  searchHint: Világok keresése a CurseForge-on
+  searchSaves: Mentések keresése
 screenshots:
   empty: Nincsenek képernyőképeid
   playRandom: Játék véletlenszerűen
   playSequence: Játék sorrendben
+  gallery: Képernyőkép-galéria
+  hint: A játékban nyomd meg az F2-t képernyőképhez
+  openFolder: Képernyőképek mappájának megnyitása
 search:
   favorate: Gyűjtemény
   local: Telepített
@@ -1349,6 +1377,9 @@ shaderPack:
   selectSearchHint: Keresés és Shader Pack kiválasztása
   showDirectory: Shader pack könyvtár megjelenítése
   showFile: Shader pack megjelenítése a mappában
+  market: Shaderpiac
+  noPacks: Nincs shadercsomag telepítve
+  search: Shadercsomagok keresése...
 shared:
   add: Új
   author: Készítő
@@ -1385,12 +1416,15 @@ sortBy:
   alphabetDesc: Rendezés ábécé szerint (csökkenő)
   timeAsc: Rendezés módosítási idő szerint (növekvő)
   timeDesc: Rendezés módosítási idő szerint (csökkenő)
+  name: Rendezés
 store:
   discover: Fedezze fel
   latestMinecraft: Legfrissebb Minecraft verzió
   name: Modcsomag piac
   searchResult: Keresés eredménye
   trending: Felkapott
+  empty: Nem található modpack
+  emptyHint: Próbáld módosítani a szűrőket vagy a keresést.
 tag:
   create: Címke létrehozása
   createSelected: Címke létrehozása a kiválasztotthoz
@@ -1557,3 +1591,21 @@ versionType:
   beta: Béta
   name: Státusz
   release: Kiadás
+downloadModMetadataDb:
+  name: Mod metaadat-adatbázis letöltése
+duplicateInstance:
+  name: Példány duplikálása
+exportModpack:
+  name: Modpack exportálása
+installProfile:
+  name: 'Profil telepítése: {version}'
+installQuilt:
+  name: 'Quilt telepítése: {version}'
+instanceLauncher:
+  search: Példányok keresése...
+  showAll: Összes példány megjelenítése
+  title: Összes példány
+migrateMinecraft:
+  name: Minecraft-fájlok migrálása
+reinstall:
+  name: 'Újratelepítés: {version}'

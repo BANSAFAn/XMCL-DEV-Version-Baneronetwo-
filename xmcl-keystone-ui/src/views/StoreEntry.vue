@@ -233,8 +233,8 @@
             class="flex flex-col justify-center items-center h-96 text-center opacity-50"
           >
             <v-icon size="96" color="grey">mood_bad</v-icon>
-            <h3 class="text-2xl font-bold mt-4">No ModPacks Found</h3>
-            <p class="text-gray-400 mt-2">Try adjusting your filters or search query.</p>
+            <h3 class="text-2xl font-bold mt-4">{{ t('store.empty') }}</h3>
+            <p class="text-gray-400 mt-2">{{ t('store.emptyHint') }}</p>
           </div>
           <div
             v-else

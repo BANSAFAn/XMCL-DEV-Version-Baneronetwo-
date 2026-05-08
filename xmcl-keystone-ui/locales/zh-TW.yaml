@@ -177,7 +177,8 @@ disk:
   available: 可用
   used: 已用
 downloadCount: '{count} 次下載'
-downloadUpdate: 下載更新
+downloadUpdate:
+  name: 下載更新 {version}
 duration:
   day: '{duration} 天'
   hour: '{duration} 小時'
@@ -347,6 +348,11 @@ instance:
   vmVar: 環境變數
   vmVarHint: 按一下按鈕新增環境變數
   width: 寬度
+  envVarKey: 變數名
+  envVarValue: 值
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: value
+  fileApiPlaceholder: 若需保持資源同步，請在此處填入遠端同步網址
 instanceAge:
   older: 三天前
   threeDay: 三天內
@@ -423,6 +429,7 @@ instances:
   folderSetting: 資料夾設定
   importFolderDescription: 匯入 Minecraft 到啟動器
   loadingFiles: 載入模組包檔案
+  addPrismDescription: 匯入現有的 PrismLauncher 實例。
 items:
   count: '{count} 個'
   total: 共 {total} 個
@@ -441,6 +448,12 @@ java:
   noMemory: 不設定記憶體限制
   refresh: 重新整理本地 Java
   systemMemory: '系統可用記憶體: {free} / {total}'
+  allocation: 已分配
+  autoHint: 最小記憶體隨已安裝 Mod 數量增長；最大記憶體使用系統可用記憶體。
+  change: 更換
+  locationHint: 未選擇 Java — 使用系統預設
+  openFolder: 開啟 Java 所在資料夾
+  presets: 預設
 labyMod:
   disable: 不使用 LabyMod
   empty: 目前 Minecraft 不支援 LabyMod
@@ -451,6 +464,7 @@ launch:
   killServer: 停止本地伺服器
   launch: 啟動
   launchAnyway: 直接啟動
+  forceKill: 強制結束
 launchBlocked:
   launchBadVersion:
     description: 版本 {version} 的 JSON 內有無法解析的庫，也許您需要重新安裝此版本？
@@ -609,6 +623,7 @@ mod:
   syncGroupRules: 儲存分組規則
   toUpdate: '{count} 個有新版本'
   ungroup: 取消分組
+  description: 描述
 modFilter:
   clear: 清除篩選
   dependenciesInstallOnly: 僅顯示缺少相依項的模組
@@ -787,6 +802,7 @@ modrinth:
     optional: 可選
     required: 必裝
     unsupported: 不支援
+    all: 全部
   externalResources: 第三方連結
   featuredVersions: 推薦版本
   followedProjects: 追蹤的專案
@@ -883,6 +899,9 @@ multiplayer:
   sharingNotificationTitle: 同伴正在共享遊戲設定
   start: 開始
   startNewP2PConnection: 按一下開始按鈕來新建一個新的點對點連線
+  connectionError: 連線錯誤
+  connectionFailedHint: 無法建立連線。請檢查雙方的 NAT 類型是否相容。
+  natWarning: 您的 NAT 類型可能阻礙直連。請嘗試在設定中啟用中繼伺服器，或讓朋友作為主機。
 myStuff: 個人中心
 natType:
   blocked: 無法存取網際網路
@@ -953,6 +972,8 @@ resourcepack:
   showFile: 在資料夾中顯示 {file}
   showInCurseforge: 在 Curseforge 中顯示 {name}
   unselected: 未選資源包
+  noPacks: 未找到資源包
+  search: 搜尋資源包...
 save:
   copy:
     name: 複製存檔
@@ -975,10 +996,16 @@ save:
   showDirectory: 顯示儲存目錄
   unselected: 共享的存檔
   useCurrent: 使用目前世界
+  openFolder: 開啟存檔資料夾
+  searchHint: 在 CurseForge 上搜尋世界
+  searchSaves: 搜尋存檔
 screenshots:
   empty: 您還沒有截圖
   playRandom: 隨機播放
   playSequence: 順序播放
+  gallery: 截圖畫廊
+  hint: 在遊戲中按 F2 截圖
+  openFolder: 開啟截圖資料夾
 search:
   favorate: 收藏
   local: 已安裝
@@ -1266,6 +1293,9 @@ shaderPack:
   selectSearchHint: 檢視已選擇的光影包
   showDirectory: 顯示光影資料夾
   showFile: 在資料夾中顯示此光影包
+  market: 光影包市場
+  noPacks: 未安裝光影包
+  search: 搜尋光影包...
 shared:
   add: 新增
   author: 作者
@@ -1302,12 +1332,15 @@ sortBy:
   alphabetDesc: 按字母（下降）排序
   timeAsc: 按修改時間（上升）排序
   timeDesc: 通過修改時間（下降）排序
+  name: 排序方式
 store:
   discover: 發現
   latestMinecraft: 使用近期 Minecraft 版本
   name: 模組包市集
   searchResult: 搜索結果
   trending: 流行趨勢
+  empty: 沒有找到整合包
+  emptyHint: 請嘗試調整篩選條件或搜尋關鍵字。
 tag:
   create: 建立標籤
   createSelected: 為所有選中的建立標籤
@@ -1439,7 +1472,7 @@ userService:
   manageServices: 管理服務
   register: 註冊
   server: 伺服器
-  service: null
+  service:
   skinDomains: 皮膚網域
   title: 第三方玩家資訊服務
   version: 版本
@@ -1482,3 +1515,21 @@ versionType:
   beta: Beta (測試版)
   name: 型別
   release: 穩定版
+downloadModMetadataDb:
+  name: 下載 Mod 元資料資料庫
+duplicateInstance:
+  name: 複製實例
+exportModpack:
+  name: 匯出整合包
+installProfile:
+  name: 安裝設定檔 {version}
+installQuilt:
+  name: 安裝 Quilt {version}
+instanceLauncher:
+  search: 搜尋實例...
+  showAll: 顯示所有實例
+  title: 所有實例
+migrateMinecraft:
+  name: 遷移 Minecraft 檔案
+reinstall:
+  name: 重新安裝 {version}

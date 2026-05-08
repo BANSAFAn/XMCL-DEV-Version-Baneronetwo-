@@ -181,7 +181,8 @@ disk:
   available: Доступно
   used: Використано
 downloadCount: '{count} завантажень'
-downloadUpdate: Завантажити оновлення
+downloadUpdate:
+  name: Завантажити оновлення {version}
 duration:
   day: '{duration} день | {duration} дні | {duration} днів'
   hour: '{duration} година | {duration} години | {duration} годин'
@@ -353,6 +354,11 @@ instance:
   vmVar: Змінні середовища
   vmVarHint: Натисніть кнопку +, щоб додати змінні середовища
   width: Ширина
+  envVarKey: Ключ
+  envVarValue: Значення
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: значення
+  fileApiPlaceholder: Введіть тут URL віддаленої синхронізації, якщо хочете підтримувати синхронізацію ресурсів
 instanceAge:
   older: Старші
   threeDay: Протягом трьох днів
@@ -417,6 +423,7 @@ instances:
   folderSetting: Налаштування папки
   importFolderDescription: Імпортувати Minecraft в лаунчер
   loadingFiles: Завантаження файлів модпаку
+  addPrismDescription: Імпортувати існуючий інстанс PrismLauncher.
 items:
   count: '{count} елементів'
   total: '{total} всього'
@@ -435,6 +442,12 @@ java:
   noMemory: Не обмежувати використання пам'яті
   refresh: Оновити локальні Java
   systemMemory: 'Вільна системна пам''ять: {free} / {total}'
+  allocation: Виділено
+  autoHint: Мінімум зростає з кількістю встановлених модів; максимум використовує доступну системну пам'ять.
+  change: Змінити
+  locationHint: Java не обрана — використовується системна за замовчуванням
+  openFolder: Відкрити теку Java
+  presets: Налаштування
 labyMod:
   disable: Вимкнути LabyMod
   empty: LabyMod не підтримує поточний Minecraft
@@ -445,6 +458,7 @@ launch:
   killServer: Зупинити локальний сервер
   launch: Запустити
   launchAnyway: Запустити все одно
+  forceKill: Примусово завершити
 launchBlocked:
   launchBadVersion:
     description: Файл JSON версії {version} пошкоджено. Можливо, перевстановити цю версію?
@@ -615,6 +629,7 @@ mod:
   syncGroupRules: Зберегти правила групування
   toUpdate: '{count} оновлень'
   ungroup: Розгрупувати
+  description: Опис
 modFilter:
   clear: Очистити фільтр
   dependenciesInstallOnly: Показувати лише відсутні залежності модів
@@ -795,6 +810,7 @@ modrinth:
     optional: Необов'язково
     required: Обов'язково
     unsupported: Не підтримується
+    all: Всі
   externalResources: Зовнішні ресурси
   featuredVersions: Рекомендовані версії
   followedProjects: Відстежувані проєкти
@@ -898,6 +914,11 @@ multiplayer:
   sharingNotificationTitle: Вузол ділиться своєю ігровою конфігурацією
   start: Почати
   startNewP2PConnection: Натисніть кнопку "Почати", щоб створити нове з'єднання з вузлом
+  connectionError: Помилка з'єднання
+  connectionFailedHint: >-
+    Не вдалося встановити з'єднання. Перевірте, чи мають обидві сторони сумісні типи NAT.
+  natWarning: >-
+    Ваш тип NAT може перешкоджати прямим з'єднанням. Спробуйте увімкнути ретрансляційний сервер у налаштуваннях або попросіть друга бути хостом.
 myStuff: Мої речі
 natType:
   blocked: Заблоковано
@@ -970,6 +991,8 @@ resourcepack:
   showFile: Показати пакет ресурсів у папці {file}
   showInCurseforge: Показати {name} на Curseforge
   unselected: Невибрані пакети ресурсів
+  noPacks: Ресурспаки не знайдено
+  search: Пошук ресурспаків...
 save:
   copy:
     name: Копіювати збереження
@@ -993,10 +1016,16 @@ save:
   showDirectory: Показати каталог збережень
   unselected: Спільні збереження
   useCurrent: Використовувати поточний світ
+  openFolder: Відкрити теку збережень
+  searchHint: Пошук світів на CurseForge
+  searchSaves: Пошук збережень
 screenshots:
   empty: У вас немає знімків екрана
   playRandom: Перемішати
   playSequence: Відтворити по порядку
+  gallery: Галерея скріншотів
+  hint: У грі натисніть F2 для скріншоту
+  openFolder: Відкрити теку скріншотів
 search:
   favorate: Колекція
   local: Встановлені
@@ -1280,6 +1309,9 @@ shaderPack:
   selectSearchHint: Шукати та вибрати пакет шейдерів
   showDirectory: Показати каталог пакетів шейдерів
   showFile: Показати цей пакет шейдерів у папці
+  market: Ринок шейдерів
+  noPacks: Шейдерпаки не встановлені
+  search: Пошук шейдерпаків...
 shared:
   add: Додати
   author: Автор
@@ -1316,12 +1348,15 @@ sortBy:
   alphabetDesc: Сортувати за алфавітом (за спаданням)
   timeAsc: Сортувати за часом модифікації (за зростанням)
   timeDesc: Сортувати за часом модифікації (за спаданням)
+  name: Сортувати за
 store:
   discover: Відкрийте для себе
   latestMinecraft: Остання версія Minecraft
   name: Ринок модпаків
   searchResult: Результат пошуку
   trending: В тренді
+  empty: Модпаки не знайдено
+  emptyHint: Спробуйте змінити фільтри або пошуковий запит.
 tag:
   create: Створити тег
   createSelected: Створити тег для вибраного
@@ -1486,3 +1521,21 @@ versionType:
   beta: Бета
   name: Статус
   release: Випуск
+downloadModMetadataDb:
+  name: Завантажити базу метаданих модів
+duplicateInstance:
+  name: Дублювати інстанс
+exportModpack:
+  name: Експортувати модпак
+installProfile:
+  name: Встановити профіль {version}
+installQuilt:
+  name: Встановити Quilt {version}
+instanceLauncher:
+  search: Пошук інстансів...
+  showAll: Показати всі інстанси
+  title: Всі інстанси
+migrateMinecraft:
+  name: Перенести файли Minecraft
+reinstall:
+  name: Перевстановити {version}

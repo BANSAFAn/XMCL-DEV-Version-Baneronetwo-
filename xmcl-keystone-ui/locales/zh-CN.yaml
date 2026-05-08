@@ -184,7 +184,12 @@ disk:
   available: 可用
   used: 已用
 downloadCount: '{count} 次下载'
-downloadUpdate: 下载更新
+downloadModMetadataDb:
+  name: 下载 Mod 元数据数据库
+downloadUpdate:
+  name: 下载更新 {version}
+duplicateInstance:
+  name: 复制实例
 duration:
   day: '{duration} 天'
   hour: '{duration} 小时'
@@ -264,6 +269,8 @@ help: 帮助
 home: 主页
 importModpack:
   name: 导入整合包
+exportModpack:
+  name: 导出整合包
 installAssets:
   asset: 下载 {count} 个资源文件
   assetIndex: 下载资源文件目录
@@ -296,6 +303,10 @@ installModrinthFile:
 installOptifine:
   download: 下载 Optifine Universal
   name: 安装 Optifine
+installProfile:
+  name: 安装配置 {version}
+installQuilt:
+  name: 安装 Quilt {version}
 installVersion:
   jar: 安装游戏 Jar 文件
   json: 安装游戏 JSON 文件
@@ -312,6 +323,7 @@ instance:
   duplicate: 创建备份
   duplicatedName: 名字冲突！
   fileApi: 远程同步文件服务器 API 地址
+  fileApiPlaceholder: 如需保持资源同步，请在此处填入远程同步地址
   fileApiHint: 用于远程同步实例文件的链接
   fullscreen: 全屏
   height: 高度
@@ -357,6 +369,10 @@ instance:
   vmOptionsHint: 额外的 JVM 的启动参数
   vmVar: 环境变量
   vmVarHint: 点击按钮添加环境变量
+  envVarKey: 变量名
+  envVarValue: 值
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: value
   width: 宽度
 instanceAge:
   older: 三天前
@@ -433,16 +449,25 @@ instances:
   folder: 文件夹
   folderSetting: 文件夹设置
   importFolderDescription: 导入 Minecraft 到启动器
+  addPrismDescription: 导入现有的 PrismLauncher 实例。
   loadingFiles: 加载整合包文件
 items:
   count: '{count} 个'
   total: 共 {total} 个
+instanceLauncher:
+  search: 搜索实例...
+  showAll: 显示所有实例
+  title: 所有实例
 java:
   allocatedLong: 启动器自动选择 Java
   allocatedShort: 自动分配
+  allocation: 已分配
+  autoHint: 最小内存随已安装 Mod 数量增长；最大内存使用系统可用内存。
+  change: 更换
   importFromFile: 从文件导入 Java
   invalid: 无效的 Java 路径
   location: Java 路径
+  locationHint: 未选择 Java — 使用系统默认
   maxMemory: 最大内存
   memory: Java 内存
   memoryAuto: 自动
@@ -450,6 +475,8 @@ java:
   memoryUnassigned: 不指定内存
   minMemory: 最小内存
   noMemory: 不设置内存限制
+  openFolder: 打开 Java 所在文件夹
+  presets: 预设
   refresh: 刷新本地 Java
   systemMemory: '系统空闲内存: {free} / {total}'
 labyMod:
@@ -580,6 +607,7 @@ mod:
   createGroup: 创建分组
   currentVersion: 当前是 {current}
   denseView: 简略模式
+  description: 描述
   disableAll: 全部禁用
   dropHint: 将模组 Jar 文件拖入此处来导入
   duplicatedDetected: 有 {count} 个模组重复了
@@ -798,6 +826,7 @@ modrinth:
   description: 详情
   downloads: 下载量
   environments:
+    all: 全部
     default: 默认
     name: 运行环境
     optional: 可选
@@ -851,6 +880,9 @@ multiplayer:
   allowTurnHint: 当您和您的朋友连不上时可以尝试允许转发服务，但是转发服务可能会增加您的联机延迟。使用时请注意。
   complete: 完成
   confirm: 确定
+  connectionError: 连接错误
+  connectionFailedHint: 无法建立连接。请检查双方的 NAT 类型是否兼容。
+  natWarning: 您的 NAT 类型可能阻碍直连。请尝试在设置中启用中继服务器，或让朋友作为主机。
   connections: 用户连接管理
   copied: 已复制！
   copy: 复制
@@ -902,6 +934,8 @@ multiplayer:
   start: 开始
   startNewP2PConnection: 点击开始按钮来新建一个新的点对点连接
 myStuff: 个人中心
+migrateMinecraft:
+  name: 迁移 Minecraft 文件
 natType:
   blocked: 无法访问外网
   fullCone: 完全锥形
@@ -953,6 +987,8 @@ proxy:
 quiltVersion:
   disable: 不使用 Quilt
   empty: Minecraft {version} 不支持 Quilt
+reinstall:
+  name: 重新安装 {version}
 resourcepack:
   compatible: 当前格式({format}) 可用于当前版本 {version}
   defaultDescription: Minecraft 的默认材质
@@ -963,6 +999,8 @@ resourcepack:
   enable: 一共启用了 {count} 个资源包
   incompatible: 不兼容的资源包格式({format})。适用范围 {accept}。当前版本 {actual}。
   name: 资源包 | 资源包
+  noPacks: 未找到资源包
+  search: 搜索资源包...
   searchHint: 搜索资源包
   searchOnCurseforge: 在 Curseforge 中查找 {name}
   searchOnModrinth: '@:mod.searchOnModrinth'
@@ -993,8 +1031,11 @@ save:
   mapLoaded: 地图已加载
   mapPreview: 地图预览
   name: 地图存档 | 地图存档
+  openFolder: 打开存档文件夹
   properties: 世界属性
   search: 搜索地图
+  searchSaves: 搜索存档
+  searchHint: 在 CurseForge 上搜索世界
   seed: 种子
   selected: 本地存档
   shared: 实例使用共享存档文件夹
@@ -1005,6 +1046,9 @@ save:
   useScrollZoom: 使用滚轮缩放
 screenshots:
   empty: 您还没有截图
+  gallery: 截图画廊
+  hint: 在游戏中按 F2 截图
+  openFolder: 打开截图文件夹
   playRandom: 随机播放
   playSequence: 顺序播放
 search:
@@ -1292,10 +1336,13 @@ shaderPack:
   enable: 使用了 {name} 作为光影包
   enabled: 已启用的光影
   manage: 管理光影包
+  market: 光影包市场
   name: 光影包
+  noPacks: 未安装光影包
   noShaderMod: 没有安装光影模组
   noShaderModHint: 不装光影模组光影包没法生效
   noShaderModInstallHint: 您需要安装以下 mod 之一来加载着光影包。
+  search: 搜索光影包...
   searchHint: 搜索光影包
   selectSearchHint: 查看已选择的光影包
   showDirectory: 显示光影文件夹
@@ -1334,10 +1381,13 @@ sidebar:
 sortBy:
   alphabetAsc: 按字母（上升）排序
   alphabetDesc: 按字母（下降）排序
+  name: 排序方式
   timeAsc: 按修改时间（上升）排序
   timeDesc: 通过修改时间（下降）排序
 store:
   discover: 发现
+  empty: 没有找到整合包
+  emptyHint: 请尝试调整筛选条件或搜索关键词。
   latestMinecraft: 使用近期 Minecraft 版本
   name: 整合包市场
   searchResult: 搜索结果

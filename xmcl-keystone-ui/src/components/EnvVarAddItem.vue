@@ -3,8 +3,8 @@
     <v-text-field
       v-model="envVarKey"
       autofocus
-      label="Key"
-      placeholder="MY_VAR"
+      :label="t('instance.envVarKey')"
+      :placeholder="t('instance.envVarKeyPlaceholder')"
       variant="outlined"
       density="compact"
       hide-details
@@ -15,8 +15,8 @@
     <span class="env-var-add__sep">=</span>
     <v-text-field
       v-model="envVarValue"
-      label="Value"
-      placeholder="value"
+      :label="t('instance.envVarValue')"
+      :placeholder="t('instance.envVarValuePlaceholder')"
       variant="outlined"
       density="compact"
       hide-details

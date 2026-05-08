@@ -180,7 +180,8 @@ disk:
   available: Disponible
   used: Utilisé
 downloadCount: '{count} téléchargements'
-downloadUpdate: Télécharger la mise à jour
+downloadUpdate:
+  name: Télécharger la mise à jour {version}
 duration:
   day: '{duration} jour | {duration} jours'
   hour: |-
@@ -205,13 +206,7 @@ errors:
     Reçu {actual}.
   ConnectTimeoutError: Délai de connexion au serveur.
   DNSNotFoundError: Erreur de recherche DNS
-  DatabaseNotOpened: "La base de données n'est pas ouverte !\ 
-
-    Le lanceur ne fonctionnera pas correctement !\ 
-
-    Veuillez sélectionner un répertoire de données auquel le lanceur peut accéder.\ 
-
-    Vous pouvez essayer de réinitialiser la racine des données dans la page de configuration."
+  DatabaseNotOpened: "La base de données n'est pas ouverte ! \nLe lanceur ne fonctionnera pas correctement ! \nVeuillez sélectionner un répertoire de données auquel le lanceur peut accéder. \nVous pouvez essayer de réinitialiser la racine des données dans la page de configuration."
   DiskIsFull: |-
     Votre disque est plein!
     Ne peut rien écrire sur le disque!
@@ -328,9 +323,7 @@ instance:
   lastPlayed: Dernier Joué
   launchArguments: Aperçu des Arguments au Lancement
   launchServer: Lancer le serveur localhost
-  linkFileDesc: "Cela écrasera le {file} local de l'instance par le {file} global.\ 
-
-    Etes-vous sûr de le lier ?"
+  linkFileDesc: "Cela écrasera le {file} local de l'instance par le {file} global. \nEtes-vous sûr de le lier ?"
   linkFileTitle: "Êtes-vous sûr de créer un lien vers {file} ?"
   mcOptions: Options Minecraft
   mcOptionsHint: Arguments supplémentaires pour le lancement de Minecraft
@@ -360,6 +353,11 @@ instance:
   vmVar: Variables d'environnement
   vmVarHint: Cliquez sur le bouton pour ajouter des variables d'environnement
   width: Largeur
+  envVarKey: Clé
+  envVarValue: Valeur
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: valeur
+  fileApiPlaceholder: Entrez ici l'URL de synchronisation distante si vous souhaitez conserver les ressources synchronisées
 instanceAge:
   older: Plus âgée
   threeDay: Dans trois jours
@@ -442,6 +440,7 @@ instances:
   folderSetting: Paramètres du dossier
   importFolderDescription: Importer Minecraft au launcher
   loadingFiles: Chargement des fichiers Modpack
+  addPrismDescription: Importer une instance PrismLauncher existante.
 items:
   count: '{count} éléments'
   total: '{total} total'
@@ -460,11 +459,18 @@ java:
   noMemory: Ne pas limiter l'utilisation de la mémoire
   refresh: Actualiser l'exécutable Java Local
   systemMemory: "Mémoire libre du système : {free} / {total}"
+  allocation: Alloué
+  autoHint: Le minimum croît avec le nombre de mods installés ; le maximum utilise la mémoire système disponible.
+  change: Modifier
+  locationHint: Aucun Java sélectionné — utilisation de celui par défaut du système
+  openFolder: Ouvrir le dossier Java
+  presets: Préréglages
 launch:
   createShortcut: Créer un raccourci
   killServer: Tuer le serveur Localhost
   launch: Jouer
   launchAnyway: Lancer quand même
+  forceKill: Forcer l'arrêt
 launchBlocked:
   launchGeneralException:
     description: Certaines erreurs font échouer le lancement.
@@ -656,6 +662,7 @@ mod:
   showInModrinth: Afficher {name} sur Modrinth
   syncGroupRules: Enregistrer les règles de regroupement
   ungroup: Désordre
+  description: Description
 modFilter:
   clear: Filtre effacer
   dependenciesInstallOnly: Afficher uniquement les mods des dépendances manquées
@@ -834,6 +841,7 @@ modrinth:
     optional: Facultatif
     required: Obligatoire
     unsupported: Non pris en charge
+    all: Tous
   externalResources: Ressources externes
   featuredVersions: Versions récentes
   followedProjects: Projets suivis
@@ -932,6 +940,11 @@ multiplayer:
   sharingNotificationTitle: Un pair partage la configuration du jeu
   start: Démarrer
   startNewP2PConnection: Cliquez sur le bouton Démarrer pour créer une nouvelle connexion homologue
+  connectionError: Erreur de connexion
+  connectionFailedHint: >-
+    Impossible d'établir la connexion. Vérifiez que les deux pairs ont des types de NAT compatibles.
+  natWarning: >-
+    Votre type de NAT peut empêcher les connexions directes. Essayez d'activer le serveur de relais dans les paramètres ou demandez à votre ami d'héberger.
 myStuff: Mon inventaire
 natType:
   blocked: Bloqué
@@ -1000,6 +1013,8 @@ resourcepack:
   showFile: Afficher le pack de ressources dans le dossier {file}
   showInCurseforge: Afficher {name} dans curseforge
   unselected: Packs de ressources désélectionnés
+  noPacks: Aucun pack de ressources trouvé
+  search: Rechercher des packs de ressources...
 save:
   copy:
     name: Copier la sauvegarde
@@ -1025,10 +1040,16 @@ save:
   showDirectory: Afficher le répertoire de sauvegarde
   unselected: archives partagées
   useCurrent: Utiliser le monde actuel
+  openFolder: Ouvrir le dossier des sauvegardes
+  searchHint: Rechercher des mondes sur CurseForge
+  searchSaves: Rechercher des sauvegardes
 screenshots:
   empty: Vous n'avez pas de capture d'écran
   playRandom: Jouez au hasard
   playSequence: Jouer dans l'ordre
+  gallery: Galerie de captures d'écran
+  hint: Appuyez sur F2 dans le jeu pour prendre des captures d'écran
+  openFolder: Ouvrir le dossier des captures d'écran
 search:
   favorate: Collection
   local: Installé
@@ -1196,9 +1217,7 @@ setting:
   location: Emplacement du magasin
   manualUpdateHint: >-
     La version ne peut pas être mise à jour automatiquement. Veuillez télécharger à nouveau le lanceur à partir du site officiel !
-  maunalUpdateHint: "La version ne peut pas être mise à jour automatiquement.\ 
-
-    Veuillez retélécharger le lanceur depuis le site Web !"
+  maunalUpdateHint: "La version ne peut pas être mise à jour automatiquement. \nVeuillez retélécharger le lanceur depuis le site Web !"
   maxSockets: Par hôte
   maxSocketsDescription: >-
     Limitez le nombre maximal de sockets à autoriser par hôte ou pour tous les hôtes au total. 0 signifie aucune limite.
@@ -1296,9 +1315,7 @@ setup:
     Il est également inspiré d'autres applications de lancement de jeux comme Steam, etc.
   defaultPath: Chemin par défaut
   error:
-    badDataRoot: "Répertoire invalide pour les données du lanceur !\ 
-
-      Veuillez essayer un autre répertoire !"
+    badDataRoot: "Répertoire invalide pour les données du lanceur ! \nVeuillez essayer un autre répertoire !"
     exists: |-
       Le répertoire sélectionné n'est pas vide.
       Ce n'est pas grave, mais assurez-vous de sauvegarder vos données.
@@ -1306,12 +1323,8 @@ setup:
       Le chemin contient des caractères invalides!
       Cela pourrait provoquer le démarrage de Minecraft!
       Plaese utilise uniquement des caractères anglais et un symbole!
-    noPermission: "Le lanceur n'est pas autorisé à accéder au répertoire sélectionné !\ 
-
-      Veuillez en essayer un autre."
-    nonDictionary: "Le chemin sélectionné est un fichier !\ 
-
-      Veuillez sélectionner un répertoire !"
+    noPermission: "Le lanceur n'est pas autorisé à accéder au répertoire sélectionné ! \nVeuillez en essayer un autre."
+    nonDictionary: "Le chemin sélectionné est un fichier ! \nVeuillez sélectionner un répertoire !"
   focusLayoutDescription: >-
     La mise en page ciblée est la mise en page héritée de Minecraft Launcher.
 
@@ -1341,6 +1354,9 @@ shaderPack:
   noShaderModInstallHint: Vous devez installer l'un des mods suivants pour charger le pack de shaders.
   showDirectory: Afficher le répertoire du shaderpack
   showFile: Afficher ce pack de shaders dans le dossier
+  market: Marché des shaders
+  noPacks: Aucun pack de shaders installé
+  search: Rechercher des packs de shaders...
 shared:
   add: Ajouter
   author: Auteur
@@ -1377,10 +1393,13 @@ sortBy:
   alphabetDesc: Trier par Alphabet (descendant)
   timeAsc: Trier par temps de modification (ascendant)
   timeDesc: Trier par temps de modification (descendant)
+  name: Trier par
 store:
   discover: Découvrir
   searchResult: Résultat de la recherche
   trending: Tendance
+  empty: Aucun modpack trouvé
+  emptyHint: Essayez d'ajuster vos filtres ou votre recherche.
 tag:
   create: Créer un tag
   createSelected: Créer un tag pour la sélection
@@ -1568,3 +1587,21 @@ versionType:
   beta: Bêta
   name: Statut
   release: Sortie
+downloadModMetadataDb:
+  name: Télécharger la base de métadonnées des mods
+duplicateInstance:
+  name: Dupliquer l'instance
+exportModpack:
+  name: Exporter le modpack
+installProfile:
+  name: Installer le profil {version}
+installQuilt:
+  name: Installer Quilt {version}
+instanceLauncher:
+  search: Rechercher des instances...
+  showAll: Afficher toutes les instances
+  title: Toutes les instances
+migrateMinecraft:
+  name: Migrer les fichiers Minecraft
+reinstall:
+  name: Réinstaller {version}

@@ -183,7 +183,8 @@ disk:
   available: Доступно
   used: Использовано
 downloadCount: '{count} загрузок'
-downloadUpdate: Скачать обновление
+downloadUpdate:
+  name: Загрузить обновление {version}
 duration:
   day: '{duration} день | {duration} дней'
   hour: '{duration} час | {duration} часов'
@@ -357,6 +358,11 @@ instance:
   vmVar: Переменные среды
   vmVarHint: Нажмите кнопку, чтобы добавить переменные среды.
   width: Ширина
+  envVarKey: Ключ
+  envVarValue: Значение
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: значение
+  fileApiPlaceholder: Введите здесь URL удалённой синхронизации, если хотите поддерживать синхронизацию ресурсов
 instanceAge:
   older: Старые
   threeDay: В течение трёх дней
@@ -435,6 +441,7 @@ instances:
   folderSetting: Настройки папки
   importFolderDescription: Импортировать Minecraft в лаунчер
   loadingFiles: Загрузка файлов сборки модов
+  addPrismDescription: Импортировать существующий инстанс PrismLauncher.
 items:
   count: '{count} элементов'
   total: '{total} всего'
@@ -453,6 +460,12 @@ java:
   noMemory: Не ограничивать использование памяти
   refresh: Обновить локальный Java
   systemMemory: 'Свободная память системы: {free} / {total}'
+  allocation: Выделено
+  autoHint: Минимум растёт с количеством установленных модов; максимум использует доступную системную память.
+  change: Изменить
+  locationHint: Java не выбрана — используется системная по умолчанию
+  openFolder: Открыть папку Java
+  presets: Предустановки
 labyMod:
   disable: LabyMod не выбран
   empty: LabyMod не поддерживает текущую версию Minecraft
@@ -463,6 +476,7 @@ launch:
   killServer: Остановить локальный сервер
   launch: Запустить
   launchAnyway: Запустить в любом случае
+  forceKill: Принудительно завершить
 launchBlocked:
   launchBadVersion:
     description: >-
@@ -824,6 +838,7 @@ modrinth:
     optional: Необязательно
     required: Требуется
     unsupported: Не поддерживается
+    all: Все
   externalResources: Внешние ресурсы
   featuredVersions: Рекомендуемые версии
   followedProjects: Следовал проектам
@@ -926,6 +941,11 @@ multiplayer:
   sharingNotificationTitle: Пользователь делится настройками экземпляра
   start: Начать
   startNewP2PConnection: Нажмите на кнопку "Начать", чтобы создать новое p2p-соединение
+  connectionError: Ошибка соединения
+  connectionFailedHint: >-
+    Не удалось установить соединение. Проверьте, что у обеих сторон совместимые типы NAT.
+  natWarning: >-
+    Ваш тип NAT может препятствовать прямым соединениям. Попробуйте включить релейный сервер в настройках или попросите друга стать хостом.
 myStuff: Мой контент
 natType:
   blocked: Заблокирован
@@ -998,6 +1018,8 @@ resourcepack:
   showFile: Показать путь к набору ресурсов {file}
   showInCurseforge: Показать {name} на CurseForge
   unselected: Невыбранные наборы ресурсов
+  noPacks: Ресурс-паки не найдены
+  search: Поиск ресурс-паков...
 save:
   copy:
     name: Копировать мир
@@ -1021,10 +1043,16 @@ save:
   showDirectory: Открыть папку с мирами
   unselected: общий архив
   useCurrent: Использовать текущий мир
+  openFolder: Открыть папку сохранений
+  searchHint: Поиск миров на CurseForge
+  searchSaves: Поиск сохранений
 screenshots:
   empty: У вас нет снимков экрана
   playRandom: Показывать случайным образом
   playSequence: Показывать по порядку
+  gallery: Галерея скриншотов
+  hint: В игре нажмите F2, чтобы сделать скриншот
+  openFolder: Открыть папку скриншотов
 search:
   favorate: Коллекция
   local: Установлено
@@ -1325,6 +1353,9 @@ shaderPack:
   selectSearchHint: Найдите и выберите Shader Pack
   showDirectory: Открыть папку с наборами шейдеров
   showFile: Показать путь к набору шейдеров {file}
+  market: Магазин шейдеров
+  noPacks: Шейдер-паки не установлены
+  search: Поиск шейдер-паков...
 shared:
   add: Добавить
   author: Автор
@@ -1361,12 +1392,15 @@ sortBy:
   alphabetDesc: Сортировка по алфавиту (спуск)
   timeAsc: Сортировать по времени модификации (восходящая)
   timeDesc: Сортировать по времени модификации (спуск)
+  name: Сортировать по
 store:
   discover: Обнаружить
   latestMinecraft: Последняя версия Minecraft
   name: Магазин сборок модов
   searchResult: Результат поиска
   trending: Тенденции
+  empty: Модпаки не найдены
+  emptyHint: Попробуйте изменить фильтры или поисковый запрос.
 tag:
   create: Создать тег
   createSelected: Создать тег для выбранного
@@ -1531,3 +1565,21 @@ versionType:
   beta: Бета
   name: Статус
   release: Релиз
+downloadModMetadataDb:
+  name: Загрузить базу метаданных модов
+duplicateInstance:
+  name: Дублировать инстанс
+exportModpack:
+  name: Экспортировать модпак
+installProfile:
+  name: Установить профиль {version}
+installQuilt:
+  name: Установить Quilt {version}
+instanceLauncher:
+  search: Поиск инстансов...
+  showAll: Показать все инстансы
+  title: Все инстансы
+migrateMinecraft:
+  name: Перенести файлы Minecraft
+reinstall:
+  name: Переустановить {version}

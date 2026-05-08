@@ -181,7 +181,8 @@ disk:
   available: FREE SPACE
   used: USED
 downloadCount: '{count} DOWNLODS'
-downloadUpdate: DOWNLOD UPDAT
+downloadUpdate:
+  name: Downloadz Updaet {version}
 duration:
   day: '{duration} DAY | {duration} DAYZ'
   hour: '{duration} HOUR | {duration} HOURZ'
@@ -352,6 +353,11 @@ instance:
   vmVar: ENVIRONMENT VARIABLEZ
   vmVarHint: CLICK + BUTTON TO ADD ENVIRONEMNT VARIABLEZ
   width: WIDTH
+  envVarKey: Keey
+  envVarValue: Vallue
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: vallue
+  fileApiPlaceholder: Type ur sync URLz heer if u wanna keepz reswurzes synchd
 instanceAge:
   older: OLDR
   threeDay: IN THREE DAYZ
@@ -372,9 +378,9 @@ instanceInstallSkip:
   warning: >-
     SOME FILEZ ARE DOWNLODED MULTIPLE TIMES WITH CHECKSUM UNMATCHING. THIS MAY BE DUE TO DA FACT THAT DA ORIGINAL CHECKSUM IS INCORRECT. PLZ CHECK. IF U CONFIRM DA CURREN FILEZ ARE VALID, U CAN SKIP DA VALIDASHUN CHECK.
 instanceLauncher:
-  search: SEARCH INSTANCES...
-  showAll: SHOW ALL INSTANCES
-  title: ALL INSTANCES
+  search: Sniff instncez...
+  showAll: Sho All Instncez
+  title: All Instncez
 instanceSetting:
   disableAuthlibInjector: DISABL AUTHLIB INJECTOR
   disableAuthlibInjectorDescription: >-
@@ -420,6 +426,7 @@ instances:
   folderSetting: FOLDR SETTINGZ
   importFolderDescription: IMPORT MINECWAFT TO LAUNCHER
   loadingFiles: LOADING MODPACK FILEZ
+  addPrismDescription: Imprt exsting PrismLauncher instnce.
 items:
   count: '{count} ITEMZ'
   total: '{total} TOTAL'
@@ -438,6 +445,12 @@ java:
   noMemory: DO NOT LIMIT MEMRY USAG
   refresh: REFRESH LOCAL JAVA
   systemMemory: 'SYSTEM FREE MEMRY: {free} / {total}'
+  allocation: Allocaeted
+  autoHint: Min growz wif moar modz; max uzes ur freeshmemz.
+  change: Chaneg
+  locationHint: No Java pikd — uzin systmm defawlt
+  openFolder: Open Java fldr
+  presets: Presetz
 labyMod:
   disable: DISABL LABYMOD
   empty: LABYMOD DOES NOT SUPPORT CURREN MINECWAFT
@@ -448,6 +461,7 @@ launch:
   killServer: KILL LOCALHOST SERVR
   launch: LAUNCH
   launchAnyway: LAUNCH ANYWAY
+  forceKill: KILLZ HARDIR
 launchBlocked:
   launchBadVersion:
     description: TEH VERSHUN {version} JSON IS BREAKING. MAYBE RE-INSTALL THIS VERSHUN?
@@ -570,7 +584,7 @@ mod:
   createGroup: MAKE GROUP
   currentVersion: CURREN {current}
   denseView: DENSE VUE
-  description: DESCRIPSHUN
+  description: Descripshun
   disableAll: DISABL ALL
   dropHint: DROP MOD'S .JAR/.LITEMOD HERE TO IMPORT.
   duplicatedDetected: '{count} DUPLICATED MODZ'
@@ -783,7 +797,7 @@ modrinth:
   description: DESCRIPSHUN
   downloads: DOWNLODS
   environments:
-    all: ALL
+    all: Everytin
     default: DEFAULT
     name: ENVIRONMENT
     optional: OPSHUNAL
@@ -888,6 +902,11 @@ multiplayer:
   sharingNotificationTitle: A PEER IS SHARING THEIR GAME CONFIG
   start: START
   startNewP2PConnection: CLICK DA START BUTTON TO MAKE A NEW PEER CONNEKSHUN
+  connectionError: CONNEKSHN BORKED
+  connectionFailedHint: >-
+    Cant connectz. Bof NAT typez maybe sad.
+  natWarning: >-
+    Ur NAT mite blockz directs. Try relayz in settingz or makez ur frend host plz.
 myStuff: MAH STUFF
 natType:
   blocked: BLOCKED
@@ -959,6 +978,8 @@ resourcepack:
   showFile: SHOW RESOURC PAK IN FOLDR {file}
   showInCurseforge: SHOW {name} IN CURSEFORGE
   unselected: UNSELECTED RESOURC PAKS
+  noPacks: No reswurz packz fownd
+  search: Sniff reswurz packz...
 save:
   allowCheats: ALLOW CHEATS
   copy:
@@ -992,10 +1013,16 @@ save:
   useCurrent: USE CURREN WORLD
   useMouseRotate: USE MOUSE TO ROTATE VUE
   useScrollZoom: USE SCROLL WHEEL TO ZOOM
+  openFolder: Open savez fldr
+  searchHint: Sniff worldz on CurseForge
+  searchSaves: Sniff savez
 screenshots:
   empty: U DONT HAZ ANY SCREENSHOTS
   playRandom: SHUFFLE
   playSequence: PLAY IN ORDER
+  gallery: Screenshotz Gallery
+  hint: Pres F2 in gaem to maek screenshotz
+  openFolder: Open screenshotz fldr
 search:
   favorate: COLLEKSHUN
   local: INSTALLED
@@ -1280,6 +1307,9 @@ shaderPack:
   selectSearchHint: SEARCH AN PICK SHADER PAK
   showDirectory: SHOW SHADER PAK DIRECTORY
   showFile: SHOW THIS SHADER PAK IN FOLDR
+  market: Shadr Markit
+  noPacks: No shadr packz instold
+  search: Sniff shadr packz...
 shared:
   add: ADD
   author: AUTHOR
@@ -1316,12 +1346,15 @@ sortBy:
   alphabetDesc: SORT BY ALPHABET (DESCENDING)
   timeAsc: SORT BY MODIFICASHUN TIME (ASCENDING)
   timeDesc: SORT BY MODIFICASHUN TIME (DESCENDING)
+  name: Sorrt By
 store:
   discover: Discover
   latestMinecraft: LATEST MINECWAFT VERSHUN
   name: MODPACK MARKET
   searchResult: Search Result
   trending: Trending
+  empty: No modpaks fownd
+  emptyHint: Tweekz ur filterz or sniff query.
 tag:
   create: MAKE TAG
   createSelected: MAKE TAG FUR SELECTED
@@ -1474,3 +1507,17 @@ versionType:
   beta: BETA
   name: STATUS
   release: RELEASE
+downloadModMetadataDb:
+  name: Downloadz Mod Metadataz DB
+duplicateInstance:
+  name: Coyp Instnce
+exportModpack:
+  name: Exportz Modpak
+installProfile:
+  name: Instol Profile {version}
+installQuilt:
+  name: Instol Quilt {version}
+migrateMinecraft:
+  name: Migrate Minecraft Filez
+reinstall:
+  name: Reinstol {version}

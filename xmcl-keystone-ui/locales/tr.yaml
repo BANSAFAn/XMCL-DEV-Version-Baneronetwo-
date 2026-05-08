@@ -184,7 +184,8 @@ disk:
   available: Kullanılabilir
   used: Kullanılan
 downloadCount: '{count} indirme'
-downloadUpdate: Güncellemeyi İndir
+downloadUpdate:
+  name: '{version} güncellemesini indir'
 duration:
   day: '{duration} gün | {duration} gün'
   hour: '{duration} saat | {duration} saat'
@@ -356,6 +357,11 @@ instance:
   vmVar: Ortam Değişkenleri
   vmVarHint: Ortam değişkenleri eklemek için + düğmesine tıklayın
   width: Genişlik
+  envVarKey: Anahtar
+  envVarValue: Değer
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: değer
+  fileApiPlaceholder: Kaynak senkronizasyonunu sürdürmek istiyorsanız uzak senkronizasyon URL'sini buraya girin
 instanceAge:
   older: Daha Eski
   threeDay: Üç Gün İçinde
@@ -376,9 +382,9 @@ instanceInstallSkip:
   warning: >-
     Bazı dosyalar sağlama toplamı eşleşmeden birden çok kez indirildi. Bu, orijinal sağlama toplamının yanlış olmasından kaynaklanabilir. Lütfen kontrol edin. Mevcut dosyaların geçerli olduğunu onaylıyorsanız, doğrulama kontrolünü atlayabilirsiniz.
 instanceLauncher:
-  search: Instance ara...
-  showAll: Tüm Instance'ları Göster
-  title: Tüm Instance'lar
+  search: Örnekleri ara...
+  showAll: Tüm örnekleri göster
+  title: Tüm örnekler
 instanceSetting:
   disableAuthlibInjector: Authlib injector'ı devre dışı bırak
   disableAuthlibInjectorDescription: >-
@@ -426,6 +432,7 @@ instances:
   folderSetting: Klasör Ayarları
   importFolderDescription: Minecraft'ı Başlatıcıya İçe Aktar
   loadingFiles: Mod Paketi Dosyaları Yükleniyor
+  addPrismDescription: Mevcut PrismLauncher örneğini içe aktar.
 items:
   count: '{count} öğe'
   total: '{total} toplam'
@@ -444,6 +451,12 @@ java:
   noMemory: Bellek kullanımını sınırlama
   refresh: Yerel Java'yı Yenile
   systemMemory: 'Sistem Boş Belleği: {free} / {total}'
+  allocation: Atanan
+  autoHint: Minimum, kurulu mod sayısıyla artar; maksimum, kullanılabilir sistem belleğini kullanır.
+  change: Değiştir
+  locationHint: Java seçilmedi — sistem varsayılanı kullanılıyor
+  openFolder: Java klasörünü aç
+  presets: Hazır ayarlar
 labyMod:
   disable: LabyMod'u Devre Dışı Bırak
   empty: LabyMod mevcut Minecraft'ı desteklemiyor
@@ -454,6 +467,7 @@ launch:
   killServer: Localhost Sunucusunu Durdur
   launch: Başlat
   launchAnyway: Yine de Başlat
+  forceKill: Zorla kapat
 launchBlocked:
   launchBadVersion:
     description: >-
@@ -796,7 +810,7 @@ modrinth:
   description: Açıklama
   downloads: İndirmeler
   environments:
-    all: Tümü
+    all: Hepsi
     default: Varsayılan
     name: Ortam
     optional: İsteğe Bağlı
@@ -903,6 +917,11 @@ multiplayer:
   sharingNotificationTitle: Bir eş oyun yapılandırmasını paylaşıyor
   start: Başlat
   startNewP2PConnection: Yeni bir eş bağlantısı oluşturmak için Başlat düğmesine tıklayın
+  connectionError: Bağlantı hatası
+  connectionFailedHint: >-
+    Bağlantı kurulamıyor. Her iki tarafın da uyumlu NAT türlerine sahip olduğunu kontrol edin.
+  natWarning: >-
+    NAT türünüz doğrudan bağlantıyı engelleyebilir. Ayarlardan röle sunucusunu etkinleştirmeyi deneyin veya arkadaşınızdan ev sahibi olmasını isteyin.
 myStuff: Eşyalarım
 natType:
   blocked: Engellendi
@@ -974,6 +993,8 @@ resourcepack:
   showFile: '{file} klasöründeki kaynak paketini göster'
   showInCurseforge: Curseforge'da {name} göster
   unselected: Seçilmeyen Kaynak Paketleri
+  noPacks: Kaynak paketi bulunamadı
+  search: Kaynak paketleri ara...
 save:
   allowCheats: Hilelere İzin Ver
   copy:
@@ -1007,10 +1028,16 @@ save:
   useCurrent: Mevcut dünyayı kullan
   useMouseRotate: Görünümü döndürmek için fareyi kullanın
   useScrollZoom: Yakınlaştırmak için kaydırma tekerleğini kullanın
+  openFolder: Kayıtlar klasörünü aç
+  searchHint: CurseForge'da dünyaları ara
+  searchSaves: Kayıtları ara
 screenshots:
   empty: Hiç ekran görüntünüz yok
   playRandom: Karıştır
   playSequence: Sırayla oynat
+  gallery: Ekran görüntüsü galerisi
+  hint: Oyunda F2 tuşuna basarak ekran görüntüsü alın
+  openFolder: Ekran görüntüleri klasörünü aç
 search:
   favorate: Koleksiyon
   local: Yüklü
@@ -1290,6 +1317,9 @@ shaderPack:
   selectSearchHint: Gölgelendirici Paketi ara ve seç
   showDirectory: Gölgelendirici paketi dizinini göster
   showFile: Bu gölgelendirici paketini klasörde göster
+  market: Shader pazarı
+  noPacks: Shader paketi kurulu değil
+  search: Shader paketleri ara...
 shared:
   add: Ekle
   author: Yazar
@@ -1326,12 +1356,15 @@ sortBy:
   alphabetDesc: Alfabeye göre sırala (azalan)
   timeAsc: Değiştirme zamanına göre sırala (artan)
   timeDesc: Değiştirme zamanına göre sırala (azalan)
+  name: Sırala
 store:
   discover: Keşfetmek
   latestMinecraft: En Son Minecraft Sürümü
   name: Mod Paketi Pazarı
   searchResult: Arama Sonucu
   trending: Trend olan
+  empty: Modpack bulunamadı
+  emptyHint: Filtrelerinizi veya aramanızı değiştirmeyi deneyin.
 tag:
   create: Etiket Oluştur
   createSelected: Seçilenler için Etiket Oluştur
@@ -1485,3 +1518,17 @@ versionType:
   beta: Beta
   name: Durum
   release: Sürüm (Release)
+downloadModMetadataDb:
+  name: Mod meta veri veritabanını indir
+duplicateInstance:
+  name: Örneği çoğalt
+exportModpack:
+  name: Modpack'i dışa aktar
+installProfile:
+  name: Profil {version} kur
+installQuilt:
+  name: Quilt {version} kur
+migrateMinecraft:
+  name: Minecraft dosyalarını taşı
+reinstall:
+  name: '{version} yeniden kur'

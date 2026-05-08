@@ -173,7 +173,8 @@ disk:
   available: 利用可能
   used: 使用済み
 downloadCount: '{count} ダウンロード'
-downloadUpdate: アップデートをダウンロード
+downloadUpdate:
+  name: 更新 {version} をダウンロード
 duration:
   day: '{duration} 日'
   hour: '{duration} 時間'
@@ -343,6 +344,11 @@ instance:
   vmVar: 環境変数
   vmVarHint: ボタンをクリックして環境変数を追加します
   width: 幅
+  envVarKey: キー
+  envVarValue: 値
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: 値
+  fileApiPlaceholder: リソースを同期させたい場合は、ここにリモート同期URLを入力してください
 instanceAge:
   older: 古い
   threeDay: 三日以内
@@ -414,6 +420,7 @@ instances:
   folderSetting: フォルダーの設定
   importFolderDescription: Minecraftをランチャーにインポート
   loadingFiles: Modpackファイルを読み込み中
+  addPrismDescription: 既存のPrismLauncherインスタンスをインポート。
 items:
   count: '{count} 個'
   total: 合計 {total} 個
@@ -432,6 +439,12 @@ java:
   noMemory: メモリの使用を制限しない
   refresh: ローカルのJavaをリフレッシュする
   systemMemory: 'システム空きメモリ: {free} / {total}'
+  allocation: 割り当て済み
+  autoHint: 最小値はインストール済みModの数に応じて増加し、最大値は利用可能なシステムメモリを使用します。
+  change: 変更
+  locationHint: Javaが選択されていません — システムのデフォルトを使用
+  openFolder: Javaフォルダを開く
+  presets: プリセット
 labyMod:
   disable: LabyMod を使用しない
   empty: LabyMod は現在のMinecraftをサポートしていません
@@ -442,6 +455,7 @@ launch:
   killServer: Localhost Serverを終了
   launch: 起動
   launchAnyway: どちらでも走れる
+  forceKill: 強制終了
 launchBlocked:
   launchBadVersion:
     description: このバージョン {version} のjsonはこわれています。このバージョンを再インストールすると解決するかもしれません?
@@ -601,6 +615,7 @@ mod:
   syncGroupRules: グループ化ルールの保存
   toUpdate: '{count} 個のアップデート'
   ungroup: グループ化
+  description: 説明
 modFilter:
   clear: クリアフィルター
   dependenciesInstallOnly: 見逃された依存関係のMODのみを表示します
@@ -780,6 +795,7 @@ modrinth:
     optional: オプション
     required: 必須
     unsupported: 未サポート
+    all: すべて
   externalResources: 外部リンク
   featuredVersions: 推奨バージョン
   followedProjects: プロジェクトに従った
@@ -883,6 +899,11 @@ multiplayer:
   sharingNotificationTitle: ピアはゲームの設定を共有しています
   start: スタート
   startNewP2PConnection: スタートボタンをクリックして新しいピアへの接続を作成します
+  connectionError: 接続エラー
+  connectionFailedHint: >-
+    接続を確立できません。両方のピアのNATタイプが互換性があるか確認してください。
+  natWarning: >-
+    NATタイプが直接接続を妨げている可能性があります。設定でリレーサーバーを有効にするか、フレンドにホストを依頼してください。
 myStuff: 私の作品
 natType:
   blocked: ブロックされた
@@ -953,6 +974,8 @@ resourcepack:
   showFile: フォルダーの中からリソースパック {file} を見る
   showInCurseforge: Curseforgeで {name} を見る
   unselected: リソースパックの選択が解除されました
+  noPacks: リソースパックが見つかりません
+  search: リソースパックを検索...
 save:
   copy:
     name: セーブデータをコピー
@@ -975,10 +998,16 @@ save:
   showDirectory: セーブデータのディレクトリを開く
   unselected: 共有されたセーブデータ
   useCurrent: 現在のワールドを使用
+  openFolder: セーブフォルダを開く
+  searchHint: CurseForgeでワールドを検索
+  searchSaves: セーブを検索
 screenshots:
   empty: スクリーンショットがありません
   playRandom: シャッフル
   playSequence: 順番に再生
+  gallery: スクリーンショットギャラリー
+  hint: ゲーム内でF2を押してスクリーンショットを撮影
+  openFolder: スクリーンショットフォルダを開く
 search:
   favorate: コレクション
   local: 設置済み
@@ -1263,6 +1292,9 @@ shaderPack:
   selectSearchHint: シェーダーパックを検索して選ぶ
   showDirectory: シェーダーパックのディレクトリを見る
   showFile: このシェーダーパックをフォルダーで見る
+  market: シェーダーマーケット
+  noPacks: シェーダーパックがインストールされていません
+  search: シェーダーパックを検索...
 shared:
   add: 追加
   author: 著者
@@ -1299,12 +1331,15 @@ sortBy:
   alphabetDesc: アルファベットでソート（下降）
   timeAsc: 変更時間ごとにソート（上昇）
   timeDesc: 変更時間ごとにソート（下降）
+  name: 並び替え
 store:
   discover: 発見する
   latestMinecraft: 最新のMinecraftバージョン
   name: Modpack マーケット
   searchResult: 検索結果
   trending: トレンド
+  empty: Modpackが見つかりません
+  emptyHint: フィルターまたは検索条件を調整してみてください。
 tag:
   create: タグを作成
   createSelected: 選択されたもので新しいタグを作る
@@ -1456,3 +1491,21 @@ versionType:
   beta: ベータ
   name: ステータス
   release: リリース
+downloadModMetadataDb:
+  name: Modメタデータデータベースをダウンロード
+duplicateInstance:
+  name: インスタンスを複製
+exportModpack:
+  name: Modpackをエクスポート
+installProfile:
+  name: プロファイル {version} をインストール
+installQuilt:
+  name: Quilt {version} をインストール
+instanceLauncher:
+  search: インスタンスを検索...
+  showAll: すべてのインスタンスを表示
+  title: すべてのインスタンス
+migrateMinecraft:
+  name: Minecraftファイルを移行
+reinstall:
+  name: '{version} を再インストール'

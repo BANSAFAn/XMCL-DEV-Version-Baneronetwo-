@@ -326,6 +326,7 @@ instance:
   duplicatedName: Duplicated Name
   fileApi: The synchronize file server API url
   fileApiHint: The url to synchronize instance files from a remote config server.
+  fileApiPlaceholder: Please enter the remote sync url here if you want to keep the resource sync
   fullscreen: Fullscreen
   height: Height
   icon: Profile Icon
@@ -369,6 +370,10 @@ instance:
   vmOptionsHint: Extra arguments to pass to the JVM
   vmVar: Environment Variables
   vmVarHint: Click + button to add environemnt variables
+  envVarKey: Key
+  envVarValue: Value
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: value
   width: Width
 instanceAge:
   older: Older
@@ -1377,6 +1382,8 @@ sortBy:
   timeDesc: Sort by modification time (descending)
 store:
   discover: Discover
+  empty: No Modpacks Found
+  emptyHint: Try adjusting your filters or search query.
   latestMinecraft: Latest Minecraft Version
   name: Modpack Market
   searchResult: Search Result

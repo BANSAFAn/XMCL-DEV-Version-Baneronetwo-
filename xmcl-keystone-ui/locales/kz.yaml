@@ -183,7 +183,8 @@ disk:
   available: Қолжетімді
   used: Қолданылған
 downloadCount: '{count} жүктеп алу'
-downloadUpdate: Жаңартуды жүктеп алу
+downloadUpdate:
+  name: Жаңартуды жүктеп алу {version}
 duration:
   day: '{duration} күн | {duration} күн'
   hour: '{duration} сағат | {duration} сағат'
@@ -356,6 +357,11 @@ instance:
   vmVar: Орта айнымалылары
   vmVarHint: Орта айнымалыларын қосу үшін + батырмасын басыңыз
   width: ені
+  envVarKey: Кілт
+  envVarValue: Мән
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: мән
+  fileApiPlaceholder: Ресурс синхронизациясын сақтағыңыз келсе, осында қашықтан синхрондау URL мекенжайын енгізіңіз
 instanceAge:
   older: Ескірек
   threeDay: Үш күн ішінде
@@ -376,9 +382,9 @@ instanceInstallSkip:
   warning: >-
     Кейбір файлдар бақылау қосымы сәйкес келмей бірнеше рет жүктелді. Бұл түпнұсқа бақылау қосымының дұрыс емес болуы мүмкін. Тексеріңіз. Егер ағымдағы файлдардың жарамды екеніне сенімді болсаңыз, тексеруді өткізіп жіберуге болады.
 instanceLauncher:
-  search: Жеке жағдайларды іздеу...
-  showAll: Барлық жеке жағдайларды көрсету
-  title: Барлық жеке жағдайлар
+  search: Даналарды іздеу...
+  showAll: Барлық даналарды көрсету
+  title: Барлық даналар
 instanceSetting:
   disableAuthlibInjector: authlib injector-ды өшіру
   disableAuthlibInjectorDescription: >-
@@ -425,6 +431,7 @@ instances:
   folderSetting: Қалта баптаулары
   importFolderDescription: Minecraft-ты іске қосқышқа импорттау
   loadingFiles: Мод-пак файлдары жүктелуде
+  addPrismDescription: Бар PrismLauncher данасын импорттау.
 items:
   count: '{count} элемент'
   total: Барлығы {total}
@@ -443,6 +450,12 @@ java:
   noMemory: Жады қолданысын шектеуді болдырмау
   refresh: Жергілікті Java-ны жаңарту
   systemMemory: 'Жүйелік бос жады: {free} / {total}'
+  allocation: Бөлінген
+  autoHint: Минимум орнатылған модтар санына қарай өседі; максимум қолжетімді жүйелік жадты пайдаланады.
+  change: Өзгерту
+  locationHint: Java таңдалмаған — жүйелік әдепкі қолданылуда
+  openFolder: Java қалтасын ашу
+  presets: Алдын ала орнатулар
 labyMod:
   disable: LabyMod-ты өшіру
   empty: LabyMod ағымдағы Minecraft-ты қолдамайды
@@ -453,6 +466,7 @@ launch:
   killServer: Жергілікті серверді өшіру
   launch: Іске қосу
   launchAnyway: Сонда да іске қосу
+  forceKill: Мәжбүрлеп жабу
 launchBlocked:
   launchBadVersion:
     description: '{version} нұсқасы json-ы бұзылған. Бұл нұсқаны қайта орнату керек пе?'
@@ -616,6 +630,7 @@ mod:
   syncGroupRules: Топтастыру ережелерін сақтау
   toUpdate: '{count} жаңарту'
   ungroup: Топтан шығару
+  description: Сипаттама
 modFilter:
   clear: Сүзгіні тазалау
   dependenciesInstallOnly: Тек жетіспейтін тәуелділік модтарын көрсету
@@ -899,6 +914,11 @@ multiplayer:
   sharingNotificationTitle: Қарым-қатынас серігі өзінің ойын конфигурациясын бөлісуде
   start: Бастау
   startNewP2PConnection: Жаңа қарым-қатынас серігі байланысын жасау үшін Бастау батырмасын басыңыз
+  connectionError: Байланыс қатесі
+  connectionFailedHint: >-
+    Байланыс орнату мүмкін емес. Екі жағында да NAT түрлерінің сәйкестігін тексеріңіз.
+  natWarning: >-
+    NAT түрі тікелей байланысқа кедергі келтіруі мүмкін. Параметрлерде релелік серверді қосыңыз немесе досыңыздан хост болуын сұраңыз.
 myStuff: Менің заттарым
 natType:
   blocked: Блокталған
@@ -971,6 +991,8 @@ resourcepack:
   showFile: '{file} қалтасында ресурстар жинағын көрсету'
   showInCurseforge: '{name} модын curseforge-де көрсету'
   unselected: Таңдалмаған ресурстар жинағы
+  noPacks: Ресурс пакеттері табылмады
+  search: Ресурс пакеттерін іздеу...
 save:
   allowCheats: Читтерге рұқсат беру
   copy:
@@ -1004,10 +1026,16 @@ save:
   useCurrent: Ағымдағы әлемді қолдану
   useMouseRotate: Көріністі бұру үшін тышқанды қолданыңыз
   useScrollZoom: Масштабтау үшін домалау доңғалағын қолданыңыз
+  openFolder: Сақтау қалтасын ашу
+  searchHint: CurseForge-те әлемдерді іздеу
+  searchSaves: Сақтауларды іздеу
 screenshots:
   empty: Сізде ешқандай скриншот жоқ
   playRandom: Араластыру
   playSequence: Ретімен ойнату
+  gallery: Скриншоттар галереясы
+  hint: Ойында скриншот үшін F2 басыңыз
+  openFolder: Скриншоттар қалтасын ашу
 search:
   favorate: Жинақ
   local: Орнатылған
@@ -1294,6 +1322,9 @@ shaderPack:
   selectSearchHint: Шейдерлер жинағын іздеу және таңдау
   showDirectory: Шейдерлер жинағы қалтасын көрсету
   showFile: Бұл шейдерлер жинағын қалтада көрсету
+  market: Шейдер маркеті
+  noPacks: Шейдер пакеттері орнатылмаған
+  search: Шейдер пакеттерін іздеу...
 shared:
   add: Қосу
   author: Автор
@@ -1330,12 +1361,15 @@ sortBy:
   alphabetDesc: Әліпби бойынша (кему)
   timeAsc: Өзгерту уақыты бойынша (өсу)
   timeDesc: Өзгерту уақыты бойынша (кему)
+  name: Реттеу бойынша
 store:
   discover: Discover
   latestMinecraft: Ең соңғы Minecraft нұсқасы
   name: Мод-пак нарығы
   searchResult: Search Result
   trending: Trending
+  empty: Модпак табылмады
+  emptyHint: Сүзгілерді немесе іздеу сұрауын реттеп көріңіз.
 tag:
   create: Тег жасау
   createSelected: Таңдалғандар үшін тег жасау
@@ -1498,3 +1532,17 @@ versionType:
   beta: Бета
   name: Күй
   release: Шығарылым
+downloadModMetadataDb:
+  name: Мод метадеректер дерекқорын жүктеп алу
+duplicateInstance:
+  name: Данаға көшіру
+exportModpack:
+  name: Модпак экспорттау
+installProfile:
+  name: Профильді орнату {version}
+installQuilt:
+  name: Quilt {version} орнату
+migrateMinecraft:
+  name: Minecraft файлдарын тасымалдау
+reinstall:
+  name: '{version} қайта орнату'

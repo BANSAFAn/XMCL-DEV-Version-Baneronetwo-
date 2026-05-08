@@ -183,7 +183,8 @@ disk:
   available: Disponível
   used: Usado
 downloadCount: '{count} downloads'
-downloadUpdate: Baixar atualização
+downloadUpdate:
+  name: Baixar atualização {version}
 duration:
   day: '{duration} dias | {duration} dias'
   hour: '{duration} hora | {duration} horas'
@@ -359,6 +360,11 @@ instance:
   vmVar: Variáveis ​​de ambiente
   vmVarHint: Clique no botão para adicionar variáveis ​​de ambiente
   width: Largura
+  envVarKey: Chave
+  envVarValue: Valor
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: valor
+  fileApiPlaceholder: Digite aqui a URL de sincronização remota se quiser manter os recursos sincronizados
 instanceAge:
   older: Antigo
   threeDay: Em três dias
@@ -433,6 +439,7 @@ instances:
   folderSetting: Configurações de Pasta
   importFolderDescription: Importar Minecraft para o Launcher
   loadingFiles: Carregando arquivos do modpack
+  addPrismDescription: Importar instância existente do PrismLauncher.
 items:
   count: '{count} itens'
   total: '{total} total'
@@ -451,6 +458,12 @@ java:
   noMemory: Não limitar o uso de memória
   refresh: Atualizar Java local
   systemMemory: 'Memória livre do sistema: {free} / {total}'
+  allocation: Alocado
+  autoHint: O mínimo cresce com a quantidade de mods instalados; o máximo usa a memória disponível do sistema.
+  change: Alterar
+  locationHint: Nenhum Java selecionado — usando o padrão do sistema
+  openFolder: Abrir pasta do Java
+  presets: Predefinições
 labyMod:
   disable: Desabilitar LabyMod
   empty: LabyMod não é compatível com a versão atual do Minecraft.
@@ -461,6 +474,7 @@ launch:
   killServer: Matar Localhost Server
   launch: Launch
   launchAnyway: Iniciar mesmo assim
+  forceKill: Forçar encerramento
 launchBlocked:
   launchBadVersion:
     description: >-
@@ -629,6 +643,7 @@ mod:
   syncGroupRules: Salvar regras de agrupamento
   toUpdate: '{count} atualizações'
   ungroup: Sem agrupar
+  description: Descrição
 modFilter:
   clear: Filtro transparente
   dependenciesInstallOnly: Mostrar apenas mods de dependências perdidas
@@ -811,6 +826,7 @@ modrinth:
     optional: Opcional
     required: Obrigatório
     unsupported: Não suportado
+    all: Todos
   externalResources: Links Externos
   featuredVersions: Versões em Destaque
   followedProjects: Projetos seguidos
@@ -912,6 +928,11 @@ multiplayer:
   sharingNotificationTitle: Um par está compartilhando sua configuração de jogo
   start: Iniciar
   startNewP2PConnection: Clique no botão Iniciar para criar uma nova conexão de par
+  connectionError: Erro de conexão
+  connectionFailedHint: >-
+    Não foi possível estabelecer a conexão. Verifique se ambos os pares têm tipos de NAT compatíveis.
+  natWarning: >-
+    Seu tipo de NAT pode impedir conexões diretas. Tente ativar o servidor de relay nas configurações ou peça ao seu amigo para ser o anfitrião.
 myStuff: Minhas coisas
 natType:
   blocked: Bloqueado
@@ -984,6 +1005,8 @@ resourcepack:
   showFile: Mostrar pacote de recursos na pasta {file}
   showInCurseforge: Mostrar {name} no curseforge
   unselected: Pacotes de Recursos Não Selecionados
+  noPacks: Nenhum pacote de recursos encontrado
+  search: Buscar pacotes de recursos...
 save:
   copy:
     name: Copiar Salvar
@@ -1007,10 +1030,16 @@ save:
   showDirectory: Mostrar diretório de saves
   unselected: Saves Compartilhados
   useCurrent: Usar o mundo atual
+  openFolder: Abrir pasta de saves
+  searchHint: Buscar mundos no CurseForge
+  searchSaves: Buscar saves
 screenshots:
   empty: Você não tem nenhuma captura de tela
   playRandom: Aleatório
   playSequence: Reproduzir em ordem
+  gallery: Galeria de capturas de tela
+  hint: Pressione F2 no jogo para capturar a tela
+  openFolder: Abrir pasta de capturas de tela
 search:
   favorate: Coleção
 server:
@@ -1307,6 +1336,9 @@ shaderPack:
   selectSearchHint: Procurar e selecionar Shaders Pack
   showDirectory: Mostrar diretório de shaders packs
   showFile: Mostrar este shaders pack na pasta
+  market: Mercado de shaders
+  noPacks: Nenhum pacote de shader instalado
+  search: Buscar pacotes de shader...
 shared:
   add: Adicionar
   author: Autor
@@ -1343,12 +1375,15 @@ sortBy:
   alphabetDesc: Classificar por alfabeto (descendente)
   timeAsc: Classificar por tempo de modificação (ascendente)
   timeDesc: Classificar por tempo de modificação (descendente)
+  name: Ordenar por
 store:
   discover: Descobrir
   latestMinecraft: Última Versão do Minecraft
   name: Mercado de Modpacks
   searchResult: Resultado da pesquisa
   trending: Tendências
+  empty: Nenhum modpack encontrado
+  emptyHint: Tente ajustar seus filtros ou pesquisa.
 tag:
   create: Criar uma Tag
   createSelected: Criar uma Tag para os Selecionados
@@ -1510,3 +1545,21 @@ versionType:
   beta: Beta
   name: Status
   release: Lançamento
+downloadModMetadataDb:
+  name: Baixar banco de dados de metadados de mods
+duplicateInstance:
+  name: Duplicar instância
+exportModpack:
+  name: Exportar modpack
+installProfile:
+  name: Instalar perfil {version}
+installQuilt:
+  name: Instalar Quilt {version}
+instanceLauncher:
+  search: Buscar instâncias...
+  showAll: Mostrar todas as instâncias
+  title: Todas as instâncias
+migrateMinecraft:
+  name: Migrar arquivos do Minecraft
+reinstall:
+  name: Reinstalar {version}

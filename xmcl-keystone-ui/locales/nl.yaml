@@ -184,7 +184,8 @@ disk:
   available: Beschikbaar
   used: Gebruikt
 downloadCount: '{count} downloads'
-downloadUpdate: Update Downloaden
+downloadUpdate:
+  name: Update {version} downloaden
 duration:
   day: '{duration} dag | {duration} dagen'
   hour: '{duration} uur | {duration} uur'
@@ -359,6 +360,11 @@ instance:
   vmVar: Omgevingsvariabelen
   vmVarHint: Klik op de + knop om omgevingsvariabelen toe te voegen
   width: Breedte
+  envVarKey: Sleutel
+  envVarValue: Waarde
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: waarde
+  fileApiPlaceholder: Voer hier de externe sync-URL in als je de resources gesynchroniseerd wilt houden
 instanceAge:
   older: Ouder
   threeDay: Binnen Drie Dagen
@@ -379,9 +385,9 @@ instanceInstallSkip:
   warning: >-
     Sommige bestanden zijn meerdere keren gedownload met een niet-overeenkomende checksum. Dit kan komen doordat de oorspronkelijke checksum onjuist is. Controleer dit. Als u bevestigt dat de huidige bestanden geldig zijn, kunt u de validatie overslaan.
 instanceLauncher:
-  search: Zoek instances...
-  showAll: Toon Alle Instances
-  title: Alle Instances
+  search: Instanties zoeken...
+  showAll: Alle instanties tonen
+  title: Alle instanties
 instanceSetting:
   disableAuthlibInjector: Schakel authlib injector uit
   disableAuthlibInjectorDescription: >-
@@ -430,6 +436,7 @@ instances:
   folderSetting: Map Instellingen
   importFolderDescription: Importeer Minecraft naar Launcher
   loadingFiles: Modpack Bestanden Laden
+  addPrismDescription: Bestaande PrismLauncher-instantie importeren.
 items:
   count: '{count} items'
   total: '{total} totaal'
@@ -448,6 +455,12 @@ java:
   noMemory: Geheugengebruik niet beperken
   refresh: Ververs Lokale Java
   systemMemory: 'Systeem Vrij Geheugen: {free} / {total}'
+  allocation: Toegewezen
+  autoHint: Minimum groeit met het aantal geïnstalleerde mods; maximum gebruikt het beschikbare systeemgeheugen.
+  change: Wijzigen
+  locationHint: Geen Java geselecteerd — systeemstandaard wordt gebruikt
+  openFolder: Java-map openen
+  presets: Voorinstellingen
 labyMod:
   disable: LabyMod Uitschakelen
   empty: LabyMod ondersteunt de huidige Minecraft niet
@@ -458,6 +471,7 @@ launch:
   killServer: Stop Localhost Server
   launch: Starten
   launchAnyway: Toch Starten
+  forceKill: Geforceerd beëindigen
 launchBlocked:
   launchBadVersion:
     description: >-
@@ -625,6 +639,7 @@ mod:
   syncGroupRules: Groeperingsregels Opslaan
   toUpdate: '{count} updates'
   ungroup: Degroeperen
+  description: Beschrijving
 modFilter:
   clear: Filter Wissen
   dependenciesInstallOnly: Toon alleen gemiste afhankelijkheden mods
@@ -909,6 +924,11 @@ multiplayer:
   sharingNotificationTitle: Een peer deelt zijn spelconfiguratie
   start: Starten
   startNewP2PConnection: Klik op de Start knop om een nieuwe peer-verbinding te maken
+  connectionError: Verbindingsfout
+  connectionFailedHint: >-
+    Kan geen verbinding maken. Controleer of beide peers compatibele NAT-types hebben.
+  natWarning: >-
+    Je NAT-type kan directe verbindingen verhinderen. Probeer de relay-server in de instellingen in te schakelen of vraag je vriend om host te zijn.
 myStuff: Mijn Spullen
 natType:
   blocked: Geblokkeerd
@@ -981,6 +1001,8 @@ resourcepack:
   showFile: Toon dit resource pack in map {file}
   showInCurseforge: Toon {name} in curseforge
   unselected: Niet-geselecteerde Resource Packs
+  noPacks: Geen resourcepakketten gevonden
+  search: Resourcepakketten zoeken...
 save:
   allowCheats: Cheats Toestaan
   copy:
@@ -1014,10 +1036,16 @@ save:
   useCurrent: Huidige wereld gebruiken
   useMouseRotate: Gebruik muis om te roteren
   useScrollZoom: Gebruik scrollwiel om te zoomen
+  openFolder: Opslagmap openen
+  searchHint: Werelden zoeken op CurseForge
+  searchSaves: Opslagen zoeken
 screenshots:
   empty: U heeft geen screenshots
   playRandom: Shuffle
   playSequence: Volgorde Afspelen
+  gallery: Schermafbeeldingengalerij
+  hint: Druk in het spel op F2 voor een schermafbeelding
+  openFolder: Map met schermafbeeldingen openen
 search:
   favorate: Collectie
   local: Geïnstalleerd
@@ -1304,6 +1332,9 @@ shaderPack:
   selectSearchHint: Zoek en selecteer Shader Pack
   showDirectory: Toon shader pack map
   showFile: Toon dit shader pack in map
+  market: Shadermarkt
+  noPacks: Geen shaderpakketten geïnstalleerd
+  search: Shaderpakketten zoeken...
 shared:
   add: Toevoegen
   author: Auteur
@@ -1340,12 +1371,15 @@ sortBy:
   alphabetDesc: Sorteren op alfabet (aflopend)
   timeAsc: Sorteren op wijzigingstijd (oplopend)
   timeDesc: Sorteren op wijzigingstijd (aflopend)
+  name: Sorteren op
 store:
   discover: Ontdekken
   latestMinecraft: Laatste Minecraft Versie
   name: Modpack Markt
   searchResult: Zoekresultaat
   trending: Populair
+  empty: Geen modpacks gevonden
+  emptyHint: Pas je filters of zoekopdracht aan.
 tag:
   create: Tag Aanmaken
   createSelected: Tag Aanmaken voor Geselecteerde
@@ -1507,3 +1541,17 @@ versionType:
   beta: Beta
   name: Status
   release: Release
+downloadModMetadataDb:
+  name: Mod-metadatabank downloaden
+duplicateInstance:
+  name: Instantie dupliceren
+exportModpack:
+  name: Modpack exporteren
+installProfile:
+  name: Profiel {version} installeren
+installQuilt:
+  name: Quilt {version} installeren
+migrateMinecraft:
+  name: Minecraft-bestanden migreren
+reinstall:
+  name: '{version} opnieuw installeren'

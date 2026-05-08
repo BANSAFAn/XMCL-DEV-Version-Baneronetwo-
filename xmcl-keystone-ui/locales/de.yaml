@@ -197,7 +197,8 @@ disk:
   available: Verfügbar
   used: Gepflegt
 downloadCount: 'Downloads: {count}'
-downloadUpdate: Aktualisierung herunterladen
+downloadUpdate:
+  name: Update {version} herunterladen
 duration:
   day: '{duration} Tag | {duration} Tage'
   hour: '{duration} Stunde  | {duration} Stunden'
@@ -384,6 +385,11 @@ instance:
   vmVar: Umgebungsvariablen
   vmVarHint: Klicken Sie auf die Schaltfläche, um Umgebungsvariablen hinzuzufügen
   width: Breite
+  envVarKey: Schlüssel
+  envVarValue: Wert
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: Wert
+  fileApiPlaceholder: Bitte geben Sie hier die Remote-Sync-URL ein, wenn Sie die Ressourcensynchronisation beibehalten möchten
 instanceAge:
   older: Alte
   threeDay: Innerhalb von drei Tagen
@@ -466,6 +472,7 @@ instances:
   folderSetting: Ordnereinstellungen
   importFolderDescription: Minecraft in den Launcher importieren
   loadingFiles: Laden von Modpack-Dateien
+  addPrismDescription: Bestehende PrismLauncher-Instanz importieren.
 items:
   count: '{count} Artikel'
   total: '{total} insgesamt'
@@ -484,6 +491,12 @@ java:
   noMemory: Speichernutzung nicht einschränken
   refresh: Lokales Java aktualisieren
   systemMemory: 'Freier Systemspeicher: {free} / {total}'
+  allocation: Zugewiesen
+  autoHint: Min wächst mit der Anzahl installierter Mods; Max nutzt den verfügbaren Systemspeicher.
+  change: Ändern
+  locationHint: Kein Java ausgewählt — Systemstandard wird verwendet
+  openFolder: Java-Ordner öffnen
+  presets: Voreinstellungen
 labyMod:
   disable: LabyMod ausschalten
   empty: LabyMod unterstützt nicht das aktuelle Minecraft
@@ -494,6 +507,7 @@ launch:
   killServer: Töte den Localhost-Server
   launch: Los geht's
   launchAnyway: Trotzdem starten
+  forceKill: Beenden erzwingen
 launchBlocked:
   launchBadVersion:
     description: >-
@@ -678,6 +692,7 @@ mod:
   syncGroupRules: Gruppierungsregeln speichern
   toUpdate: '{count} zu aktualisieren'
   ungroup: Ungruppierung
+  description: Beschreibung
 modFilter:
   clear: Klaren Filter
   dependenciesInstallOnly: Zeigen Sie nur verpasste Abhängigkeiten Mods
@@ -862,6 +877,7 @@ modrinth:
     optional: Optional
     required: Erforderlich.
     unsupported: Nicht unterstützte
+    all: Alle
   externalResources: Externe Ressourcen
   featuredVersions: Beliebte Versionen
   followedProjects: Folgte Projekte
@@ -987,6 +1003,11 @@ multiplayer:
   sharingNotificationTitle: Ein Peer teilt die Spielkonfiguration
   start: Los geht's
   startNewP2PConnection: Klicken Sie auf Start, um eine neue Peer-to-Peer-Verbindung zu erstellen
+  connectionError: Verbindungsfehler
+  connectionFailedHint: >-
+    Verbindung kann nicht hergestellt werden. Prüfen Sie, ob beide Seiten kompatible NAT-Typen haben.
+  natWarning: >-
+    Ihr NAT-Typ kann Direktverbindungen verhindern. Aktivieren Sie in den Einstellungen den Relay-Server oder lassen Sie Ihren Freund hosten.
 myStuff: Meine Materialien
 natType:
   blocked: Blockiert
@@ -1061,6 +1082,8 @@ resourcepack:
   showFile: Öffnen Sie das Texturpaket {file} im Ordner
   showInCurseforge: anzeigen {name} in curseforge
   unselected: Unausgewählte Texturpakete
+  noPacks: Keine Ressourcenpakete gefunden
+  search: Ressourcenpakete suchen...
 save:
   copy:
     name: Kopieren einer Speicherung
@@ -1085,10 +1108,16 @@ save:
   showDirectory: Speicherverzeichnis anzeigen
   unselected: gemeinsames Archiv
   useCurrent: Aktuelle Welt verwenden
+  openFolder: Speicherstand-Ordner öffnen
+  searchHint: Welten auf CurseForge suchen
+  searchSaves: Speicherstände suchen
 screenshots:
   empty: Sie haben keine Bildschirmfotos
   playRandom: Spielen Sie zufällig
   playSequence: Spielen Sie der Reihe nach
+  gallery: Screenshot-Galerie
+  hint: Drücken Sie im Spiel F2, um Screenshots zu machen
+  openFolder: Screenshot-Ordner öffnen
 search:
   favorate: Sammlung
   local: Installiert
@@ -1417,6 +1446,9 @@ shaderPack:
   selectSearchHint: Suchen Sie das Shader Pack und wählen Sie es aus
   showDirectory: Öffnen Sie den Ordner mit den Shader-Sets
   showFile: Відкрити цей шейдер у папці
+  market: Shader-Markt
+  noPacks: Keine Shaderpakete installiert
+  search: Shaderpakete suchen...
 shared:
   add: hinzufügen
   author: Autor.
@@ -1453,12 +1485,15 @@ sortBy:
   alphabetDesc: Sortieren Sie nach Alphabet (absteigend)
   timeAsc: Sortieren nach Änderungszeit (aufsteigend)
   timeDesc: Sortieren nach Änderungszeit (absteigend)
+  name: Sortieren nach
 store:
   discover: Entdecken
   latestMinecraft: Die neueste Version von Minecraft
   name: Shop für Mod-Kits
   searchResult: Suchergebnis
   trending: Im Trend
+  empty: Keine Modpacks gefunden
+  emptyHint: Versuchen Sie, Ihre Filter oder Suchanfrage anzupassen.
 tag:
   create: Einen Tag erstellen
   createSelected: Stvoriti-Tag für Inverse
@@ -1655,3 +1690,21 @@ versionType:
   beta: Beta
   name: Zustand.
   release: Freigabe
+downloadModMetadataDb:
+  name: Mod-Metadaten-Datenbank herunterladen
+duplicateInstance:
+  name: Instanz duplizieren
+exportModpack:
+  name: Modpack exportieren
+installProfile:
+  name: Profil {version} installieren
+installQuilt:
+  name: Quilt {version} installieren
+instanceLauncher:
+  search: Instanzen suchen...
+  showAll: Alle Instanzen anzeigen
+  title: Alle Instanzen
+migrateMinecraft:
+  name: Minecraft-Dateien migrieren
+reinstall:
+  name: '{version} neu installieren'

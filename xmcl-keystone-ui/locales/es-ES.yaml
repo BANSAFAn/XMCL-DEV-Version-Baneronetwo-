@@ -155,7 +155,8 @@ diagnosis:
   unzipFileNotFound:
     description: No puedo encontrar {file}
     title: Archivo modpack no encontrado
-downloadUpdate: Descarga de la actualización
+downloadUpdate:
+  name: Descargar actualización {version}
 env:
   select:
     all: Seleccionar todo
@@ -311,6 +312,11 @@ instance:
   vmVar: Variables de entorno
   vmVarHint: Haga clic en el botón para agregar variables ambientales
   width: Ancho
+  envVarKey: Clave
+  envVarValue: Valor
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: valor
+  fileApiPlaceholder: Introduce aquí la URL de sincronización remota si quieres mantener los recursos sincronizados
 instanceAge:
   older: Más Antiguo
   threeDay: En Tres Días
@@ -374,16 +380,24 @@ instances:
   folderSetting: Configuración de carpeta
   importFolderDescription: Importar Minecraft al Lanzador
   loadingFiles: Cargando archivos Modpack
+  addPrismDescription: Importar instancia existente de PrismLauncher.
 items:
   count: '{count} ítems'
   total: '{total} total'
 java:
   allocatedLong: Usar Java predeterminada del sistema
   allocatedShort: Asignación Automática
+  allocation: Asignado
+  autoHint: El mínimo crece con la cantidad de mods instalados; el máximo usa la memoria disponible del sistema.
+  change: Cambiar
+  locationHint: Ningún Java seleccionado — usando el predeterminado del sistema
+  openFolder: Abrir carpeta de Java
+  presets: Predeterminados
 launch:
   createShortcut: Crear atajo
   killServer: Matar el servidor localhost
   launchAnyway: Lanzar de todos modos
+  forceKill: Forzar cierre
 launchBlocked:
   launchBadVersion:
     description: >-
@@ -487,6 +501,7 @@ mod:
   syncGroupRules: Guardar reglas de agrupación
   toUpdate: '{count} para actualizar'
   ungroup: Desagrado
+  description: Descripción
 modFilter:
   clear: Filtro claro
   dependenciesInstallOnly: Solo muestre modificaciones de dependencias perdidas
@@ -672,6 +687,7 @@ modrinth:
     optional: Opcional
     required: Requerido
     unsupported: No Soportado
+    all: Todos
   externalResources: Recursos Externos
   featuredVersions: Versiones Destacadas
   followedProjects: Proyectos seguidos
@@ -726,6 +742,11 @@ multiplayer:
   sharingNotificationBody: >-
     Puede descargar o crear una instancia desde la configuración compartida de {nombre}.
   sharingNotificationTitle: Un compañero está compartiendo la configuración del juego.
+  connectionError: Error de conexión
+  connectionFailedHint: >-
+    No se puede establecer la conexión. Comprueba que ambos pares tengan tipos de NAT compatibles.
+  natWarning: >-
+    Tu tipo de NAT puede impedir conexiones directas. Intenta activar el servidor de relé en los ajustes o pídele a tu amigo que sea el anfitrión.
 optifineVersion:
   disable: Desactivar Optifine
   empty: Optifine no es compatible con Minecraft {version}
@@ -782,6 +803,8 @@ resourcepack:
   showFile: Mostrar paquete de recursos en la carpeta {file}
   showInCurseforge: Mostrar {name} en CurseForge
   unselected: Paquetes de Recursos No Seleccionados
+  noPacks: No se encontraron paquetes de recursos
+  search: Buscar paquetes de recursos...
 save:
   copy:
     name: Copiar Partida
@@ -805,10 +828,16 @@ save:
   showDirectory: Mostrar directorio de guardado
   unselected: archivo compartido
   useCurrent: Usar el mundo actual
+  openFolder: Abrir carpeta de partidas
+  searchHint: Buscar mundos en CurseForge
+  searchSaves: Buscar partidas
 screenshots:
   empty: No tienes capturas de pantalla
   playRandom: Juega aleatoriamente
   playSequence: Jugar en orden
+  gallery: Galería de capturas
+  hint: Pulsa F2 en el juego para capturar pantallas
+  openFolder: Abrir carpeta de capturas
 search:
   favorate: Recopilación
   local: Instalado
@@ -1096,6 +1125,9 @@ shaderPack:
   selectSearchHint: Localice y seleccione Shader Pack
   showDirectory: Mostrar directorio de packs de shaders
   showFile: Mostrar este pack de shaders en la carpeta
+  market: Mercado de shaders
+  noPacks: No hay shaders instalados
+  search: Buscar shaders...
 shared:
   add: Añadir
   author: Autor
@@ -1127,12 +1159,15 @@ sortBy:
   alphabetDesc: Ordenar por alfabeto (descendente)
   timeAsc: Ordenar por tiempo de modificación (ascendente)
   timeDesc: Ordenar por tiempo de modificación (descendente)
+  name: Ordenar por
 store:
   discover: Descubrir
   latestMinecraft: La última versión de Minecraft
   name: Tienda de kits mod
   searchResult: Resultado de la búsqueda
   trending: Tendencia
+  empty: No se encontraron modpacks
+  emptyHint: Prueba a ajustar los filtros o la búsqueda.
 tag:
   create: Crear Etiqueta
   createSelected: Crear Etiqueta para la Selección
@@ -1212,3 +1247,21 @@ userSkin:
   reset: Restablecer
 version:
   checkIntegrity: Verificar la integridad
+downloadModMetadataDb:
+  name: Descargar base de datos de metadatos de mods
+duplicateInstance:
+  name: Duplicar instancia
+exportModpack:
+  name: Exportar modpack
+installProfile:
+  name: Instalar perfil {version}
+installQuilt:
+  name: Instalar Quilt {version}
+instanceLauncher:
+  search: Buscar instancias...
+  showAll: Mostrar todas las instancias
+  title: Todas las instancias
+migrateMinecraft:
+  name: Migrar archivos de Minecraft
+reinstall:
+  name: Reinstalar {version}

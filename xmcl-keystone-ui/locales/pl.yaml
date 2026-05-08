@@ -151,7 +151,8 @@ disk:
   available: Dostępne
   used: Używany
 downloadCount: '{count} pliki do pobrania'
-downloadUpdate: Pobierz aktualizację
+downloadUpdate:
+  name: Pobierz aktualizację {version}
 duration:
   day: '{duration} dzień | {duration} dni'
   hour: '{duration} godzina | {duration} godziny'
@@ -326,6 +327,11 @@ instance:
   vmVar: Zmienne środowiskowe
   vmVarHint: Kliknij przycisk, aby dodać zmienne środowiskowe
   width: Szerokość
+  envVarKey: Klucz
+  envVarValue: Wartość
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: wartość
+  fileApiPlaceholder: Wprowadź tutaj zdalny adres synchronizacji, jeśli chcesz zachować synchronizację zasobów
 instanceAge:
   older: Starszy
   threeDay: W trzy dni
@@ -405,6 +411,7 @@ instances:
   folderSetting: Ustawienia folderów
   importFolderDescription: Importowanie Minecrafta do programu uruchamiającego
   loadingFiles: Ładowanie plików Modpack
+  addPrismDescription: Importuj istniejącą instancję PrismLauncher.
 items:
   count: '{count} pozycje'
   total: '{total} całkowity'
@@ -423,6 +430,12 @@ java:
   noMemory: Nie ograniczaj użycia pamięci
   refresh: Odśwież lokalną Javę
   systemMemory: 'Wolna pamięć systemowa: {free} / {total}'
+  allocation: Przydzielone
+  autoHint: Minimum rośnie wraz z liczbą zainstalowanych modów; maksimum używa dostępnej pamięci systemu.
+  change: Zmień
+  locationHint: Nie wybrano Javy — używana jest domyślna systemowa
+  openFolder: Otwórz folder Javy
+  presets: Ustawienia wstępne
 labyMod:
   disable: Wyłącz LabyMod
   empty: LabyMod nie obsługuje aktualnej wersji Minecrafta
@@ -433,6 +446,7 @@ launch:
   killServer: Zabij serwer Localhost
   launch: Uruchomienie
   launchAnyway: Uruchom mimo to
+  forceKill: Wymuś zakończenie
 launchBlocked:
   launchBadVersion:
     description: Wersja {version} json jest uszkodzony. Może przeinstaluj tę wersję?
@@ -606,6 +620,7 @@ mod:
   syncGroupRules: Zapisz reguły grupowania
   toUpdate: '{count} aktualizować'
   ungroup: Ungrouping
+  description: Opis
 modFilter:
   clear: Przezroczysty filtr
   dependenciesInstallOnly: Pokaż tylko pominięte mody
@@ -789,6 +804,7 @@ modrinth:
     optional: Opcjonalnie
     required: Wymagane
     unsupported: Nieobsługiwane
+    all: Wszystkie
   externalResources: Zasoby zewnętrzne
   featuredVersions: Polecane wersje
   followedProjects: Następujące projekty
@@ -896,6 +912,11 @@ multiplayer:
   sharingNotificationTitle: Kolega udostępnia konfigurację gry
   start: Start
   startNewP2PConnection: Kliknij przycisk Start, aby utworzyć nowe połączenie peer
+  connectionError: Błąd połączenia
+  connectionFailedHint: >-
+    Nie można nawiązać połączenia. Sprawdź, czy obie strony mają zgodne typy NAT.
+  natWarning: >-
+    Twój typ NAT może uniemożliwiać bezpośrednie połączenia. Spróbuj włączyć serwer przekaźnikowy w ustawieniach lub poproś znajomego, aby był hostem.
 myStuff: Moje rzeczy
 natType:
   blocked: Zablokowany
@@ -969,6 +990,8 @@ resourcepack:
   showFile: Pokaż pakiet zasobów w folderze {file}
   showInCurseforge: Pokaż {name} w curseforge
   unselected: Niewybrane pakiety zasobów
+  noPacks: Nie znaleziono paczek zasobów
+  search: Wyszukaj paczki zasobów...
 save:
   copy:
     name: Kopiuj Zapisz
@@ -992,10 +1015,16 @@ save:
   showDirectory: Pokaż katalog zapisu
   unselected: wspólne archiwum
   useCurrent: Użyj obecnego świata
+  openFolder: Otwórz folder zapisów
+  searchHint: Szukaj światów na CurseForge
+  searchSaves: Wyszukaj zapisy
 screenshots:
   empty: Nie masz zrzutów ekranu
   playRandom: Graj losowo
   playSequence: Graj w kolejności
+  gallery: Galeria zrzutów ekranu
+  hint: Naciśnij F2 w grze, aby zrobić zrzut ekranu
+  openFolder: Otwórz folder zrzutów ekranu
 search:
   favorate: Kolekcja
   local: Zainstalowany
@@ -1286,6 +1315,9 @@ shaderPack:
   selectSearchHint: Wyszukaj i wybierz Shader Pack
   showDirectory: Pokaż katalog pakietów shaderów
   showFile: Pokaż ten pakiet shaderów w folderze
+  market: Rynek shaderów
+  noPacks: Nie zainstalowano paczek shaderów
+  search: Wyszukaj paczki shaderów...
 shared:
   add: Dodaj
   author: Autor
@@ -1321,12 +1353,15 @@ sortBy:
   alphabetDesc: Sortuj według alfabetu (zejście)
   timeAsc: Sortuj według czasu modyfikacji (rosnący)
   timeDesc: Sortuj według czasu modyfikacji (zstępowanie)
+  name: Sortuj według
 store:
   discover: Odkryć
   latestMinecraft: Najnowsza wersja Minecrafta
   name: Rynek Modpack
   searchResult: Wynik wyszukiwania
   trending: Trendy
+  empty: Nie znaleziono modpacków
+  emptyHint: Spróbuj dostosować filtry lub zapytanie.
 tag:
   create: Utwórz tag
   createSelected: Utwórz znacznik dla wybranych
@@ -1479,3 +1514,21 @@ userSkin:
   urlNotEmpty: Adres URL skórki nie może być pusty
   urlNotValid: Adres URL skórki jest nieprawidłowy
   useSlim: Użyj modelu Slim
+downloadModMetadataDb:
+  name: Pobierz bazę metadanych modów
+duplicateInstance:
+  name: Duplikuj instancję
+exportModpack:
+  name: Eksportuj modpack
+installProfile:
+  name: Zainstaluj profil {version}
+installQuilt:
+  name: Zainstaluj Quilt {version}
+instanceLauncher:
+  search: Wyszukaj instancje...
+  showAll: Pokaż wszystkie instancje
+  title: Wszystkie instancje
+migrateMinecraft:
+  name: Migruj pliki Minecraft
+reinstall:
+  name: Zainstaluj ponownie {version}

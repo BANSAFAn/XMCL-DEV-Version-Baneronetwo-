@@ -183,7 +183,8 @@ disk:
   available: Beschikbaar
   used: Gebruikt
 downloadCount: '{count} downloads'
-downloadUpdate: Update downloaden
+downloadUpdate:
+  name: Descargar actualización {version}
 duration:
   day: '{duration} dag | {duration} dagen'
   hour: '{duration} uur | {duration} uur'
@@ -357,6 +358,11 @@ instance:
   vmVar: Omgevingsvariabelen
   vmVarHint: Klik op + knop om omgevingsvariabelen toe te voegen
   width: Breedte
+  envVarKey: Chave
+  envVarValue: Valor
+  envVarKeyPlaceholder: MY_VAR
+  envVarValuePlaceholder: valor
+  fileApiPlaceholder: Introduce aquí o URL de sincronización remota se queres manter os recursos sincronizados
 instanceAge:
   older: Ouder
   threeDay: Binnen drie dagen
@@ -376,9 +382,9 @@ instanceInstallSkip:
   warning: >-
     Sommige bestanden zijn meerdere keren gedownload met niet-overeenkomende checksum. Dit kan komen doordat de originele checksum onjuist is. Controleer dit aub. Als je bevestigt dat de huidige bestanden geldig zijn, kun je de validatiecheck overslaan.
 instanceLauncher:
-  search: Zoek instanties...
-  showAll: Toon alle instanties
-  title: Alle Instanties
+  search: Buscar instancias...
+  showAll: Amosar todas as instancias
+  title: Todas as instancias
 instanceSetting:
   disableAuthlibInjector: Schakel authlib injector uit
   disableAuthlibInjectorDescription: >-
@@ -426,6 +432,7 @@ instances:
   folderSetting: Mapinstellingen
   importFolderDescription: Importeer Minecraft naar Launcher
   loadingFiles: Modpack-bestanden laden
+  addPrismDescription: Importar unha instancia de PrismLauncher existente.
 items:
   count: '{count} items'
   total: '{total} totaal'
@@ -444,6 +451,12 @@ java:
   noMemory: Geheugengebruik niet beperken
   refresh: Ververs Lokale Java
   systemMemory: 'Systeem Vrij Geheugen: {free} / {total}'
+  allocation: Asignado
+  autoHint: O mínimo crece coa cantidade de mods instalados; o máximo usa a memoria dispoñible do sistema.
+  change: Cambiar
+  locationHint: Ningún Java seleccionado — usando o predeterminado do sistema
+  openFolder: Abrir cartafol de Java
+  presets: Predefinicións
 labyMod:
   disable: Schakel LabyMod uit
   empty: LabyMod ondersteunt huidige Minecraft niet
@@ -454,6 +467,7 @@ launch:
   killServer: Stop Localhost Server
   launch: Starten
   launchAnyway: Toch starten
+  forceKill: Forzar peche
 launchBlocked:
   launchBadVersion:
     description: >-
@@ -581,7 +595,7 @@ mod:
   createGroup: Maak Groep
   currentVersion: Huidige {current}
   denseView: Compacte weergave
-  description: Beschrijving
+  description: Descrición
   disableAll: Alles uitschakelen
   dropHint: Sleep mod's .jar/.litemod hierheen om te importeren.
   duplicatedDetected: '{count} gedupliceerde mods'
@@ -797,7 +811,7 @@ modrinth:
   description: Beschrijving
   downloads: Downloads
   environments:
-    all: Alles
+    all: Todos
     default: Standaard
     name: Omgeving
     optional: Optioneel
@@ -904,6 +918,11 @@ multiplayer:
   sharingNotificationTitle: Een peer deelt zijn gameconfiguratie
   start: Start
   startNewP2PConnection: Klik op de Start knop om een nieuwe peer-verbinding te maken
+  connectionError: Erro de conexión
+  connectionFailedHint: >-
+    Non se pode establecer a conexión. Comproba que ambos os pares teñan tipos de NAT compatibles.
+  natWarning: >-
+    O teu tipo de NAT pode impedir conexións directas. Tenta activar o servidor de relé na configuración ou pídelle ao teu amigo que sexa o anfitrión.
 myStuff: Mijn Spullen
 natType:
   blocked: Geblokkeerd
@@ -968,7 +987,7 @@ resourcepack:
   incompatible: >-
     Incompatibel Resourcepack formaat({format}). Past in {accept}. Huidig {actual}.
   name: Resourcepack | Resourcepacks
-  noPacks: Geen resourcepacks gevonden
+  noPacks: Non se atoparon paquetes de recursos
   searchHint: Busca paquetes de recursos
   searchOnCurseforge: Zoek {name} in curseforge
   searchOnModrinth: '@:mod.searchOnModrinth'
@@ -977,6 +996,7 @@ resourcepack:
   showFile: Toon resourcepack in map {file}
   showInCurseforge: Toon {name} in curseforge
   unselected: Niet-geselecteerde Resourcepacks
+  search: Buscar paquetes de recursos...
 save:
   allowCheats: Cheats Toestaan
   copy:
@@ -1000,10 +1020,10 @@ save:
   mapLoaded: Kaart Geladen
   mapPreview: Kaartvoorbeeld
   name: Save | Saves
-  openFolder: Open Saves-map
+  openFolder: Abrir cartafol de partidas
   properties: Wereldeigenschappen
   search: Zoek Saves
-  searchHint: Zoek naar werelden op CurseForge
+  searchHint: Buscar mundos en CurseForge
   seed: Seed
   selected: Lokale Saves
   shared: Instantie gebruikt gedeelde saves-map
@@ -1012,10 +1032,14 @@ save:
   useCurrent: Gebruik huidige wereld
   useMouseRotate: Gebruik muis om weergave te draaien
   useScrollZoom: Gebruik scrollwiel om te zoomen
+  searchSaves: Buscar partidas
 screenshots:
   empty: Je hebt geen screenshots
   playRandom: Shuffle
   playSequence: Speel in volgorde
+  gallery: Galería de capturas
+  hint: Preme F2 no xogo para capturar pantallas
+  openFolder: Abrir cartafol de capturas
 search:
   favorate: Collectie
   local: Geïnstalleerd
@@ -1296,7 +1320,7 @@ shaderPack:
   enabled: Ingeschakelde Shader Packs
   manage: Beheer Shader Packs
   name: Shader Pack
-  noPacks: Geen shader packs geïnstalleerd
+  noPacks: Non hai shaders instalados
   noShaderMod: Geen Shader Mod Geïnstalleerd
   noShaderModHint: Je kunt shader niet gebruiken zonder een shader mod
   noShaderModInstallHint: Je moet een van de volgende mods installeren om shader pack te laden.
@@ -1304,6 +1328,8 @@ shaderPack:
   selectSearchHint: Zoek en selecteer Shader Pack
   showDirectory: Toon shader pack map
   showFile: Toon dit shader pack in map
+  market: Mercado de shaders
+  search: Buscar shaders...
 shared:
   add: Toevoegen
   author: Auteur
@@ -1340,12 +1366,15 @@ sortBy:
   alphabetDesc: Sorteer op alfabet (aflopend)
   timeAsc: Sorteer op wijzigingstijd (oplopend)
   timeDesc: Sorteer op wijzigingstijd (aflopend)
+  name: Ordenar por
 store:
   discover: Descubrir
   latestMinecraft: Laatste Minecraft Versie
   name: Modpack Markt
   searchResult: Resultado da busca
   trending: Tendencias
+  empty: Non se atoparon modpacks
+  emptyHint: Proba a axustar os filtros ou a busca.
 tag:
   create: Maak Tag
   createSelected: Maak Tag voor Geselecteerde
@@ -1507,3 +1536,17 @@ versionType:
   beta: Beta
   name: Status
   release: Release
+downloadModMetadataDb:
+  name: Descargar base de datos de metadatos de mods
+duplicateInstance:
+  name: Duplicar instancia
+exportModpack:
+  name: Exportar modpack
+installProfile:
+  name: Instalar perfil {version}
+installQuilt:
+  name: Instalar Quilt {version}
+migrateMinecraft:
+  name: Migrar arquivos de Minecraft
+reinstall:
+  name: Reinstalar {version}

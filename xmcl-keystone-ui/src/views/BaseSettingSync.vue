@@ -24,7 +24,7 @@
         <v-text-field
           v-model="data.fileServerApi"
           hide-details
-          placeholder="Please enter the remote sync url here if you want to keep the resource sync"
+          :placeholder="t('instance.fileApiPlaceholder')"
         />
       </v-list-item-action>
       <v-list-item-action>
