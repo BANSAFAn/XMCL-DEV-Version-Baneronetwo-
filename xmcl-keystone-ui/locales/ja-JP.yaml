@@ -557,6 +557,7 @@ logsCrashes:
   logs: ログ
   placeholder: ファイルが見つかりませんでした
   title: ログ、またはクラッシュレポート
+  failures: 起動失敗
 me:
   news: ニュース
   recentPlay: プレイの履歴

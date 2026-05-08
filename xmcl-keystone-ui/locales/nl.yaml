@@ -585,6 +585,7 @@ logsCrashes:
   logs: Logs
   placeholder: Geen Bestanden Gevonden
   title: Logs of Crash Rapporten
+  failures: Startfouten
 me:
   news: Nieuws
   recentPlay: Onlangs Gespeeld

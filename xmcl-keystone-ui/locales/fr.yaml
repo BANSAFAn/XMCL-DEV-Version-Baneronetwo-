@@ -609,6 +609,7 @@ logsCrashes:
   logs: Journaux
   placeholder: Aucun fichier trouvé
   title: Journaux ou rapports de plantage
+  failures: Échecs de lancement
 me:
   news: Nouvelles
   recentPlay: Joué Récemment

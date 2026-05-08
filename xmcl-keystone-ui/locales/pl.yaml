@@ -563,6 +563,7 @@ logsCrashes:
   logs: Dzienniki
   placeholder: Nie znaleziono plików
   title: Dzienniki lub raporty o wypadkach
+  failures: Błędy uruchamiania
 me:
   news: Aktualności
   recentPlay: Ostatnia gra

@@ -1,5 +1,5 @@
 import { MinecraftFolder, type LaunchOption as ResolvedLaunchOptions, type ResolvedVersion, type ServerOptions, type ResolvedServerVersion, createMinecraftProcessWatcher, generateArguments, generateArgumentsServer, launch, launchServer } from '@xmcl/core'
-import { AUTHORITY_DEV, type CreateLaunchShortcutOptions, type GameProcess, type LaunchService as ILaunchService, LaunchException, type LaunchOptions, LaunchServiceKey, type ReportOperationPayload } from '@xmcl/runtime-api'
+import { AUTHORITY_DEV, type CreateLaunchShortcutOptions, type GameProcess, type LaunchService as ILaunchService, LAUNCH_FAILURE_PREFIX, LaunchException, type LaunchOptions, LaunchServiceKey, type ReportOperationPayload } from '@xmcl/runtime-api'
 import { offline } from '@xmcl/user'
 import { ChildProcess, spawn } from 'child_process'
 import createDesktopShortcut, { type ShortcutOptions } from 'create-desktop-shortcuts'
@@ -519,6 +519,7 @@ export class LaunchService extends AbstractService implements ILaunchService {
         }
         Promise.all(errPromises).catch((e) => { this.error(e) }).finally(() => {
           const errorLog = errorLogs.join('\n');
+          const stdLog = stdLogs.join('\n')
           for (const plugin of this.middlewares) {
             try {
               plugin.onAfterLaunch?.({ code, signal, crashReport, crashReportLocation, errorLog }, options, { version, options: launchOptions, side } as any, context)
@@ -527,6 +528,26 @@ export class LaunchService extends AbstractService implements ILaunchService {
               this.error(e as any)
             }
           }
+
+          // Persist a dump on abnormal exit so the user can revisit the
+          // captured stderr/stdout later from the Logs dialog. Without
+          // this, closing the crash dialog (which now allows Esc, see
+          // gh #1389) would lose the only copy of the launcher-captured
+          // log: vanilla `latest.log` doesn't contain `System.err`
+          // messages from the JVM bootstrap.
+          if (code !== 0 && (errorLog || stdLog)) {
+            this.#persistAbnormalExitLog(options.gameDirectory, {
+              code,
+              signal,
+              crashReportLocation,
+              startTime,
+              endTime,
+              operationId,
+              errorLog,
+              stdLog,
+            }).catch((e) => this.warn(e))
+          }
+
           this.emit('minecraft-exit', {
             pid: process.pid,
             ...options,
@@ -537,7 +558,7 @@ export class LaunchService extends AbstractService implements ILaunchService {
             duration: playTime,
             crashReportLocation: crashReportLocation ? crashReportLocation.replace('\r\n', '').trim() : '',
             errorLog,
-            stdLog: stdLogs.join('\n'),
+            stdLog,
             elyByAuthlibReplaced: context.elyByAuthlibReplaced,
             elyByMinecraftVersion: context.elyByMinecraftVersion,
           })
@@ -624,6 +645,53 @@ export class LaunchService extends AbstractService implements ILaunchService {
         this.warn(e as Error)
       }
     }
+  }
+
+  /**
+   * Persist the launcher-captured stderr / stdout for an abnormal Minecraft
+   * exit so the user can revisit it later from the Logs dialog. The file is
+   * written into the instance's `logs/` folder using a `xmcl-abnormal-exit-`
+   * prefix and a `.log` extension so it is automatically picked up by
+   * {@link InstanceLogService.listLogs}. See gh #1389.
+   */
+  async #persistAbnormalExitLog(gameDirectory: string, info: {
+    code: number | undefined
+    signal: string | undefined
+    crashReportLocation: string | undefined
+    startTime: number
+    endTime: number
+    operationId: string
+    errorLog: string
+    stdLog: string
+  }) {
+    const logsDir = join(gameDirectory, 'logs')
+    await ensureDir(logsDir)
+    const stamp = new Date(info.endTime).toISOString().replace(/[:.]/g, '-')
+    const filePath = join(logsDir, `${LAUNCH_FAILURE_PREFIX}${stamp}.log`)
+
+    const header = [
+      `# X Minecraft Launcher abnormal-exit dump`,
+      `# Operation:        ${info.operationId}`,
+      `# Exit code:        ${info.code ?? '(none)'}`,
+      `# Signal:           ${info.signal ?? '(none)'}`,
+      `# Started:          ${new Date(info.startTime).toISOString()}`,
+      `# Ended:            ${new Date(info.endTime).toISOString()}`,
+      `# Duration:         ${info.endTime - info.startTime}ms`,
+      `# Crash report:     ${info.crashReportLocation || '(none)'}`,
+      ``,
+    ].join('\n')
+
+    const body = [
+      `===== stderr =====`,
+      info.errorLog || '(empty)',
+      ``,
+      `===== stdout (pre-window-ready) =====`,
+      info.stdLog || '(empty)',
+      ``,
+    ].join('\n')
+
+    await writeFile(filePath, header + body, 'utf-8')
+    this.log(`Wrote abnormal-exit log to ${filePath}`)
   }
 
   async getGameProcess(pid: number): Promise<GameProcess | undefined> {

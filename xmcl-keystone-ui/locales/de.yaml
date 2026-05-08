@@ -634,6 +634,7 @@ logsCrashes:
   logs: Логи
   placeholder: Dateien nicht gefunden
   title: Protokolle oder Fehlerberichte
+  failures: Startfehler
 me:
   news: Nachrichten
   recentPlay: Neuestes Spiel

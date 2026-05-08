@@ -587,6 +587,7 @@ loginError:
   timeout: Login timeout. Please retry or check your network.
 logsCrashes:
   crashes: Crash Reports
+  failures: Launch Failures
   logs: Logs
   placeholder: No Files Found
   title: Logs or Crash Reports

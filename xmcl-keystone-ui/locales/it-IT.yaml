@@ -572,6 +572,7 @@ logsCrashes:
   logs: Log
   placeholder: Nessun file trovato
   title: Log o report arresto anomalo
+  failures: Errori di avvio
 me:
   news: Notizie
   recentPlay: Giocato di recente

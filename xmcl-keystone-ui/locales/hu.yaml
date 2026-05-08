@@ -604,6 +604,7 @@ logsCrashes:
   logs: Naplók
   placeholder: Nem találhatóak fájlok
   title: Napló vagy összeomlás jelentések
+  failures: Indítási hibák
 me:
   news: Hírek
   recentPlay: Legutóbbi játék

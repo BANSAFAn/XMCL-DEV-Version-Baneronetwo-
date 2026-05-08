@@ -1,6 +1,16 @@
 import { ServiceKey } from './Service'
 
 /**
+ * Filename prefix used by LaunchService to persist the launcher-captured
+ * stderr / stdout when Minecraft exits abnormally. Files matching this
+ * prefix in `<instance>/logs/` are surfaced as "Launch Failures" in the
+ * UI so the user can revisit them after dismissing the crash dialog.
+ *
+ * Keep in sync with LaunchService.#persistAbnormalExitLog.
+ */
+export const LAUNCH_FAILURE_PREFIX = 'xmcl-abnormal-exit-'
+
+/**
  * Provide the ability to list/read/remove log and crash reports of a instance.
  */
 export interface InstanceLogService {
@@ -18,6 +28,11 @@ export interface InstanceLogService {
    * @param name The log file name
    */
   getLogContent(instancePath: string, name: string): Promise<string>
+  /**
+   * List the launcher-captured abnormal-exit dumps in `<instance>/logs/`.
+   * Sorted most-recent-first. See {@link LAUNCH_FAILURE_PREFIX}.
+   */
+  listLaunchFailures(instancePath: string): Promise<string[]>
   /**
    * List crash reports in current instance
    */

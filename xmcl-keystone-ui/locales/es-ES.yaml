@@ -442,6 +442,7 @@ logsCrashes:
   logs: Registros
   placeholder: No se encontraron archivos
   title: Registros o Informes de Errores
+  failures: Fallos de inicio
 me:
   news: Noticias
   recentPlay: Juego Reciente

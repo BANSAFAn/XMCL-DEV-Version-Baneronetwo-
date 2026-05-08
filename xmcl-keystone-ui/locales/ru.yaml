@@ -595,6 +595,7 @@ logsCrashes:
   logs: Журналы
   placeholder: Файлы не найдены
   title: Журналы и отчёты об ошибках
+  failures: Ошибки запуска
 me:
   news: Новости
   recentPlay: Последние игры

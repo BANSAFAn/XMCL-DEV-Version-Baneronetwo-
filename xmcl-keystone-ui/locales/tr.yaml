@@ -579,6 +579,7 @@ logsCrashes:
   logs: Günlükler
   placeholder: Dosya Bulunamadı
   title: Günlükler veya Çökme Raporları
+  failures: Başlatma hataları
 me:
   news: Haberler
   recentPlay: Son Oynananlar

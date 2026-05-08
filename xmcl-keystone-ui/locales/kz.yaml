@@ -577,6 +577,7 @@ logsCrashes:
   logs: Журналдар
   placeholder: Файлдар табылмады
   title: Журналдар немесе құлау есептері
+  failures: Іске қосу қателері
 me:
   news: Жаңалықтар
   recentPlay: Соңғы ойналғандар

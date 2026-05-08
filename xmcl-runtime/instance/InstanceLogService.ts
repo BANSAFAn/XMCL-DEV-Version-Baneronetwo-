@@ -1,4 +1,4 @@
-import { InstanceLogServiceKey, type InstanceLogService as IInstanceLogService } from '@xmcl/runtime-api'
+import { InstanceLogServiceKey, LAUNCH_FAILURE_PREFIX, type InstanceLogService as IInstanceLogService } from '@xmcl/runtime-api'
 import { readFile, unlink } from 'fs-extra'
 import { isAbsolute, join } from 'path'
 import { Inject, LauncherAppKey } from '~/app'
@@ -22,12 +22,30 @@ export class InstanceLogService extends AbstractService implements IInstanceLogS
   }
 
   /**
-   * List the log in current instances
+   * List the log in current instances. Excludes launcher-captured
+   * abnormal-exit dumps (those are surfaced separately via
+   * {@link listLaunchFailures}).
    */
   @Singleton()
   async listLogs(instancePath: string) {
     const files = await readdirIfPresent(join(instancePath, 'logs'))
-    return files.filter(f => f.endsWith('.gz') || f.endsWith('.txt') || f.endsWith('.log'))
+    return files.filter(f =>
+      (f.endsWith('.gz') || f.endsWith('.txt') || f.endsWith('.log')) &&
+      !f.startsWith(LAUNCH_FAILURE_PREFIX),
+    )
+  }
+
+  /**
+   * List the launcher-captured abnormal-exit dumps written by LaunchService
+   * for non-zero exits. Sorted most recent first (filenames carry an ISO
+   * timestamp so a reverse lexicographic sort is chronological).
+   */
+  @Singleton()
+  async listLaunchFailures(instancePath: string) {
+    const files = await readdirIfPresent(join(instancePath, 'logs'))
+    return files
+      .filter(f => f.startsWith(LAUNCH_FAILURE_PREFIX) && f.endsWith('.log'))
+      .sort((a, b) => b.localeCompare(a))
   }
 
   /**

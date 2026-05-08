@@ -569,6 +569,7 @@ logsCrashes:
   logs: LOGS
   placeholder: NO FILEZ FOUND
   title: LOGZ OR CRASH REPORTS
+  failures: LANCH FAYLZ
 me:
   news: NEWZ
   recentPlay: RECENT PLAY

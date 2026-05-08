@@ -580,6 +580,7 @@ logsCrashes:
   logs: Logs
   placeholder: Geen bestanden gevonden
   title: Logs of Crashrapporten
+  failures: Fallos de inicio
 me:
   news: Nieuws
   recentPlay: Recent gespeeld

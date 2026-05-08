@@ -536,6 +536,7 @@ logsCrashes:
   logs: 로그
   placeholder: 파일이 없습니다
   title: 로그 또는 크래시 리포트
+  failures: 실행 실패
 me:
   news: 뉴스
   recentPlay: 최근 플레이

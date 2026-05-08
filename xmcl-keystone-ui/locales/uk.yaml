@@ -575,6 +575,7 @@ logsCrashes:
   logs: Логи
   placeholder: Файлів не знайдено
   title: Логи або звіти про збої
+  failures: Помилки запуску
 me:
   news: Новини
   recentPlay: Нещодавно грав

@@ -565,6 +565,7 @@ logsCrashes:
   logs: 日誌
   placeholder: 沒有找到檔案
   title: 日誌或當機報告
+  failures: 啟動失敗
 me:
   news: 最新消息
   recentPlay: 最近遊玩

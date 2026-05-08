@@ -589,6 +589,7 @@ logsCrashes:
   logs: Logs
   placeholder: Nenhum arquivo encontrado
   title: Logs ou Relatórios de falhas
+  failures: Falhas de inicialização
 me:
   news: Notícias
   recentPlay: Jogado recente
