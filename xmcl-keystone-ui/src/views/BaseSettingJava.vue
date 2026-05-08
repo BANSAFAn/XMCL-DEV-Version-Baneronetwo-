@@ -5,34 +5,45 @@
       <v-avatar
         size="48"
         rounded="lg"
-        :color="java.path && java.valid ? 'primary' : (java.path ? 'error' : 'surface-variant')"
-        :variant="java.path && java.valid ? 'flat' : 'tonal'"
+        :color="displayJava.path && displayJava.valid ? 'primary' : (displayJava.path ? 'error' : 'surface-variant')"
+        :variant="displayJava.path && displayJava.valid ? 'flat' : 'tonal'"
       >
         <span
-          v-if="java.path && java.valid && java.majorVersion"
+          v-if="displayJava.path && displayJava.valid && displayJava.majorVersion"
           class="text-h6 font-weight-bold"
         >
-          {{ java.majorVersion }}
+          {{ displayJava.majorVersion }}
         </span>
-        <v-icon v-else-if="java.path">error_outline</v-icon>
+        <v-icon v-else-if="displayJava.path">error_outline</v-icon>
         <v-icon v-else>memory</v-icon>
       </v-avatar>
 
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2 text-subtitle-1 font-weight-medium">
-          <template v-if="java.path && java.valid">
-            Java {{ java.version }}
+          <template v-if="displayJava.path && displayJava.valid">
+            Java {{ displayJava.version }}
             <v-chip
-              v-if="java.arch"
+              v-if="displayJava.arch"
               size="x-small"
               color="orange"
               label
               variant="outlined"
             >
-              {{ java.arch }}
+              {{ displayJava.arch }}
+            </v-chip>
+            <v-chip
+              v-if="isAuto"
+              v-shared-tooltip="() => t('java.allocatedLong')"
+              size="x-small"
+              color="primary"
+              label
+              variant="tonal"
+            >
+              <v-icon start size="x-small">auto_awesome</v-icon>
+              {{ t('java.allocatedShort') }}
             </v-chip>
           </template>
-          <template v-else-if="java.path">
+          <template v-else-if="displayJava.path">
             <span class="text-error">{{ t('java.invalid') }}</span>
           </template>
           <template v-else>
@@ -40,11 +51,11 @@
           </template>
         </div>
         <div
-          v-if="java.path"
-          v-shared-tooltip="java.path"
+          v-if="displayJava.path"
+          v-shared-tooltip="displayJava.path"
           class="text-caption text-medium-emphasis truncate"
         >
-          {{ java.path }}
+          {{ displayJava.path }}
         </div>
         <div v-else class="text-caption text-medium-emphasis">
           {{ t('java.locationHint') }}
@@ -52,13 +63,13 @@
       </div>
 
       <v-btn
-        v-if="java.path && java.valid"
+        v-if="displayJava.path && displayJava.valid"
         v-shared-tooltip="() => t('java.openFolder')"
         icon
         variant="text"
         density="comfortable"
         size="small"
-        @click="showItemInDirectory(java.path)"
+        @click="showItemInDirectory(displayJava.path)"
       >
         <v-icon>folder_open</v-icon>
       </v-btn>
@@ -285,6 +296,23 @@ const java = computed({
   set: (v: JavaRecord | undefined) => {
     javaPath.value = v?.path ?? ''
   },
+})
+
+// When the user has not pinned a Java (auto mode), fall back to whatever
+// the launcher would actually run with. `selectedJava` from kInstanceJava is
+// resolved by the same logic used at launch time, so the user can see what
+// will be picked instead of a generic "system default" placeholder.
+const isAuto = computed(() => !javaPath.value)
+const displayJava = computed<JavaRecord & { path: string; valid: boolean; majorVersion: number; version: string }>(() => {
+  if (!isAuto.value) return java.value as any
+  const auto = selectedJava.value
+  if (auto && auto.path) {
+    return {
+      ...auto,
+      valid: auto.valid !== false,
+    } as any
+  }
+  return java.value as any
 })
 
 const { push } = useRouter()
