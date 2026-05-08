@@ -53,7 +53,7 @@ import { vContextMenu } from '../directives/contextMenu'
 import { BuiltinImages } from '../constant'
 import { kInstances } from '@/composables/instances'
 import AppSideBarGroupItemIndicator from './AppSideBarGroupItemIndicator.vue'
-import { useGroupDragDropState } from '@/composables/instanceGroup'
+import { isDraggingInstance, useGroupDragDropState } from '@/composables/instanceGroup'
 import { vSharedTooltip } from '@/directives/sharedTooltip'
 
 const props = defineProps<{
@@ -132,6 +132,7 @@ const onDragStart = (e: DragEvent) => {
   }
   e.dataTransfer!.setData('instance', props.path)
   dragging.value = true
+  isDraggingInstance.value = true
 }
 
 const { dragging, overState, onDragEnd, onDragEnter, onDragLeave, onDragOver, onDrop } = useGroupDragDropState(emit, computed(() => props.inside))

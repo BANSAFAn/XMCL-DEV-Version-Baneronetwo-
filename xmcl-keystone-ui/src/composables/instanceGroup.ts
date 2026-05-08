@@ -14,6 +14,14 @@ export enum OverState {
 
 export type InstanceOrGroupData = InstanceGroupDataOrString
 
+/**
+ * Global flag indicating whether an instance (or instance-group) is currently
+ * being dragged. Used by the sidebar scroll container to enable mouse-wheel
+ * scrolling while a drag is in progress (native HTML5 drag-and-drop does not
+ * scroll containers automatically). See gh #1396.
+ */
+export const isDraggingInstance = ref(false)
+
 export function useGroupDragDropState(emit: (event: 'arrange' | 'group' | 'drop-save', data: any) => void, inside?: MaybeRef<boolean | undefined>) {
   const dragging = ref(false)
   const dragover = ref(0)
@@ -47,6 +55,7 @@ export function useGroupDragDropState(emit: (event: 'arrange' | 'group' | 'drop-
   const onDragEnd = (e: DragEvent) => {
     dragging.value = false
     overState.value = undefined
+    isDraggingInstance.value = false
   }
 
   const onDragEnter = (e: DragEvent) => {
@@ -90,6 +99,7 @@ export function useGroupDragDropState(emit: (event: 'arrange' | 'group' | 'drop-
     dragging.value = false
     dragover.value = 0
     overState.value = undefined
+    isDraggingInstance.value = false
   }
   return {
     onDragEnd,

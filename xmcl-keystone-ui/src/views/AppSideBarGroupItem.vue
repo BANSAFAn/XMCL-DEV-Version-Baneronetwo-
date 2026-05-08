@@ -68,7 +68,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { useGroupDragDropState } from '@/composables/instanceGroup'
+import { isDraggingInstance, useGroupDragDropState } from '@/composables/instanceGroup'
 import { kInstances } from '@/composables/instances'
 import { getInstanceIcon } from '@/util/favicon'
 import AppSideBarInstanceItem from './AppSideBarInstanceItem.vue'
@@ -101,6 +101,7 @@ const onDragStart = (e: DragEvent) => {
   e.dataTransfer!.setData('group', JSON.stringify(props.group))
   e.dataTransfer!.effectAllowed = 'move'
   e.dataTransfer!.dropEffect = 'move'
+  isDraggingInstance.value = true
 }
 
 const { dragging, overState, onDragEnd, onDragEnter, onDragLeave, onDragOver, onDrop } = useGroupDragDropState(emit)

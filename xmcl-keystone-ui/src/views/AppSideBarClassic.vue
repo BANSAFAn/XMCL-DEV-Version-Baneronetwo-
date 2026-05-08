@@ -35,7 +35,10 @@
 
     <div class="sidebar__divider" />
 
-    <div class="sidebar__instances">
+    <div
+      ref="instancesScrollEl"
+      class="sidebar__instances"
+    >
       <AppSideBarInstances />
     </div>
 
@@ -147,6 +150,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDragAutoScroll } from '@/composables/dragAutoScroll'
 import { kSettingsState } from '@/composables/setting'
 import { useInjectSidebarSettings } from '@/composables/sidebarSettings'
 import { kTheme } from '@/composables/theme'
@@ -171,6 +175,13 @@ function goBack() {
 function goMultiplayer() {
   windowController.openMultiplayerWindow()
 }
+
+// gh #1396 — Auto-scroll the instances container while an instance is being
+// dragged near its top/bottom edge. (Mouse-wheel scrolling during a native
+// HTML5 drag isn't possible — Chromium suppresses wheel events for the
+// duration of the drag.)
+const instancesScrollEl = ref<HTMLDivElement | null>(null)
+useDragAutoScroll(instancesScrollEl)
 </script>
 
 <style scoped>
