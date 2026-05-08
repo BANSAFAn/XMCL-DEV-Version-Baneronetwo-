@@ -34,7 +34,7 @@
       ref="accountInput"
       v-model="data.username"
       prepend-inner-icon="person"
-      outlined
+      variant="outlined"
       required
       type="password"
       :label="getUserServiceAccount(authority)"
@@ -49,7 +49,7 @@
       v-if="!isOffline"
       v-model="data.password"
       prepend-inner-icon="lock"
-      outlined
+      variant="outlined"
       :type="passwordType"
       required
       :label="passwordLabel"
@@ -65,7 +65,7 @@
     <v-text-field
       v-else
       v-model="data.uuid"
-      outlined
+      variant="outlined"
       prepend-inner-icon="fingerprint"
       :placeholder="uuidLabel"
       :label="uuidLabel"
@@ -90,11 +90,10 @@
         block
         :loading="isLogining && (!hovered)"
         color="primary"
-        rounded
-        large
+        rounded="pill"
         class="text-white"
         @click="onLogin"
-      >
+       size="large">
         <span v-if="!isLogining">
           {{ t("login.login") }}
         </span>

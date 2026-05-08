@@ -1,94 +1,113 @@
 <template>
-  <v-list
-    class="base-settings"
-    color="transparent"
-  >
-    <SettingItem :title="t('modpack.exportDirectory')" :description="modpackMetadata.exportDirectory || t('modpack.exportDirectoryDescription')">
+  <SettingCard :title="t('modpack.exportDirectory')" icon="save_alt">
+    <SettingItem
+      long-action
+      :title="t('modpack.exportDirectory')"
+      :description="modpackMetadata.exportDirectory || t('modpack.exportDirectoryDescription')"
+    >
       <template #preaction>
-        <v-icon>save_alt</v-icon>
+        <v-icon>folder_open</v-icon>
       </template>
       <template #action>
-        <v-btn
-          outlined
-          text
-          @click="onSelectExportDirectory"
-        >
-          <v-icon left>
-            edit
-          </v-icon>
-          {{ t("shared.browse") }}
+        <v-btn variant="tonal" prepend-icon="edit" @click="onSelectExportDirectory">
+          {{ t('shared.browse') }}
         </v-btn>
       </template>
     </SettingItem>
-    <SettingSubheader :title="t('modpack.includes', 1)" class="mb-2">
-      <div class="mx-2">
+  </SettingCard>
+
+  <SettingCard :title="t('modpack.includes', 1)" icon="folder_zip">
+    <template #header-action>
+      <div class="flex flex-1 items-center gap-2 min-w-0">
         <v-text-field
           v-model="filterText"
           :label="t('shared.filter')"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           hide-details
           clearable
           prepend-inner-icon="search"
-          single-line
+          class="flex-1 min-w-0"
+        />
+        <div class="text-sm whitespace-nowrap opacity-70">
+          ~{{ getExpectedSize(totalSize) }}
+        </div>
+        <v-btn
+          variant="text"
+          icon="refresh"
+          size="small"
+          :loading="refreshing"
+          @click="refresh"
         />
       </div>
-      <div class="flex flex-shrink flex-grow-0 items-center justify-center text-center text-sm dark:text-gray-500">
-        ~{{ getExpectedSize(totalSize) }}
-      </div>
-      <v-btn icon class="z-1" @click="refresh" :loading="refreshing">
-        <v-icon>
-          refresh
-        </v-icon>
-      </v-btn>
-    </SettingSubheader>
-    <div
-      class="visible-scroll modpack-files"
-      ref="scrollElement"
-    >
+    </template>
+    <div ref="scrollElement" class="visible-scroll modpack-files">
       <InstanceManifestFileTree
         v-model="cache.selected"
         :loading="refreshing"
         selectable
         :scroll-element="scrollElement"
-        :multiple="false"
       >
-        <template #default="{ item, selected }">
-          <div
-            v-if="(item.curseforge || item.modrinth)"
-            class="inline-flex gap-2"
-            @click.stop
-          >
-            <div
-              class="v-item-group theme--dark v-btn-toggle v-btn-toggle--dense"
-            >
-              <v-btn v-shared-tooltip="() => getEnvText(item, 'client')" text small @click="toggle(item, 'client')">
-                <v-icon small left>desktop_mac</v-icon>
-                <v-icon small color="green" v-if="getEnvValue(item, 'client') === 'required'"> check </v-icon>
-                <v-icon small color="red" v-else-if="getEnvValue(item, 'client') === 'unsupported'"> close </v-icon>
-                <v-icon small color="orange" v-else> question_mark </v-icon>
+        <template #default="{ item }">
+          <div v-if="item.curseforge || item.modrinth" class="inline-flex gap-2" @click.stop>
+            <div class="v-btn-toggle v-btn-toggle--density-compact">
+              <v-btn
+                v-shared-tooltip="() => getEnvText(item, 'client')"
+                variant="text"
+                size="small"
+                @click="toggle(item, 'client')"
+              >
+                <v-icon size="small" start>desktop_mac</v-icon>
+                <v-icon v-if="getEnvValue(item, 'client') === 'required'" size="small" color="green">
+                  check
+                </v-icon>
+                <v-icon
+                  v-else-if="getEnvValue(item, 'client') === 'unsupported'"
+                  size="small"
+                  color="red"
+                >
+                  close
+                </v-icon>
+                <v-icon v-else size="small" color="orange"> question_mark </v-icon>
               </v-btn>
-              <v-btn v-shared-tooltip="() => getEnvText(item, 'server')" text small @click="toggle(item, 'server')">
-                <v-icon class="material-symbols-outlined" left small>hard_drive</v-icon>
-                <v-icon small color="green" v-if="getEnvValue(item, 'server') === 'required'"> check </v-icon>
-                <v-icon small color="red" v-else-if="getEnvValue(item, 'server') === 'unsupported'"> close </v-icon>
-                <v-icon small color="orange" v-else> question_mark </v-icon>
+              <v-btn
+                v-shared-tooltip="() => getEnvText(item, 'server')"
+                variant="text"
+                size="small"
+                @click="toggle(item, 'server')"
+              >
+                <v-icon class="material-symbols-outlined" start size="small">hard_drive</v-icon>
+                <v-icon v-if="getEnvValue(item, 'server') === 'required'" size="small" color="green">
+                  check
+                </v-icon>
+                <v-icon
+                  v-else-if="getEnvValue(item, 'server') === 'unsupported'"
+                  size="small"
+                  color="red"
+                >
+                  close
+                </v-icon>
+                <v-icon v-else size="small" color="orange"> question_mark </v-icon>
               </v-btn>
             </div>
           </div>
         </template>
       </InstanceManifestFileTree>
     </div>
-  </v-list>
+  </SettingCard>
 </template>
 
 <script lang="ts" setup>
 import InstanceManifestFileTree from '@/components/InstanceManifestFileTree.vue'
 import SettingItem from '@/components/SettingItem.vue'
-import SettingSubheader from '@/components/SettingSubheader.vue'
+import SettingCard from '@/components/SettingCard.vue'
 import { useRefreshable, useService } from '@/composables'
 import { kInstance } from '@/composables/instance'
-import { InstanceFileNode, provideFileNodes, useInstanceFileNodesFromLocal } from '@/composables/instanceFileNodeData'
+import {
+  InstanceFileNode,
+  provideFileNodes,
+  useInstanceFileNodesFromLocal,
+} from '@/composables/instanceFileNodeData'
 import { useInstanceModpackMetadata } from '@/composables/instanceModpackMetadata'
 import { kInstanceVersion } from '@/composables/instanceVersion'
 import { kModpackExport } from '@/composables/modpack'
@@ -98,7 +117,14 @@ import { getModSides } from '@/util/modSides'
 import { getExpectedSize } from '@/util/size'
 import { syncRef } from '@vueuse/core'
 import type { InstanceFile } from '@xmcl/instance'
-import { ExportFileDirective, InstanceManifestServiceKey, InstanceModsServiceKey, InstanceResourcePacksServiceKey, InstanceShaderPacksServiceKey, ModpackServiceKey } from '@xmcl/runtime-api'
+import {
+  ExportFileDirective,
+  InstanceManifestServiceKey,
+  InstanceModsServiceKey,
+  InstanceResourcePacksServiceKey,
+  InstanceShaderPacksServiceKey,
+  ModpackServiceKey,
+} from '@xmcl/runtime-api'
 
 const { t } = useI18n()
 const { getInstanceManifest } = useService(InstanceManifestServiceKey)
@@ -111,7 +137,15 @@ const cache = shallowReactive({
 })
 const selectedPaths = computed(() => new Set(cache.selected))
 const filterText = ref('')
-const { leaves } = provideFileNodes(useInstanceFileNodesFromLocal(computed(() => cache.files.filter(f => f.path.toLowerCase().includes((filterText.value || '').toLowerCase())))))
+const { leaves } = provideFileNodes(
+  useInstanceFileNodesFromLocal(
+    computed(() =>
+      cache.files.filter((f) =>
+        f.path.toLowerCase().includes((filterText.value || '').toLowerCase()),
+      ),
+    ),
+  ),
+)
 
 const { instance } = injection(kInstance)
 const { versionId } = injection(kInstanceVersion)
@@ -136,34 +170,47 @@ const { refresh, refreshing } = useRefreshable(async () => {
   let selected = [] as string[]
   if (modpackMetadata.emittedFiles && modpackMetadata.emittedFiles.length > 0) {
     selected = files
-      .filter(file => modpackMetadata.emittedFiles!.includes(file.path))
-      .map(file => file.path)
+      .filter((file) => modpackMetadata.emittedFiles!.includes(file.path))
+      .map((file) => file.path)
   } else {
     selected = files
-      .filter(file => file.path.startsWith('resourcepacks')
-          || file.path.startsWith('mods')
-          || file.path.startsWith('config')
-          || file.path.startsWith('scripts')
-          || file.path.startsWith('shaderpacks')
-          || file.path.startsWith('options.txt')
-          || file.path.startsWith('optionsof.txt')
-          || file.path.startsWith('servers.dat')
-          || file.path.startsWith('theme.json')
-          || file.path.startsWith('theme')
-        )
-      .filter(file => !file.path.endsWith('.disabled'))
-      .map(file => file.path)
+      .filter(
+        (file) =>
+          file.path.startsWith('resourcepacks') ||
+          file.path.startsWith('mods') ||
+          file.path.startsWith('config') ||
+          file.path.startsWith('scripts') ||
+          file.path.startsWith('shaderpacks') ||
+          file.path.startsWith('options.txt') ||
+          file.path.startsWith('optionsof.txt') ||
+          file.path.startsWith('servers.dat') ||
+          file.path.startsWith('theme.json') ||
+          file.path.startsWith('theme'),
+      )
+      .filter((file) => !file.path.endsWith('.disabled'))
+      .map((file) => file.path)
   }
-  nextTick().then(() => { cache.selected = selected })
+  nextTick().then(() => {
+    cache.selected = selected
+  })
   cache.files = files
 
-  const selectedFiles = files.filter(f => (f.path.startsWith('mods') || f.path.startsWith('resourcepacks') || f.path.startsWith('shaderpacks')) && f.hashes.sha1)
+  const selectedFiles = files.filter(
+    (f) =>
+      (f.path.startsWith('mods') ||
+        f.path.startsWith('resourcepacks') ||
+        f.path.startsWith('shaderpacks')) &&
+      f.hashes.sha1,
+  )
 
-  if (modpackMetadata.filesEnvironments && Object.keys(modpackMetadata.filesEnvironments).length > 0) {
+  if (
+    modpackMetadata.filesEnvironments &&
+    Object.keys(modpackMetadata.filesEnvironments).length > 0
+  ) {
     const existed = Object.keys(modpackMetadata.filesEnvironments)
 
-    const newToAdd = selectedFiles.filter(f => !existed.includes(f.path))
-    const toDelete = existed.filter(f => !selectedFiles.find(file => file.path === f))
+    const newToAdd = selectedFiles.filter((f) => !existed.includes(f.path))
+    const toDelete = existed.filter((f) => !selectedFiles.find((file) => file.path === f))
     const newEnvs = { ...modpackMetadata.filesEnvironments }
     for (const del of toDelete) {
       delete newEnvs[del]
@@ -179,9 +226,21 @@ const { refresh, refreshing } = useRefreshable(async () => {
   }
 })
 
-async function updateEnvironments(files: InstanceFile[], envs: Record<string, { client: string; server: string }>) {
-  const withHash = files.filter(f => (f.path.startsWith('mods') || f.path.startsWith('resourcepacks') || f.path.startsWith('shaderpacks')) && f.hashes.sha1)
-  const hashToSide = await getModSides(withHash.map(f_1 => ({ hash: f_1.hashes.sha1, modrinth: f_1.modrinth })), true).catch(() => ({} as Record<string, { client: string; server: string }>))
+async function updateEnvironments(
+  files: InstanceFile[],
+  envs: Record<string, { client: string; server: string }>,
+) {
+  const withHash = files.filter(
+    (f) =>
+      (f.path.startsWith('mods') ||
+        f.path.startsWith('resourcepacks') ||
+        f.path.startsWith('shaderpacks')) &&
+      f.hashes.sha1,
+  )
+  const hashToSide = await getModSides(
+    withHash.map((f_1) => ({ hash: f_1.hashes.sha1, modrinth: f_1.modrinth })),
+    true,
+  ).catch(() => ({}) as Record<string, { client: string; server: string }>)
   for (const file of files) {
     if (file.hashes.sha1) {
       const found = hashToSide[file.hashes.sha1]
@@ -198,9 +257,10 @@ onMounted(() => {
 
 const totalSize = computed(() => {
   const existed = selectedPaths.value
-  return leaves.value.filter(n => existed.has(n.path))
-    .filter(n => (!n?.curseforge && !n.data?.downloads) /* || !canExport(n.data) */)
-    .map(l => l.size)
+  return leaves.value
+    .filter((n) => existed.has(n.path))
+    .filter((n) => !n?.curseforge && !n.data?.downloads /* || !canExport(n.data) */)
+    .map((l) => l.size)
     .reduce((a, b) => a + b, 0)
 })
 
@@ -241,27 +301,36 @@ const getEnvText = (item: InstanceFileNode<any>, side: 'client' | 'server' = 'cl
 }
 
 function onSelectExportDirectory() {
-  windowController.showOpenDialog({
-    title: t('modpack.exportDirectory'),
-    properties: ['openDirectory', 'createDirectory'],
-  }).then(({ filePaths, canceled }) => {
-    if (!canceled && filePaths.length > 0) {
-      modpackMetadata.exportDirectory = filePaths[0]
-    }
-  })
+  windowController
+    .showOpenDialog({
+      title: t('modpack.exportDirectory'),
+      properties: ['openDirectory', 'createDirectory'],
+    })
+    .then(({ filePaths, canceled }) => {
+      if (!canceled && filePaths.length > 0) {
+        modpackMetadata.exportDirectory = filePaths[0]
+      }
+    })
 }
 
-const disabledBuild = computed(() => !modpackMetadata.emitCurseforge && !modpackMetadata.emitModrinth && !modpackMetadata.emitOffline)
+const disabledBuild = computed(
+  () =>
+    !modpackMetadata.emitCurseforge &&
+    !modpackMetadata.emitModrinth &&
+    !modpackMetadata.emitOffline,
+)
 const { refresh: confirm, refreshing: exporting } = useRefreshable(async () => {
   try {
     const selected = selectedPaths.value
     const exportFiles: ExportFileDirective[] = leaves.value
-      .filter(n => selected.has(n.path))
-      .map(l => ({
-        path: l.path,
-        env: environments.value[l.path] ? environments.value[l.path]
-          : undefined,
-      }) as ExportFileDirective)
+      .filter((n) => selected.has(n.path))
+      .map(
+        (l) =>
+          ({
+            path: l.path,
+            env: environments.value[l.path] ? environments.value[l.path] : undefined,
+          }) as ExportFileDirective,
+      )
     const path = instance.value.path
     await exportModpack({
       instancePath: path,
@@ -292,16 +361,15 @@ onMounted(() => {
 onUnmounted(() => {
   setExportHandler(undefined)
 })
-
 </script>
 
 <style scoped="true">
 .flex {
-  padding: 6px 8px !important
+  padding: 6px 8px !important;
 }
 
 .v-btn {
-  margin: 0
+  margin: 0;
 }
 
 .modpack-files {

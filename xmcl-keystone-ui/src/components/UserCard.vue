@@ -1,18 +1,8 @@
 <template>
-  <v-card
-    :outlined="outlined"
-    flat
-    class="invisible-scroll user-menu"
-  >
-    <transition
-      name="fade-transition"
-      mode="out-in"
-    >
+  <v-card flat class="invisible-scroll user-menu">
+    <transition name="fade-transition" mode="out-in">
       <template v-if="addService">
-        <UserCardAddYggdrasilService
-          :key="2"
-          @back="onBackFromAddService"
-        />
+        <UserCardAddYggdrasilService :key="2" @back="onBackFromAddService" />
       </template>
       <template v-else-if="!login">
         <div :key="0">
@@ -33,57 +23,40 @@
             v-if="selected && selected.authority === AUTHORITY_MICROSOFT"
             :user="selected"
           />
-          <UserCardYggdrasil
-            v-else-if="!!selected"
-            :user="selected"
-          />
+          <UserCardYggdrasil v-else-if="!!selected" :user="selected" />
 
           <v-divider v-if="usersToSwitch.length > 0" />
-          <v-list dense>
+          <v-list density="compact">
             <UserCardUserItem
-              v-for="(item) of usersToSwitch"
+              v-for="item of usersToSwitch"
               :key="item.id"
               :hide-user-name="streamerMode"
               link
               :user="item"
-              @click.native="onSelectUser(item.id)"
+              @click="onSelectUser(item.id)"
             />
           </v-list>
 
           <v-divider />
-          <v-list dense>
-            <v-list-item
-              color="primary"
-              @click="login = true"
-            >
-              <v-list-item-avatar>
-                <v-icon>
-                  person_add
-                </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ t('userAccount.add') }}
-                </v-list-item-title>
-              </v-list-item-content>
+          <v-list density="compact">
+            <v-list-item color="primary" @click="login = true">
+              <template #prepend>
+                <v-avatar>
+                  <v-icon> person_add </v-icon>
+                </v-avatar>
+              </template>
+              <v-list-item-title>
+                {{ t('userAccount.add') }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </div>
       </template>
       <template v-else>
-        <div
-          :key="1"
-          class="flex flex-col"
-        >
+        <div :key="1" class="flex flex-col">
           <div class="relative">
-            <v-btn
-              v-if="users.length > 0"
-              text
-              @click="login = false"
-            >
-              <v-icon small>
-                arrow_back
-              </v-icon>
+            <v-btn v-if="users.length > 0" variant="text" @click="login = false">
+              <v-icon size="small"> arrow_back </v-icon>
             </v-btn>
           </div>
 
@@ -122,7 +95,7 @@ import UserCardUserItem from './UserCardUserItem.vue'
 import UserCardYggdrasil from './UserCardYggdrasil.vue'
 import UserLoginForm from './UserLoginForm.vue'
 
-const props = defineProps<{ show: boolean; outlined?: boolean }>()
+const props = defineProps<{ show: boolean }>()
 
 const { t } = useI18n()
 const { users, select, userProfile: selected } = injection(kUserContext)
@@ -175,7 +148,13 @@ async function onRefresh(force = false) {
 }
 
 const options = ref(undefined as any)
-const reset = (o?: { username?: string; password?: string; microsoftUrl?: string; authority?: string; error?: string }) => {
+const reset = (o?: {
+  username?: string
+  password?: string
+  microsoftUrl?: string
+  authority?: string
+  error?: string
+}) => {
   options.value = o
   login.value = false
   addService.value = false
@@ -191,11 +170,16 @@ const onBackFromAddService = () => {
   login.value = true
 }
 
-watch(() => props.show, (v) => {
-  if (v) return
-  login.value = users.value.length === 0
-  addService.value = false
-})
+watch(
+  () => props.show,
+  (v) => {
+    if (v) return
+    login.value = users.value.length === 0
+    addService.value = false
+  },
+)
 
-const usersToSwitch = computed(() => users.value.filter(v => selected.value ? (v.id !== selected.value.id) : true))
+const usersToSwitch = computed(() =>
+  users.value.filter((v) => (selected.value ? v.id !== selected.value.id : true)),
+)
 </script>

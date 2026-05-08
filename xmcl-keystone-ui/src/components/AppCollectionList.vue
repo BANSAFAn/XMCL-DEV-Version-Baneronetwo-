@@ -1,47 +1,91 @@
 <template>
-  <v-list nav>
-    <v-list-item-group :input-value="selectedIndex" :value="selectedIndex" color="primary"
-      @change="selectedIndex = $event">
-      <v-list-item v-for="c of collectionItems" :key="c.id" @click="">
-        <v-list-item-avatar>
+  <!-- Inline Modrinth login prompt -->
+  <div
+    v-if="!userData && !isValidatingUser"
+    class="modrinth-login-prompt"
+  >
+    <v-icon size="64" color="green" class="modrinth-login-prompt__icon">
+      xmcl:modrinth
+    </v-icon>
+    <div class="text-base font-semibold mt-3">
+      {{ t('modrinth.loginTitle') }}
+    </div>
+    <div class="text-sm text-medium-emphasis mt-2 px-4">
+      {{ t('modrinth.loginHint') }}
+    </div>
+    <div class="flex gap-2 mt-5">
+      <v-btn
+        variant="text"
+        size="small"
+        @click="onCancelLogin"
+      >
+        {{ t('shared.no') }}
+      </v-btn>
+      <v-btn
+        color="primary"
+        variant="tonal"
+        size="small"
+        prepend-icon="check"
+        @click="onAcceptLogin"
+      >
+        {{ t('shared.yes') }}
+      </v-btn>
+    </div>
+  </div>
+
+  <!-- Loading state while signing in -->
+  <div
+    v-else-if="isValidatingUser"
+    class="modrinth-login-loading"
+  >
+    <v-progress-circular indeterminate color="primary" size="36" />
+    <div class="text-sm text-medium-emphasis mt-3">
+      {{ t('modrinth.loginTitle') }}
+    </div>
+    <v-btn
+      variant="text"
+      size="small"
+      class="mt-4"
+      @click="cancelLogin"
+    >
+      {{ t('shared.cancel') }}
+    </v-btn>
+  </div>
+
+  <v-list
+    v-else
+    nav
+    :selected="[selectedIndex]"
+    @update:selected="v => selectedIndex = (v[0] as number) ?? -1"
+  >
+    <v-list-item v-for="(c, idx) of collectionItems" :key="c.id" :value="idx" color="primary" :title="c.name" :subtitle="c.description" @click="">
+      <template #prepend>
+        <v-avatar>
           <v-icon v-if="'icon' in c" color="red">{{ c.icon }}</v-icon>
           <v-img v-else-if="c.icon_url" :src="c.icon_url" />
           <div v-else>
             <span class="white--text text-h5 capitalize">{{ c.name[0] }}</span>
           </div>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            {{ c.name }}
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ c.description }}
-          </v-list-item-subtitle>
-          <v-list-item-subtitle>
-            {{ t('modrinth.projects', { count: c.count }) }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action v-if="c.id !== 'followed'" @click.stop>
-          <v-btn
-            icon
-            small
-            :loading="deletingCollection === c.id"
-            @click.stop="onDeleteCollection(c.id)"
-          >
-            <v-icon small>delete</v-icon>
-          </v-btn>
-        </v-list-item-action>
-      </v-list-item>
-    </v-list-item-group>
-    <v-list-item v-if="projectId" color="primary" @click="show(props.projectId)">
-      <v-list-item-icon>
+        </v-avatar>
+      </template>
+      <v-list-item-subtitle>
+        {{ t('modrinth.projects', { count: c.count }) }}
+      </v-list-item-subtitle>
+      <template v-if="c.id !== 'followed'" #append>
+        <v-btn
+          icon
+          variant="text"
+          :loading="deletingCollection === c.id"
+          @click.stop="onDeleteCollection(c.id)"
+        >
+          <v-icon size="small">delete</v-icon>
+        </v-btn>
+      </template>
+    </v-list-item>
+    <v-list-item v-if="projectId" color="primary" :title="t('modrinth.createCollection')" @click="show(props.projectId)">
+      <template #prepend>
         <v-icon>add</v-icon>
-      </v-list-item-icon>
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ t('modrinth.createCollection') }}
-        </v-list-item-title>
-      </v-list-item-content>
+      </template>
     </v-list-item>
   </v-list>
 </template>
@@ -50,7 +94,17 @@ import { useDialog } from '@/composables/dialog';
 import { kModrinthAuthenticatedAPI } from '@/composables/modrinthAuthenticatedAPI';
 import { injection } from '@/util/inject';
 
-const { collections, follows, deleteCollection } = injection(kModrinthAuthenticatedAPI)
+const {
+  collections,
+  follows,
+  deleteCollection,
+  userData,
+  isValidatingUser,
+  acceptSignal,
+  rejectSignal,
+  cancelLogin,
+  interact,
+} = injection(kModrinthAuthenticatedAPI)
 
 const props = defineProps<{
   select?: string
@@ -75,6 +129,17 @@ async function onDeleteCollection(collectionId: string) {
   } finally {
     deletingCollection.value = null
   }
+}
+
+function onAcceptLogin() {
+  // Make sure interact() is in-flight so it can pick up the resolved signal.
+  // `silent: true` prevents the global login dialog from also opening.
+  interact({ silent: true })
+  acceptSignal()
+}
+
+function onCancelLogin() {
+  rejectSignal()
 }
 
 const selectedIndex = computed({
@@ -135,3 +200,20 @@ const { t } = useI18n()
 const { show } = useDialog('collection')
 
 </script>
+
+<style scoped>
+.modrinth-login-prompt,
+.modrinth-login-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 16px;
+  min-height: 280px;
+}
+
+.modrinth-login-prompt__icon {
+  opacity: 0.9;
+}
+</style>

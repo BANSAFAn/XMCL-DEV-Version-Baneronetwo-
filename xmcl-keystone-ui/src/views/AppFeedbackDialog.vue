@@ -1,60 +1,84 @@
 <template>
-  <v-dialog v-model="isShown" hide-overlay transition="dialog-bottom-transition" width="600" scrollable>
-    <v-card class="flex flex-col overflow-auto">
-      <v-toolbar color="primary" dark flat>
-        <v-toolbar-title class="d-flex align-center">
+  <v-dialog
+    v-model="isShown"
+    hide-overlay
+    transition="dialog-bottom-transition"
+    width="600"
+    scrollable
+  >
+    <v-card class="flex max-h-[85vh] flex-col overflow-hidden">
+      <v-toolbar
+        color="primary"
+        flat
+      >
+        <v-toolbar-title class="flex items-center">
           <v-icon class="mr-2">feedback</v-icon>
           {{ t('feedback.name') }}
         </v-toolbar-title>
         <v-spacer />
-        <v-btn icon @click="hide">
+        <v-btn
+          icon
+          @click="hide"
+        >
           <v-icon>close</v-icon>
         </v-btn>
       </v-toolbar>
 
-      <v-card-text class="pa-0">
-        <v-container fluid>
-          <v-row>
-            <v-col cols="12">
-              <v-card flat class="pa-4 mb-4">
-                <div class="d-flex align-center mb-2">
-                  <v-icon color="primary" class="mr-2">info</v-icon>
-                  <span class="text-h6">{{ t('feedback.description') }}</span>
-                </div>
-                <FeedbackCard />
-              </v-card>
-            </v-col>
-          </v-row>
+      <v-card-text class="flex flex-col gap-4 overflow-x-hidden overflow-y-auto p-4">
+        <v-card flat class="p-4">
+          <div class="mb-2 flex items-center">
+            <v-icon color="primary" class="mr-2">info</v-icon>
+            <span class="text-h6">{{ t('feedback.description') }}</span>
+          </div>
+          <FeedbackCard :icon="false" />
+        </v-card>
 
-          <v-row>
-            <v-col cols="12">
-              <div class="d-flex align-center mb-3">
-                <v-icon color="primary" class="mr-2">forum</v-icon>
-                <span class="text-h6">{{ t('feedback.channel') }}</span>
-              </div>
+        <div>
+          <div class="mb-3 flex items-center">
+            <v-icon color="primary" class="mr-2">forum</v-icon>
+            <span class="text-h6">{{ t('feedback.channel') }}</span>
+          </div>
 
-              <v-card v-for="(channel, index) in feedbackChannels" :key="index" class="mb-3" outlined hover>
-                <v-card-text class="pa-4">
-                  <div class="d-flex align-center justify-space-between">
-                    <div class="d-flex align-center flex-grow-1">
-                      <v-avatar :color="channel.color" size="40" class="mr-3">
-                        <v-icon dark>{{ channel.icon }}</v-icon>
-                      </v-avatar>
-                      <div>
-                        <div class="text-h6">{{ channel.title }}</div>
-                        <div class="text-body-2 text--secondary">{{ channel.description }}</div>
+          <div class="flex flex-col gap-3">
+            <v-card
+              v-for="(channel, index) in feedbackChannels"
+              :key="index"
+              variant="outlined"
+              hover
+            >
+              <v-card-text class="p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex min-w-0 flex-grow items-center">
+                    <v-avatar
+                      :color="channel.color"
+                      size="40"
+                      class="mr-3 flex-shrink-0"
+                    >
+                      <v-icon color="white">{{ channel.icon }}</v-icon>
+                    </v-avatar>
+                    <div class="min-w-0 flex-1">
+                      <div class="text-h6">{{ channel.title }}</div>
+                      <div class="text-body-2 text--secondary break-words">
+                        {{ channel.description }}
                       </div>
                     </div>
-                    <v-btn depressed rounded :color="channel.color" dark :href="channel.link" :target="channel.target">
-                      {{ channel.buttonText }}
-                      <v-icon right>open_in_new</v-icon>
-                    </v-btn>
                   </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
+                  <v-btn
+                    rounded="pill"
+                    :color="channel.color"
+                    :href="channel.link"
+                    :target="channel.target"
+                    variant="flat"
+                    class="flex-shrink-0"
+                  >
+                    {{ channel.buttonText }}
+                    <v-icon end>open_in_new</v-icon>
+                  </v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
+          </div>
+        </div>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -112,10 +136,3 @@ watch(isShown, (v) => {
   }
 })
 </script>
-
-<style scoped>
-.diff {
-  color: #81c784;
-  font-style: italic;
-}
-</style>

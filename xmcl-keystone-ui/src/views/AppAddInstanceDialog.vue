@@ -6,65 +6,48 @@
   >
     <v-toolbar
       elevation="4"
-      class="px-1"
+      class="px-5"
     >
-      <v-icon left>add</v-icon>
+      <v-icon start>add</v-icon>
       <v-toolbar-title class="flex items-center">
         <template v-if="steps[step - 1] === 'config'">
           {{ t('instances.add') }}
         </template>
-        <template v-if="steps[step - 1] === 'choice'">
-          {{ t('AppAddInstanceDialog.choiceTitle') }}
-        </template>
-        <template v-if="steps[step - 1] === 'create'">
-          {{ t('AppAddInstanceDialog.createTitle') }}
-        </template>
         <template v-if="steps[step - 1] === 'server'">
           {{ t('AppAddInstanceDialog.serverTitle') }}
         </template>
-
-        <div class="flex-grow" />
-        <v-btn
-          outlined
-          color="primary"
-          @click="onMigrateFromOther"
-        >
-          <v-icon left>
-            local_shipping
-          </v-icon>
-          {{ t("setting.migrateFromOther") }}
-        </v-btn>
       </v-toolbar-title>
+      <div class="flex-grow" />
+      <v-btn
+        color="primary"
+        @click="onMigrateFromOther"
+        variant="text" border>
+        <v-icon start>
+          local_shipping
+        </v-icon>
+        {{ t("setting.migrateFromOther") }}
+      </v-btn>
     </v-toolbar>
 
-    <v-stepper v-model="step">
-      <v-stepper-items class="visible-scroll overflow-y-auto">
-        <v-stepper-content
+    <v-card flat>
+      <v-window v-model="step" class="visible-scroll overflow-y-auto">
+        <v-window-item
           v-for="(tStep, i) in steps"
           :key="tStep"
           class="max-h-[70vh]"
-          :step="i + 1"
+          :value="i + 1"
         >
-          <AppLoadingCircular
-            v-if="tStep === 'create' && loading"
-            :texts="[t('instances.loadingFiles') + '...']"
-          />
-          <StepChoice
-            v-if="tStep === 'choice'"
-            :manifests="manifests"
-            @select="onManifestSelect"
-          />
           <StepConfig
             v-if="tStep === 'config'"
             :loading="loading"
-            :valid.sync="valid"
+            v-model:valid="valid"
           />
           <StepServer
             v-if="tStep === 'server'"
-            :valid.sync="valid"
+            v-model:valid="valid"
           />
-        </v-stepper-content>
-      </v-stepper-items>
+        </v-window-item>
+      </v-window>
       <v-divider />
       <StepperFooter
         class="px-6 pb-6 pt-4"
@@ -81,12 +64,10 @@
           class="flex justify-end"
         >
           <v-btn
-            text
-            outlined
             :loading="loading"
             @click="onImportModpack"
-          >
-            <v-icon left>
+           variant="text">
+            <v-icon start>
               note_add
             </v-icon>
             {{ t('importModpack.name') }}
@@ -108,13 +89,11 @@
           </v-alert>
         </div>
       </StepperFooter>
-    </v-stepper>
+    </v-card>
   </v-dialog>
 </template>
 
 <script lang=ts setup>
-import AppLoadingCircular from '@/components/AppLoadingCircular.vue'
-import StepChoice from '@/components/StepChoice.vue'
 import StepConfig from '@/components/StepConfig.vue'
 import StepServer from '@/components/StepServer.vue'
 import StepperFooter from '@/components/StepperFooter.vue'
@@ -128,23 +107,12 @@ import { kPeerShared } from '@/composables/peers'
 import { kUserContext } from '@/composables/user'
 import { getFTBTemplateAndFile } from '@/util/ftb'
 import { injection } from '@/util/inject'
-import { CachedFTBModpackVersionManifest, CreateInstanceManifest, InstanceIOServiceKey, InstanceManifest, ModpackServiceKey, PeerServiceKey, waitModpackFiles } from '@xmcl/runtime-api'
+import { CachedFTBModpackVersionManifest, InstanceManifest, ModpackServiceKey, PeerServiceKey, waitModpackFiles } from '@xmcl/runtime-api'
 import { useDialog } from '../composables/dialog'
 import { kInstanceCreation, useInstanceCreation } from '../composables/instanceCreation'
 import { AddInstanceDialogKey } from '../composables/instanceTemplates'
 
 const type = ref(undefined as 'modrinth' | 'mmc' | 'server' | 'vanilla' | 'manual' | 'template' | 'prism' | undefined)
-const manifests = ref([] as CreateInstanceManifest[])
-const { parseInstanceFiles } = useService(InstanceIOServiceKey)
-const onManifestSelect = async (man: CreateInstanceManifest) => {
-  update(
-    man.options,
-    man.isIsolated ? parseInstanceFiles(man.path, type.value as any) : Promise.resolve([]),
-  )
-  nextTick().then(() => {
-    step.value += 1
-  })
-}
 
 // Dialog model
 const { openModpack } = useService(ModpackServiceKey)
@@ -196,7 +164,7 @@ const { isShown, show, hide } = useDialog(AddInstanceDialogKey, (param) => {
     return
   }
 
-  step.value = 2
+  step.value = 1
   type.value = 'template'
   valid.value = true
 
@@ -208,7 +176,7 @@ const { isShown, show, hide } = useDialog(AddInstanceDialogKey, (param) => {
     const after = () => {
       type.value = 'template'
       nextTick(() => {
-        step.value = 2
+        step.value = 1
       })
     }
     if (param.format === 'modpack') {
@@ -224,7 +192,7 @@ const { isShown, show, hide } = useDialog(AddInstanceDialogKey, (param) => {
     return
   }
   setTimeout(() => {
-    step.value = 2
+    step.value = 1
     valid.value = true
     type.value = 'template'
     reset()
@@ -261,7 +229,7 @@ const { fix } = injection(kInstanceVersionInstall)
 const onCreate = async () => {
   const newPath = await create((newPath) => {
     path.value = newPath
-    if (router.currentRoute.path !== '/') router.push('/')
+    if (router.currentRoute.value.path !== '/') router.push('/')
     hide()
   })
   if (newPath === path.value) {
@@ -274,10 +242,6 @@ const valid = ref(false)
 const step = ref(1)
 const errorText = computed(() => t('errors.BadInstanceType', { type: type.value === 'mmc' ? 'MultiMC' : type.value === 'modrinth' ? 'Modrinth' : type.value === 'prism' ? 'PrismLauncher' : '' }))
 const steps = computed(() => {
-  if (type.value === 'template') {
-    return ['template', 'config']
-  }
-
   if (type.value === 'server') {
     return ['server', 'config']
   }
@@ -297,11 +261,7 @@ function back() {
 
 function onSelectTemplate() {
   type.value = 'template'
-  step.value = 2
-
-  nextTick(() => {
-    step.value = 1
-  })
+  step.value = 1
 }
 
 // Manuall import
@@ -317,7 +277,7 @@ const onImportModpack = () => {
       await onSelectModpack(file)
       type.value = 'template'
       nextTick(() => {
-        step.value = 2
+        step.value = 1
       })
     } catch (e) {
       error.value = e
@@ -351,26 +311,3 @@ onPeerService('share', (event) => {
 
 const { show: onMigrateFromOther } = useDialog('migrate-wizard')
 </script>
-
-<style>
-.v-stepper__content {
-  padding: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.v-stepper__wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.v-stepper__step span {
-  margin-right: 12px !important;
-}
-
-.v-stepper__step div {
-  display: flex !important;
-}
-</style>

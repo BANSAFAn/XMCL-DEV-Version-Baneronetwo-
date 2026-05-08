@@ -12,15 +12,19 @@
       </v-toolbar>
       <div v-if="progressRef" class="px-2 h-full flex-grow overflow-auto flex flex-col items-center justify-center">
         <!-- <div class="flex items-center justify-center"> -->
-        <v-card-title>
-          {{ progressRef.from }}
-        </v-card-title>
+        <v-card-item>
+          <v-card-title>
+            {{ progressRef.from }}
+          </v-card-title>
+        </v-card-item>
         <!-- </div> -->
         <v-progress-linear :value="progressRef.progress" :total="progressRef.total"
           :indeterminate="progressRef.progress === 0" :height="10" class="rounded-none" />
-        <v-card-title>
-          {{ progressRef.to }}
-        </v-card-title>
+        <v-card-item>
+          <v-card-title>
+            {{ progressRef.to }}
+          </v-card-title>
+        </v-card-item>
         <v-progress-circular class="mt-13" :size="40" indeterminate />
       </div>
     </v-card>

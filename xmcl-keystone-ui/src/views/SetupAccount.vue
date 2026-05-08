@@ -19,17 +19,15 @@
         color="primary"
         @click="login = true"
       >
-        <v-list-item-avatar>
+        <template #prepend><v-avatar>
           <v-icon>
             person_add
           </v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
+        </v-avatar></template>
+        <v-list-item-title>
             {{ t('userAccount.add') }}
           </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+</v-list-item>
     </v-list>
     <div
       v-else
@@ -41,11 +39,10 @@
       >
         <v-btn
           block
-          rounded
-          large
+          rounded="pill"
           class="z-10 mt-4 dark:text-white"
           @click="login = false"
-        >
+         size="large">
           {{ t('setup.account.skip') }}
         </v-btn>
       </UserLoginForm>

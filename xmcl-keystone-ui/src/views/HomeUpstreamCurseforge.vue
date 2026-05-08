@@ -153,7 +153,7 @@ const loadChangelog = async (v: ProjectVersionProps) => {
     :current-version="currentVersion"
     :header="headerData"
     :duplicating="duplicating"
-    :only-current-version.sync="onlyCurrentVersion"
+    v-model:only-current-version="onlyCurrentVersion"
     :updating="updating"
     :loading="loadingFiles"
     @duplicate="onDuplicate"

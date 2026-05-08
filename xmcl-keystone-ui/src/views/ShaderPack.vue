@@ -10,25 +10,21 @@
     :loading="loading"
     @load="loadMore"
   >
+    <template #actions>
+      <MarketListHeader
+        v-model:dense="denseView"
+        :label="`${originalItems.length} ${t('shaderPack.name', originalItems.length)}`"
+      />
+    </template>
     <template #item="{ item, hasUpdate, checked, selectionMode, selected, on, index }">
-      <v-subheader
+      <v-list-subheader
         v-if="typeof item === 'string'"
         :style="{ height: itemHeight + 'px' }"
         class="flex"
       >
         {{ item === 'enabled' ? t("shaderPack.enabled") : item === 'disabled' ? t("shaderPack.disabled") :
           t('modInstall.search') }}
-
-        <div class="flex-grow" />
-        <v-btn
-          v-if="index === 0"
-          v-shared-tooltip="() => t('mod.denseView')"
-          icon
-          @click="denseView = !denseView"
-        >
-          <v-icon> {{ denseView ? 'reorder' : 'list' }} </v-icon>
-        </v-btn>
-      </v-subheader>
+      </v-list-subheader>
       <ShaderPackItem
         v-else
         :pack="item"
@@ -94,10 +90,7 @@
       v-model="model"
       width="600"
     >
-      <v-card>
-        <v-card-title>
-          {{ t('shaderPack.noShaderMod') }}
-        </v-card-title>
+      <v-card :title="t('shaderPack.noShaderMod')">
         <v-card-text>
           {{ t('shaderPack.noShaderModHint') }}
           <div>
@@ -108,11 +101,10 @@
               :disabled="shouldDisableIris"
               @click="navigateToMod('iris')"
             >
-              <v-list-item-avatar>
+              <template #prepend><v-avatar>
                 <img :src="BuiltinImages.iris">
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
+              </v-avatar></template>
+              <v-list-item-title>
                   Iris
                 </v-list-item-title>
                 <v-list-item-subtitle>
@@ -121,8 +113,7 @@
                     @click.stop
                   >https://modrinth.com/mod/iris</a>
                 </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action class="flex flex-row flex-grow-0 gap-1">
+<v-list-item-action class="flex flex-row flex-grow-0 gap-1">
                 <AvatarChip
                   :avatar="BuiltinImages.fabric"
                   small
@@ -144,11 +135,10 @@
               :disabled="shouldDisableOptifine"
               @click="navigateToMod('optifine')"
             >
-              <v-list-item-avatar>
+              <template #prepend><v-avatar>
                 <img :src="BuiltinImages.optifine">
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
+              </v-avatar></template>
+              <v-list-item-title>
                   Optifine
                 </v-list-item-title>
                 <v-list-item-subtitle>
@@ -157,8 +147,7 @@
                     @click.stop
                   >https://optifine.net/home</a>
                 </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action class="flex flex-row gap-1 flex-grow-0">
+<v-list-item-action class="flex flex-row gap-1 flex-grow-0">
                 <AvatarChip
                   :avatar="BuiltinImages.forge"
                   small
@@ -175,11 +164,10 @@
               :disabled="shouldDisableOculus"
               @click="navigateToMod('oculus')"
             >
-              <v-list-item-avatar>
+              <template #prepend><v-avatar>
                 <img :src="BuiltinImages.oculus">
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
+              </v-avatar></template>
+              <v-list-item-title>
                   Oculus
                 </v-list-item-title>
                 <v-list-item-subtitle>
@@ -188,8 +176,7 @@
                     @click.stop
                   >https://www.curseforge.com/minecraft/mc-mods/oculus</a>
                 </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action class="flex flex-row gap-1 flex-grow-0">
+<v-list-item-action class="flex flex-row gap-1 flex-grow-0">
                 <AvatarChip
                   :avatar="BuiltinImages.forge"
                   small
@@ -207,9 +194,8 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
-            text
             @click="skip"
-          >
+           variant="text">
             {{ t('shared.skipForNow') }}
           </v-btn>
         </v-card-actions>
@@ -235,6 +221,7 @@
 import AvatarChip from '@/components/AvatarChip.vue'
 import Hint from '@/components/Hint.vue'
 import MarketBase from '@/components/MarketBase.vue'
+import MarketListHeader from '@/components/MarketListHeader.vue'
 import MarketProjectDetailCurseforge from '@/components/MarketProjectDetailCurseforge.vue'
 import MarketProjectDetailModrinth from '@/components/MarketProjectDetailModrinth.vue'
 import MarketRecommendation from '@/components/MarketRecommendation.vue'

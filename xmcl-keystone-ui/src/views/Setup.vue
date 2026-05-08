@@ -43,16 +43,16 @@
         </v-stepper-step>
       </v-stepper-header>
 
-      <v-stepper-items class="h-full overflow-auto overflow-x-hidden">
-        <v-stepper-content
+      <v-stepper-window class="h-full overflow-auto overflow-x-hidden">
+        <v-stepper-window-item
           class="h-full overflow-auto overflow-x-hidden pt-2"
           step="1"
         >
           <SetLocale
             v-model="localeRef"
           />
-        </v-stepper-content>
-        <v-stepper-content
+        </v-stepper-window-item>
+        <v-stepper-window-item
           class="h-full overflow-auto overflow-x-hidden pt-2"
           step="2"
         >
@@ -62,8 +62,8 @@
             :default-path="data.defaultPath"
             :drives="data.drives"
           />
-        </v-stepper-content>
-        <v-stepper-content
+        </v-stepper-window-item>
+        <v-stepper-window-item
           class="h-full overflow-auto overflow-x-hidden pt-2"
           step="3"
         >
@@ -74,16 +74,16 @@
             :default-path="data.defaultPath"
             :drives="data.drives"
           />
-        </v-stepper-content>
-        <v-stepper-content
+        </v-stepper-window-item>
+        <v-stepper-window-item
           class="h-full overflow-auto overflow-x-hidden pt-2"
           step="4"
         >
           <SetupAccount
             v-model="data.instancePath"
           />
-        </v-stepper-content>
-      </v-stepper-items>
+        </v-stepper-window-item>
+      </v-stepper-window>
       <slot name="actions">
         <SetupFooter
           :prev="data.step !== 1"

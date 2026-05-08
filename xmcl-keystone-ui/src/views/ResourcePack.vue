@@ -10,8 +10,14 @@
     :loading="loading"
     @load="onLoad"
   >
+    <template #actions>
+      <MarketListHeader
+        v-model:dense="denseView"
+        :label="`${originalItems.length} ${t('resourcepack.name', originalItems.length)}`"
+      />
+    </template>
     <template #item="{ item, hasUpdate, checked, selectionMode, selected, on, index }">
-      <v-subheader
+      <v-list-subheader
         v-if="typeof item === 'string'"
         class="flex"
         :style="{ height: itemHeight + 'px' }"
@@ -21,16 +27,7 @@
           item === 'disabled' ? t("resourcepack.unselected") :
           t("modInstall.search")
         }}
-        <div class="flex-grow" />
-        <v-btn
-          v-if="index === 0"
-          v-shared-tooltip="() => t('mod.denseView')"
-          icon
-          @click="denseView = !denseView"
-        >
-          <v-icon> {{ denseView ? 'reorder' : 'list' }} </v-icon>
-        </v-btn>
-      </v-subheader>
+      </v-list-subheader>
       <ResourcePackItem
         v-else-if="(typeof item === 'object')"
         :pack="item"
@@ -104,6 +101,7 @@
 <script lang=ts setup>
 import Hint from '@/components/Hint.vue'
 import MarketBase from '@/components/MarketBase.vue'
+import MarketListHeader from '@/components/MarketListHeader.vue'
 import MarketProjectDetailCurseforge from '@/components/MarketProjectDetailCurseforge.vue'
 import MarketProjectDetailModrinth from '@/components/MarketProjectDetailModrinth.vue'
 import MarketRecommendation from '@/components/MarketRecommendation.vue'

@@ -4,16 +4,16 @@
       <v-text-field
         v-model="searchText"
         :placeholder="t('logView.searchPlaceholder')"
-        dense
+        density="compact"
         hide-details
-        outlined
+        variant="outlined"
         clearable
         prepend-inner-icon="search"
         class="max-w-xs"
       />
     </div>
     <div
-      ref="scroller" 
+      ref="scroller"
       class="visible-scroll rounded p-2 text-sm flex-grow overflow-auto"
       @wheel="onWheel"
     >
@@ -24,7 +24,7 @@
           position: 'relative',
           width: '100%',
           marginTop: `${-offsetTop}px`,
-        }"  
+        }"
       >
         <div
           v-for="virtualRow in virtualRows"
@@ -62,9 +62,8 @@
           class="z-10 absolute right-6 bottom-4"
           elevation="2"
           color="primary"
-          fab
           @click="scrollToBottom"
-        >
+         icon>
         <v-icon>arrow_downward</v-icon>
       </v-btn>
     </v-fab-transition>
@@ -86,7 +85,7 @@ interface DisplayLogRecord extends LogRecord {
   _rawParts?: string[]
 }
 
-const props = defineProps<{ 
+const props = defineProps<{
   logs: LogRecord[]
 }>()
 const { isDark } = injection(kTheme)
@@ -120,14 +119,14 @@ const displayLogs = computed<DisplayLogRecord[]>(() => {
   if (logs.length === 0) {
     return logs
   }
-  
+
   const result: DisplayLogRecord[] = []
   let currentGroup: DisplayLogRecord | null = null
-  
+
   for (const log of logs) {
-    if (currentGroup && 
-        currentGroup.level === log.level && 
-        currentGroup.date === log.date && 
+    if (currentGroup &&
+        currentGroup.level === log.level &&
+        currentGroup.date === log.date &&
         currentGroup.source === log.source) {
       // Same metadata - add to current group
       currentGroup.groupCount = (currentGroup.groupCount || 1) + 1
@@ -137,7 +136,7 @@ const displayLogs = computed<DisplayLogRecord[]>(() => {
         currentGroup._rawParts = [currentGroup.raw]
       }
       currentGroup._contentParts.push(log.content)
-      
+
       currentGroup._rawParts!.push(log.raw)
     } else {
       // Finalize previous group's concatenation if needed
@@ -150,13 +149,13 @@ const displayLogs = computed<DisplayLogRecord[]>(() => {
       result.push(currentGroup)
     }
   }
-  
+
   // Finalize last group
   if (currentGroup && currentGroup._contentParts) {
     currentGroup.content = currentGroup._contentParts.join('\n')
     currentGroup.raw = currentGroup._rawParts!.join('\n')
   }
-  
+
   return result
 })
 

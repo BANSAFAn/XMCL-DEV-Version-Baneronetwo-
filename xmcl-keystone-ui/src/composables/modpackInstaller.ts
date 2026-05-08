@@ -53,7 +53,7 @@ export function useModpackInstaller() {
     const { instancePath, version, runtime } = await importModpack(modpackFile, icon, upstream)
 
     selectedInstance.value = instancePath
-    if (currentRoute.path !== '/') {
+    if (currentRoute.value.path !== '/') {
       push('/')
     }
 

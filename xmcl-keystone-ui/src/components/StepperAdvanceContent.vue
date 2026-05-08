@@ -7,6 +7,7 @@
         v-model="data.java"
         outlined
         class="java-select col-span-2"
+        item-title="text"
         :label="t('java.location')"
         :placeholder="t('java.allocatedLong')"
         :items="javaItems"
@@ -16,7 +17,7 @@
       />
       <v-text-field
         v-model="data.minMemory"
-        outlined
+        variant="outlined"
         hide-details
         type="number"
         :label="t('java.minMemory')"
@@ -25,7 +26,7 @@
       />
       <v-text-field
         v-model="data.maxMemory"
-        outlined
+        variant="outlined"
         hide-details
         type="number"
         :label="t('java.maxMemory')"

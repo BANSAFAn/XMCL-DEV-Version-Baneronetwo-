@@ -1,22 +1,17 @@
 AppAddInstanceDialog:
   choiceTitle: >-
-    Birden fazla başlatma profili algılandı. Lütfen içe aktarmak için birini
-    seçin.
+    Birden fazla başlatma profili algılandı. Lütfen içe aktarmak için birini seçin.
   createTitle: Oyun Oluştur
   serverTitle: Sunucu adresini girin
 AppShareInstanceDialog:
   alterDownloadDescription: >-
-    Mevcut instance'ı bozmak istemiyorsanız, arkadaşınızın yapılandırmasından
-    yeni bir instance oluşturabilirsiniz. Instance oluşturmak için aşağıdaki
-    düğmeye tıklayın.
+    Mevcut instance'ı bozmak istemiyorsanız, arkadaşınızın yapılandırmasından yeni bir instance oluşturabilirsiniz. Instance oluşturmak için aşağıdaki düğmeye tıklayın.
   baseInfo: Temel Ayarlar
   cancelShare: Paylaşımı İptal Et
   description: >-
-    Profili paylaştıktan sonra, diğer yerler bu dosyaları bilgisayarınız
-    üzerinden indirebilir.
+    Profili paylaştıktan sonra, diğer yerler bu dosyaları bilgisayarınız üzerinden indirebilir.
   downloadDescription: >-
-    Lütfen arkadaşınızın sağladığı dosyaları doğrulayın. İndirmek istediğiniz
-    dosyayı seçin. Mevcut instance {name} içine yerleştirilecektir.
+    Lütfen arkadaşınızın sağladığı dosyaları doğrulayın. İndirmek istediğiniz dosyayı seçin. Mevcut instance {name} içine yerleştirilecektir.
   downloadNotifyTitle: '{user} kullanıcısından Instance İndir'
   downloadTitle: Diğer eşlerden dosya indir
   filesToDownload: İndirilecek dosyaları seçin
@@ -32,26 +27,11 @@ HomeJavaIssueDialog:
   incompatibleJavaHint: Mevcut Java, seçilen Minecraft ile uyumsuz olabilir!
   missingJava: Java Eksik
   missingJavaHint: >-
-    Başlatıcı bilgisayarınızda herhangi bir Java algılayamadı. Şunları
-    yapabilirsiniz:
+    Başlatıcı bilgisayarınızda herhangi bir Java algılayamadı. Şunları yapabilirsiniz:
 HomeLaunchMultiInstanceDialog:
   confirm: Evet, Başlat
   description: Birden fazla Minecraft instance'ı başlatıyorsunuz. Emin misiniz?
   title: Çoklu Instance
-HomeSyncDialog:
-  pull: Çek (Pull)
-  push: İt (Push)
-HomeSyncDialogPull:
-  failText: Güncelleme alınamadı. {url}
-  refresh: Yenile
-  update: Güncelle
-HomeSyncDialogPush:
-  authError: >-
-    Hatalı kullanıcı kimlik doğrulaması. Lütfen sunucunun dosyalarını yükleme
-    yetkiniz olduğundan emin olun!
-  refresh: Yenile
-  unknownError: Bilinmeyen Sunucu Hatası. Lütfen tekrar deneyin.
-  upload: Instance Yükle
 SettingMigrationDialog:
   selectRootDirectory: Kök Dizini Seç
 ago:
@@ -62,8 +42,7 @@ ago:
 askAICrash:
   copyPrompt: İstemi kopyala ve yapay zekaya sor
   description: >-
-    Yapay zekanın oyun çökmesini anlamanıza yardım etmesine izin verin! Bu oyun
-    çökmesi hakkında yapay zekaya sormak için aşağıdaki talimatları izleyin!
+    Yapay zekanın oyun çökmesini anlamanıza yardım etmesine izin verin! Bu oyun çökmesi hakkında yapay zekaya sormak için aşağıdaki talimatları izleyin!
   selectPlatform: Bir yapay zeka platformu açın ve az önce kopyaladığınız istemi yapıştırın.
 authProfileAddedNotification: Kimlik Doğrulama Profili {name} Eklendi
 baseSetting:
@@ -82,7 +61,6 @@ create: Oluştur
 curseforge:
   category: Kategori
   createdDate: Oluşturulma Tarihi
-  installToStorage: Depolama Alanına Yükle
   lastUpdate: Son Güncelleme Tarihi
   releasedDate: Yayınlanma Tarihi
 curseforgeCategory:
@@ -143,16 +121,13 @@ dataMigration:
   directoryCriteriaHint: Lütfen yeni dizin konumunun BOŞ bir dizin olduğundan emin olun!
   placeholder: Dizin seçmek için lütfen buraya tıklayın
   setRootCause: >-
-    Bu işlem sırasında Başlatıcıyı kapatırsanız verilerinizi (Haritalar, Kaynak
-    Paketleri, Modlar) kaybedeceksiniz!
+    Bu işlem sırasında Başlatıcıyı kapatırsanız verilerinizi (Haritalar, Kaynak Paketleri, Modlar) kaybedeceksiniz!
   setRootDescription: >-
-    Bu işlem, bu başlatıcının ve Minecraft'ın kök veri klasörünü
-    değiştirecektir.
+    Bu işlem, bu başlatıcının ve Minecraft'ın kök veri klasörünü değiştirecektir.
   setRootTitle: Yeni bir depolama konumuna ayarla
   unknownError: Bilinmeyen Hata! Lütfen tekrar deneyin veya geliştiriciyle iletişime geçin!
   waitReload: >-
-    Veriler taşınıyor. Lütfen Başlatıcıyı kapatmayın, aksi takdirde verilerinizi
-    kaybedersiniz.
+    Veriler taşınıyor. Lütfen Başlatıcıyı kapatmayın, aksi takdirde verilerinizi kaybedersiniz.
 delete:
   name: Sil {name}
   'no': Hayır
@@ -176,8 +151,7 @@ diagnosis:
   corruptedLibraries:
     message: Başlatıcı kütüphaneleri sizin için yükleyecek
     name: >-
-      Bozuk kütüphane: {name} | Bozuk kütüphane: {name} | {count} kütüphane
-      bozuk
+      Bozuk kütüphane: {name} | Bozuk kütüphane: {name} | {count} kütüphane bozuk
   corruptedVersionJar:
     message: Bu sürümü yüklemek için tıklayın
     name: Minecraft %{version} için bozuk sürüm jar dosyası.
@@ -194,8 +168,7 @@ diagnosis:
   missingLibraries:
     message: Başlatıcı kütüphaneleri sizin için yükleyecek
     name: >-
-      Eksik {name} Kütüphanesi | Eksik {name} Kütüphanesi | Eksik {count}
-      Kütüphane | Eksik {count} Kütüphane
+      Eksik {name} Kütüphanesi | Eksik {name} Kütüphanesi | Eksik {count} Kütüphane | Eksik {count} Kütüphane
   missingVersion:
     message: Bu sürümü yüklemek için tıklayın
     name: '{version} sürümü yüklü değil!'
@@ -224,35 +197,27 @@ env:
     none: Hiçbirini Seçme
 errors:
   BadForgeInstallerJarError: >-
-    Forge yükleyici jar dosyası ayrıştırılamadı. Belki forge yeni yükleyici
-    dosya formatına sahiptir? Bu sorun devam ederse geliştiricilerle iletişime
-    geçin.
+    Forge yükleyici jar dosyası ayrıştırılamadı. Belki forge yeni yükleyici dosya formatına sahiptir? Bu sorun devam ederse geliştiricilerle iletişime geçin.
   BadInstanceType: 'Geçerli bir instance değil: {type}'
   BodyTimeoutError: HTTP Gövde zaman aşımı
   ChecksumNotMatchError: Sağlama toplamı eşleşmedi! Beklenen {expect}. Gerçekleşen {actual}.
   ConnectTimeoutError: Sunucuya bağlantı zaman aşımı.
   DNSNotFoundError: DNS arama hatası
   DatabaseNotOpened: >-
-    Veritabanı açılmadı! Başlatıcı düzgün çalışmayacak! Lütfen başlatıcının
-    erişebileceği bir veri dizini seçin. Ayarlar sayfasında veri kökünü
-    sıfırlamayı deneyebilirsiniz.
+    Veritabanı açılmadı! Başlatıcı düzgün çalışmayacak! Lütfen başlatıcının erişebileceği bir veri dizini seçin. Ayarlar sayfasında veri kökünü sıfırlamayı deneyebilirsiniz.
   DiskIsFull: Diskiniz dolu! Diske hiçbir şey yazılamıyor! Tüm özellikler çalışmayabilir!
   DownloadAggregateError: Dosya indirilemedi.
   DownloadFileSystemError: >-
-    İndirme dosyası yoluna erişim sırasında hata. Lütfen başlatıcının üzerine
-    yazma iznine sahip olduğundan emin olun.
+    İndirme dosyası yoluna erişim sırasında hata. Lütfen başlatıcının üzerine yazma iznine sahip olduğundan emin olun.
   HeadersTimeoutError: HTTP Başlık zaman aşımı
   NotFoundError: 404 Bulunamadı
   SocketError: Sunucu soket hatası
 eula:
   body: >-
-    Onay kutusu düğmesini işaretleyerek, Minecraft'ın {eula} sözleşmesini kabul
-    ettiğinizi belirtiyorsunuz.
+    Onay kutusu düğmesini işaretleyerek, Minecraft'ın {eula} sözleşmesini kabul ettiğinizi belirtiyorsunuz.
 exception:
   http: >-
-    {url} adresine HTTP isteği başarısız oldu. Durum kodu {statusCode}. {code}.
-    Lütfen tekrar deneyin veya ağınızı kontrol edin. Bu hata devam ederse,
-    lütfen geliştirici ekibine bir rapor gönderin.
+    {url} adresine HTTP isteği başarısız oldu. Durum kodu {statusCode}. {code}. Lütfen tekrar deneyin veya ağınızı kontrol edin. Bu hata devam ederse, lütfen geliştirici ekibine bir rapor gönderin.
 extensions:
   mrpack: Modrinth Mod Paketi
   zip: Zip Dosyası
@@ -274,16 +239,13 @@ feedback:
   githubDescription: Düşüncenizi anlatmak için bir Github Sorunu açın
   githubOpenIssue: Github
   hint: >-
-    Raporu oluşturmak ve geliştirici ekibiyle iletişime geçmek için düğmeye
-    tıklayın. Rapor, işletim sistemi türü, sürümü, kullanıcı adı (işletim
-    sisteminizdeki) vb. cihaz bilgilerinizi içerecektir.
+    Raporu oluşturmak ve geliştirici ekibiyle iletişime geçmek için düğmeye tıklayın. Rapor, işletim sistemi türü, sürümü, kullanıcı adı (işletim sisteminizdeki) vb. cihaz bilgilerinizi içerecektir.
   kook: Kook
   kookDescription: Kook, Çin Anakarası kullanıcıları için discord'a alternatif bir uygulamadır
   name: Geri Bildirim
   qq: QQ Grubu
   qqDescription: >-
-    Geri bildirim QQ grubuna girin ve yazarlarla doğrudan konuşun. Grup
-    Numarası: {number}
+    Geri bildirim QQ grubuna girin ve yazarlarla doğrudan konuşun. Grup Numarası: {number}
   qqEnterGroup: Katıl
 fileDetail:
   fileSize: Dosya Boyutu
@@ -363,8 +325,7 @@ instance:
   launchArguments: Başlatma Argümanları Önizlemesi
   launchServer: Localhost sunucusunu başlat
   linkFileDesc: >-
-    Bu, yerel {file} dosyasının üzerine global {file} dosyasını yazacaktır.
-    Bağlamak istediğinize emin misiniz?
+    Bu, yerel {file} dosyasının üzerine global {file} dosyasını yazacaktır. Bağlamak istediğinize emin misiniz?
   linkFileTitle: '{file} dosyasını bağlamak istediğinize emin misiniz?'
   mcOptions: Minecraft Seçenekleri
   mcOptionsHint: Ek Minecraft başlatma argümanları
@@ -386,12 +347,10 @@ instance:
   updates: Güncellemeler
   useSharedOptions: Paylaşılan oyun ayarlarını kullan
   useSharedOptionsDesc: >-
-    Bu, options.txt dosyasını instance'lar arasında paylaşılan bir dosyaya
-    bağlayacaktır
+    Bu, options.txt dosyasını instance'lar arasında paylaşılan bir dosyaya bağlayacaktır
   useSharedServersList: Paylaşılan sunucu listesini kullan
   useSharedServersListDesc: >-
-    Bu, servers.dat dosyasını instance'lar arasında paylaşılan bir dosyaya
-    bağlayacaktır
+    Bu, servers.dat dosyasını instance'lar arasında paylaşılan bir dosyaya bağlayacaktır
   vmOptions: JVM Seçenekleri
   vmOptionsHint: JVM'e iletilecek ek argümanlar
   vmVar: Ortam Değişkenleri
@@ -415,10 +374,7 @@ instanceInstallSkip:
   skip: Atla
   title: Potansiyel bozuk dosya kaynağı
   warning: >-
-    Bazı dosyalar sağlama toplamı eşleşmeden birden çok kez indirildi. Bu,
-    orijinal sağlama toplamının yanlış olmasından kaynaklanabilir. Lütfen
-    kontrol edin. Mevcut dosyaların geçerli olduğunu onaylıyorsanız, doğrulama
-    kontrolünü atlayabilirsiniz.
+    Bazı dosyalar sağlama toplamı eşleşmeden birden çok kez indirildi. Bu, orijinal sağlama toplamının yanlış olmasından kaynaklanabilir. Lütfen kontrol edin. Mevcut dosyaların geçerli olduğunu onaylıyorsanız, doğrulama kontrolünü atlayabilirsiniz.
 instanceLauncher:
   search: Instance ara...
   showAll: Tüm Instance'ları Göster
@@ -426,20 +382,17 @@ instanceLauncher:
 instanceSetting:
   disableAuthlibInjector: Authlib injector'ı devre dışı bırak
   disableAuthlibInjectorDescription: >-
-    Üçüncü taraf bir cilt (skin) sistemi kullanıyorsanız. Authlib injector,
-    cildin oyunda görüntülenmesine yardımcı olabilir.
+    Üçüncü taraf bir cilt (skin) sistemi kullanıyorsanız. Authlib injector, cildin oyunda görüntülenmesine yardımcı olabilir.
   disableElyByAuthlib: Ely.by'ın authlib değişimini devre dışı bırak
   disableElyByAuthlibDescription: >-
-    Ely.by, cildi herhangi bir sunucuda evrensel olarak görüntülemek için
-    benzersiz bir authlib değişimine sahiptir.
+    Ely.by, cildi herhangi bir sunucuda evrensel olarak görüntülemek için benzersiz bir authlib değişimine sahiptir.
   fastLaunch: Hızlı Başlat
   fastLaunchHint: Kullanıcı durumunu ve mevcut düzeltilmemiş sorunları yoksay
   hideLauncher: Başlattıktan sonra başlatıcıyı gizle
   icon: Bir resim seçin
   showLog: Minecraft Günlüğünü Göster
   showLogHint: >-
-    Bu, oyun başladıktan sonra Minecraft günlüğünü yayınlamak için bir pencere
-    açacaktır
+    Bu, oyun başladıktan sonra Minecraft günlüğünü yayınlamak için bir pencere açacaktır
 instanceTemplate:
   ftb: Bu bir FTB mod paketidir
   preview: Mod Paketi Önizlemesi
@@ -447,38 +400,32 @@ instanceUpdate:
   basic: Ayar Güncellemesi
   files: Dosya Güncellemeleri
   loaderChanged: >-
-    Bu instance'ın mod yükleyicisi değiştirildi. Eski mod yükleyici {modloader}
-    ve yeni mod yükleyici {newModloader}.
+    Bu instance'ın mod yükleyicisi değiştirildi. Eski mod yükleyici {modloader} ve yeni mod yükleyici {newModloader}.
   summary: '{add} dosya ekle. {remove} dosya kaldır. {keep} dosyayı tut.'
   title: Instance'ı Güncelle
   update: Güncellemeyi Başlat
 instances:
   add: Oyun Oluştur
   addCurseForgeDescription: >-
-    Curseforge veri klasöründen içe aktar. Curseforge'un kök veri klasörünü
-    seçmeniz gerekir
+    Curseforge veri klasöründen içe aktar. Curseforge'un kök veri klasörünü seçmeniz gerekir
   addDescription: Sıfırdan yeni bir instance oluştur
   addMMCDescription: >-
-    Mevcut MultiMC instance'ını içe aktar. MultiMC'den veri klasörünü seçmeniz
-    gerekir.
+    Mevcut MultiMC instance'ını içe aktar. MultiMC'den veri klasörünü seçmeniz gerekir.
   addManually: Manuel Olarak Oluştur
   addModrinthDescription: >-
-    Mevcut Modrinth instance'ını içe aktar. Modrinth kök veri klasörünü seçmeniz
-    gerekir.
+    Mevcut Modrinth instance'ını içe aktar. Modrinth kök veri klasörünü seçmeniz gerekir.
   addServer: Sunucudan oluştur
   addServerDescription: Bu, doğrudan sunucuya bağlanan bir oyun oluşturacaktır.
   addTemplate: İndirilen mod paketinden oluştur
   addTemplateDescription: İndirilen Mod Paketinden içe aktar
   addVanilla: Vanilla benzeri Minecraft'tan oluştur
   addVanillaDescription: >-
-    Yaygın .minecraft klasöründen içe aktar. Bu, orijinal oyun profilini XMCL'ye
-    kopyalayacaktır.
+    Yaygın .minecraft klasöründen içe aktar. Bu, orijinal oyun profilini XMCL'ye kopyalayacaktır.
   fix: Onar
   folder: Klasör
   folderSetting: Klasör Ayarları
   importFolderDescription: Minecraft'ı Başlatıcıya İçe Aktar
   loadingFiles: Mod Paketi Dosyaları Yükleniyor
-  refreshServers: Sunucuları Yenile
 items:
   count: '{count} öğe'
   total: '{total} toplam'
@@ -510,65 +457,52 @@ launch:
 launchBlocked:
   launchBadVersion:
     description: >-
-      Sürüm {version} json dosyası bozuk. Belki bu sürümü yeniden
-      yüklemelisiniz?
+      Sürüm {version} json dosyası bozuk. Belki bu sürümü yeniden yüklemelisiniz?
     title: Kötü Sürüm JSON
   launchGeneralException:
     description: Bazı hatalar başlatmanın başarısız olmasına neden oldu.
     title: Başlatma Başarısız
   launchInvalidJavaPath:
     description: >-
-      Seçilen java eksik veya geçersiz. Lütfen yeni bir tane seçin. <span
-      class="highlight"> {javaPath} </span>
+      Seçilen java eksik veya geçersiz. Lütfen yeni bir tane seçin. <span class="highlight"> {javaPath} </span>
     title: Geçersiz Java Yolu
   launchJavaNoPermission:
     description: >-
-      Başlatıcının java <span class="highlight"> {javaPath} </span> dosyasını
-      yürütme izni yok. Ya java dosyasının iznini değiştirin ya da başlatıcının
-      iznini yükseltin.
+      Başlatıcının java <span class="highlight"> {javaPath} </span> dosyasını yürütme izni yok. Ya java dosyasının iznini değiştirin ya da başlatıcının iznini yükseltin.
     title: Başlatma izni yok
   launchNoProperJava:
     description: Oyunu başlatmak için uygun bir java seçilemedi. ({javaPath} geçersiz mi?)
     title: Uygun java bulunamadı
   launchNoVersionInstalled:
     description: >-
-      Başlatmak için <span class="highlight">{version}</span> sürümü
-      çözümlenemiyor.
+      Başlatmak için <span class="highlight">{version}</span> sürümü çözümlenemiyor.
     title: Sürüm seçilmedi
   launchSpawnProcessFailed:
     description: >-
-      Lütfen java'nızı kontrol edin veya başlatıcıya daha fazla izin verin ve
-      tekrar deneyin. Bu hala işe yaramazsa, lütfen geliştiricilerle iletişime
-      geçin.
+      Lütfen java'nızı kontrol edin veya başlatıcıya daha fazla izin verin ve tekrar deneyin. Bu hala işe yaramazsa, lütfen geliştiricilerle iletişime geçin.
     title: Oyun işlemi başlatılamadı
   unexpectedText: >-
-    Bu beklenmedik bir durum. Sorunu hafifletmek için başlatıcıyı yeniden
-    başlatabilirsiniz. Bu sorun tekrar olursa lütfen yazarla iletişime geçin.
+    Bu beklenmedik bir durum. Sorunu hafifletmek için başlatıcıyı yeniden başlatabilirsiniz. Bu sorun tekrar olursa lütfen yazarla iletişime geçin.
 launchFailed:
   crash: Oyun Çöktü!!
   description: Çökme raporu yok. Bu hata günlüğü ve en son günlük.
   elyByAuthlib:
     description: >-
-      Ely.by authlib değişimi Minecraft sürümü {version} için kullanıldı, ancak
-      bu sürüm tam olarak uyumlu olmayabilir.
+      Ely.by authlib değişimi Minecraft sürümü {version} için kullanıldı, ancak bu sürüm tam olarak uyumlu olmayabilir.
     suggestion: >-
-      Bu sorunu önlemek için instance ayarlarında Ely.by'ın authlib değişimini
-      devre dışı bırakabilirsiniz.
+      Bu sorunu önlemek için instance ayarlarında Ely.by'ın authlib değişimini devre dışı bırakabilirsiniz.
     title: Ely.by Authlib Uyumluluk Sorunu
   failedToLaunch: Başlatma başarısız oldu
   latestLog: En Son Günlük
   title: Oyun Anormal Kod ile Çıktı
 launchPreExecuteCommandFailed:
   description: >-
-    Ön yürütme komutu bir hatayla başarısız oldu: {error}. Lütfen komutu kontrol
-    edin ve tekrar deneyin.
+    Ön yürütme komutu bir hatayla başarısız oldu: {error}. Lütfen komutu kontrol edin ve tekrar deneyin.
   title: Ön Yürütme Komutu Başarısız
 launchStatus:
   assigningMemory: Bellek atanıyor
   elyByWarning: >-
-    Ely.by authlib değişimi etkin. Bazı Minecraft sürümleri uyumlu olmayabilir
-    ve çökebilir. Sorun oluşursa instance ayarlarından devre dışı
-    bırakabilirsiniz.
+    Ely.by authlib değişimi etkin. Bazı Minecraft sürümleri uyumlu olmayabilir ve çökebilir. Sorun oluşursa instance ayarlarından devre dışı bırakabilirsiniz.
   exit: Oyundan Çık?
   injectingAuthLib: Üçüncü Taraf AuthLib Kuruluyor
   launching: Başlatılıyor...
@@ -582,16 +516,10 @@ launcherUpdate:
   updateToThisVersion: İndir ve Yükle
 localVersion:
   auto: Otomatik Hesaplanmış
-  delete: Yerel Sürümü Sil
-  deleteDescription: >-
-    Bu işlem yerel sürüm json ve jar dosyalarını silecektir. Tekrar kullanmak
-    isterseniz yeniden indirmeniz gerekecektir.
   empty: Yüklü Sürüm Yok
   hint: Belirli bir yerel sürümü doğrudan başlat
-  refresh: Sürümleri Yenile
   reinstallDescription: >-
-    Bu sürüm kurulumunda bazı sorunlar olduğunu düşünüyorsanız, yeniden
-    yüklemeyi deneyebilirsiniz.
+    Bu sürüm kurulumunda bazı sorunlar olduğunu düşünüyorsanız, yeniden yüklemeyi deneyebilirsiniz.
   reinstallTitle: '{version} Yeniden Yükle'
   title: Yerel Sürüm | Yerel Sürümler
 logLevel:
@@ -611,28 +539,22 @@ login:
   userRelogin: Kullanıcı erişim belirtecinin süresi doldu. Lütfen tekrar giriş yapın!
 loginError:
   acquireMicrosoftTokenFailed: >-
-    Microsoft belirteci alınamadı. Bu bir ağ sorunu olabilir. Lütfen tekrar
-    deneyin.
+    Microsoft belirteci alınamadı. Bu bir ağ sorunu olabilir. Lütfen tekrar deneyin.
   badNetworkOrServer: >-
-    Lütfen ağ bağlantınızı kontrol edin! Veya kimlik doğrulama sunucusu kapalı
-    olabilir!
+    Lütfen ağ bağlantınızı kontrol edin! Veya kimlik doğrulama sunucusu kapalı olabilir!
   checkOwnershipFailed: Oyun sahipliği kontrol edilemedi. Lütfen tekrar deneyin.
   connectionReset: Bağlantı sunucu tarafından sıfırlandığı için giriş yapılamadı
   fetchMinecraftProfileFailed: 'Minecraft profili alınamadı: {reason}'
   illegalEmail: E-posta geçerli olmalıdır
   invalidCredentials: Geçersiz kimlik bilgileri. Geçersiz kullanıcı adı veya şifre.
   loginMinecraftByXboxFailed: >-
-    Xbox belirteci ile Minecraft belirteci takas edilemedi. Lütfen Xbox'ta
-    Minecraft'a sahip olduğunuzdan emin olun veya tekrar deneyin.
+    Xbox belirteci ile Minecraft belirteci takas edilemedi. Lütfen Xbox'ta Minecraft'a sahip olduğunuzdan emin olun veya tekrar deneyin.
   loginXboxAgeRestricted: >-
-    Yaş sorunu nedeniyle Xbox'a giriş yapılamadı. Lütfen Microsoft hesabınızda
-    yaşın ayarlandığından ve 18 yaşın üzerinde olduğundan emin olun.
+    Yaş sorunu nedeniyle Xbox'a giriş yapılamadı. Lütfen Microsoft hesabınızda yaşın ayarlandığından ve 18 yaşın üzerinde olduğundan emin olun.
   loginXboxFailed: >-
-    Microsoft belirteci ile Xbox'a giriş yapılamadı. Lütfen Microsoft hesabınıza
-    bağımsız bir Xbox hesabınız olduğundan emin olun. Lütfen tekrar deneyin.
+    Microsoft belirteci ile Xbox'a giriş yapılamadı. Lütfen Microsoft hesabınıza bağımsız bir Xbox hesabınız olduğundan emin olun. Lütfen tekrar deneyin.
   noProfileForNewUser: >-
-    Oyun profili bulunamadı! Yeni bir Minecraft kullanıcısıysanız, lütfen
-    Minecraft resmi başlatıcısında en az bir kez giriş yapın.
+    Oyun profili bulunamadı! Yeni bir Minecraft kullanıcısıysanız, lütfen Minecraft resmi başlatıcısında en az bir kez giriş yapın.
   requestFailed: Giriş başarısız, kesin nedenini bilmiyoruz. Lütfen tekrar deneyin.
   requireEmail: E-posta gereklidir
   requirePassword: Şifre gereklidir
@@ -657,19 +579,13 @@ mod:
   compatible: Uyumlu Mod.
   createGroup: Grup Oluştur
   currentVersion: Mevcut {current}
-  deletionHint: >-
-    Bu modu ve meta verilerini sonsuza kadar kaybedeceksiniz. Silmek
-    istediğinize emin misiniz? | Bu modları ve meta verilerini sonsuza kadar
-    kaybedeceksiniz. Bunu yapmak istediğinize emin misiniz?
-  deletionRestHint: Ve {rest} Mod daha...
   denseView: Yoğun Görünüm
   description: Açıklama
   disableAll: Tümünü Devre Dışı Bırak
   dropHint: İçe aktarmak için modun .jar/.litemod dosyasını buraya bırakın.
   duplicatedDetected: '{count} yinelenen mod'
   duplicatedDetectedDescription: >-
-    Aynı mod kimliğine sahip ancak farklı dosyalar bulundu. Bu Minecraft'ın
-    çökmesine neden olabilir. Lütfen tutmak istediğiniz dosyayı seçin.
+    Aynı mod kimliğine sahip ancak farklı dosyalar bulundu. Bu Minecraft'ın çökmesine neden olabilir. Lütfen tutmak istediğiniz dosyayı seçin.
   enableAll: Tümünü Etkinleştir
   enabled: '{count} Mod etkin'
   filter: Modları Filtrele
@@ -681,13 +597,10 @@ mod:
   incompatible: Uyumsuz Mod.
   incompatibleHint: Uyumsuzu Göster
   incompatibleHintDescription: >-
-    Bazı mod bağımlılıkları eksik olabilir. Veya bazı bağımlılık sürümleri
-    eşleşmiyor.
-  license: Lisans
+    Bazı mod bağımlılıkları eksik olabilir. Veya bazı bağımlılık sürümleri eşleşmiyor.
   maybeCompatible: Belki Uyumlu.
   modloaderSelectHint: >-
-    Mod aşağıdaki mod yükleyicileri destekler. Lütfen yüklemek için birini
-    seçin.
+    Mod aşağıdaki mod yükleyicileri destekler. Lütfen yüklemek için birini seçin.
   modloaderSelectNotSupported: Minecraft {minecraft} için {modloader} bulunamadı
   mods: '{count} Mod'
   name: Mod | Modlar
@@ -707,7 +620,6 @@ mod:
   syncGroupRules: Gruplama kurallarını kaydet
   toUpdate: '{count} güncelleme'
   ungroup: Grubu Çöz
-  versions: Sürümler
 modFilter:
   clear: Filtreyi Temizle
   dependenciesInstallOnly: Sadece eksik bağımlılık modlarını göster
@@ -717,12 +629,10 @@ modFilter:
   unusedOnly: Sadece kullanılmayan kütüphane modlarını göster
 modInstall:
   archived: >-
-    {name} arşivlendi. {name}, yazar projeyi arşivden çıkarmaya karar vermedikçe
-    daha fazla güncelleme almayacaktır.
+    {name} arşivlendi. {name}, yazar projeyi arşivden çıkarmaya karar vermedikçe daha fazla güncelleme almayacaktır.
   autoUpgrade:
     description: >-
-      Minecraft sürümünü değiştirdiniz. Uyumlu modları Minecraft {version} ile
-      eşleşen sürümlere otomatik olarak güncellemek ister misiniz?
+      Minecraft sürümünü değiştirdiniz. Uyumlu modları Minecraft {version} ile eşleşen sürümlere otomatik olarak güncellemek ister misiniz?
     'no': Atla
     title: Modlar Güncellensin mi?
     'yes': Modları Güncelle
@@ -736,7 +646,6 @@ modInstall:
   installHint: '{file} dosyasını {dependencies} bağımlılıkları ile yükleyecek'
   noVersionSupported: Mod sadece Minecraft {supported} destekler.
   recommendation: '{modrinth} ve {curseforge} üzerindeki ilk {first} modu keşfedin!'
-  reinstall: Yeniden Yükle
   removeUnusedLibraries: Kullanılmayanları Kaldır
   search: Mod Ara...
   skipVersion: Farklı Minecraft sürümüne sahip Modları atla
@@ -761,17 +670,10 @@ modified:
 modpack:
   author: Yazar Adı
   authorHint: >-
-    Bu, dışa aktarılan bir mod paketini imzalamak için kullanılabilir
-    (Curseforge)
-  delete:
-    hint: >-
-      Bu işlem {name} mod paketini meta verileriyle birlikte silecektir. Emin
-      misiniz?
-    title: Mod Paketini Sil
+    Bu, dışa aktarılan bir mod paketini imzalamak için kullanılabilir (Curseforge)
   description: Açıklama
   descriptionHint: >-
-    Mod paketiniz için genel açıklama. Curseforge mod paketi olarak dışa
-    aktarmak için kullanılabilir.
+    Mod paketiniz için genel açıklama. Curseforge mod paketi olarak dışa aktarmak için kullanılabilir.
   dropHint: İçe aktarmak için mod paketi zip dosyasını buraya bırakın
   emitCurseforge: Curseforge Mod Paketini Dışa Aktar
   emitModrinth: Modrinth Mod Paketini Dışa Aktar
@@ -789,8 +691,7 @@ modpack:
   urlHint: Mod paketinizin ana sayfa url'si
 modpackImportConfirm:
   description: >-
-    Başlatıcıya bir dosya bıraktığınız algılandı. Bir mod paketini içe aktarmaya
-    mı çalışıyorsunuz?
+    Başlatıcıya bir dosya bıraktığınız algılandı. Bir mod paketini içe aktarmaya mı çalışıyorsunuz?
   title: Bir mod paketini içe aktarmaya mı çalışıyorsunuz?
 modrinth:
   browseUrl: Tarayıcıda Aç {url}
@@ -917,8 +818,7 @@ modrinth:
   licenses:
     name: Lisanslar
   loginHint: >-
-    İşlem modrinth gerektiriyor. Başlatıcı modrinth girişi yapmak için bir
-    tarayıcı penceresi açacak.
+    İşlem modrinth gerektiriyor. Başlatıcı modrinth girişi yapmak için bir tarayıcı penceresi açacak.
   loginTitle: Modrinth'e Giriş Yap
   modLoaders:
     name: Mod Yükleyiciler
@@ -947,8 +847,7 @@ modrinthCard:
 multiplayer:
   allowTurn: Geçiş (relay) sunucusunu etkinleştir
   allowTurnHint: >-
-    Arkadaşınızla bağlantı kuramıyorsanız geçiş sunucusuna izin verin. Ancak,
-    geçiş sunucusu kullanmak bağlantınızı yavaşlatabilir. Dikkatli kullanın.
+    Arkadaşınızla bağlantı kuramıyorsanız geçiş sunucusuna izin verin. Ancak, geçiş sunucusu kullanmak bağlantınızı yavaşlatabilir. Dikkatli kullanın.
   complete: Tamamla
   confirm: Onayla
   connections: Bağlantılar
@@ -956,13 +855,7 @@ multiplayer:
   copy: Kopyala
   copyGroupToFriendHint: Arkadaşlarınızın bu id ile gruba katılmasına izin verin
   copyLocalHint: >
-    "Lütfen yerel SDP metnini kopyalayın ve nesnenize gönderin, nesnenizin bu
-    metni katılma bağlantısına girmesini sağlayın <span>Bir belirteç sadece
-    <span style="color: red; font-weight: bold;">bir eş</span> için
-    kullanılabilir! Aynı belirteci birden fazla eşe gönderemezsiniz!</span> <br>
-    <span class="hint-text" style="font-style: italic;">Birden fazla eş
-    bağlamanız gerekiyorsa, <span style="font-weight: bold; color: rgba(245,
-    158, 11)">birden fazla</span> bağlantı oluşturmanız gerekir.</span>"
+    "Lütfen yerel SDP metnini kopyalayın ve nesnenize gönderin, nesnenizin bu metni katılma bağlantısına girmesini sağlayın <span>Bir belirteç sadece <span style="color: red; font-weight: bold;">bir eş</span> için kullanılabilir! Aynı belirteci birden fazla eşe gönderemezsiniz!</span> <br> <span class="hint-text" style="font-style: italic;">Birden fazla eş bağlamanız gerekiyorsa, <span style="font-weight: bold; color: rgba(245, 158, 11)">birden fazla</span> bağlantı oluşturmanız gerekir.</span>"
   createLocalToken: Yerel Belirteç Oluştur
   currentIpTitle: Algılanan Genel IP
   currentNatTitle: 'Mevcut ağ (NAT):'
@@ -972,26 +865,14 @@ multiplayer:
   disconnected: bağlantı kesildi
   enterRemoteToken: Uzak Belirteci Girin
   enterRemoteTokenHint: >-
-    Eşiniz belirtecinizi girdikten sonra, onun belirtecini aşağıdaki metin
-    alanına girmelisiniz. Bağlanmak için onayla'ya tıklayın.
+    Eşiniz belirtecinizi girdikten sonra, onun belirtecini aşağıdaki metin alanına girmelisiniz. Bağlanmak için onayla'ya tıklayın.
   exposedPortDescription: Diğer eşlere açtığınız port
   exposedPorts: Yönlendirilen Portlar
   gatheringIce: >
-    "Lütfen ICE sunucusunun ağınız hakkında yeterli bilgi toplamasını bekleyin.
-    Sabırsızsanız ve yeterli bilgi varsa, mevcut SDP'yi karşı tarafa önceden
-    verebilir ve İleri'ye tıklayabilirsiniz. Lütfen <span class="v-chip
-    v-chip--label v-size--small" style="text-font: bold" >Yerel Belirteci</span>
-    eşinize gönderin, eşiniz belirtecinizi <span class="v-chip v-chip--label
-    v-size--small" style="text-font: bold"> Bağlantıya Katıl </span> bölümüne
-    girer. <br> ICE sunucusu <span class="v-chip v-chip--label v-size--small"
-    style="text-font: bold">Yerel belirteç</span> oluşturmak için bilgilerinizi
-    toplamak üzere biraz zamana ihtiyaç duyabilir.<br> ICE durumu tamamlanana
-    kadar beklemenize gerek yoktur. Aşağıdaki belirteç değişmeden kalırsa,
-    kopyalayıp eşinize gönderebilirsiniz."
+    "Lütfen ICE sunucusunun ağınız hakkında yeterli bilgi toplamasını bekleyin. Sabırsızsanız ve yeterli bilgi varsa, mevcut SDP'yi karşı tarafa önceden verebilir ve İleri'ye tıklayabilirsiniz. Lütfen <span class="v-chip v-chip--label v-size--small" style="text-font: bold" >Yerel Belirteci</span> eşinize gönderin, eşiniz belirtecinizi <span class="v-chip v-chip--label v-size--small" style="text-font: bold"> Bağlantıya Katıl </span> bölümüne girer. <br> ICE sunucusu <span class="v-chip v-chip--label v-size--small" style="text-font: bold">Yerel belirteç</span> oluşturmak için bilgilerinizi toplamak üzere biraz zamana ihtiyaç duyabilir.<br> ICE durumu tamamlanana kadar beklemenize gerek yoktur. Aşağıdaki belirteç değişmeden kalırsa, kopyalayıp eşinize gönderebilirsiniz."
   groupId: Grup Kimliği
   illegalTokenDescription: >-
-    Geçersiz belirteç, lütfen eşinizden gelen belirtecin doğru olduğundan emin
-    olun
+    Geçersiz belirteç, lütfen eşinizden gelen belirtecin doğru olduğundan emin olun
   initiateConnection: Bağlantıyı Başlat
   joinConnection: Eşiniz zaten bir bağlantı başlattıysa, Bağlantıya Katılmanız gerekir.
   joinManual: Katıl
@@ -999,8 +880,7 @@ multiplayer:
   joinOrCreateGroupHint: Arkadaşlarınızdan grup kimliğini alın veya bir grup oluşturun
   kernel: P2P Çekirdeği
   kernelDescription: >-
-    Yerel WebRTC veya node-datachannel kullanın. Bunu yalnızca p2p bağlantınız
-    bazen başlatıcı penceresini çökerttiğinde değiştirin.
+    Yerel WebRTC veya node-datachannel kullanın. Bunu yalnızca p2p bağlantınız bazen başlatıcı penceresini çökerttiğinde değiştirin.
   leaveGroup: Gruptan ayrıl
   localToken: Yerel Belirteç
   manualConnect: Manuel Bağlan
@@ -1011,8 +891,7 @@ multiplayer:
   placeholder: LAN üzerinde Minecraft oynamak için diğer kullanıcılarla bağlanın!
   previous: Önceki
   receiveHint: >-
-    Diğer taraf belirtecinizi girdikten sonra, bağlantınız otomatik olarak
-    oluşturulacaktır. Şimdi iletişim kutusunu kapatabilirsiniz.
+    Diğer taraf belirtecinizi girdikten sonra, bağlantınız otomatik olarak oluşturulacaktır. Şimdi iletişim kutusunu kapatabilirsiniz.
   receiveRemoteTokenHint: Lütfen eşinizden gelen belirteci buraya girin.
   remoteToken: Uzak Belirteç
   routerInfo: Yönlendirici Bilgisi
@@ -1020,8 +899,7 @@ multiplayer:
   share: Instance Yapılandırmasını Paylaş
   sharing: Dosyalar paylaşılıyor...
   sharingNotificationBody: >-
-    Paylaşılan yapılandırmadan {name} indirebilir veya bir instance
-    oluşturabilirsiniz.
+    Paylaşılan yapılandırmadan {name} indirebilir veya bir instance oluşturabilirsiniz.
   sharingNotificationTitle: Bir eş oyun yapılandırmasını paylaşıyor
   start: Başlat
   startNewP2PConnection: Yeni bir eş bağlantısı oluşturmak için Başlat düğmesine tıklayın
@@ -1071,7 +949,6 @@ presence:
   save: '{instance} içindeki Kayıtlar Görüntüleniyor'
   setting: Ayar Sayfası Görüntüleniyor
   shaderPack: '{instance} içindeki Gölgelendirici Paketleri Görüntüleniyor'
-  version: Sürümler Sayfası Görüntüleniyor
 proxy:
   host: Ana Bilgisayar
   port: Port
@@ -1083,8 +960,7 @@ resourcepack:
   defaultDescription: Minecraft'ın varsayılan görünümü ve hissi
   delete:
     content: >-
-      Bu işlem kaynak paketi dosyasını diskten kaldıracak ve geri alamayız. Bunu
-      yapmak istediğinize emin misiniz?
+      Bu işlem kaynak paketi dosyasını diskten kaldıracak ve geri alamayız. Bunu yapmak istediğinize emin misiniz?
     title: Kaynak paketini sil
   dropHint: İçe aktarmak için Kaynak Paketi klasörünü/zip dosyasını buraya bırakın.
   enable: '{count} kaynak paketi etkin'
@@ -1101,16 +977,11 @@ resourcepack:
 save:
   allowCheats: Hilelere İzin Ver
   copy:
-    cancel: Kopyalamayı İptal Et
-    confirm: Kopyalamayı Başlat
-    description: Lütfen kaydın gitmesini istediğiniz hedef profil(ler)i seçin.
     name: Kaydı Kopyala
-    title: Kaydı Diğer Profile Kopyala
   createNew: Yeni Dünya Oluştur
   createdWorlds: '{count} dünyanız var'
   deleteHint: >-
-    Bu işlem geri alınamaz. Kayıt verilerini sonsuza kadar kaybedeceksiniz. Bu
-    kaydı silmek istediğinize emin misiniz?
+    Bu işlem geri alınamaz. Kayıt verilerini sonsuza kadar kaybedeceksiniz. Bu kaydı silmek istediğinize emin misiniz?
   deleteTitle: Kaydı Sil
   difficulty: Zorluk
   dropHint: İçe Aktarmak için kayıt zip dosyasını buraya sürükleyin
@@ -1150,12 +1021,10 @@ server:
   expectedVersions: Desteklenen Sürümler
   export: Sunucuyu Dışa Aktar
   exportNoFilesHint: >-
-    Sunucu dosyası bulunamadı. Bazı dosyalar oluşturmak için sunucuyu yerel
-    olarak bir kez çalıştırabilirsiniz.
+    Sunucu dosyası bulunamadı. Bazı dosyalar oluşturmak için sunucuyu yerel olarak bir kez çalıştırabilirsiniz.
   exportOption: Sunucu Dışa Aktarma Seçenekleri
   exportSSHAuthenticationFailed: >-
-    Tüm kimlik doğrulama yöntemleri başarısız oldu. Lütfen kullanıcı adı/şifre
-    veya özel anahtarı kontrol edin.
+    Tüm kimlik doğrulama yöntemleri başarısız oldu. Lütfen kullanıcı adı/şifre veya özel anahtarı kontrol edin.
   exportSSHOptions: SSH Seçenekleri
   exportSSHPrivateKeyPath: SSH Özel Anahtar Yolu
   exportSSHRemotePath: Uzak Sunucu Yolu
@@ -1167,14 +1036,12 @@ server:
   ipAddress: IP Adresi
   maxPlayers: Maks Oyuncu
   motd: Sunucu MOTD
-  name: Sunucu | Sunucular
   nogui: Sunucu Arayüzü Yok
   onlineMode: Çevrimiçi Mod
   ping: Ping
   pings: Pingler
   players: Oyuncular
   port: Port
-  status: Sunucu Durumu
   unknown: Bilinmeyen Sunucu
   unknownDescription: Bilinmeyen Sunucu. Lütfen Yenileyin
   upload: Sunucu Yükle
@@ -1208,14 +1075,12 @@ setting:
   appearance: Görünüm
   appearanceDescription: Başlatıcı görünümünü özelleştirin
   appxUpdateHint: >-
-    Başlatıcı yükleyiciyi indirip çalıştıracak. Açılır yükleyici başarısız
-    olursa, lütfen manuel olarak çalıştırın.
+    Başlatıcı yükleyiciyi indirip çalıştıracak. Açılır yükleyici başarısız olursa, lütfen manuel olarak çalıştırın.
   authenticationSettings: Kimlik Doğrulama
   backdropBlur: Arka Plan Bulanıklığı
   backgroundColorAbove: Arka plan rengini kaplama olarak göster
   backgroundColorAboveDescription: >-
-    Bu, arka plan renginin arka plan resmi veya videosunun üzerinde
-    görüntülenmesini sağlar.
+    Bu, arka plan renginin arka plan resmi veya videosunun üzerinde görüntülenmesini sağlar.
   backgroundImage: Arka plan resmi
   backgroundImageClear: temizle
   backgroundImageDescription: Arka plan olarak bir resim seçin veya temizleyin
@@ -1275,11 +1140,9 @@ setting:
   importSettingsHint: Daha önce dışa aktarılan bir dosyadan ayarları yükleyin
   instanceTheme:
     activeDescription: >-
-      Bu instance özel bir tema kullanıyor. Global temayı kullanmak için bunu
-      silebilirsiniz.
+      Bu instance özel bir tema kullanıyor. Global temayı kullanmak için bunu silebilirsiniz.
     description: >-
-      Bu instance için özel bir tema etkinleştirin. Bu, mevcut global temanın
-      bir kopyasını oluşturacaktır.
+      Bu instance için özel bir tema etkinleştirin. Bu, mevcut global temanın bir kopyasını oluşturacaktır.
     name: Instance Teması
   language: Dil
   languageDescription: Görüntüleme dili
@@ -1295,15 +1158,12 @@ setting:
   linuxTitlebarDescription: Başlatıcı için yerel linux başlık çubuğunu kullan
   location: Mağaza Konumu
   manualUpdateHint: >-
-    Sürüm otomatik olarak güncellenemez. Lütfen başlatıcıyı resmi web sitesinden
-    tekrar indirin!
+    Sürüm otomatik olarak güncellenemez. Lütfen başlatıcıyı resmi web sitesinden tekrar indirin!
   maunalUpdateHint: >-
-    Sürüm otomatik güncellenemez. Lütfen başlatıcıyı web sitesinden yeniden
-    indirin!
+    Sürüm otomatik güncellenemez. Lütfen başlatıcıyı web sitesinden yeniden indirin!
   maxSockets: Ana Bilgisayar Başına
   maxSocketsDescription: >-
-    Ana bilgisayar başına veya toplamda tüm ana bilgisayarlar için izin verilen
-    maksimum soket sayısını sınırlayın. 0 sınır olmadığı anlamına gelir.
+    Ana bilgisayar başına veya toplamda tüm ana bilgisayarlar için izin verilen maksimum soket sayısını sınırlayın. 0 sınır olmadığı anlamına gelir.
   maxSocketsTitle: Maks HTTP soketi
   memoryAssignment: Bellek Atama
   migrateFromOther: Diğer başlatıcıdan içe aktar
@@ -1327,9 +1187,7 @@ setting:
     legacy: Sadece Eski Sürüm
   resetAllSettings: Tüm Ayarları Sıfırla
   resetAllSettingsConfirmMessage: >-
-    Bu işlem tüm ayarları, hesapları, instance'ları, grupları ve önbelleğe
-    alınmış verileri kalıcı olarak silecektir. Bu işlem geri alınamaz. Emin
-    misiniz?
+    Bu işlem tüm ayarları, hesapları, instance'ları, grupları ve önbelleğe alınmış verileri kalıcı olarak silecektir. Bu işlem geri alınamaz. Emin misiniz?
   resetAllSettingsConfirmTitle: Tüm Ayarlar Sıfırlansın mı?
   resetAllSettingsHint: Başlatıcıyı fabrika ayarlarına sıfırla (her şeyi siler)
   resetAllSettingsSuccess: Tüm ayarlar sıfırlandı. Başlatıcı yeniden başlatılacak.
@@ -1371,8 +1229,7 @@ setting:
   update: Güncelle
   useBmclAPI: BMCL API Kullan
   useBmclAPIDescription: >-
-    Çin Anakarasındayken Minecraft indirmek için BMCLAPI kullanın. (Çin
-    Anakarasında değilseniz bu sizi etkilemez)
+    Çin Anakarasındayken Minecraft indirmek için BMCLAPI kullanın. (Çin Anakarasında değilseniz bu sizi etkilemez)
   useProxy: HTTP Proxy
   useProxyDescription: Http isteği için proxy sunucu adresi
   viewBackgroundMusic: Müzikleri Görüntüle
@@ -1390,38 +1247,28 @@ setup:
     name: '@:setting.appearance'
   dataRoot:
     description: >-
-      Veri kökü yaygın bir .minecraft dizini değildir. XMCL veri dizini yapısı
-      vanilla'dan farklı olduğundan, veri kökü olarak yaygın .minecraft dizinini
-      kullanmanızı önermiyoruz.
+      Veri kökü yaygın bir .minecraft dizini değildir. XMCL veri dizini yapısı vanilla'dan farklı olduğundan, veri kökü olarak yaygın .minecraft dizinini kullanmanızı önermiyoruz.
     drives: Önerilen Konumlar
     name: Veri Dizinini Ayarla
   defaultLayoutDescription: >-
-    Varsayılan düzen oyun "instance" kavramını geliştirmeye çalışıyor. Discord
-    gibi uygulamalara benziyor. Ayrıca Steam vb. diğer oyun başlatıcı
-    uygulamalarından da esinlenmiştir.
+    Varsayılan düzen oyun "instance" kavramını geliştirmeye çalışıyor. Discord gibi uygulamalara benziyor. Ayrıca Steam vb. diğer oyun başlatıcı uygulamalarından da esinlenmiştir.
   defaultPath: Varsayılan Yol
   error:
     badDataRoot: Başlatıcı verileri için geçersiz dizin! Lütfen başka bir dizin deneyin!
     exists: >-
-      Seçilen dizin boş değil. Sorun değil ancak lütfen verilerinizi
-      yedeklediğinizden emin olun.
+      Seçilen dizin boş değil. Sorun değil ancak lütfen verilerinizi yedeklediğinizden emin olun.
     invalidChar: >-
-      Yol geçersiz karakterler içeriyor! Minecraft'ın başlamamasına neden
-      olabilir! Lütfen sadece İngilizce karakterler ve semboller kullanın!
+      Yol geçersiz karakterler içeriyor! Minecraft'ın başlamamasına neden olabilir! Lütfen sadece İngilizce karakterler ve semboller kullanın!
     noPermission: >-
-      Başlatıcının seçilen dizine erişim izni yok! Lütfen başka bir tane
-      deneyin.
+      Başlatıcının seçilen dizine erişim izni yok! Lütfen başka bir tane deneyin.
     nonDictionary: Seçilen yol bir dosya! Lütfen bir dizin seçin!
   focusLayoutDescription: >-
-    Odak düzeni, Minecraft Başlatıcısının eski düzenidir. Tek bir instance veya
-    birkaç instance ile kullanılmak üzere tasarlanmıştır.
+    Odak düzeni, Minecraft Başlatıcısının eski düzenidir. Tek bir instance veya birkaç instance ile kullanılmak üzere tasarlanmıştır.
   game:
     name: Mevcut Oyunu İçe Aktar
   locale:
     description: >-
-      Varsa tercih ettiğiniz dili seçin! Ana dilinizi görmüyorsanız ve yardım
-      etmek istiyorsanız, çeviri için çekme istekleri (pull requests) göndermek
-      üzere Github'ımızı ziyaret edebilirsiniz!
+      Varsa tercih ettiğiniz dili seçin! Ana dilinizi görmüyorsanız ve yardım etmek istiyorsanız, çeviri için çekme istekleri (pull requests) göndermek üzere Github'ımızı ziyaret edebilirsiniz!
     language: Dil
     name: Dili Ayarla
   path: Mevcut Yol
@@ -1438,8 +1285,7 @@ shaderPack:
   noShaderMod: Gölgelendirici Modu Yüklü Değil
   noShaderModHint: Gölgelendirici modu olmadan gölgelendirici kullanamazsınız
   noShaderModInstallHint: >-
-    Gölgelendirici paketini yüklemek için aşağıdaki modlardan birini yüklemeniz
-    gerekir.
+    Gölgelendirici paketini yüklemek için aşağıdaki modlardan birini yüklemeniz gerekir.
   searchHint: Gölgelendirici Paketi Ara
   selectSearchHint: Gölgelendirici Paketi ara ve seç
   showDirectory: Gölgelendirici paketi dizinini göster
@@ -1525,11 +1371,9 @@ turnRegion:
   po: Polonya
 tutorial:
   feedbackDescription: >-
-    Herhangi bir sorunla karşılaşırsanız, geri bildirim göndermek için lütfen bu
-    düğmeye tıklayın!
+    Herhangi bir sorunla karşılaşırsanız, geri bildirim göndermek için lütfen bu düğmeye tıklayın!
   hideNewsHeaderDescription: >-
-    Solda Haber vitrinini görebilirsiniz. Bu düğmeye tıklamak bu vitrini
-    gizleyebilir.
+    Solda Haber vitrinini görebilirsiniz. Bu düğmeye tıklamak bu vitrini gizleyebilir.
   instance:
     iconDescription: Simgeyi değiştirmek için tıklayın.
     iconTitle: Instance simgesi
@@ -1538,50 +1382,34 @@ tutorial:
     javaImportTitle: Java içe aktar
     javaTitle: Java listesi
   instanceAddDescription: >-
-    Mevcut Minecraft instance'ını içe aktarmak veya sıfırdan ya da mod
-    paketinden yeni bir tane oluşturmak için bu düğmeye tıklayın.
+    Mevcut Minecraft instance'ını içe aktarmak veya sıfırdan ya da mod paketinden yeni bir tane oluşturmak için bu düğmeye tıklayın.
   instanceSelectDescription: Bu düğmeye tıklamak oyun seçme ve haber okuma sayfasına gidecektir.
   launchDescription: Oyunu yüklemek veya başlatmak için bu düğmeye tıklayın.
   mod:
     defaultSourceDescription: >-
-      Mod detaylarının kaynağını buradan seçebilirsiniz. Hem Modrinth hem de
-      Curseforge'da yayınlanan modlar vardır. Bu iki içerik sağlayıcı arasında
-      geçiş yapmak isterseniz, değeri buradan değiştirebilirsiniz.
+      Mod detaylarının kaynağını buradan seçebilirsiniz. Hem Modrinth hem de Curseforge'da yayınlanan modlar vardır. Bu iki içerik sağlayıcı arasında geçiş yapmak isterseniz, değeri buradan değiştirebilirsiniz.
     defaultSourceTitle: Mod İçerik Kaynağını Seç
     detailDescription: >-
-      Soldan bir öğe seçtiğinizde. Modun detaylarını göreceksiniz. İçerik
-      Modrinth, Curseforge veya ayrıştırılmış mod içeriğinden gelebilir.
+      Soldan bir öğe seçtiğinizde. Modun detaylarını göreceksiniz. İçerik Modrinth, Curseforge veya ayrıştırılmış mod içeriğinden gelebilir.
     detailTitle: Mod Detayı
     listDescription: >-
-      Herhangi bir girdiniz olmadığında yüklü modları göstereceğiz. Girdinizde
-      bir anahtar kelime veya kategori seçildiğinde aranan modları göreceksiniz.
+      Herhangi bir girdiniz olmadığında yüklü modları göstereceğiz. Girdinizde bir anahtar kelime veya kategori seçildiğinde aranan modları göreceksiniz.
     listTitle: Yüklü veya Aranan Mod
     searchDescription: >-
-      Bu arama kutusuyla Modrinth, Curseforge veya yerel önbelleğinizden mod
-      arayabilirsiniz.
+      Bu arama kutusuyla Modrinth, Curseforge veya yerel önbelleğinizden mod arayabilirsiniz.
     searchTitle: Mod Ara
   multiplayer:
     contentDescription: Siz ve eşleriniz arasındaki bağlantılar burada listelenecektir.
     contentTitle: '@:multiplayer.connections'
     groupDescription: >-
-      Diğer oyuncularla bir grup oluşturabilir veya katılabilirsiniz. Başlatıcı,
-      gruba göre siz ve arkadaşlarınız arasında P2P bağlantıları oluşturmaya
-      çalışacaktır. Arkadaşlarınızın verdiği grup adını girebilirsiniz. Veya
-      benzersiz bir ad oluşturabilirsiniz.
+      Diğer oyuncularla bir grup oluşturabilir veya katılabilirsiniz. Başlatıcı, gruba göre siz ve arkadaşlarınız arasında P2P bağlantıları oluşturmaya çalışacaktır. Arkadaşlarınızın verdiği grup adını girebilirsiniz. Veya benzersiz bir ad oluşturabilirsiniz.
     groupTitle: Bir gruba katıl
     joinDescription: >-
-      Bir grup adı girdikten sonra, gruba katılmak veya oluşturmak için bu
-      düğmeye tıklabilirsiniz. Grup adı boşsa, başlatıcı sizin için bir ad
-      oluşturacaktır.
+      Bir grup adı girdikten sonra, gruba katılmak veya oluşturmak için bu düğmeye tıklabilirsiniz. Grup adı boşsa, başlatıcı sizin için bir ad oluşturacaktır.
     manualDescription: >-
-      Siz veya arkadaşınız gruba bağlanamıyorsanız, manuel bağlan'a tıklayarak
-      belirteci manuel olarak takas etmeyi deneyebilirsiniz. Bu da başarısız
-      olursa, bu bir internet sorunu olabilir.
+      Siz veya arkadaşınız gruba bağlanamıyorsanız, manuel bağlan'a tıklayarak belirteci manuel olarak takas etmeyi deneyebilirsiniz. Bu da başarısız olursa, bu bir internet sorunu olabilir.
 universalDrop:
-  start: İçe Aktarma Başladı
-  title: Olarak İçe Aktarmak İçin Dosya(lar)ı Buraya Bırakın
   unknownResource: Bilinmeyen
-update: {}
 upstream:
   downgrade: Sürüm Düşür
   onlyShowCurrentVersion: Sadece Mevcut Minecraft Sürümünü Göster
@@ -1604,9 +1432,7 @@ userAccount:
 userCape:
   changeTitle: Pelerininizi değiştirin
   description: >-
-    Pelerinler, oyuncuların farklı etkinlikler, kampanyalar ve diğer mutlu
-    olaylar aracılığıyla açabileceği özel ödüllerdir. Burada şu anda sahip
-    olduğunuz pelerinler arasından seçim yapabilirsiniz:
+    Pelerinler, oyuncuların farklı etkinlikler, kampanyalar ve diğer mutlu olaylar aracılığıyla açabileceği özel ödüllerdir. Burada şu anda sahip olduğunuz pelerinler arasından seçim yapabilirsiniz:
   noCape: Pelerin Yok
 userService:
   add: Daha Fazla Servis Ekle

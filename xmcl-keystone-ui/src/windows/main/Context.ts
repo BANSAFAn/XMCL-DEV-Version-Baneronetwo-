@@ -124,10 +124,10 @@ export default defineComponent({
 
     const instanceTheme = useInstanceTheme(instance.path)
     provide(kInstanceTheme, instanceTheme)
-    provide(kTheme, useTheme(instanceTheme.instanceTheme, vuetify.framework))
+    provide(kTheme, useTheme(instanceTheme.instanceTheme))
 
 
-    useI18nSync(vuetify.framework, settings.state)
+    useI18nSync(settings.state)
 
     const router = useRouter()
     useExternalRoute(router)

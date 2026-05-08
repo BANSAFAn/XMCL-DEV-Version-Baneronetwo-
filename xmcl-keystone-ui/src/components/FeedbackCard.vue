@@ -1,14 +1,13 @@
 <template>
-  <div class="feedback-card">
+  <div class="feedback-card flex flex-col gap-4">
     <v-card
-      class="mx-4 mb-4"
+      v-if="icon"
       elevation="2"
-      outlined
+      variant="outlined"
     >
-      <v-card-text class="pa-4">
-        <div class="d-flex align-center mb-3">
+      <v-card-text class="p-4">
+        <div class="flex items-center">
           <v-icon
-            v-if="icon"
             color="primary"
             class="mr-2"
           >
@@ -19,25 +18,32 @@
       </v-card-text>
     </v-card>
 
-    <div class="flex w-full px-4">
+    <div
+      v-else
+      class="text-body-2 text--secondary"
+    >
+      {{ t('feedback.hint') }}
+    </div>
+
+    <div class="flex w-full">
       <v-btn
         class="flex-grow"
-        rounded
-        large
-        depressed
+        rounded="pill"
         color="primary"
         :loading="loading"
+        size="large"
+        variant="flat"
         @click="generateReport"
       >
         <v-icon
           v-if="!done"
-          left
+          start
         >
           bug_report
         </v-icon>
         <v-icon
           v-else
-          left
+          start
         >
           check_circle
         </v-icon>
@@ -71,6 +77,6 @@ const { refresh: generateReport, refreshing: loading } = useRefreshable(async ()
 
 <style scoped>
 .feedback-card {
-  margin-bottom: 16px;
+  width: 100%;
 }
 </style>

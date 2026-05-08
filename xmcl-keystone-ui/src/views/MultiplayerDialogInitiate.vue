@@ -16,7 +16,7 @@
       >
         {{ t('multiplayer.initiateConnection') }}
       </v-stepper-step>
-      <v-stepper-content step="1">
+      <v-stepper-window-item step="1">
         <div class="flex items-center justify-center">
           <div>
             {{ t('multiplayer.startNewP2PConnection') }}
@@ -26,15 +26,13 @@
           </div>
           <div class="flex-grow" />
           <v-btn
-            text
-            outlined
             color="primary"
             @click="initiate"
-          >
+           variant="text">
             {{ t('multiplayer.start') }}
           </v-btn>
         </div>
-      </v-stepper-content>
+      </v-stepper-window-item>
 
       <v-stepper-step
         :complete="step > 2"
@@ -43,7 +41,7 @@
       >
         {{ t('multiplayer.createLocalToken') }}
       </v-stepper-step>
-      <v-stepper-content
+      <v-stepper-window-item
         step="2"
       >
         <div class="flex flex-col gap-2">
@@ -77,19 +75,17 @@
           <div v-html="t('multiplayer.copyLocalHint')" />
           <div class="mt-3 flex items-center justify-center gap-2 text-amber-500">
             <v-btn
-              text
-              outlined
               @click="copyLocalDescription"
-            >
+             variant="text">
               <v-icon
                 v-if="!copied"
-                left
+                start
               >
                 content_copy
               </v-icon>
               <v-icon
                 v-else
-                left
+                start
                 color="success"
               >
                 check
@@ -98,24 +94,22 @@
             </v-btn>
             <div class="flex-grow" />
             <v-btn
-              text
-              outlined
               :color="initiating ? '' : 'primary'"
               :disabled="freeze"
               @click="step++"
-            >
+             variant="text">
               {{ t('multiplayer.next') }}
             </v-btn>
           </div>
         </div>
-      </v-stepper-content>
+      </v-stepper-window-item>
 
       <v-stepper-step
         step="3"
       >
         {{ t('multiplayer.enterRemoteToken') }}
       </v-stepper-step>
-      <v-stepper-content step="3">
+      <v-stepper-window-item step="3">
         {{ t('multiplayer.enterRemoteTokenHint') }}
         <v-textarea
           v-model="remoteDescription"
@@ -127,24 +121,20 @@
         />
         <div class="flex">
           <v-btn
-            text
-            outlined
             @click="step--"
-          >
+           variant="text">
             {{ t('multiplayer.previous') }}
           </v-btn>
           <div class="flex-grow" />
           <v-btn
-            text
-            outlined
             color="primary"
             :loading="connecting"
             @click="connect"
-          >
+           variant="text">
             {{ t('multiplayer.confirm') }}
           </v-btn>
         </div>
-      </v-stepper-content>
+      </v-stepper-window-item>
     </v-stepper>
   </v-dialog>
 </template>

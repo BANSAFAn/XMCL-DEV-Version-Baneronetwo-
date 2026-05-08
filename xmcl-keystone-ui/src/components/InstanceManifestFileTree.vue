@@ -59,22 +59,24 @@ import InstanceManifestFileItem from './InstanceManifestFileItem.vue'
 import { flatTree, treeItemKey, TreeItem } from '@/util/tree'
 import { useVModel } from '@vueuse/core'
 
-const props = defineProps<{
-  value: string[]
+const props = withDefaults(defineProps<{
+  modelValue?: string[]
   selectable?: boolean
   openAll?: boolean
   scrollElement?: HTMLElement | null
   loading?: boolean
-}>()
+}>(), {
+  modelValue: () => [],
+})
 
 const emit = defineEmits<{
-  (e: 'input', value: string[]): void
+  (e: 'update:modelValue', value: string[]): void
 }>()
-const model = useVModel(props, 'value', emit, { eventName: 'input' })
+const model = useVModel(props, 'modelValue', emit)
 
 const { t } = useI18n()
 
-const containerRef = ref<HTMLElement | null>(null)
+const containerRef = shallowRef<HTMLElement | null>(null)
 const offsetTop = ref(0)
 
 watch(containerRef, container => {
@@ -83,7 +85,7 @@ watch(containerRef, container => {
   }
 })
 
-const opened = ref<string[]>([])
+const opened = shallowRef<string[]>([])
 const isOpen = (item: TreeItem<InstanceFileNode<any>>) => {
   let result = opened.value.includes(treeItemKey(item))
   if (props.openAll) result = !result
@@ -105,19 +107,20 @@ const toggleOpen = (item: TreeItem<InstanceFileNode<any>>) => {
     return
   }
 
-  const index = opened.value.indexOf(treeItemKey(item))
+  const key = treeItemKey(item)
+  const index = opened.value.indexOf(key)
   if (index >= 0) {
-    opened.value.splice(index, 1)
+    opened.value = opened.value.filter((_, i) => i !== index)
   } else {
-    opened.value.push(treeItemKey(item))
+    opened.value = [...opened.value, key]
   }
 }
 
 const toggleValue = (item: TreeItem<InstanceFileNode<any>>) => {
+  const current = props.modelValue ?? []
   if (item.data.children) {
     if (checkedStates.value[item.data.path] === CheckedState.Checked) {
-      const newModel = props.value.filter(v => !v.startsWith(item.data.path + '/'))
-      model.value = newModel
+      model.value = current.filter(v => !v.startsWith(item.data.path + '/'))
     } else {
       const targets: string[] = []
 
@@ -131,7 +134,7 @@ const toggleValue = (item: TreeItem<InstanceFileNode<any>>) => {
           }
 
           if (!file.path.startsWith(prefix)) continue
-          if (props.value.includes(file.path)) continue
+          if (current.includes(file.path)) continue
 
           targets.push(file.path)
         }
@@ -139,12 +142,12 @@ const toggleValue = (item: TreeItem<InstanceFileNode<any>>) => {
 
       recurse(files.value)
 
-      model.value = [...props.value, ...targets]
+      model.value = [...current, ...targets]
     }
   } else {
-    const idx = props.value.indexOf(item.data.path)
-    if (idx >= 0) model.value = props.value.filter((v, i) => i !== idx)
-    else model.value = [...props.value, item.data.path]
+    const idx = current.indexOf(item.data.path)
+    if (idx >= 0) model.value = current.filter((_, i) => i !== idx)
+    else model.value = [...current, item.data.path]
   }
 }
 
@@ -157,7 +160,7 @@ const enum CheckedState {
   Partial = 2
 }
 const checkedStates = computed(() => {
-  const checkedSet = props.value
+  const checkedSet = props.modelValue ?? []
   const result: Record<string, CheckedState> = {}
   const getState = (node: InstanceFileNode<any>): CheckedState => {
     if (!node.children) {

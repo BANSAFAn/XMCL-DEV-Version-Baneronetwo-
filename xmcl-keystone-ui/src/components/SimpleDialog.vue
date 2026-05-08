@@ -5,14 +5,7 @@
     :width="width"
     @input="emit('input', $event)"
   >
-    <v-card>
-      <v-card-title
-        class="select-none"
-        primary-title
-      >
-        {{ title }}
-      </v-card-title>
-
+    <v-card :title="title">
       <v-card-text
         class="select-none"
       >
@@ -22,18 +15,16 @@
       <v-divider />
       <v-card-actions>
         <v-btn
-          text
           @click="onCancel"
-        >
+         variant="text">
           {{ t('delete.no') }}
         </v-btn>
         <v-spacer />
         <v-btn
           :color="color ?? 'error'"
-          text
           @click="onConfirm"
-        >
-          <v-icon left>
+         variant="text">
+          <v-icon start>
             {{ confirmIcon ?? 'delete' }}
           </v-icon>
           {{ confirm ?? t('delete.yes') }}

@@ -1,4 +1,4 @@
-import { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from '@vueuse/core'
 import { Ref, ref, watch } from 'vue'
 
 export interface LocalStorageOptions {

@@ -2,7 +2,7 @@
   <SimpleDialog v-model="isShown" :title="t('modrinth.loginTitle')" :width="400" color="primary" confirm-icon="check" :confirm="t('shared.yes')" @confirm="onAccept" @cancel="rejectSignal()">
     <div class="flex flex-col items-center gap-4 mt-2">
       <v-icon size="100" color="green">
-        $vuetify.icons.modrinth
+        xmcl:modrinth
       </v-icon>
       <span>
         {{ t('modrinth.loginHint') }}

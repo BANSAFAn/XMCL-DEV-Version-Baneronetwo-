@@ -5,31 +5,31 @@
         <AvatarItemList :items="extensionItems" />
       </div>
       <div class="flex-grow" />
-      <div class="invisible-scroll flex justify-end gap-4 overflow-x-auto">
+      <div class="invisible-scroll flex flex-grow justify-end gap-4 overflow-x-auto">
         <MarketTextFieldWithMenu
           :placeholder="t('mod.search')"
-          :keyword.sync="keywordBuffer"
-          :curseforge-category.sync="curseforgeCategory"
-          :modrinth-categories.sync="modrinthCategories"
-          :local-sort.sync="sortBy"
+          v-model:keyword="keywordBuffer"
+          v-model:curseforge-category="curseforgeCategory"
+          v-model:modrinth-categories="modrinthCategories"
+          v-model:local-sort="sortBy"
           curseforge-category-filter="mc-mods"
           modrinth-category-filter="mod"
-          :collection.sync="selectedCollection"
-          :enable-curseforge.sync="isCurseforgeActive"
-          :enable-modrinth.sync="isModrinthActive"
-          :sort.sync="sort"
-          :mode.sync="source"
-          :game-version.sync="gameVersion"
-          :modloader.sync="modLoader"
+          v-model:collection="selectedCollection"
+          v-model:enable-curseforge="isCurseforgeActive"
+          v-model:enable-modrinth="isModrinthActive"
+          v-model:sort="sort"
+          v-model:mode="source"
+          v-model:game-version="gameVersion"
+          v-model:modloader="modLoader"
           :mod-loaders="[ModLoaderFilter.forge, ModLoaderFilter.neoforge, ModLoaderFilter.fabric, ModLoaderFilter.quilt]"
-          :modrinth-environment.sync="modrinthEnvironment"
+          v-model:modrinth-environment="modrinthEnvironment"
         >
           <template #local>
-            <v-subheader class="flex">
+            <div class="filter-subheader flex">
               {{ t('mod.filter') }}
-            </v-subheader>
+            </div>
             <v-btn-toggle
-              background-color="transparent"
+              density="compact"
               :value="getFilterButtonValue()"
               class="bg-transparent px-1"
               @change="onUpdateLocalFilter(filterItems[$event]?.value)"
@@ -39,22 +39,23 @@
                 :key="tag.value"
                 v-shared-tooltip="() => tag.text"
                 :disabled="tag.disabled"
-                small
-                outlined
+                size="small"
+                variant="text"
+                border
               >
                 <v-icon
                   class="material-icons-outlined"
-                  small
+                  size="small"
                 >
                   {{ tag.icon }}
                 </v-icon>
               </v-btn>
             </v-btn-toggle>
-            <v-subheader class="flex">
+            <div class="filter-subheader flex">
               {{ t('modrinth.modLoaders.name') }}
-            </v-subheader>
+            </div>
             <v-btn-toggle
-              background-color="transparent"
+              density="compact"
               :value="getModLoaderFilterValue()"
               class="bg-transparent px-1"
               @change="onUpdateLocalFilter(modLoaderFilterItems[$event]?.value)"
@@ -63,17 +64,18 @@
                 v-for="tag in modLoaderFilterItems"
                 :key="tag.value"
                 v-shared-tooltip="() => tag.text"
-                small
-                outlined
+                size="small"
+                variant="text"
+                border
               >
-                <v-icon small>
+                <v-icon size="small">
                   {{ tag.icon }}
                 </v-icon>
               </v-btn>
             </v-btn-toggle>
             <ModOptionsPage
-              :denseView.sync="denseView"
-              :groupInstalled.sync="groupInstalled"
+              v-model:denseView="denseView"
+              v-model:groupInstalled="groupInstalled"
             />
           </template>
         </MarketTextFieldWithMenu>
@@ -147,19 +149,19 @@ const filterItems = computed(() => {
 
 const modLoaderFilterItems = computed(() => {
   return [{
-    icon: '$vuetify.icons.forge',
+    icon: 'xmcl:forge',
     text: t('modrinth.modLoaders.forge'),
     value: 'forgeOnly',
   }, {
-    icon: '$vuetify.icons.neoForged',
+    icon: 'xmcl:neoForged',
     text: t('modrinth.modLoaders.neoforge'),
     value: 'neoforgeOnly',
   }, {
-    icon: '$vuetify.icons.fabric',
+    icon: 'xmcl:fabric',
     text: t('modrinth.modLoaders.fabric'),
     value: 'fabricOnly',
   }, {
-    icon: '$vuetify.icons.quilt',
+    icon: 'xmcl:quilt',
     text: t('modrinth.modLoaders.quilt'),
     value: 'quiltOnly',
   }]

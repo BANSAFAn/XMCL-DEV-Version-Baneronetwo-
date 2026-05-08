@@ -18,7 +18,7 @@
       <div
         key="launch-button-group"
         class="flex items-center justify-end overflow-visible"
-        v-if="!isInFocusMode || !(router.currentRoute.path === '/')"
+        v-if="!isInFocusMode || !(router.currentRoute.value.path === '/')"
       >
         <HomeLaunchButtonStatus
           :active="active"

@@ -167,7 +167,7 @@ const onDelete = () => {
 
 const { push, currentRoute } = useRouter()
 const onOpenDependency = (dep: ProjectDependency) => {
-  push({ query: { ...currentRoute.query, id: `modrinth:${dep.id}` } })
+  push({ query: { ...currentRoute.value.query, id: `modrinth:${dep.id}` } })
 }
 
 const curseforgeId = computed(() => props.curseforge ||
@@ -177,7 +177,7 @@ const curseforgeId = computed(() => props.curseforge ||
 const isNotFound = computed(() => error.value?.status === 404)
 const { replace } = useRouter()
 const goCurseforgeProject = (id: number) => {
-  replace({ query: { ...currentRoute.query, id: `curseforge:${id}` } })
+  replace({ query: { ...currentRoute.value.query, id: `curseforge:${id}` } })
 }
 
 const { isFollowed, following, onFollow } = useModrinthFollow(projectId)
@@ -189,8 +189,8 @@ const { t } = useI18n()
 <template>
   <Hint v-if="isNotFound" icon="warning" color="red" class="px-10" :size="100" :text="t('errors.NotFoundError')">
     <div>
-      <v-btn color="primary" text v-if="curseforgeId" @click="goCurseforgeProject(curseforgeId)">
-        <v-icon left>$vuetify.icons.curseforge</v-icon>
+      <v-btn color="primary" v-if="curseforgeId" @click="goCurseforgeProject(curseforgeId)" variant="text">
+        <v-icon start>xmcl:curseforge</v-icon>
         Curseforge
       </v-btn>
     </div>

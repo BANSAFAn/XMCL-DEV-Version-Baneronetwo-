@@ -17,52 +17,54 @@
       class="flex h-full w-full overflow-auto py-0"
     >
       <template #left>
-        <div>
-          <slot
-            name="actions"
-          />
-          <v-alert
-            v-if="error"
-            v-shared-tooltip="error.message"
-            type="error"
-            dense
-            class="overflow-hidden text-ellipsis whitespace-nowrap"
-          >
-            {{ error }}
-          </v-alert>
-        </div>
-        <slot v-if="$slots.options" name="options" />
-        <v-virtual-scroll
-          v-else-if="items.length > 0"
-          key="market-left"
-          id="left-pane"
-          :bench="16"
-          class="visible-scroll h-full max-h-full w-full overflow-auto pl-1 pt-2"
-          :items="items"
-          :item-height="itemHeight"
-          @scroll="onScroll"
-        >
-          <template #default="{ item, index }">
+        <div class="flex flex-col h-full overflow-hidden">
+          <div>
             <slot
-              name="item"
-              :item="item"
-              :index="index"
-              :has-update="typeof item === 'string' ? false : !!plans[item.id]"
-              :checked="typeof item === 'string' ? false : (selections[item.id] || false)"
-              :selection-mode="typeof item === 'string' ? false : (selectionMode && item.installed && item.installed.length > 0)"
-              :selected="typeof item === 'string' ? false : ((selectedItem && (selectedItem.id === item.id) || selections[item.id]) || false)"
-              :on="{
-                // @ts-ignore
-                click: (event) => onSelect(event, item)
-              }"
+              name="actions"
             />
-          </template>
-        </v-virtual-scroll>
-        <slot
-          v-else
-          class="responsive-container"
-          name="placeholder"
-        />
+            <v-alert
+              v-if="error"
+              v-shared-tooltip="error.message"
+              type="error"
+              dense
+              class="overflow-hidden text-ellipsis whitespace-nowrap"
+            >
+              {{ error }}
+            </v-alert>
+          </div>
+          <slot v-if="$slots.options" name="options" />
+          <v-virtual-scroll
+            v-else-if="items.length > 0"
+            key="market-left"
+            id="left-pane"
+            :bench="16"
+            class="visible-scroll h-full max-h-full w-full overflow-auto pl-1 pt-2"
+            :items="items"
+            :item-height="itemHeight"
+            @scroll="onScroll"
+          >
+            <template #default="{ item, index }">
+              <slot
+                name="item"
+                :item="item"
+                :index="index"
+                :has-update="typeof item === 'string' ? false : !!plans[item.id]"
+                :checked="typeof item === 'string' ? false : (selections[item.id] || false)"
+                :selection-mode="typeof item === 'string' ? false : (selectionMode && item.installed && item.installed.length > 0)"
+                :selected="typeof item === 'string' ? false : ((selectedItem && (selectedItem.id === item.id) || selections[item.id]) || false)"
+                :on="{
+                  // @ts-ignore
+                  click: (event) => onSelect(event, item)
+                }"
+              />
+            </template>
+          </v-virtual-scroll>
+          <div v-else class="flex-1 min-h-0 h-full">
+            <slot
+              name="placeholder"
+            />
+          </div>
+        </div>
       </template>
       <template #right>
         <div

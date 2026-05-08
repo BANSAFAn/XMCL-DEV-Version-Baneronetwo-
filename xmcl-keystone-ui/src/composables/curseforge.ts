@@ -1,6 +1,7 @@
 import { clientCurseforgeV1 } from '@/util/clients'
 import { SWRVModel, formatKey } from '@/util/swrvGet'
-import { MaybeRef, get } from '@vueuse/core'
+import { get } from '@vueuse/core'
+import type { MaybeRef } from '@vueuse/core'
 import { File, FileModLoaderType, Mod, ModsSearchSortField } from '@xmcl/curseforge'
 import useSWRV from 'swrv'
 import { InjectionKey, Ref, computed, reactive, toRefs, watch } from 'vue'

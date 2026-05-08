@@ -8,16 +8,16 @@
       <AvatarItemList :items="extensionItems" />
       <div class="flex-grow" />
       <MarketTextFieldWithMenu
-        :keyword.sync="keyword"
+        v-model:keyword="keyword"
         :placeholder="t('shaderPack.searchHint')"
-        :modrinth-categories.sync="modrinthCategories"
+        v-model:modrinth-categories="modrinthCategories"
         modrinth-category-filter="shader"
-        :enable-modrinth.sync="isModrinthActive"
-        :game-version.sync="gameVersion"
-        :local-sort.sync="sortBy"
-        :sort.sync="sort"
-        :mode.sync="source"
-        :collection.sync="selectedCollection"
+        v-model:enable-modrinth="isModrinthActive"
+        v-model:game-version="gameVersion"
+        v-model:local-sort="sortBy"
+        v-model:sort="sort"
+        v-model:mode="source"
+        v-model:collection="selectedCollection"
       />
     </div>
     <MarketExtensions

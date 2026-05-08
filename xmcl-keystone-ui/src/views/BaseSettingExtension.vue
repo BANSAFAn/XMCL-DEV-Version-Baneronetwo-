@@ -9,24 +9,24 @@
     <div
       class="flex flex-grow-0 flex-row items-center justify-center gap-2"
     >
-      <AvatarItemList 
+      <AvatarItemList
         :items="items"
       />
       <v-divider vertical />
-      <v-btn v-shared-tooltip="() => t('BaseSettingGeneral.title')" text :class="{ 'v-btn--active': !targetQuery }" @click="navigate('')">
-        <v-icon :left="!targetQuery" class="material-icons-outlined">settings_heart</v-icon>
+      <v-btn v-shared-tooltip="() => t('BaseSettingGeneral.title')" variant="text" :class="{ 'v-btn--active': !targetQuery }" @click="navigate('')">
+        <v-icon :start="!targetQuery" class="material-icons-outlined">settings_heart</v-icon>
         <span :style="{ width: !targetQuery ?  '80px' : 0 }" class="overflow-hidden transition-all!">
           {{ t("BaseSettingGeneral.title") }}
         </span>
       </v-btn>
-      <v-btn v-shared-tooltip="() => t('modpack.name', 1)" text :class="{ 'v-btn--active': targetQuery === 'modpack' }" @click="navigate('modpack')">
-        <v-icon :left="targetQuery === 'modpack'" class="material-icons-outlined">folder_zip</v-icon>
+      <v-btn v-shared-tooltip="() => t('modpack.name', 1)" variant="text" :class="{ 'v-btn--active': targetQuery === 'modpack' }" @click="navigate('modpack')">
+        <v-icon :start="targetQuery === 'modpack'" class="material-icons-outlined">folder_zip</v-icon>
         <span :style="{ width: targetQuery === 'modpack' ?  '80px' : 0 }" class="overflow-hidden transition-all!">
           {{ t("modpack.name", 1) }}
         </span>
       </v-btn>
-      <v-btn v-shared-tooltip="() => t('setting.appearance')" text :class="{ 'v-btn--active': targetQuery === 'appearance' }" @click="navigate('appearance')">
-        <v-icon :left="targetQuery === 'appearance'" class="material-icons-outlined">invert_colors</v-icon>
+      <v-btn v-shared-tooltip="() => t('setting.appearance')" variant="text" :class="{ 'v-btn--active': targetQuery === 'appearance' }" @click="navigate('appearance')">
+        <v-icon :start="targetQuery === 'appearance'" class="material-icons-outlined">invert_colors</v-icon>
         <span :style="{ width: targetQuery === 'appearance' ?  'auto' : 0 }" class="overflow-hidden transition-all!">
           {{ t('setting.appearance') }}
         </span>
@@ -52,11 +52,10 @@
       <div v-else-if="targetQuery === 'modpack'" class="flex items-center justify-end overflow-hidden">
         <v-btn
           color="primary"
-          large
           :loading="exporting || loading"
           @click="exportModpack"
-        >
-          <v-icon left>
+         size="large">
+          <v-icon start>
             build
           </v-icon>
           {{ t("modpack.export") }}
@@ -94,7 +93,7 @@ const { exportModpack, exporting, loading } = injection(kModpackExport)
 
 const router = useRouter()
 function navigate(target: '' | 'modpack' | 'appearance') {
-  if (router.currentRoute.query.target === target) {
+  if (router.currentRoute.value.query.target === target) {
     return
   }
   if (target === '') {

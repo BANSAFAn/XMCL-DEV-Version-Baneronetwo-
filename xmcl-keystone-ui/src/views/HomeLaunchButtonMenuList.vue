@@ -1,24 +1,18 @@
 <template>
-  <v-list dense>
-    <v-list-item @click="onStartLocalhost">
-      <v-list-item-avatar size="20">
+  <v-list density="compact" min-width="200">
+    <v-list-item :title="text" @click="onStartLocalhost">
+      <template #prepend>
         <v-icon size="20">
           {{ serverCount > 0 ? 'cancel' : 'play_arrow' }}
         </v-icon>
-      </v-list-item-avatar>
-      <v-list-item-title>
-        {{ text }}
-      </v-list-item-title>
+      </template>
     </v-list-item>
-    <v-list-item v-if="env && env.os !== 'osx'" @click="onCreateShortcut">
-      <v-list-item-avatar size="20">
+    <v-list-item v-if="env && env.os !== 'osx'" :title="t('launch.createShortcut')" @click="onCreateShortcut">
+      <template #prepend>
         <v-icon size="20">
           rocket_launch
         </v-icon>
-      </v-list-item-avatar>
-      <v-list-item-title>
-        {{ t('launch.createShortcut') }}
-      </v-list-item-title>
+      </template>
     </v-list-item>
   </v-list>
 </template>

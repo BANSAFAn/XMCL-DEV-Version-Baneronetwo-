@@ -1,38 +1,36 @@
 <template>
   <v-menu
     :close-on-content-click="false"
-    top
+    location="top"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ props: activatorProps }">
       <div
         v-shared-tooltip="() => text"
         class="color-button min-w-5 max-w-5 dark:border-light-50 rounded-full border-2 p-5 transition-all"
-        v-bind="attrs"
+        v-bind="activatorProps"
         :style="shadowColor"
-        @click="on.click($event)"
       />
     </template>
     <v-card class="overflow-hidden">
       <v-color-picker
-        :value="value"
+        :model-value="modelValue"
         dot-size="25"
         show-swatches
         swatches-max-height="200"
-        @input="emit('input', $event)"
+        @update:model-value="emit('update:modelValue', $event)"
       />
       <template v-if="hasBlur">
-        <v-subheader>
+        <v-list-subheader>
           {{ t('setting.backdropBlur') }}
-        </v-subheader>
+        </v-list-subheader>
         <v-slider
           class="mx-2"
-          :input-value="blur"
-          :value="blur"
-          @input="emit('update:blur', $event)"
-          :height="5"
+          :model-value="blur"
           :min="0"
           :max="30"
-          dense
+          density="compact"
+          hide-details
+          @update:model-value="emit('update:blur', $event)"
         />
       </template>
     </v-card>
@@ -44,20 +42,23 @@ import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { injection } from '@/util/inject'
 
 const props = defineProps<{
-  value: string
+  modelValue: string
   text: string
   blur?: number
   hasBlur?: boolean
 }>()
 
 const { t } = useI18n()
-const emit = defineEmits(['input', 'update:blur'])
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void
+  (e: 'update:blur', value: number): void
+}>()
 
 const { isDark } = injection(kTheme)
 
 const shadowColor = computed(() => ({
   '--shadow-color': isDark.value ? '255 255 255' : '0 0 0',
-  'background-color': props.value,
+  'background-color': props.modelValue,
 }))
 
 </script>

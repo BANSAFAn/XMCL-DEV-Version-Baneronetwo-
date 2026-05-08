@@ -1,5 +1,5 @@
 import { SharedTooltipData, useSharedTooltipData } from '@/composables/sharedTooltip'
-import { FunctionDirective } from 'vue'
+import { FunctionDirective, markRaw } from 'vue'
 
 export type VSharedTooltipParam = {
   text?: string
@@ -9,9 +9,18 @@ export type VSharedTooltipParam = {
   direction?: 'top' | 'bottom' | 'left' | 'right'
 } | string
 
+const { blocked, isShown, stack, setValue } = useSharedTooltipData()
+const observer = new MutationObserver(mutations => {
+  for (const m of mutations) {
+    for (const node of m.removedNodes) {
+      stack.value = stack.value.filter((v) => v.el?.deref() !== node)
+      setValue(false)
+    }
+  }
+})
+
 export const vSharedTooltip: FunctionDirective<HTMLElement, ((v?: any) => VSharedTooltipParam) | VSharedTooltipParam | undefined> = (el, bindings, node, prevNode) => {
-  if (prevNode.tag) return
-  const { blocked, isShown, stack, setValue } = useSharedTooltipData()
+  if (prevNode && prevNode.type) return
   el.addEventListener('mouseenter', (e) => {
     if (blocked.value) return
     const target = e.target as HTMLElement
@@ -25,6 +34,7 @@ export const vSharedTooltip: FunctionDirective<HTMLElement, ((v?: any) => VShare
       color: 'black',
       items: undefined,
       list: undefined,
+      el: new WeakRef(el),
     }
 
     function assign(val: VSharedTooltipParam) {
@@ -42,10 +52,10 @@ export const vSharedTooltip: FunctionDirective<HTMLElement, ((v?: any) => VShare
     const val = bindings.value
     if (typeof val === 'string') {
       newData.text = val
-    } else if (typeof val === 'object') {
-      assign(val)
     } else if (typeof val === 'function') {
       assign(val())
+    } else if (typeof val === 'object') {
+      assign(val)
     } else {
       return
     }
@@ -81,20 +91,17 @@ export const vSharedTooltip: FunctionDirective<HTMLElement, ((v?: any) => VShare
   })
   el.addEventListener('click', (e) => {
     if (blocked.value) return
-    stack.value = stack.value.slice(0, stack.value.length - 1)
+    stack.value = stack.value.filter((v) => v.el?.deref() !== el)
     setValue(false)
   })
   el.addEventListener('mouseleave', (e) => {
     if (blocked.value) return
-    stack.value = stack.value.slice(0, stack.value.length - 1)
+    stack.value = stack.value.filter((v) => v.el?.deref() !== el)
     if (stack.value.length > 0) {
       setValue(true)
     } else {
       setValue(false)
     }
   })
-  el.addEventListener('DOMNodeRemoved', (e) => {
-    stack.value = stack.value.slice(0, stack.value.length - 1)
-    setValue(false)
-  })
+  observer.observe(el, { childList: true, subtree: true })
 }

@@ -1,28 +1,26 @@
 <template>
   <div class="px-1">
-    <v-subheader class="flex items-center">
+    <v-list-subheader class="flex items-center">
       {{ t('save.properties') }}
       <v-spacer />
       <v-btn
         v-if="!isUnlocked"
         icon
-        small
         @click="unlock"
-      >
-        <v-icon small>lock</v-icon>
+       size="small">
+        <v-icon size="small">lock</v-icon>
       </v-btn>
       <v-btn
         v-else
         icon
-        small
         color="primary"
         :loading="saving"
         @click="save"
-      >
-        <v-icon small>save</v-icon>
+       size="small">
+        <v-icon size="small">save</v-icon>
       </v-btn>
-    </v-subheader>
-    
+    </v-list-subheader>
+
     <div class="grid grid-cols-1 gap-1 gap-y-3 overflow-auto overflow-y-hidden pr-2">
       <div class="item">
         <v-icon>badge</v-icon>
@@ -31,9 +29,9 @@
           <v-text-field
             v-if="isUnlocked"
             v-model="editedLevelName"
-            dense
+            density="compact"
             hide-details
-            outlined
+            variant="outlined"
             class="mt-1"
           />
           <AppCopyChip
@@ -43,7 +41,7 @@
           />
         </div>
       </div>
-      
+
       <div class="item">
         <v-icon>apps</v-icon>
         <div class="overflow-x-auto overflow-y-hidden">
@@ -51,9 +49,9 @@
           <v-text-field
             v-if="isUnlocked"
             v-model="editedSeed"
-            dense
+            density="compact"
             hide-details
-            outlined
+            variant="outlined"
             class="mt-1"
           />
           <AppCopyChip
@@ -63,7 +61,7 @@
           />
         </div>
       </div>
-      
+
       <div class="item">
         <v-icon>shield</v-icon>
         <div class="overflow-x-auto overflow-y-hidden">
@@ -72,6 +70,7 @@
             v-if="isUnlocked"
             v-model="editedDifficulty"
             :items="difficultyOptions"
+            item-title="text"
             dense
             hide-details
             outlined
@@ -84,7 +83,7 @@
           />
         </div>
       </div>
-      
+
       <div class="item">
         <v-icon>mode</v-icon>
         <div class="overflow-x-auto overflow-y-hidden">
@@ -103,7 +102,7 @@
           />
         </div>
       </div>
-      
+
       <div class="item">
         <v-icon>shop</v-icon>
         <div class="overflow-x-auto overflow-y-hidden">
@@ -196,7 +195,7 @@ const save = async () => {
       difficulty: editedDifficulty.value,
       cheat: editedCheat.value,
     })
-    
+
     // Lock again after saving
     isUnlocked.value = false
     emit('saved')

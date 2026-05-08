@@ -4,14 +4,7 @@
     :persistent="false"
     :width="400"
   >
-    <v-card>
-      <v-card-title
-        class="headline"
-        primary-title
-      >
-        {{ t('instance.delete') }}
-      </v-card-title>
-
+    <v-card :title="t('instance.delete')">
       <v-card-text>
         {{ t('instance.deleteHint') }}
         <div style="color: grey">
@@ -29,9 +22,8 @@
       <v-divider />
       <v-card-actions>
         <v-btn
-          text
           @click="isShown = false"
-        >
+         variant="text">
           {{ t('delete.no') }}
         </v-btn>
         <v-spacer />
@@ -39,7 +31,7 @@
           color="error"
           @click="doDelete"
         >
-          <v-icon left>
+          <v-icon start>
             delete
           </v-icon>
           {{ t('delete.yes') }}
@@ -82,7 +74,7 @@ const doDelete = () => {
     }
   })
   const instancePath = (val as any).path
-  if (router.currentRoute.fullPath !== '/' && selectedInstance.value === instancePath) {
+  if (router.currentRoute.value.fullPath !== '/' && selectedInstance.value === instancePath) {
     router.push('/')
   }
   isShown.value = false

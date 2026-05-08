@@ -2,26 +2,30 @@
   <v-list-item
     v-if="user"
     :link="link"
+    lines="three"
+    class="user-card-user-item"
   >
-    <v-list-item-avatar>
-      <v-img
-        v-if="user.avatar"
-        :src="user.avatar"
-      />
-      <PlayerAvatar
-        v-else
-        :src="user.profiles[user.selectedProfile]?.textures.SKIN.url"
-        :dimension="48"
-      />
-    </v-list-item-avatar>
-    <v-list-item-content>
-      <v-list-item-title>
-        {{ userNameText }}
-      </v-list-item-title>
-      <v-list-item-subtitle>
+    <template #prepend>
+      <v-avatar size="40">
+        <v-img
+          v-if="user.avatar"
+          :src="user.avatar"
+        />
+        <PlayerAvatar
+          v-else
+          :src="user.profiles[user.selectedProfile]?.textures.SKIN.url"
+          :dimension="48"
+        />
+      </v-avatar>
+    </template>
+    <template #title>
+      {{ userNameText }}
+    </template>
+    <template #subtitle>
+      <div class="user-sub-line">
         <v-icon
-          small
-          color="blue"
+          size="16"
+          color="info"
         >
           verified
         </v-icon>
@@ -29,39 +33,43 @@
           {{ authority }}
           ({{ t('user.authService') }})
         </span>
-      </v-list-item-subtitle>
-      <v-list-item-subtitle>
+      </div>
+      <div class="user-sub-line">
         <v-icon
-          small
-          :color="expired ? 'red': 'primary'"
+          size="16"
+          :color="expired ? 'error': 'primary'"
         >
           {{ expired ? 'cancel': 'check_circle' }}
         </v-icon>
         <span
           v-if="user.authority !== AUTHORITY_DEV"
-          :style="{ color: getColorCode(expired ? 'red': 'primary') }"
+          :style="{ color: getColorCode(expired ? 'error': 'primary') }"
         >
           {{ expired ? t('user.tokenExpired'): t('user.tokenValidUntil') }}
           {{ new Date(user.expiredAt).toLocaleString() }}
         </span>
         <template v-else>
           <span
-            :style="{ color: getColorCode(expired ? 'red': 'primary') }"
+            :style="{ color: getColorCode(expired ? 'error': 'primary') }"
           >
             {{ expired ? t('user.tokenExpired'): t('user.tokenValidUntil') }}
           </span>
           <v-icon
-            small
-            :color="expired ? 'red': 'primary'"
+            size="16"
+            :color="expired ? 'error': 'primary'"
           >
             all_inclusive
           </v-icon>
         </template>
-      </v-list-item-subtitle>
-    </v-list-item-content>
-    <v-list-item-action v-if="controls">
+      </div>
+    </template>
+    <template
+      v-if="controls"
+      #append
+    >
       <v-btn
-        text
+        variant="text"
+        icon
         :loading="refreshing && !hoverRefresh"
         @mouseenter="hoverRefresh = true"
         @mouseleave="hoverRefresh = false"
@@ -69,7 +77,7 @@
       >
         <template v-if="hoverRefresh && refreshing">
           <v-icon
-            color="red"
+            color="error"
           >
             close
           </v-icon>
@@ -80,18 +88,17 @@
           </v-icon>
         </template>
       </v-btn>
-    </v-list-item-action>
-    <v-list-item-action v-if="controls">
       <v-btn
-        text
-        color="red"
+        variant="text"
+        icon
+        color="error"
         @click="emit('remove')"
       >
         <v-icon>
           delete
         </v-icon>
       </v-btn>
-    </v-list-item-action>
+    </template>
   </v-list-item>
 </template>
 <script lang="ts" setup>
@@ -140,3 +147,25 @@ const authority = computed(() => {
   return props.user.authority
 })
 </script>
+
+<style scoped>
+.user-card-user-item :deep(.v-list-item__prepend),
+.user-card-user-item :deep(.v-list-item__append) {
+  align-self: center;
+}
+.user-card-user-item :deep(.v-list-item-title),
+.user-card-user-item :deep(.v-list-item-subtitle) {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.user-card-user-item :deep(.v-list-item-subtitle) {
+  opacity: 1;
+  -webkit-line-clamp: unset;
+  display: block;
+}
+.user-sub-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+</style>

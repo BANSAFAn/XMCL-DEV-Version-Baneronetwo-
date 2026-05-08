@@ -7,8 +7,7 @@
       subheader
     >
       <v-list-item class="items-center justify-center">
-        <v-list-item-content>
-          <v-list-item-title>
+        <v-list-item-title>
             {{
               t("setting.darkTheme")
             }}
@@ -18,11 +17,11 @@
               t("setting.darkThemeDescription")
             }}
           </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
+<v-list-item-action>
           <v-select
             v-model="data.theme"
             filled
+            item-title="text"
             style="max-width: 185px"
             hide-details
             :items="themes"

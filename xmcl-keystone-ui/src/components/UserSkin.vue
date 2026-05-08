@@ -8,15 +8,13 @@
       <v-fab-transition>
         <v-btn
           v-if="inspect && modified"
+          icon="clear"
           color="secondary"
-          fab
-          small
-          style="z-index: 3;"
+          size="small"
+          style="z-index: 3"
           :disabled="pending"
           @click="reset"
-        >
-          <v-icon>clear</v-icon>
-        </v-btn>
+        />
       </v-fab-transition>
     </div>
     <SkinView
@@ -28,69 +26,71 @@
       :animation="hover ? 'running' : selected ? 'walking' : 'idle'"
       @model="onModelChange"
       @drop.prevent="dropSkin"
-      @dragover.prevent="() => { }"
+      @dragover.prevent="() => {}"
     />
     <div class="absolute bottom-4 flex flex-none flex-shrink gap-4">
       <v-fab-transition>
         <v-btn
           v-show="!inspect && modified"
           v-shared-tooltip="() => t('userSkin.reset')"
+          icon="clear"
           color="secondary"
-          fab
-          small
+          size="small"
           style="z-index: 3;"
           :disabled="pending"
           @click="reset"
-        >
-          <v-icon>clear</v-icon>
-        </v-btn>
+        />
       </v-fab-transition>
       <SpeedDial
         :value="hover || modified"
         :has-skin="canUploadSkin"
         :has-cape="canUploadCape"
         :disabled="pending"
-        :upload="() => isImportSkinDialogShown = true"
+        :upload="() => (isImportSkinDialogShown = true)"
         :save="exportSkin"
         :load="loadSkin"
       />
       <v-fab-transition>
         <v-btn
           v-show="!inspect && modified"
+          icon="check"
           color="secondary"
-          fab
-          small
-          style="z-index: 3;"
+          size="small"
+          style="z-index: 3"
           :disabled="pending"
           @click="save_"
-        >
-          <v-icon>check</v-icon>
-        </v-btn>
+        />
       </v-fab-transition>
     </div>
-    <v-dialog
-      v-model="isImportSkinDialogShown"
-      width="400"
-    >
+    <v-dialog v-model="isImportSkinDialogShown" width="400">
       <ImportSkinUrlForm @input="skin = $event" />
     </v-dialog>
   </div>
 </template>
 
-<script lang=ts setup>
+<script lang="ts" setup>
 import SkinView from '@/components/SkinView.vue'
 import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { GameProfileAndTexture, UserProfile } from '@xmcl/runtime-api'
 import { useNotifier } from '../composables/notifier'
-import { PlayerNameModel, UserSkinModel, UserSkinRenderPaused, usePlayerName, useUserSkin } from '../composables/userSkin'
+import {
+  PlayerNameModel,
+  UserSkinModel,
+  UserSkinRenderPaused,
+  usePlayerName,
+  useUserSkin,
+} from '../composables/userSkin'
 import ImportSkinUrlForm from './UserSkinImportUrlForm.vue'
 import SpeedDial from './UserSkinSpeedDial.vue'
 
-const props = withDefaults(defineProps<{
-  user: UserProfile
-  profile: GameProfileAndTexture
-  inspect: boolean
-}>(), { inspect: false })
+const props = withDefaults(
+  defineProps<{
+    user: UserProfile
+    profile: GameProfileAndTexture
+    inspect: boolean
+  }>(),
+  { inspect: false },
+)
 const { t } = useI18n()
 const hover = ref(false)
 const { watcherTask } = useNotifier()
@@ -99,7 +99,27 @@ const gameProfile = computed(() => props.profile)
 const selected = computed(() => props.user.selectedProfile === props.profile.id)
 const name = inject(PlayerNameModel, () => usePlayerName(gameProfile), true)
 
-const { skin, slim, save, exportTo, loading, modified, reset, inferModelType, cape, canUploadCape, canUploadSkin } = inject(UserSkinModel, () => useUserSkin(computed(() => props.user.id), gameProfile), true)
+const {
+  skin,
+  slim,
+  save,
+  exportTo,
+  loading,
+  modified,
+  reset,
+  inferModelType,
+  cape,
+  canUploadCape,
+  canUploadSkin,
+} = inject(
+  UserSkinModel,
+  () =>
+    useUserSkin(
+      computed(() => props.user.id),
+      gameProfile,
+    ),
+  true,
+)
 const paused = inject(UserSkinRenderPaused, () => ref(false), true)
 const pending = computed(() => loading.value)
 const { showOpenDialog, showSaveDialog } = windowController
@@ -115,7 +135,10 @@ const onModelChange = (modelType: 'default' | 'slim') => {
 
 async function loadSkin() {
   if (!canUploadSkin.value) return
-  const { filePaths } = await showOpenDialog({ title: t('userSkin.importFile'), filters: [{ extensions: ['png'], name: 'PNG Images' }] })
+  const { filePaths } = await showOpenDialog({
+    title: t('userSkin.importFile'),
+    filters: [{ extensions: ['png'], name: 'PNG Images' }],
+  })
   if (filePaths && filePaths[0]) {
     skin.value = `http://launcher/media?path=${filePaths[0]}`
     inferModelType.value = true
@@ -143,7 +166,6 @@ async function dropSkin(e: DragEvent) {
 }
 
 const save_ = watcherTask(save, t('userSkin.upload'))
-
 </script>
 
 <style>

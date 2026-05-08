@@ -1,49 +1,58 @@
 <template>
   <v-dialog
-    :value="value"
+    :model-value="modelValue"
     transition="fade-transition"
-    width="700"
-    @input="$emit('input', $event)"
+    width="760"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <v-card
-      outlined
-      class="visible-scroll max-h-[90vh] overflow-auto flex flex-col py-4 px-2 rounded-2xl! select-none"
+      variant="flat"
+      class="visible-scroll flex max-h-[90vh] flex-col overflow-hidden rounded-2xl! select-none"
     >
       <v-progress-linear
         class="absolute left-0 top-0 z-20 m-0 p-0"
         :active="loading"
         height="3"
         :indeterminate="true"
+        color="primary"
       />
-      <div class="flex justify-between items-center">
-        <v-btn
+
+      <v-toolbar color="primary" flat density="comfortable">
+        <v-app-bar-nav-icon
           v-if="!noBack && selectedDetail"
-          text
-          large
+          icon="arrow_back"
           @click="selectedDetail = undefined"
-        >
-          <v-icon>
-            arrow_back
-          </v-icon>
-        </v-btn>
-        <v-card-title>
-          <v-icon class="material-icons-outlined" left> download </v-icon>
-          {{ t('shared.install') }}
-        </v-card-title>
-      </div>
+        />
+        <v-app-bar-nav-icon
+          v-else
+          icon="download"
+          :ripple="false"
+          style="cursor: default"
+        />
+        <v-toolbar-title class="font-medium">
+          {{ selectedDetail ? selectedDetail.version.name : t('shared.install') }}
+        </v-toolbar-title>
+        <v-spacer />
+        <v-btn
+          icon="close"
+          variant="text"
+          @click="$emit('update:modelValue', false)"
+        />
+      </v-toolbar>
+
       <div
         v-if="!selectedDetail"
-        class="mx-5 my-3 grid flex-grow-0 grid-cols-3 gap-5"
+        class="grid flex-grow-0 grid-cols-3 gap-3 px-5 pb-2 pt-4"
       >
         <v-select
           v-model="gameVersion"
           clearable
           :disabled="loading"
           hide-details
-          flat
-          solo
+          variant="outlined"
+          density="compact"
+          prepend-inner-icon="sports_esports"
           :items="gameVersions"
-          dense
           :label="t('modrinth.gameVersions.name')"
         />
         <v-select
@@ -51,10 +60,10 @@
           clearable
           :disabled="loading"
           hide-details
-          flat
-          solo
+          variant="outlined"
+          density="compact"
+          prepend-inner-icon="extension"
           :items="loaders"
-          dense
           :label="t('modrinth.modLoaders.name')"
         />
         <v-select
@@ -62,51 +71,68 @@
           clearable
           :disabled="loading"
           hide-details
-          flat
-          solo
+          variant="outlined"
+          density="compact"
+          prepend-inner-icon="label"
           :items="versionTypes"
-          dense
+          item-title="text"
+          item-value="value"
           :label="t('versionType.name')"
         />
       </div>
 
-      <StoreProjectInstallVersionDialogVersion
-        v-if="selectedDetail"
-        class="min-h-22"
-        :version="selectedDetail.version"
-        no-click
-      >
-        <v-list-item-action>
-          <v-btn
-            color="primary"
-            :loading="installing"
-            @click="emit('install', selectedDetail.version)"
+      <template v-if="selectedDetail">
+        <div class="flex items-center gap-3 px-5 py-3">
+          <StoreProjectInstallVersionDialogVersion
+            class="min-h-22 flex-1"
+            :version="selectedDetail.version"
+            no-click
           >
-            <v-icon
-              class="material-icons-outlined"
-              left
+            <v-btn
+              color="primary"
+              variant="flat"
+              rounded="pill"
+              size="large"
+              prepend-icon="file_download"
+              :loading="installing"
+              @click="emit('install', selectedDetail.version)"
             >
-              file_download
-            </v-icon>
-            {{ t('shared.install') }}
-          </v-btn>
-        </v-list-item-action>
-      </StoreProjectInstallVersionDialogVersion>
+              {{ t('shared.install') }}
+            </v-btn>
+          </StoreProjectInstallVersionDialogVersion>
+        </div>
 
-      <InstanceVersionShiftAlert v-if="!loading && selectedDetail && initialSelectedDetail" :old-runtime="instance.runtime" :runtime="newRuntime" />
+        <InstanceVersionShiftAlert
+          v-if="!loading && initialSelectedDetail"
+          class="mx-4 mb-2"
+          :old-runtime="instance.runtime"
+          :runtime="newRuntime"
+        />
+      </template>
+
       <div
         ref="scrollElement"
-        class="overflow-auto"
+        class="flex-1 overflow-auto"
       >
         <div
           v-if="selectedDetail && selectedDetail.changelog"
-          class="z-1 markdown-body m-2 hover:(bg-[rgba(0,0,0,0.05)]) dark:hover:(bg-[rgba(0,0,0,0.3)]) overflow-auto rounded-lg bg-[rgba(0,0,0,0.07)] py-2 pl-2 text-gray-500 transition-colors hover:text-black dark:bg-[rgba(0,0,0,0.4)] dark:hover:text-gray-300"
+          class="markdown-body z-1 mx-4 mb-2 mt-1 overflow-auto rounded-lg bg-[rgba(0,0,0,0.04)] p-3 text-sm dark:bg-[rgba(255,255,255,0.06)]"
+          style="color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity, 0.95))"
           v-html="render(selectedDetail.changelog)"
         />
-        <v-divider
-          v-if="selectedDetail"
-          class="z-1"
-        />
+
+        <div
+          v-if="selectedDetail && !loading && selectedDetail.dependencies.length > 0"
+          class="text-caption mx-4 mt-2 flex items-center gap-2"
+          style="color: rgba(var(--v-theme-on-surface), 0.85)"
+        >
+          <v-icon size="small">device_hub</v-icon>
+          {{ t('dependencies.name') }}
+          <span class="opacity-70">
+            ({{ selectedDetail.dependencies.length }})
+          </span>
+        </div>
+
         <v-list
           ref="containerRef"
           class="overflow-auto"
@@ -138,27 +164,41 @@
             </template>
             <template v-else-if="selectedDetail">
               <v-list-item
+                class="mx-2 rounded-lg"
                 :href="selectedDetail.dependencies[row.index].href"
+                :title="selectedDetail.dependencies[row.index].title"
+                :subtitle="selectedDetail.dependencies[row.index].description"
               >
-                <v-list-item-avatar>
-                  <img :src="selectedDetail.dependencies[row.index].icon">
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title v-text="selectedDetail.dependencies[row.index].title" />
-                  <v-list-item-subtitle v-text="selectedDetail.dependencies[row.index].title" />
-                </v-list-item-content>
+                <template #prepend>
+                  <v-avatar>
+                    <img width="40" :src="selectedDetail.dependencies[row.index].icon">
+                  </v-avatar>
+                </template>
+                <template #append>
+                  <v-chip
+                    size="x-small"
+                    label
+                    variant="tonal"
+                    :color="getDepColor(selectedDetail.dependencies[row.index].dependencyType)"
+                  >
+                    {{ selectedDetail.dependencies[row.index].dependencyType }}
+                  </v-chip>
+                </template>
               </v-list-item>
             </template>
             <template v-else>
-              <template v-if="typeof all[row.index] === 'string'">
-                <v-subheader>
-                  <v-divider class="mx-4" />
-                  {{ t('modrinth.featuredVersions') }}
-                  <v-divider class="mx-4" />
-                </v-subheader>
-              </template>
+              <div
+                v-if="typeof all[row.index] === 'string'"
+                class="text-caption mx-4 mt-3 flex items-center gap-3 uppercase tracking-wider"
+                style="color: rgba(var(--v-theme-on-surface), 0.7)"
+              >
+                <v-divider class="flex-1" />
+                <span>{{ t('modrinth.featuredVersions') }}</span>
+                <v-divider class="flex-1" />
+              </div>
               <StoreProjectInstallVersionDialogVersion
                 v-else
+                class="mx-2"
                 :disabled="loading"
                 :version="asAny(all[row.index])"
                 @click="onVersionClicked(asAny(all[row.index]))"
@@ -204,7 +244,7 @@ export interface StoreProjectVersionDetail {
 const props = defineProps<{
   versions: StoreProjectVersion[]
   getVersionDetail: (version: StoreProjectVersion) => Promise<StoreProjectVersionDetail>
-  value: boolean
+  modelValue: boolean
   initialSelectedDetail?: StoreProjectVersion
   noBack?: boolean
   installing?: boolean
@@ -212,7 +252,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const emit = defineEmits(['install', 'input'])
+const emit = defineEmits(['install', 'update:modelValue'])
 
 const gameVersions = computed(() => {
   const result = [] as string[]
@@ -326,13 +366,13 @@ const newRuntime = computed(() => {
   const v = selectedDetail.value
   if (v.version.loaders.includes('fabric')) {
     return { fabricLoader: 1 }
-  } 
+  }
   if (v.version.loaders.includes('forge')) {
     return { forge: 1 }
-  } 
+  }
   if (v.version.loaders.includes('quilt')) {
     return { quiltLoader: 1 }
-  } 
+  }
   if (v.version.loaders.includes('neoforge')) {
     return { neoForged: 1 }
   }
@@ -343,7 +383,17 @@ function asAny(v: unknown): any {
   return v as any
 }
 
-watch(() => props.value, (newVal) => {
+function getDepColor(type: string) {
+  switch (type) {
+    case 'required': return 'error'
+    case 'optional': return 'info'
+    case 'incompatible': return 'warning'
+    case 'embedded': return 'success'
+    default: return 'grey'
+  }
+}
+
+watch(() => props.modelValue, (newVal) => {
   if (!newVal) {
     selectedDetail.value = undefined
   } else {

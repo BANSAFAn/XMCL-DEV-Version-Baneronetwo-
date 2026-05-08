@@ -47,17 +47,15 @@
         <div class="sidebar-notch__instances">
           
         </div>
-        <template v-for="i of instanceItems">
+        <template v-for="i of instanceItems" :key="typeof i === 'string' ? i : i.id">
           <AppSideBarNotchItemInstance
             v-if="typeof i === 'string'"
-            :key="i"
             clickable
             :path="i"
             :direction="tooltipDirection"
           />
           <AppSideBarNotchItemGroup
             v-else
-            :key="i.id"
             :group="i"
             :direction="tooltipDirection"
           />

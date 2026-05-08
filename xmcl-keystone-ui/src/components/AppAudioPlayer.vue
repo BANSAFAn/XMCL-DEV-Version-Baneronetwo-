@@ -10,36 +10,36 @@
     </span>
     <v-btn
       icon
-      x-small
+      variant="text"
       @click="prev"
-    >
+     size="x-small">
       <v-icon class="mr-0">
         skip_previous
       </v-icon>
     </v-btn>
     <v-btn
       icon
-      x-small
+      variant="text"
       @click="play"
-    >
+     size="x-small">
       <v-icon class="mr-0">
         {{ playing ? 'pause' : 'play_arrow' }}
       </v-icon>
     </v-btn>
     <v-btn
       icon
-      x-small
+      variant="text"
       @click="next"
-    >
+     size="x-small">
       <v-icon class="mr-0">
         skip_next
       </v-icon>
     </v-btn>
     <v-btn
       icon
-      x-small
+      variant="text"
       @click="shuffle = !shuffle"
-    >
+     size="x-small">
       <v-icon class="mr-0">
         {{ shuffle ? 'shuffle' : 'repeat' }}
       </v-icon>
@@ -54,14 +54,13 @@
     <v-menu
       offset-y
     >
-      <template #activator="{ on, attrs }">
+      <template #activator="{ props }">
         <v-btn
           icon
-          x-small
-          v-bind="attrs"
-          v-on="on"
+          variant="text"
+          v-bind="props"
           @wheel="onWheel"
-        >
+         size="x-small">
           <v-icon class="mr-0">
             volume_up
           </v-icon>

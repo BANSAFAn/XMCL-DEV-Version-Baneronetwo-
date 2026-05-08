@@ -137,14 +137,14 @@ const { refresh: exportAsFile, refreshing: exporting } = useRefreshable(async ()
       defaultPath,
       properties: ['openDirectory', 'createDirectory']
     })
-    
+
     if (canceled) {
       return
     }
-    
+
     if (filePaths[0]) {
       await exportInstanceAsServer({
-        output: { type: 'folder', path: filePaths[0] }, 
+        output: { type: 'folder', path: filePaths[0] },
         options: await generateLaunchOptions(path.value, userProfile.value, '', 'server', { version: id }, true),
         files: selectedFiles,
       })
@@ -168,7 +168,7 @@ const { refresh: exportAsFile, refreshing: exporting } = useRefreshable(async ()
         } : {
           password: password.value
         },
-      }, 
+      },
       options: await generateLaunchOptions(path.value, userProfile.value, '', 'server', { version: id }, true),
       files: selectedFiles,
     })
@@ -250,7 +250,7 @@ const hasError = computed(() => {
         ref="scrollElement"
 
       >
-        <v-subheader>{{ t('server.exportOption') }}</v-subheader>
+        <v-list-subheader>{{ t('server.exportOption') }}</v-list-subheader>
         <div
           class="grid grid-cols-2 gap-4 gap-y-2 z-10"
         >
@@ -269,11 +269,11 @@ const hasError = computed(() => {
             @change="exportToServer = $event"
           ></v-checkbox>
         </div>
-        <v-subheader
+        <v-list-subheader
           v-if="exportToServer"
         >
           {{ t('server.exportSSHOptions') }}
-        </v-subheader>
+        </v-list-subheader>
         <div
           v-if="exportToServer"
           class="grid grid-cols-3 gap-4 gap-y-2 z-10"
@@ -323,13 +323,13 @@ const hasError = computed(() => {
           />
         </div>
         <div class="px-6">
-          <v-subheader>
+          <v-list-subheader>
             {{ t('modpack.includes') }}
             <v-spacer />
             <v-btn
               class="z-10"
               v-shared-tooltip="() => t('env.select.all')"
-              text
+              variant="text"
               icon
               @click="selectAll"
             >
@@ -340,7 +340,7 @@ const hasError = computed(() => {
             <v-btn
               class="z-10"
               v-shared-tooltip="() => t('env.select.fit')"
-              text
+              variant="text"
               icon
               @click="selectFit"
             >
@@ -352,7 +352,7 @@ const hasError = computed(() => {
             <v-btn
               class="z-10"
               v-shared-tooltip="() => t('env.select.none')"
-              text
+              variant="text"
               icon
               @click="selectNone"
             >
@@ -360,7 +360,7 @@ const hasError = computed(() => {
                 deselect
               </v-icon>
             </v-btn>
-          </v-subheader>
+          </v-list-subheader>
         </div>
         <div
           style="padding: 5px; margin-bottom: 5px"
@@ -386,11 +386,9 @@ const hasError = computed(() => {
       </v-alert>
       <v-card-actions class="items-baseline gap-5">
         <v-btn
-          text
-          large
           :disabled="exporting || refreshing"
           @click="cancel"
-        >
+         size="large" variant="text">
           {{ t('shared.cancel') }}
         </v-btn>
         <v-spacer />
@@ -398,13 +396,11 @@ const hasError = computed(() => {
           ~{{ getExpectedSize(totalSize) }}
         </div>
         <v-btn
-          text
           :disabled="hasError"
           color="primary"
-          large
           :loading="exporting || refreshing"
           @click="exportAsFile"
-        >
+         size="large" variant="text">
           {{ t('server.export') }}
         </v-btn>
       </v-card-actions>

@@ -57,7 +57,7 @@ const route = useRoute()
 const isActive = computed(() => props.path === selectedInstance.value && route.path === '/')
 
 const navigate = () => {
-  if (router.currentRoute.path !== '/') {
+  if (router.currentRoute.value.path !== '/') {
     router.push('/').then(() => {
       select(props.path)
     })
@@ -81,7 +81,7 @@ const navigate = () => {
       v-if="isPinned"
       class="pin-badge"
     >
-      <v-icon x-small color="white" style="font-size: 8px;">push_pin</v-icon>
+      <v-icon size="x-small" color="white" style="font-size: 8px;">push_pin</v-icon>
     </div>
   </div>
 </template>

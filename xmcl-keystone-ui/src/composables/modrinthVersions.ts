@@ -1,6 +1,7 @@
 import { clientModrinthV2 } from '@/util/clients'
 import { getModrinthVersionKey } from '@/util/modrinth'
-import { get, MaybeRef } from '@vueuse/core'
+import { get } from '@vueuse/core'
+import type { MaybeRef } from '@vueuse/core'
 import { ProjectVersion } from '@xmcl/modrinth'
 import { InjectionKey, Ref } from 'vue'
 import { useSWRVModel } from './swrv'

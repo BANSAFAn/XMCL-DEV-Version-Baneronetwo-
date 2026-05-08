@@ -1,48 +1,47 @@
 <template>
   <v-dialog v-model="isShown" :width="1200">
     <v-card>
-      <v-toolbar color="warning" tabs>
-        <v-toolbar-title class="white--text">
+      <v-toolbar color="warning">
+        <v-toolbar-title class="text-white">
           {{ t("logsCrashes.title") }}
         </v-toolbar-title>
         <v-spacer />
-        <v-btn icon @click="hide">
-          <v-icon>close</v-icon>
-        </v-btn>
+        <v-btn icon="close" @click="hide" />
 
         <template #extension>
-          <v-tabs v-model="data.tab" align-with-title color="white">
-            <v-tabs-slider color="yellow" />
-            <v-tab :key="0" :disabled="data.loadingList" @click="goLog">
+          <v-tabs v-model="data.tab" color="white" slider-color="yellow">
+            <v-tab :value="0" :disabled="data.loadingList" @click="goLog">
               {{ t("logsCrashes.logs") }}
             </v-tab>
-            <v-tab :key="1" :disabled="data.loadingList" @click="goCrash">
+            <v-tab :value="1" :disabled="data.loadingList" @click="goCrash">
               {{ t("logsCrashes.crashes") }}
             </v-tab>
           </v-tabs>
         </template>
       </v-toolbar>
-      <v-tabs-items v-model="data.tab" class="bg-transparent">
-        <TabItem
-          :key="0"
-          log
-          :visible="data.tab === 0 && isShown"
-          :files="data.logs"
-          :refreshing="data.loadingList"
-          :get-file-content="_getLogContent"
-          :remove-file="removeLog"
-          :show-file="_showLog"
-        />
-        <TabItem
-          :key="1"
-          :visible="data.tab === 1 && isShown"
-          :files="data.crashes"
-          :refreshing="data.loadingList"
-          :get-file-content="_getCrashReportContent"
-          :remove-file="removeCrashReport"
-          :show-file="_showCrashReport"
-        />
-      </v-tabs-items>
+      <v-tabs-window v-model="data.tab" class="bg-transparent">
+        <v-tabs-window-item :value="0">
+          <TabItem
+            log
+            :visible="data.tab === 0 && isShown"
+            :files="data.logs"
+            :refreshing="data.loadingList"
+            :get-file-content="_getLogContent"
+            :remove-file="removeLog"
+            :show-file="_showLog"
+          />
+        </v-tabs-window-item>
+        <v-tabs-window-item :value="1">
+          <TabItem
+            :visible="data.tab === 1 && isShown"
+            :files="data.crashes"
+            :refreshing="data.loadingList"
+            :get-file-content="_getCrashReportContent"
+            :remove-file="removeCrashReport"
+            :show-file="_showCrashReport"
+          />
+        </v-tabs-window-item>
+      </v-tabs-window>
     </v-card>
   </v-dialog>
 </template>

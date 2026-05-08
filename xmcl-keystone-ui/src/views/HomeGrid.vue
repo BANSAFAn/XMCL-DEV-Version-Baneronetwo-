@@ -2,7 +2,7 @@
   <div>
     <GridLayout
       class="z-1"
-      :layout.sync="layout"
+      v-model:layout="layout"
       :responsive-layouts="layouts"
       :is-draggable="true"
       :cols="cols"
@@ -24,7 +24,7 @@
         :min-w="item.minW"
         :min-h="item.minH"
         :i="item.i"
-        drag-allow-from=".v-card__title"
+        drag-allow-from=".v-card-title"
         drag-ignore-from=".no-drag"
         :class="{ 'screenshot-item': Number(item.i) === CardType.Screenshots }"
         @container-resized="onResized"
@@ -50,7 +50,6 @@
         />
         <HomeScreenshotCard
           v-else-if="isType(item.i, CardType.Screenshots)"
-          :width="item.w"
           :height="screenshotHeight"
           :instance="instance"
           persistent
@@ -65,7 +64,7 @@ import { kInstance } from '@/composables/instance'
 import { kUpstream } from '@/composables/instanceUpdate'
 import { injection } from '@/util/inject'
 import debounce from 'lodash.debounce'
-import { GridItem, GridLayout } from 'vue-grid-layout'
+import { GridItem, GridLayout } from 'grid-layout-plus'
 import HomeModCard from './HomeModCard.vue'
 import HomeResourcePacksCard from './HomeResourcePacksCard.vue'
 import HomeSavesCard from './HomeSavesCard.vue'

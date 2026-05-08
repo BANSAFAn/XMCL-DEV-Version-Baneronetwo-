@@ -1,6 +1,7 @@
 import { injection } from '@/util/inject'
 import { ref, onMounted } from 'vue'
-import { get, MaybeRef, useEventBus } from '@vueuse/core'
+import { get, useEventBus } from '@vueuse/core'
+import type { MaybeRef } from '@vueuse/core'
 import { InstanceGroupData, InstanceGroupDataOrString } from '@xmcl/runtime-api'
 import { kInstances } from './instances'
 import { kTheme } from './theme'
@@ -266,9 +267,21 @@ export function useInstanceGroup() {
     groupsSet(newOrders)
   }
 
+  const edit = (id: string, changes: Partial<Omit<InstanceGroupData, 'id' | 'instances'>>) => {
+    const data = groupsData.value
+    const newOrders = data.map(item => {
+      if (typeof item !== 'string' && item.id === id) {
+        return { ...item, ...changes }
+      }
+      return item
+    })
+    groupsSet(newOrders)
+  }
+
   return {
     groups: groupsData,
     move,
     group,
+    edit,
   }
 }

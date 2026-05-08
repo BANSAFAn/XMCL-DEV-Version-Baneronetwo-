@@ -1,37 +1,32 @@
 <template>
-  <v-card class="map-renderer">
-    <v-card-title>
-      {{ t('save.mapPreview') }}
-    </v-card-title>
-    
+  <v-card class="map-renderer" :title="t('save.mapPreview')">
     <v-card-text>
       <div class="map-container">
-        <div 
-          ref="mapContainer" 
+        <div
+          ref="mapContainer"
           class="leaflet-map"
           style="width: 100%; height: 600px; border: 1px solid #ccc; border-radius: 4px;"
         />
       </div>
-      
+
       <div class="controls mt-4 flex items-center gap-2">
-        <v-btn 
-          small 
+        <v-btn
           @click="loadMap"
           :loading="loading"
           :disabled="loading"
-        >
+         size="small">
           {{ t('save.loadMap') }}
         </v-btn>
-        
-        <v-chip small v-if="loaded && !error">
+
+        <v-chip size="small" v-if="loaded && !error">
           {{ t('save.mapLoaded') }}
         </v-chip>
-        
-        <v-chip small color="error" v-if="error">
+
+        <v-chip size="small" color="error" v-if="error">
           {{ t('save.mapError') }}: {{ errorMessage }}
         </v-chip>
       </div>
-      
+
       <div class="info mt-2 text-sm text-gray-600" v-if="loaded && !error">
         <p>{{ t('save.mapInfo') }}</p>
         <ul class="ml-4 mt-1">
@@ -45,11 +40,11 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, watch, onUnmounted } from 'vue'
-import { 
-  BiomeSource, 
-  Identifier, 
-  Climate, 
-  NoiseGeneratorSettings, 
+import {
+  BiomeSource,
+  Identifier,
+  Climate,
+  NoiseGeneratorSettings,
   RandomState,
   WorldgenRegistries,
   DensityFunction,
@@ -111,7 +106,7 @@ const hashCode = (str: string): number => {
 const getBiomeColor = (biomeId: string): { r: number; g: number; b: number } => {
   const color = BIOME_COLORS[biomeId]
   if (color) return color
-  
+
   // Generate color from hash
   const hash = Math.abs(hashCode(biomeId))
   return {
@@ -132,30 +127,30 @@ const renderBiomeMap = (
 ) => {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
-  
+
   const width = canvas.width
   const height = canvas.height
-  
+
   // Clear canvas
   ctx.fillStyle = '#a5d6a7'
   ctx.fillRect(0, 0, width, height)
-  
+
   // Render biomes
   for (let px = 0; px < width; px++) {
     for (let py = 0; py < height; py++) {
       // Convert pixel to world coordinates
       const worldX = Math.floor(centerX + (px - width / 2) * scale)
       const worldZ = Math.floor(centerZ + (py - height / 2) * scale)
-      
+
       // Get biome at this position (divide by 4 for biome coordinates)
       const biomeX = Math.floor(worldX / 4)
       const biomeZ = Math.floor(worldZ / 4)
       const biomeY = 64 / 4 // Sea level for biome sampling
-      
+
       try {
         const biome = biomeSource.getBiome(biomeX, biomeY, biomeZ, sampler)
         const color = getBiomeColor(biome.toString())
-        
+
         ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`
         ctx.fillRect(px, py, 1, 1)
       } catch (err) {
@@ -169,11 +164,11 @@ const renderBiomeMap = (
 
 const loadMap = async () => {
   if (!mapContainer.value) return
-  
+
   loading.value = true
   error.value = false
   errorMessage.value = ''
-  
+
   try {
     // Create canvas for rendering
     const canvas = document.createElement('canvas')
@@ -183,55 +178,55 @@ const loadMap = async () => {
     canvas.style.height = '100%'
     canvas.style.imageRendering = 'pixelated'
     canvas.style.cursor = 'grab'
-    
+
     mapContainer.value.innerHTML = ''
     mapContainer.value.appendChild(canvas)
-    
+
     // Read world generation settings from save
     const worldGenSettings = await getWorldGenSettings(props.savePath)
-    
+
     if (!worldGenSettings) {
       throw new Error('Failed to read world generation settings from save file')
     }
-    
+
     // Get the overworld dimension (or fallback to first available dimension)
     const dimensionKey = 'minecraft:overworld'
     const dimension = worldGenSettings.dimensions[dimensionKey] || Object.values(worldGenSettings.dimensions)[0]
-    
+
     if (!dimension) {
       throw new Error('No dimension data found in world generation settings')
     }
-    
+
     const generator = dimension.generator
-    
+
     // Register density functions and noises if provided
     if (generator.settings) {
       // Parse noise settings
-      const noiseSettingsJson = typeof generator.settings === 'string' 
-        ? JSON.parse(generator.settings) 
+      const noiseSettingsJson = typeof generator.settings === 'string'
+        ? JSON.parse(generator.settings)
         : generator.settings
-        
+
       // Create noise generator settings and random state
       const noiseSettings = NoiseGeneratorSettings.fromJson(noiseSettingsJson)
       const randomState = new RandomState(noiseSettings, worldGenSettings.seed)
-      
+
       // Create climate sampler from the random state
       const sampler = Climate.Sampler.fromRouter(randomState.router)
-      
+
       // Parse biome source
       let biomeSource: BiomeSource
-      
+
       if (generator.biome_source) {
         const biomeSourceJson = typeof generator.biome_source === 'string'
           ? JSON.parse(generator.biome_source)
           : generator.biome_source
-        
+
         biomeSource = BiomeSource.fromJson(biomeSourceJson)
       } else {
         // Fallback to a simple fixed biome if no biome source
         throw new Error('No biome source found in generator settings')
       }
-      
+
       // State for panning
       let centerX = 0
       let centerZ = 0
@@ -239,11 +234,11 @@ const loadMap = async () => {
       let isDragging = false
       let lastX = 0
       let lastY = 0
-      
+
       const render = () => {
         renderBiomeMap(canvas, biomeSource, sampler, centerX, centerZ, scale)
       }
-      
+
       // Mouse controls
       canvas.addEventListener('mousedown', (e) => {
         isDragging = true
@@ -251,32 +246,32 @@ const loadMap = async () => {
         lastY = e.clientY
         canvas.style.cursor = 'grabbing'
       })
-      
+
       canvas.addEventListener('mousemove', (e) => {
         if (!isDragging) return
-        
+
         const dx = e.clientX - lastX
         const dy = e.clientY - lastY
-        
+
         centerX -= dx * scale
         centerZ -= dy * scale
-        
+
         lastX = e.clientX
         lastY = e.clientY
-        
+
         render()
       })
-      
+
       canvas.addEventListener('mouseup', () => {
         isDragging = false
         canvas.style.cursor = 'grab'
       })
-      
+
       canvas.addEventListener('mouseleave', () => {
         isDragging = false
         canvas.style.cursor = 'grab'
       })
-      
+
       canvas.addEventListener('wheel', (e) => {
         e.preventDefault()
         const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9
@@ -284,10 +279,10 @@ const loadMap = async () => {
         scale = Math.max(0.25, Math.min(32, scale))
         render()
       })
-      
+
       // Initial render
       render()
-      
+
       loaded.value = true
     } else {
       throw new Error('Generator settings not found in dimension data')

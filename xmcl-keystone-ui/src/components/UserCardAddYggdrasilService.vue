@@ -2,10 +2,9 @@
   <div class="flex flex-col overflow-hidden">
     <div class="relative flex items-center pr-4">
       <v-btn
-        text
         @click="$emit('back')"
-      >
-        <v-icon small>
+       variant="text">
+        <v-icon size="small">
           arrow_back
         </v-icon>
       </v-btn>
@@ -22,7 +21,7 @@
             v-model="a.url"
             autofocus
             :readonly="!a.new"
-            outlined
+            variant="outlined"
             prepend-inner-icon="link"
             hide-details
             :label="t('userService.baseUrlHint')"

@@ -13,8 +13,8 @@
       <template #modloader>
         <v-chip
           label
-          small
-          outlined
+          size="small"
+          variant="outlined"
         >
           {{ loaderDifferences.old.join(', ') }}
         </v-chip>
@@ -22,8 +22,8 @@
       <template #newModloader>
         <v-chip
           label
-          small
-          outlined
+          size="small"
+          variant="outlined"
         >
           {{ loaderDifferences.new.join(', ') }}
         </v-chip>

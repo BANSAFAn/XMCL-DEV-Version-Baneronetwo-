@@ -1,18 +1,19 @@
 <template>
   <div
     ref="scrollElement"
-    style="overflow: auto; max-height: 70vh; padding: 24px 24px 16px"
+    style="overflow: auto; max-height: 70vh; padding: 24px 24px 16px;"
   >
     <v-form
       lazy-validation
       style="height: 100%;"
       :value="valid"
+      class="z-1 relative"
       @input="onUpdate"
     >
       <div class="grid grid-cols-4 gap-4 mb-4">
         <v-text-field
           v-model="content.name"
-          outlined
+          variant="outlined"
           autofocus
           class="col-span-2"
           :loading="loading"
@@ -29,7 +30,7 @@
           v-model="content.author"
           :loading="loading"
           :disabled="loading"
-          outlined
+          variant="outlined"
           class="col-span-2"
           persistent-hint
           :hint="t('modpack.authorHint')"
@@ -40,17 +41,21 @@
           :loading="loading"
           :disabled="loading"
           class="col-span-4"
-          outlined
+          variant="outlined"
           persistent-hint
           :hint="t('modpack.descriptionHint')"
           :label="t('shared.description')"
         />
       </div>
     </v-form>
-    <StepperAdvanceContent :valid.sync="valid" />
-    <v-subheader v-if="loading || error || files.length > 0">
+    <StepperAdvanceContent
+      :valid="valid"
+      class="z-1 relative"
+      @update:valid="onUpdate"
+    />
+    <v-list-subheader v-if="loading || error || files.length > 0">
       {{ t('instanceTemplate.preview') }}
-    </v-subheader>
+    </v-list-subheader>
     <v-skeleton-loader
       v-if="loading"
       type="list-item-avatar-two-line,list-item-avatar-two-line,list-item-avatar-two-line,list-item-avatar-two-line,list-item-avatar-two-line"
@@ -63,7 +68,7 @@
     />
     <InstanceManifestFileTree
       v-else
-      :value="[]"
+      :model-value="[]"
       :scroll-element="scrollElement"
     />
   </div>

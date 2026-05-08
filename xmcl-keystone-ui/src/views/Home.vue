@@ -11,7 +11,7 @@
             <v-divider
               class="divider mx-0"
             />
-            <v-btn class="z-4" icon @click="isFocus = true">
+            <v-btn class="z-4" icon variant="text" @click="isFocus = true">
               <v-icon>
                 keyboard_arrow_down
               </v-icon>

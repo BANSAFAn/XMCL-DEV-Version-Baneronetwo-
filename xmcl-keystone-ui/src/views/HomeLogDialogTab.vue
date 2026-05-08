@@ -1,90 +1,82 @@
 <template>
-  <v-tab-item>
-    <div class="min-h-[420px]">
-      <Transition
-        name="fade-transition"
-        mode="out-in"
+  <div class="min-h-[420px]">
+    <Transition name="fade-transition" mode="out-in">
+      <v-virtual-scroll
+        v-if="content === '' && files.length !== 0"
+        :key="0"
+        class="visible-scroll v-list h-full max-h-[70vh] overflow-auto"
+        :bench="10"
+        :items="files.map((name, index) => ({ name, id: `${name}-${index}` }))"
+        :item-height="60"
       >
-        <v-virtual-scroll
-          v-if="content === '' && files.length !== 0"
-          :key="0"
-          class="visible-scroll v-list h-full max-h-[70vh] overflow-auto"
-          :bench="10"
-          :items="files.map((name, index) => ({ name, id: `${name}-${index}` }))"
-          :item-height="60"
-        >
-          <template #default="{ item }">
-            <HomeLogDialogTabItem
-              :source="item"
-              :open-file="openFile"
-              :remove-file="removeFile"
-              :show-file="showFile"
-              :disabled="pending"
-            />
-          </template>
-        </v-virtual-scroll>
-        <div
-          v-else-if="content === '' && files.length === 0"
-          style="height: 420px"
-        >
-          <div class="flex h-full items-center justify-center">
-            <h1 v-if="!pending">
-              {{ t('logsCrashes.placeholder') }}
-            </h1>
-            <v-progress-circular
-              v-else
-              :size="100"
-              color="white"
-              indeterminate
-            />
-          </div>
-        </div>
-        <div
-          v-else
-          :key="1"
-          class="flex flex-col overflow-y-auto visible-scroll max-h-[70vh] overflow-x-hidden"
-        >
-          <v-card-title primary-title>
-            {{ showedFile }}
-            <v-spacer />
-            <v-btn
-              text
-              @click="goBack"
-            >
-              <v-icon left>
-                arrow_back
-              </v-icon>
-              {{ t('shared.back') }}
-            </v-btn>
-          </v-card-title>
-          <LogView
-            class="max-h-[50vh] overflow-auto"
-            v-if="log"
-            :logs="logs"
+        <template #default="{ item }">
+          <HomeLogDialogTabItem
+            :source="item"
+            :open-file="openFile"
+            :remove-file="removeFile"
+            :show-file="showFile"
+            :disabled="pending"
           />
-          <div v-else class="mx-5 mb-5 grid grid-cols-4 gap-6 overflow-hidden">
-            <pre class="col-span-3 overflow-auto rounded bg-[rgba(0,0,0,0.1)] p-5 hover:bg-[rgba(0,0,0,0.2)] min-w-0">{{ content }}</pre>
-            <AppCrashAIHint
-              class="col-span-1 min-w-0"
-              :useCNAI="useCNAI"
-              :getPrompt="getPrompt"
-            />
+        </template>
+      </v-virtual-scroll>
+      <div v-else-if="content === '' && files.length === 0" :key="2" style="height: 420px">
+        <div class="flex h-full items-center justify-center">
+          <h1 v-if="!pending" class="opacity-60">
+            {{ t('logsCrashes.placeholder') }}
+          </h1>
+          <v-progress-circular v-else :size="80" color="primary" indeterminate />
+        </div>
+      </div>
+      <div
+        v-else
+        :key="1"
+        class="log-viewer flex flex-col overflow-hidden"
+      >
+        <div class="log-viewer__header flex items-center gap-2 px-4 py-2">
+          <v-btn
+            v-shared-tooltip="() => t('shared.back')"
+            icon="arrow_back"
+            variant="text"
+            size="small"
+            @click="goBack"
+          />
+          <v-icon class="opacity-70">{{ log ? 'description' : 'bug_report' }}</v-icon>
+          <span class="font-medium truncate flex-1">{{ showedFile }}</span>
+          <v-btn
+            v-shared-tooltip="() => t('copyClipboard.success')"
+            :icon="copied ? 'check' : 'content_copy'"
+            variant="text"
+            size="small"
+            :color="copied ? 'success' : undefined"
+            @click="copyContent"
+          />
+        </div>
+        <v-divider />
+        <LogView v-if="log" class="visible-scroll max-h-[60vh] overflow-auto" :logs="logs" />
+        <div v-else class="grid grid-cols-12 gap-4 p-4 h-[60vh] overflow-hidden">
+          <pre
+            class="visible-scroll col-span-12 lg:col-span-8 overflow-auto rounded-md p-4 m-0 text-xs leading-relaxed log-pre min-w-0 min-h-0 max-h-full"
+            >{{ content }}</pre
+          >
+          <div class="visible-scroll col-span-12 lg:col-span-4 min-w-0 min-h-0 max-h-full overflow-auto">
+            <AppCrashAIHint :useCNAI="useCNAI" :getPrompt="getPrompt" />
           </div>
         </div>
-      </Transition>
-    </div>
-  </v-tab-item>
+      </div>
+    </Transition>
+  </div>
 </template>
 
-<script lang=ts setup>
+<script lang="ts" setup>
 import { parseLog } from '@/util/log'
 import LogView from '@/components/LogView.vue'
 import HomeLogDialogTabItem from './HomeLogDialogTabItem.vue'
-import AppCrashAIHint from '@/components/AppCrashAIHint.vue';
-import { kEnvironment } from '@/composables/environment';
-import { kSettingsState } from '@/composables/setting';
-import { getCrashPrompt } from '@/util/crashPrompt';
-import { injection } from '@/util/inject';
+import AppCrashAIHint from '@/components/AppCrashAIHint.vue'
+import { kEnvironment } from '@/composables/environment'
+import { kSettingsState } from '@/composables/setting'
+import { getCrashPrompt } from '@/util/crashPrompt'
+import { injection } from '@/util/inject'
+import { vSharedTooltip } from '@/directives/sharedTooltip'
 
 const props = defineProps<{
   files: string[]
@@ -107,7 +99,9 @@ const goBack = () => {
 const openFile = async (name: string) => {
   loading.value = true
   showedFile.value = name
-  content.value = await props.getFileContent(name).finally(() => { loading.value = false })
+  content.value = await props.getFileContent(name).finally(() => {
+    loading.value = false
+  })
 }
 const pending = computed(() => props.refreshing || loading.value)
 const logs = computed(() => {
@@ -123,6 +117,14 @@ const logs = computed(() => {
   return logLines.map(parseLog)
 })
 
+const copied = ref(false)
+function copyContent() {
+  windowController.writeClipboard(content.value)
+  copied.value = true
+  setTimeout(() => {
+    copied.value = false
+  }, 2000)
+}
 
 const env = injection(kEnvironment)
 const useCNAI = computed(() => {
@@ -137,13 +139,26 @@ function getPrompt(raw?: boolean) {
   return getCrashPrompt(useCNAI.value, content.value, '', state.value?.locale || 'en-US')
 }
 
-watch(() => props.visible, (v) => {
-  if (!v) {
-    goBack()
-  }
-})
+watch(
+  () => props.visible,
+  (v) => {
+    if (!v) {
+      goBack()
+    }
+  },
+)
 </script>
 
 <style scoped>
-
+.log-viewer__header {
+  background: rgba(var(--v-theme-on-surface), 0.04);
+}
+.log-pre {
+  background: rgba(var(--v-theme-on-surface), 0.05);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.log-pre:hover {
+  background: rgba(var(--v-theme-on-surface), 0.08);
+}
 </style>

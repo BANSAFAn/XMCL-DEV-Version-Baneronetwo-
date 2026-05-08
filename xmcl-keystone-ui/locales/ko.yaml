@@ -4,8 +4,7 @@ AppAddInstanceDialog:
   serverTitle: 서버 주소를 입력하세요.
 AppShareInstanceDialog:
   alterDownloadDescription: >-
-    현재 인스턴스를 망가트리고 싶지 않다면, 다른 사용자의 설정으로 새 인스턴스를 생성할 수도 있습니다.  아래 버튼을 눌러 인스턴스를
-    생성하세요.
+    현재 인스턴스를 망가트리고 싶지 않다면, 다른 사용자의 설정으로 새 인스턴스를 생성할 수도 있습니다.  아래 버튼을 눌러 인스턴스를 생성하세요.
   baseInfo: 기본 설정
   cancelShare: 공유 취소
   description: 프로필을 공유하면 다른 곳에서 이 파일들을 사용자의 PC를  통해 다운로드 할 수 있습니다.
@@ -31,18 +30,6 @@ HomeLaunchMultiInstanceDialog:
   confirm: 예, 실행
   description: Minecraft 인스턴스를 여러 개 실행하려고 해요. 계속하시겠습니까?
   title: 다수의 인스턴스
-HomeSyncDialog:
-  pull: 가져오기
-  push: 내보내기
-HomeSyncDialogPull:
-  failText: 업데이트를 가져오지 못했어요. {url}
-  refresh: 새로고침
-  update: 업데이트
-HomeSyncDialogPush:
-  authError: 사용자 인증에 실패했어요 서버 파일을 업로드할 권한이 있는지 확인해주세요.
-  refresh: 새로고침
-  unknownError: 알 수 없는 서버오류, 다시 시도해주세요.
-  upload: 인스턴스 업로드
 SettingMigrationDialog:
   selectRootDirectory: 최상위 경로를 선택
 ago:
@@ -71,8 +58,6 @@ create: 만들기
 curseforge:
   category: 카테고리
   createdDate: 만든 날자
-  installTo: '{path} 에 설치'
-  installToStorage: 저장공간에 설치
   lastUpdate: 마지막 업데이트 날자
   releasedDate: 출시 날자
 curseforgeCategory:
@@ -199,8 +184,7 @@ env:
     none: 모두 해제
 errors:
   BadForgeInstallerJarError: >-
-    Forge 설치용 JAR 파일을 파싱할 수 없습니다. Forge 설치 파일 형식이 변경된 것일 수 있습니다. 문제가 계속되면 개발자에게
-    문의하세요.
+    Forge 설치용 JAR 파일을 파싱할 수 없습니다. Forge 설치 파일 형식이 변경된 것일 수 있습니다. 문제가 계속되면 개발자에게 문의하세요.
   BadInstanceType: '{type} 은(는) 잘못된 인스턴스 유형입니다!'
   BodyTimeoutError: HTTP 시간 초과
   ChecksumNotMatchError: '체크섬이 일치하지 않습니다! 예상: {expect}. 실제: {actual}.'
@@ -217,8 +201,7 @@ eula:
   body: 체크박스를 선택하면 마인크래프트 {eula}에 동의하게 됩니다.
 exception:
   http: >-
-    {url} 로의 HTTP 요청이 실패했습니다. 상태 코드 {statusCode}. {code}. 다시 시도하거나 네트워크를 확인하세요.
-    오류가 지속되면 개발팀에 보고서를 보내주세요.
+    {url} 로의 HTTP 요청이 실패했습니다. 상태 코드 {statusCode}. {code}. 다시 시도하거나 네트워크를 확인하세요. 오류가 지속되면 개발팀에 보고서를 보내주세요.
 extensions:
   mrpack: Modrinth 모드팩
   zip: Zip 파일
@@ -370,8 +353,7 @@ instanceInstallSkip:
   skip: 건너뛰기
   title: 손상된 파일 소스 가능성
   warning: >-
-    일부 파일이 여러 번 다운로드되었고 체크섬이 일치하지 않습니다. 원본 체크섬이 잘못되었을 수 있습니다. 확인해 주세요. 현재 파일이
-    유효하다고 확신한다면 유효성 검사를 건너뛸 수 있습니다.
+    일부 파일이 여러 번 다운로드되었고 체크섬이 일치하지 않습니다. 원본 체크섬이 잘못되었을 수 있습니다. 확인해 주세요. 현재 파일이 유효하다고 확신한다면 유효성 검사를 건너뛸 수 있습니다.
 instanceSetting:
   disableAuthlibInjector: authlib injector 비활성화
   disableAuthlibInjectorDescription: 서드파티 스킨 시스템을 사용하는 경우. authlib injector가 게임에서 스킨을 표시하는 데 도움이 될 수 있습니다.
@@ -390,8 +372,7 @@ instanceUpdate:
   basic: 설정 업데이트
   files: 파일 업데이트
   loaderChanged: >-
-    이 인스턴스의 모드 로더가 변경되었습니다. 이전 모드 로더는 {modloader} 이고, 새로운 모드 로더는 {newModloader}
-    입니다.
+    이 인스턴스의 모드 로더가 변경되었습니다. 이전 모드 로더는 {modloader} 이고, 새로운 모드 로더는 {newModloader} 입니다.
   summary: '{add} 개 파일 추가. {remove} 개 파일 제거. {keep} 개 파일 유지.'
   title: 인스턴스 업데이트
   update: 업데이트 시작
@@ -412,7 +393,6 @@ instances:
   folderSetting: 폴더 설정
   importFolderDescription: 마인크래프트를 런처로 가져오기
   loadingFiles: 모드팩 파일 로딩 중
-  refreshServers: 서버 새로고침
 items:
   count: '{count} 아이템'
   total: '{total} 총합'
@@ -450,13 +430,11 @@ launchBlocked:
     title: 실행 실패
   launchInvalidJavaPath:
     description: >-
-      선택한 자바가 없거나 잘못되었습니다. 새로 선택해주세요. <span class="highlight"> {javaPath}
-      </span>
+      선택한 자바가 없거나 잘못되었습니다. 새로 선택해주세요. <span class="highlight"> {javaPath} </span>
     title: 잘못된 자바 경로
   launchJavaNoPermission:
     description: >-
-      런처가 자바 <span class="highlight"> {javaPath} </span>를 실행할 권한이 없습니다. 자바 파일의
-      권한을 변경하거나 런처 권한을 상승시키세요.
+      런처가 자바 <span class="highlight"> {javaPath} </span>를 실행할 권한이 없습니다. 자바 파일의 권한을 변경하거나 런처 권한을 상승시키세요.
     title: 실행 권한 없음
   launchNoProperJava:
     description: 게임을 실행할 적절한 자바를 선택할 수 없습니다. ({javaPath}가 잘못되었나요?)
@@ -473,8 +451,7 @@ launchFailed:
   description: 크래시 리포트가 없습니다. 아래는 에러 로그와 최신 로그입니다.
   elyByAuthlib:
     description: >-
-      Minecraft 버전 {version}에 대해 Ely.by의 Authlib 대체가 사용되었지만, 이 버전은 완전히 호환되지 않을 수
-      있습니다.
+      Minecraft 버전 {version}에 대해 Ely.by의 Authlib 대체가 사용되었지만, 이 버전은 완전히 호환되지 않을 수 있습니다.
     suggestion: 이 문제를 피하려면 인스턴스 설정에서 Ely.by의 Authlib 대체를 비활성화할 수 있습니다.
     title: Ely.by Authlib 호환성 문제
   failedToLaunch: 실행에 실패했습니다
@@ -486,8 +463,7 @@ launchPreExecuteCommandFailed:
 launchStatus:
   assigningMemory: 메모리 할당 중
   elyByWarning: >-
-    Ely.by Authlib 대체가 활성화되어 있습니다. 일부 Minecraft 버전은 호환되지 않아 크래시가 발생할 수 있습니다. 문제가
-    발생하면 인스턴스 설정에서 비활성화하세요.
+    Ely.by Authlib 대체가 활성화되어 있습니다. 일부 Minecraft 버전은 호환되지 않아 크래시가 발생할 수 있습니다. 문제가 발생하면 인스턴스 설정에서 비활성화하세요.
   exit: 게임을 종료할까요?
   injectingAuthLib: 서드파티 AuthLib 설정 중
   launching: 실행 중...
@@ -501,11 +477,8 @@ launcherUpdate:
   updateToThisVersion: 다운로드 및 설치
 localVersion:
   auto: 자동 계산됨
-  delete: 로컬 버전 삭제
-  deleteDescription: 이 작업은 로컬 버전의 JSON과 JAR를 삭제합니다. 다시 사용하려면 재다운로드해야 합니다.
   empty: 설치된 버전 없음
   hint: 특정 로컬 버전을 직접 실행합니다
-  refresh: 버전 새로고침
   reinstallDescription: 이 버전 설치에 문제가 있다고 생각되면 재설치를 시도해 보세요.
   reinstallTitle: '{version} 재설치'
   title: 로컬 버전
@@ -526,11 +499,9 @@ login:
   userRelogin: 사용자 액세스 토큰이 만료되었습니다. 다시 로그인하세요!
 loginError:
   acquireMicrosoftTokenFailed: >-
-    Fail to acquire Microsoft token. This might be a network issue. Please
-    retry.
+    Fail to acquire Microsoft token. This might be a network issue. Please retry.
   badNetworkOrServer: >-
-    Please check your network connectivity! Or maybe the authentication server
-    is down!
+    Please check your network connectivity! Or maybe the authentication server is down!
   checkOwnershipFailed: 게임 소유권 확인에 실패했습니다. 다시 시도하세요.
   connectionReset: 서버가 연결을 재설정했기 때문에 로그인에 실패했습니다
   fetchMinecraftProfileFailed: '마인크래프트 프로필 가져오기 실패: {reason}'
@@ -539,8 +510,7 @@ loginError:
   loginMinecraftByXboxFailed: Xbox 토큰으로 마인크래프트 토큰 교환에 실패했습니다. Xbox에 마인크래프트가 있는지 확인하거나 다시 시도하세요.
   loginXboxAgeRestricted: 나이 문제로 인해 Xbox 로그인에 실패했습니다. Microsoft 계정에 나이가 설정되어 있고 18세 이상인지 확인하세요.
   loginXboxFailed: >-
-    Microsoft 토큰으로 Xbox 로그인에 실패했습니다. Microsoft 계정과 독립적인 Xbox 계정이 있는지 확인하세요. 다시
-    시도하세요.
+    Microsoft 토큰으로 Xbox 로그인에 실패했습니다. Microsoft 계정과 독립적인 Xbox 계정이 있는지 확인하세요. 다시 시도하세요.
   noProfileForNewUser: 게임 프로필을 찾을 수 없습니다! 새로운 마인크래프트 사용자라면, 마인크래프트 공식 런처에서 최소 한 번은 로그인하세요.
   requestFailed: 로그인에 실패했습니다. 정확한 이유를 알 수 없습니다. 다시 시도하세요.
   requireEmail: 이메일이 필요합니다
@@ -566,18 +536,12 @@ mod:
   compatible: 호환되는 모드입니다.
   createGroup: 그룹 생성
   currentVersion: 현재 {current}
-  deletionHint: >-
-    You will lose this mod & its metadata forever. Are you sure you want to
-    delete it? | You will lose these mods & their metadata forever. Are you sure
-    you want to do that?
-  deletionRestHint: 그리고 모드 {rest}개 더...
   denseView: 밀집 보기
   disableAll: 모두 비활성화
   dropHint: 모드의 .jar/.litemod를 여기로 드래그하여 가져오세요.
   duplicatedDetected: 중복된 모드 {count}개 발견
   duplicatedDetectedDescription: >-
-    Found mods with same mod id but different files. This might cause Minecraft
-    crash. Please select the file you want to keep.
+    Found mods with same mod id but different files. This might cause Minecraft crash. Please select the file you want to keep.
   enableAll: 모두 활성화
   enabled: '{count} 개 모드 활성화됨'
   filter: 모드 필터
@@ -589,8 +553,7 @@ mod:
   incompatible: 호환되지 않는 모드입니다.
   incompatibleHint: 모드 호환성 보고서를 확인하세요
   incompatibleHintDescription: >-
-    Some mods dependencies might be missing. Or some dependencies versions do
-    not matched.
+    Some mods dependencies might be missing. Or some dependencies versions do not matched.
   maybeCompatible: 아마도 호환됨.
   modloaderSelectHint: 이 모드는 다음 모드 로더를 지원합니다. 설치할 항목을 선택하세요.
   modloaderSelectNotSupported: 마인크래프트 {minecraft}에 대한 {modloader}를 찾을 수 없습니다
@@ -621,12 +584,10 @@ modFilter:
   unusedOnly: 사용되지 않는 라이브러리 모드만 표시
 modInstall:
   archived: >-
-    {name}이(가) 보관되었습니다. 제작자가 프로젝트를 보관 해제하기로 결정하지 않는 한 {name}은(는) 더 이상 업데이트를 받지
-    않습니다.
+    {name}이(가) 보관되었습니다. 제작자가 프로젝트를 보관 해제하기로 결정하지 않는 한 {name}은(는) 더 이상 업데이트를 받지 않습니다.
   autoUpgrade:
     description: >-
-      Minecraft 버전을 변경했습니다. 호환되는 모드를 자동으로 Minecraft {version}에 맞는 버전으로
-      업데이트하시겠습니까?
+      Minecraft 버전을 변경했습니다. 호환되는 모드를 자동으로 Minecraft {version}에 맞는 버전으로 업데이트하시겠습니까?
     'no': 건너뛰기
     title: 모드를 업데이트하시겠습니까?
     'yes': 모드 업데이트
@@ -664,9 +625,6 @@ modified:
 modpack:
   author: 제작자 이름
   authorHint: 내보낸 모드팩(Curseforge) 서명에 사용될 수 있습니다
-  delete:
-    hint: 모드팩 {name}과(와) 그 메타데이터를 삭제합니다. 계속하시겠습니까?
-    title: 모드팩 삭제
   description: 설명
   descriptionHint: 모드팩에 대한 일반적인 설명입니다. Curseforge 모드팩으로 내보낼 때 사용될 수 있습니다.
   dropHint: 모드팩 zip을 여기로 드래그하여 가져오기
@@ -839,8 +797,7 @@ modrinthCard:
 multiplayer:
   allowTurn: 릴레이 서버 사용
   allowTurnHint: >-
-    친구와 연결할 수 없을 때 릴레이 서버를 허용합니다. 하지만 릴레이 서버 사용은 연결 속도를 느리게 할 수 있습니다. 주의해서
-    사용하세요.
+    친구와 연결할 수 없을 때 릴레이 서버를 허용합니다. 하지만 릴레이 서버 사용은 연결 속도를 느리게 할 수 있습니다. 주의해서 사용하세요.
   complete: 완료
   confirm: 확인
   connections: 연결
@@ -848,11 +805,7 @@ multiplayer:
   copy: 복사
   copyGroupToFriendHint: 친구들이 이 ID로 그룹에 참여할 수 있도록 하세요
   copyLocalHint: >
-    "로컬 SDP 텍스트를 복사하여 상대방에게 보내고, 상대방이 이 텍스트를 연결 참여 섹션에 입력하도록 하세요. <span>토큰은
-    <span style="color: red; font-weight: bold;">한 명의 피어</span>에게만 사용할 수 있습니다!
-    같은 토큰을 여러 피어에게 보낼 수 없습니다!</span> <br> <span class="hint-text"
-    style="font-style: italic;">여러 피어와 연결해야 한다면 <span style="font-weight: bold;
-    color: rgba(245, 158, 11)">여러 개의</span> 연결을 생성해야 합니다.</span>"
+    "로컬 SDP 텍스트를 복사하여 상대방에게 보내고, 상대방이 이 텍스트를 연결 참여 섹션에 입력하도록 하세요. <span>토큰은 <span style="color: red; font-weight: bold;">한 명의 피어</span>에게만 사용할 수 있습니다! 같은 토큰을 여러 피어에게 보낼 수 없습니다!</span> <br> <span class="hint-text" style="font-style: italic;">여러 피어와 연결해야 한다면 <span style="font-weight: bold; color: rgba(245, 158, 11)">여러 개의</span> 연결을 생성해야 합니다.</span>"
   createLocalToken: 로컬 토큰 생성
   currentIpTitle: 감지된 외부 IP
   currentNatTitle: '현재 네트워크 (NAT):'
@@ -865,13 +818,7 @@ multiplayer:
   exposedPortDescription: 다른 플레이어에게 노출된 포트
   exposedPorts: 포워딩된 포트
   gatheringIce: >
-    "ICE 서버가 네트워크에 대한 충분한 정보를 수집할 때까지 기다려 주세요. 참을 수 없고 충분한 정보가 있다면, 현재 SDP를 미리
-    상대방에게 주고 다음을 클릭하세요. <span class="v-chip v-chip--label v-size--small"
-    style="text-font: bold" >로컬 토큰</span>을 상대방에게 보내고, 상대방이 <span class="v-chip
-    v-chip--label v-size--small" style="text-font: bold"> 연결 참여 </span> 섹션에 토큰을
-    입력하도록 하세요. <br> ICE 서버가 <span class="v-chip v-chip--label v-size--small"
-    style="text-font: bold">로컬 토큰</span>을 생성하기 위해 정보를 수집하는 데 시간이 걸릴 수 있습니다.<br>
-    ICE 상태가 완료될 때까지 기다릴 필요는 없습니다. 아래 토큰이 변경되지 않으면 복사해서 상대방에게 보낼 수 있습니다."
+    "ICE 서버가 네트워크에 대한 충분한 정보를 수집할 때까지 기다려 주세요. 참을 수 없고 충분한 정보가 있다면, 현재 SDP를 미리 상대방에게 주고 다음을 클릭하세요. <span class="v-chip v-chip--label v-size--small" style="text-font: bold" >로컬 토큰</span>을 상대방에게 보내고, 상대방이 <span class="v-chip v-chip--label v-size--small" style="text-font: bold"> 연결 참여 </span> 섹션에 토큰을 입력하도록 하세요. <br> ICE 서버가 <span class="v-chip v-chip--label v-size--small" style="text-font: bold">로컬 토큰</span>을 생성하기 위해 정보를 수집하는 데 시간이 걸릴 수 있습니다.<br> ICE 상태가 완료될 때까지 기다릴 필요는 없습니다. 아래 토큰이 변경되지 않으면 복사해서 상대방에게 보낼 수 있습니다."
   groupId: 그룹 ID
   illegalTokenDescription: 잘못된 토큰입니다. 상대방의 토큰이 올바른지 확인하세요
   initiateConnection: 연결 시작
@@ -881,8 +828,7 @@ multiplayer:
   joinOrCreateGroupHint: 친구들로부터 그룹 ID를 받거나 그룹을 생성하세요
   kernel: P2P 커널
   kernelDescription: >-
-    네이티브 WebRTC 또는 node-datachannel을 사용합니다. P2P 연결이 때때로 런처 창을 크래시시킬 때만 이 설정을
-    변경하세요.
+    네이티브 WebRTC 또는 node-datachannel을 사용합니다. P2P 연결이 때때로 런처 창을 크래시시킬 때만 이 설정을 변경하세요.
   leaveGroup: 그룹 떠나기
   localToken: 로컬 토큰
   manualConnect: 수동 연결
@@ -949,7 +895,6 @@ presence:
   save: '{instance} 에서 저장된 월드 보는 중'
   setting: 설정 페이지 보는 중
   shaderPack: '{instance} 에서 셰이더 팩 보는 중'
-  version: 버전 페이지 보는 중
 proxy:
   host: 호스트
   port: 포트
@@ -976,11 +921,7 @@ resourcepack:
   unselected: 선택되지 않은 리소스 팩
 save:
   copy:
-    cancel: 복사 취소
-    confirm: 복사 시작
-    description: 저장된 월드를 이동시킬 대상 프로필을 선택하세요.
     name: 저장된 월드 복사
-    title: 다른 프로필로 저장된 월드 복사
   createNew: 새 월드 생성
   createdWorlds: 월드 {count} 개가 있습니다
   deleteHint: 이 작업은 되돌릴 수 없습니다. 저장된 월드 데이터를 영원히 잃게 됩니다. 정말로 이 저장된 월드를 삭제하시겠습니까?
@@ -1027,14 +968,12 @@ server:
   ipAddress: IP 주소
   maxPlayers: 최대 플레이어
   motd: 서버 MOTD
-  name: 서버
   nogui: 서버 GUI 없음
   onlineMode: 온라인 모드
   ping: 핑
   pings: 핑들
   players: 플레이어
   port: 포트
-  status: 서버 상태
   unknown: 알 수 없는 서버
   unknownDescription: 알 수 없는 서버입니다. 새로고침하세요
   upload: 서버 업로드
@@ -1239,21 +1178,18 @@ settingLabel:
 setup:
   account:
     description: >-
-      게임 계정을 추가하여 Minecraft Java Edition을 플레이하세요. Microsoft 계정과 Mojang 계정이 모두
-      지원됩니다.
+      게임 계정을 추가하여 Minecraft Java Edition을 플레이하세요. Microsoft 계정과 Mojang 계정이 모두 지원됩니다.
     name: 계정 추가
     skip: 지금은 건너뛰기
   appearance:
     name: '@:setting.appearance'
   dataRoot:
     description: >-
-      최상위 폴더가 일반적인 .minecraft 디렉터리가 아닙니다.  XMCL 데이터 디렉터리 구조는 기본 버전과 다르기 때문에,
-      일반적인 .minecraft 디렉터리를 최상위 폴더로 사용하는 것을 권장하지 않습니다.
+      최상위 폴더가 일반적인 .minecraft 디렉터리가 아닙니다.  XMCL 데이터 디렉터리 구조는 기본 버전과 다르기 때문에, 일반적인 .minecraft 디렉터리를 최상위 폴더로 사용하는 것을 권장하지 않습니다.
     drives: 권장 위치
     name: 데이터 디렉터리 설정
   defaultLayoutDescription: >-
-    기본 레이아웃은 게임 "인스턴스" 개념을 향상시키려고 합니다. Discord와 같은 앱처럼 보입니다. Steam과 같은 다른 게임 런처
-    앱에서도 영감을 받았습니다.
+    기본 레이아웃은 게임 "인스턴스" 개념을 향상시키려고 합니다. Discord와 같은 앱처럼 보입니다. Steam과 같은 다른 게임 런처 앱에서도 영감을 받았습니다.
   defaultPath: 기본 경로
   error:
     badDataRoot: 런처 데이터에 유효하지 않은 디렉터리입니다! 다른 디렉터리를 시도하세요!
@@ -1266,8 +1202,7 @@ setup:
     name: 기존 게임 가져오기
   locale:
     description: >-
-      지원하는 언어가 있다면 선호하는 언어를 선택하세요! 모국어가 보이지 않고 도움을 주고 싶다면 Github를 방문하여 번역 풀
-      리퀘스트를 제출하세요!
+      지원하는 언어가 있다면 선호하는 언어를 선택하세요! 모국어가 보이지 않고 도움을 주고 싶다면 Github를 방문하여 번역 풀 리퀘스트를 제출하세요!
     language: 언어
     name: 언어 설정
   path: 현재 경로
@@ -1382,12 +1317,10 @@ tutorial:
   launchDescription: 이 버튼을 클릭하여 게임을 설치하거나 실행하세요.
   mod:
     defaultSourceDescription: >-
-      여기서 모드 세부 정보의 소스를 선택할 수 있습니다. Modrinth와 Curseforge 모두에 게시된 모드들이 있습니다. 이 두
-      콘텐츠 제공자 간에 전환하려면 여기서 값을 변경할 수 있습니다.
+      여기서 모드 세부 정보의 소스를 선택할 수 있습니다. Modrinth와 Curseforge 모두에 게시된 모드들이 있습니다. 이 두 콘텐츠 제공자 간에 전환하려면 여기서 값을 변경할 수 있습니다.
     defaultSourceTitle: 모드 콘텐츠 소스 선택
     detailDescription: >-
-      왼쪽에서 항목을 선택하면 모드의 세부 정보를 볼 수 있습니다. 콘텐츠는 Modrinth, Curseforge 또는 파싱된 모드
-      콘텐츠에서 올 수 있습니다.
+      왼쪽에서 항목을 선택하면 모드의 세부 정보를 볼 수 있습니다. 콘텐츠는 Modrinth, Curseforge 또는 파싱된 모드 콘텐츠에서 올 수 있습니다.
     detailTitle: 모드 세부 정보
     listDescription: 입력이 없을 때는 설치된 모드를 표시합니다. 키워드나 카테고리를 선택하면 검색된 모드를 볼 수 있습니다.
     listTitle: 설치된 모드 또는 모드 검색
@@ -1397,15 +1330,12 @@ tutorial:
     contentDescription: 당신과 피어 간의 연결이 여기에 나열됩니다.
     contentTitle: '@:multiplayer.connections'
     groupDescription: >-
-      다른 플레이어와 그룹을 생성하거나 참여할 수 있습니다. 런처는 그룹에 따라 당신과 친구들 간에 P2P 연결을 생성하려고 시도합니다.
-      친구들이 준 그룹 이름을 입력하거나 고유한 이름을 만들 수 있습니다.
+      다른 플레이어와 그룹을 생성하거나 참여할 수 있습니다. 런처는 그룹에 따라 당신과 친구들 간에 P2P 연결을 생성하려고 시도합니다. 친구들이 준 그룹 이름을 입력하거나 고유한 이름을 만들 수 있습니다.
     groupTitle: 그룹 참여
     joinDescription: >-
-      그룹 이름을 입력하면 이 버튼을 클릭하여 그룹에 참여하거나 생성할 수 있습니다. 그룹 이름이 비어 있으면 런처가 이름을 생성해
-      줍니다.
+      그룹 이름을 입력하면 이 버튼을 클릭하여 그룹에 참여하거나 생성할 수 있습니다. 그룹 이름이 비어 있으면 런처가 이름을 생성해 줍니다.
     manualDescription: >-
-      당신이나 친구가 그룹에 연결할 수 없다면, 수동 연결을 클릭하여 토큰을 수동으로 교환해 볼 수 있습니다. 그것도 실패한다면 인터넷
-      문제일 수 있습니다.
+      당신이나 친구가 그룹에 연결할 수 없다면, 수동 연결을 클릭하여 토큰을 수동으로 교환해 볼 수 있습니다. 그것도 실패한다면 인터넷 문제일 수 있습니다.
   recentPlayDescription: 생성된 게임들이 여기에 나열됩니다. 여기서 뷰를 전환하여 설치된 버전과 다운로드된 모드팩도 볼 수 있습니다.
   storePoupularModpackDescription: 이 섹션에서 Curseforge와 Modrinth의 가장 인기 있는 모드팩을 볼 수 있습니다.
   storeSearchCategoryDescription: 여기서 카테고리나 필터를 토글할 수도 있습니다.
@@ -1413,10 +1343,7 @@ tutorial:
   storeSearchResultDescription: 모든 검색 결과가 여기에 나열됩니다.
   userAccountDescription: 이 아이콘을 클릭하여 마인크래프트 계정을 추가하거나 관리하세요.
 universalDrop:
-  start: 가져오기 시작됨
-  title: 파일을 여기로 드래그하여 가져오기
   unknownResource: 알 수 없음
-update: {}
 upstream:
   downgrade: 다운그레이드
   onlyShowCurrentVersion: 현재 마인크래프트 버전만 표시
@@ -1439,8 +1366,7 @@ userAccount:
 userCape:
   changeTitle: 망토 변경
   description: >-
-    망토는 플레이어가 다양한 이벤트, 캠페인 및 기타 행사를 통해 잠금 해제할 수 있는 특별한 보상입니다. 여기서 현재 소유한 망토 중에서
-    선택할 수 있습니다:
+    망토는 플레이어가 다양한 이벤트, 캠페인 및 기타 행사를 통해 잠금 해제할 수 있는 특별한 보상입니다. 여기서 현재 소유한 망토 중에서 선택할 수 있습니다:
   noCape: 망토 없음
 userService:
   add: 더 많은 서비스 추가

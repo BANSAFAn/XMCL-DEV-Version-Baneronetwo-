@@ -1,70 +1,56 @@
 <template>
-  <v-list
-    two-line
-    subheader
-    style="background: transparent; width: 100%"
-  >
-    <v-subheader>
-      {{ t('instance.resolution') }}
+  <SettingCard :title="t('instance.resolution')" icon="aspect_ratio">
+    <template #header-action>
       <BaseSettingGlobalLabel
         :global="isGlobalResolution"
         @clear="resetResolution"
         @click="gotoSetting"
       />
-    </v-subheader>
-    
-    <v-list-item>
-      <v-list-item-content>
-        <div class="flex flex-row items-center gap-2">
-          <v-text-field
-            v-model="resolutionWidth"
-            :label="t('instance.width')"
-            :disabled="resolutionFullscreen"
-            type="number"
-            outlined
-            dense
-            hide-details
-            filled
-            class="mr-2 max-w-[150px]"
-          />
-          <v-text-field
-            v-model="resolutionHeight"
-            :disabled="resolutionFullscreen"
-            :label="t('instance.height')"
-            type="number"
-            outlined
-            dense
-            hide-details
-            filled
-            class="ml-2 max-w-[150px]"
-          />
-          <v-switch
-            v-model="resolutionFullscreen"
-            :label="t('instance.fullscreen')"
-            class="ma-0 pa-0"
-            hide-details
-          />
-        </div>
-      </v-list-item-content>
-      <v-list-item-action>
-         <v-select
-            v-model="selectedResolutionPreset"
-            :items="resolutionPresets"
-            item-text="text"
-            item-value="value"
-            :label="t('instance.resolutionPreset')"
-            outlined
-            filled
-            dense
-            hide-details
-            class="mb-4 max-w-[300px]"
-          ></v-select>
-      </v-list-item-action>
-    </v-list-item>
-  </v-list>
+    </template>
+
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center">
+      <v-text-field
+        v-model="resolutionWidth"
+        :label="t('instance.width')"
+        :disabled="resolutionFullscreen"
+        type="number"
+        variant="outlined"
+        density="compact"
+        hide-details
+      />
+      <v-text-field
+        v-model="resolutionHeight"
+        :disabled="resolutionFullscreen"
+        :label="t('instance.height')"
+        type="number"
+        variant="outlined"
+        density="compact"
+        hide-details
+      />
+      <v-switch
+        v-model="resolutionFullscreen"
+        :label="t('instance.fullscreen')"
+        color="primary"
+        density="compact"
+        hide-details
+        class="ma-0 pa-0"
+      />
+      <v-select
+        v-model="selectedResolutionKey"
+        :items="resolutionPresetItems"
+        item-title="text"
+        item-value="key"
+        :label="t('instance.resolutionPreset')"
+        variant="outlined"
+        density="compact"
+        hide-details
+      />
+    </div>
+  </SettingCard>
 </template>
 
 <script lang="ts" setup>
+import SettingCard from '@/components/SettingCard.vue'
 import { injection } from '@/util/inject'
 import { InstanceEditInjectionKey } from '../composables/instanceEdit'
 import BaseSettingGlobalLabel from './BaseSettingGlobalLabel.vue'
@@ -89,13 +75,17 @@ const resolutionWidth = ref(resolution.value?.width)
 const resolutionHeight = ref(resolution.value?.height)
 
 // Watch for changes in the global resolution setting
-watch(() => resolution.value, (newValue) => {
-  if (newValue) {
-    resolutionFullscreen.value = newValue.fullscreen
-    resolutionWidth.value = newValue.width
-    resolutionHeight.value = newValue.height
-  }
-}, { immediate: true })
+watch(
+  () => resolution.value,
+  (newValue) => {
+    if (newValue) {
+      resolutionFullscreen.value = newValue.fullscreen
+      resolutionWidth.value = newValue.width
+      resolutionHeight.value = newValue.height
+    }
+  },
+  { immediate: true },
+)
 
 // Update resolution when controls change
 watch([resolutionFullscreen, resolutionWidth, resolutionHeight], ([full, w, h]) => {
@@ -110,18 +100,22 @@ watch([resolutionFullscreen, resolutionWidth, resolutionHeight], ([full, w, h]) 
   }
 })
 
-// Resolution preset selector
-const selectedResolutionPreset = computed({
-  get: () => {
-    const width = resolutionWidth.value
-    const height = resolutionHeight.value
-    const preset = resolutionPresets.value.find(p => p.value.width === width && p.value.height === height)
-    return preset ? preset.value : { width, height }
-  },
-  set: (value) => {
-    resolutionWidth.value = value.width
-    resolutionHeight.value = value.height
+// Resolution preset selector – use a stable string key so v-select can match
+// the current width/height back to a list entry.
+const resolutionPresetItems = computed(() => resolutionPresets.value.map(p => ({
+  text: p.text,
+  key: `${p.value.width ?? ''}x${p.value.height ?? ''}`,
+  value: p.value,
+})))
+
+const selectedResolutionKey = computed({
+  get: () => `${resolutionWidth.value ?? ''}x${resolutionHeight.value ?? ''}`,
+  set: (key: string) => {
+    const preset = resolutionPresetItems.value.find(p => p.key === key)
+    if (!preset) return
+    resolutionWidth.value = preset.value.width
+    resolutionHeight.value = preset.value.height
     resolutionFullscreen.value = false
-  }
+  },
 })
 </script>

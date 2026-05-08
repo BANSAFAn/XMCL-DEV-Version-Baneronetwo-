@@ -13,7 +13,8 @@
       'dragged-over': dragover > 0,
       dense,
     }"
-    :input-value="selected"
+    :active="selected"
+    :lines="dense ? 'one' : 'two'"
     link
     @mouseenter="hover = true"
     @mouseleave="hover = false"
@@ -25,116 +26,106 @@
     @drop="onDrop"
     @click="emit('click', $event)"
   >
-    <v-list-item-avatar :size="dense ? 30 : 40">
-      <img
-        ref="iconImage"
-        v-fallback-img="BuiltinImages.unknownServer"
-        :class="{ 'opacity-20': item.installed.length === 0 && hover && !item.unsupported }"
-        :src="icon || item.icon || BuiltinImages.unknownServer"
-      >
-      <v-btn
-        v-if="install && item.installed.length === 0 && !item.unsupported"
-        class="absolute"
-        large
-        icon
-        :loading="installing"
-        @click.stop="onInstall()"
-      >
-        <v-icon
-          class="material-icons-outlined"
-          :class="{ 'opacity-0': !hover }"
+    <template #prepend>
+      <v-avatar :size="dense ? 30 : 40">
+        <img
+          ref="iconImage"
+          v-fallback-img="BuiltinImages.unknownServer"
+          class="market-item__icon"
+          :class="{ 'opacity-20': item.installed.length === 0 && hover && !item.unsupported }"
+          :src="icon || item.icon || BuiltinImages.unknownServer"
         >
-          file_download
-        </v-icon>
-      </v-btn>
-    </v-list-item-avatar>
-    <div
-      v-if="indent"
-      class="indicator"
-      :style="{ height: `${height}px`, background: indentColor || 'rgb(250 204 21 / 1)' }"
-    />
-    <v-list-item-content
-      :class="{
-        indented: indent,
-        dense,
-      }"
-    >
-      <v-badge
-        class="w-full"
-        color="red"
-        dot
-        inline
-        :value="hasUpdate"
-        :offset-y="5"
-      >
-        <v-list-item-title class="flex overflow-hidden">
-          <span class="max-w-full overflow-hidden overflow-ellipsis">
-            {{ (isEnabled ? item.localizedTitle : '') || title || item.title }}
-          </span>
-          <template v-if="item.installed.length > 0 && getContextMenuItems">
-            <div class="flex-grow" />
-            <v-icon
-              v-if="hasDuplicate"
-              v-shared-tooltip="props.item.installed.map(v => basename(v.path)).join(', ')"
-              size="15"
-              color="red"
-            >
-              warning
+        <v-btn
+          v-if="install && item.installed.length === 0 && !item.unsupported"
+          class="absolute"
+          icon
+          variant="text"
+          size="small"
+          :loading="installing"
+          @click.stop="onInstall()"
+        >
+          <v-icon
+            class="material-icons-outlined"
+            :class="{ 'opacity-0': !hover }"
+          >
+            file_download
+          </v-icon>
+        </v-btn>
+      </v-avatar>
+      <div
+        v-if="indent"
+        class="indicator"
+        :style="{ height: `${height}px`, background: indentColor || 'rgb(250 204 21 / 1)' }"
+      />
+    </template>
+
+    <template #title>
+      <div class="flex items-center overflow-hidden gap-1">
+        <span class="flex-1 max-w-full overflow-hidden overflow-ellipsis whitespace-nowrap">
+          {{ (isEnabled ? item.localizedTitle : '') || title || item.title }}
+        </span>
+        <v-badge
+          v-if="hasUpdate"
+          color="red"
+          dot
+          inline
+        />
+        <template v-if="item.installed.length > 0 && getContextMenuItems">
+          <v-icon
+            v-if="hasDuplicate"
+            v-shared-tooltip="props.item.installed.map(v => basename(v.path)).join(', ')"
+            size="15"
+            color="red"
+          >
+            warning
+          </v-icon>
+          <v-btn
+            icon
+            variant="text"
+            size="x-small"
+            density="comfortable"
+            @click.stop="onSettingClick"
+          >
+            <v-icon size="15">
+              settings
             </v-icon>
-            <v-btn
-              x-small
-              icon
-              @click.stop="onSettingClick"
-            >
-              <v-icon
-                class="v-list-item__subtitle"
-                size="15"
-              >
-                settings
-              </v-icon>
-            </v-btn>
-          </template>
-          <template v-else-if="dense">
-            <div class="flex-grow" />
-            <v-icon small>
-              {{ getTrailingIcon() }}
-            </v-icon>
-          </template>
-        </v-list-item-title>
-      </v-badge>
-      <v-list-item-subtitle v-if="!dense">
+          </v-btn>
+        </template>
+        <template v-else-if="dense">
+          <v-icon size="small">
+            {{ getTrailingIcon() }}
+          </v-icon>
+        </template>
+      </div>
+    </template>
+
+    <template v-if="!dense" #subtitle>
+      <div class="market-item__description">
         <template v-if="typeof descriptionTextOrObject === 'object' || descriptionTextOrObject?.includes('§')">
           <TextComponent :source="descriptionTextOrObject" />
         </template>
         <template v-else>
           {{ descriptionTextOrObject }}
         </template>
-      </v-list-item-subtitle>
-      <v-list-item-subtitle
-        v-if="!dense"
-        class="invisible-scroll flex flex-grow-0 gap-2"
-      >
+      </div>
+      <div class="invisible-scroll flex gap-2 mt-1 market-item__tags">
         <slot
           v-if="slots.labels"
           name="labels"
         />
         <template v-else>
-          <template v-for="(tag, i) of tags">
+          <template v-for="(tag, i) of tags" :key="i">
             <v-divider
               v-if="i > 0"
-              :key="i + 'divider'"
               vertical
             />
-            <div
-              :key="i"
-              class="flex flex-grow-0"
-            >
+            <div class="flex items-center flex-grow-0">
               <v-icon
                 v-if="tag.icon"
                 class="material-icons-outlined"
-                :left="!!tag.text"
+                :start="!!tag.text"
                 :color="tag.color"
-                small
+                size="small"
               >
                 {{ tag.icon }}
               </v-icon>
@@ -144,8 +135,8 @@
             </div>
           </template>
         </template>
-      </v-list-item-subtitle>
-    </v-list-item-content>
+      </div>
+    </template>
   </v-list-item>
 </template>
 
@@ -282,10 +273,10 @@ const onSettingClick = (event: MouseEvent) => {
 
 function getTrailingIcon() {
   if (props.item.modrinth) {
-    return '$vuetify.icons.modrinth'
+    return 'xmcl:modrinth'
   }
   if (props.item.curseforge) {
-    return '$vuetify.icons.curseforge'
+    return 'xmcl:curseforge'
   }
 }
 
@@ -313,12 +304,12 @@ const tags = computed(() => {
   }
   if (props.item.modrinth || props.item.modrinthProjectId) {
     tags.push({
-      icon: '$vuetify.icons.modrinth',
+      icon: 'xmcl:modrinth',
     })
   }
   if (props.item.curseforge || props.item.curseforgeProjectId) {
     tags.push({
-      icon: '$vuetify.icons.curseforge',
+      icon: 'xmcl:curseforge',
     })
   }
   if (props.item.files && props.item.files.length > 0 && props.item.files[0]) {
@@ -356,6 +347,27 @@ const onInstall = async () => {
 .indicator {
   content: '';
   min-width: 2px;
-  margin-right: 1rem;
+  position: absolute;
+  left: 0;
+}
+.market-item__icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.market-item__description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+.market-item__tags {
+  font-size: 0.75rem;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+  flex-wrap: nowrap;
 }
 </style>

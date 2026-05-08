@@ -10,17 +10,15 @@
       class="rounded-lg"
       @click="emit('select', item.value)"
     >
-      <v-list-item-avatar class="self-center">
+      <template #prepend><v-avatar class="self-center">
         <v-img :src="item.icon" />
-      </v-list-item-avatar>
+      </v-avatar></template>
 
-      <v-list-item-content>
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
+      <v-list-item-title>{{ item.title }}</v-list-item-title>
         <v-list-item-subtitle v-if="item.subtitle">
           {{ item.subtitle }}
         </v-list-item-subtitle>
-      </v-list-item-content>
-      <v-list-item-action class="self-center">
+<v-list-item-action class="self-center">
         <v-icon>
           arrow_right
         </v-icon>

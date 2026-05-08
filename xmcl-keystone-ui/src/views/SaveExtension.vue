@@ -14,15 +14,15 @@
     <v-spacer />
     <MarketTextFieldWithMenu
      :placeholder="t('save.search')"
-      :keyword.sync="keyword"
-      :curseforge-category.sync="curseforgeCategory"
+      v-model:keyword="keyword"
+      v-model:curseforge-category="curseforgeCategory"
       curseforge-category-filter="worlds"
       :modrinth-categories="[]"
       :modrinth-category-filter="''"
-      :enable-curseforge.sync="isCurseforgeActive"
-      :sort.sync="sort"
-      :mode.sync="source"
-      :game-version.sync="gameVersion"
+      v-model:enable-curseforge="isCurseforgeActive"
+      v-model:sort="sort"
+      v-model:mode="source"
+      v-model:game-version="gameVersion"
     />
   </div>
 </template>

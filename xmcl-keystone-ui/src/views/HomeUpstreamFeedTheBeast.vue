@@ -206,7 +206,7 @@ function onChangelog(version: ProjectVersionProps) {
     :current-version="currentVersion"
     :header="headerData"
     :duplicating="duplicating"
-    :only-current-version.sync="onlyCurrentVersion"
+    v-model:only-current-version="onlyCurrentVersion"
     @duplicate="onDuplicate"
     @update="onUpdate"
     @changelog="onChangelog"

@@ -1,7 +1,7 @@
 <template>
   <v-card
     v-if="display.length > 0 || persistent"
-    class="w-full items-center justify-center flex"
+    class="screenshot-card w-full h-full items-center justify-center flex relative overflow-hidden"
     :color="cardColor"
     outlined
     :style="{
@@ -9,30 +9,66 @@
       'backdrop-filter': `blur(${blurCard}px)`,
     }"
   >
-    <v-btn
-      v-shared-tooltip="() => randomPlayScreenshot ? t('screenshots.playRandom') : t('screenshots.playSequence')"
-      text
-      icon
-      color="white"
-      class="z-6 absolute bottom-2 right-2"
-      @click="randomPlayScreenshot = !randomPlayScreenshot"
+    <!-- Header (absolute overlay, drag handle) -->
+    <div
+      v-if="persistent"
+      class="screenshot-card__header"
     >
-      <v-icon>
-        {{ randomPlayScreenshot ? 'shuffle' : 'repeat' }}
-      </v-icon>
-    </v-btn>
-    <div v-if="persistent" class="v-card__title absolute top-0 left-0 z-10 p-2 cursor-move rounded-br bg-black/20 hover:bg-black/40 transition-colors">
-      <v-icon small color="white">drag_indicator</v-icon>
+      <div class="v-card-title screenshot-card__title cursor-move">
+        <v-icon size="18" color="white" class="opacity-80">image</v-icon>
+        <span>{{ t('screenshots.gallery') }}</span>
+        <v-chip
+          v-if="display.length > 0"
+          size="x-small"
+          variant="tonal"
+          color="white"
+          class="ml-1"
+        >
+          {{ display.length }}
+        </v-chip>
+      </div>
+      <div class="flex-grow no-drag" />
+      <v-btn
+        v-if="display.length > 0"
+        v-shared-tooltip="() => randomPlayScreenshot ? t('screenshots.playRandom') : t('screenshots.playSequence')"
+        variant="text"
+        icon
+        size="small"
+        color="white"
+        class="no-drag"
+        @click="randomPlayScreenshot = !randomPlayScreenshot"
+      >
+        <v-icon>
+          {{ randomPlayScreenshot ? 'shuffle' : 'repeat' }}
+        </v-icon>
+      </v-btn>
     </div>
+
     <v-carousel
       hide-delimiters
       :height="height"
       show-arrows-on-hover
-      :show-arrows="display.length > 0"
+      :show-arrows="display.length > 1"
       cycle
       interval="5000"
-      class="rounded"
+      class="rounded w-full"
     >
+      <template #prev="{ props: btnProps }">
+        <v-btn
+          variant="plain"
+          icon="chevron_left"
+          color="white"
+          @click="btnProps.onClick"
+        />
+      </template>
+      <template #next="{ props: btnProps }">
+        <v-btn
+          variant="plain"
+          icon="chevron_right"
+          color="white"
+          @click="btnProps.onClick"
+        />
+      </template>
       <template v-if="display.length > 0">
         <v-carousel-item
           v-for="(i, idx) of display"
@@ -43,30 +79,29 @@
           <img
             :src="i"
             draggable="true"
-            @dragstart.stop="onDragStart($event, i)"
             class="w-full h-full object-cover"
+            @dragstart.stop="onDragStart($event, i)"
           />
-          <div
-            class="absolute w-full bottom-2 flex justify-center items-center justify-center z-10"
-          >
-            <div>
-              <AppImageControls :image="i" />
-            </div>
+          <div class="absolute inset-x-0 bottom-2 z-10 flex justify-center">
+            <AppImageControls :image="i" />
           </div>
         </v-carousel-item>
       </template>
       <template v-else>
-        <v-carousel-item
-          :key="-1"
-        >
+        <v-carousel-item :key="-1">
           <v-sheet
             color="transparent"
-            class="flex h-full items-center justify-center"
+            class="screenshot-card__empty flex h-full w-full items-center justify-center"
           >
-            <v-icon left>
-              image
-            </v-icon>
-            {{ t('screenshots.empty') }}
+            <div class="flex flex-col items-center gap-2 text-center px-6">
+              <v-icon size="48" class="screenshot-card__empty-icon">photo_camera</v-icon>
+              <div class="text-sm font-medium opacity-90">
+                {{ t('screenshots.empty') }}
+              </div>
+              <div class="text-xs opacity-60">
+                {{ t('screenshots.hint') }}
+              </div>
+            </div>
           </v-sheet>
         </v-carousel-item>
       </template>
@@ -130,3 +165,55 @@ const onDragStart = async (event: DragEvent, url: string) => {
 
 const { t } = useI18n()
 </script>
+
+<style scoped>
+.screenshot-card :deep(.v-window),
+.screenshot-card :deep(.v-window__container) {
+  height: 100%;
+}
+
+.screenshot-card__header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 8px 8px 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.screenshot-card__header > * {
+  pointer-events: auto;
+}
+
+.screenshot-card__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.screenshot-card__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 32px 24px;
+  gap: 8px;
+  color: rgba(var(--v-theme-on-surface), 0.85);
+}
+
+.screenshot-card__empty-icon {
+  opacity: 0.35;
+}
+</style>

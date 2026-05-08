@@ -34,18 +34,6 @@ HomeLaunchMultiInstanceDialog:
   confirm: 是的，多實例啟動
   description: 正在嘗試啟動多個 Minecraft 實例，您確定嗎？
   title: 多實例啟動
-HomeSyncDialog:
-  pull: 拉取更新
-  push: 上傳實例
-HomeSyncDialogPull:
-  failText: 取得更新失敗。{url}
-  refresh: 重新整理
-  update: 更新
-HomeSyncDialogPush:
-  authError: 使用者驗證失敗，請確認您有權限上傳伺服器的檔案！
-  refresh: 重新整理
-  unknownError: 未知伺服器錯誤，請重試。
-  upload: 上傳更新
 SettingMigrationDialog:
   selectRootDirectory: 選擇新的根目錄
 ago:
@@ -74,8 +62,6 @@ create: 建立
 curseforge:
   category: 分類
   createdDate: 建立日期
-  installTo: 安裝到 {path}
-  installToStorage: 安裝到儲存庫
   lastUpdate: 上次更新日期
   releasedDate: 釋出日期
 curseforgeCategory:
@@ -163,8 +149,7 @@ diagnosis:
   corruptedLibraries:
     message: 啟動器將重新下載函式庫
     name: >-
-      Libraries 檔案不完整: {name} | Libraries 檔案不完整: {name} | {count} 個 Libraries
-      檔案不完整 | {count} 個 Libraries 檔案不完整
+      Libraries 檔案不完整: {name} | Libraries 檔案不完整: {name} | {count} 個 Libraries 檔案不完整 | {count} 個 Libraries 檔案不完整
   corruptedVersionJar:
     message: 按一下以下載此版本
     name: Minecraft {version} 遊戲 Jar 檔案不完整。
@@ -181,8 +166,7 @@ diagnosis:
   missingLibraries:
     message: 啟動器將自動下載並安裝 Libraries 檔案
     name: >-
-      缺少 {name} Library | 缺少 {name} Library | 缺少 {count} 個 Libraries 檔案 | 缺少
-      {count} 個 Libraries 檔案
+      缺少 {name} Library | 缺少 {name} Library | 缺少 {count} 個 Libraries 檔案 | 缺少 {count} 個 Libraries 檔案
   missingVersion:
     message: 按一下以下載此版本
     name: 未安裝 {version}
@@ -439,7 +423,6 @@ instances:
   folderSetting: 資料夾設定
   importFolderDescription: 匯入 Minecraft 到啟動器
   loadingFiles: 載入模組包檔案
-  refreshServers: 重新整理伺服器
 items:
   count: '{count} 個'
   total: 共 {total} 個
@@ -477,13 +460,11 @@ launchBlocked:
     title: 無法啟動
   launchInvalidJavaPath:
     description: >-
-      目前 Java 路徑可能無效，請檢查 Java 可執行檔案是否存在 <span class="highlight"> {javaPath}
-      </span>
+      目前 Java 路徑可能無效，請檢查 Java 可執行檔案是否存在 <span class="highlight"> {javaPath} </span>
     title: Java 路徑無效
   launchJavaNoPermission:
     description: >-
-      沒有許可權執行 <span class="highlight"> {javaPath} </span>，請嘗試給啟動器更高許可權，給 Java
-      檔案增加可執行許可權，或者更換 Java。
+      沒有許可權執行 <span class="highlight"> {javaPath} </span>，請嘗試給啟動器更高許可權，給 Java 檔案增加可執行許可權，或者更換 Java。
     title: 無許可權使用 Java
   launchNoProperJava:
     description: 找不到合適的 Java 來啟動遊戲。({javaPath} 可能無效？)
@@ -526,11 +507,8 @@ launcherUpdate:
   updateToThisVersion: 下載並安裝
 localVersion:
   auto: 自動選擇
-  delete: 刪除本地版本
-  deleteDescription: 這將刪除本地版本遊戲
   empty: 本地沒有安裝任何版本
   hint: 直接啟動某個本地版本
-  refresh: 重新整理本地版本
   reinstallDescription: 如果您覺得此版本安裝的有問題，可以嘗試重新安裝該版本。
   reinstallTitle: 重新安裝 {version}
   title: 本地版本
@@ -587,8 +565,6 @@ mod:
   compatible: 可用於目前版本。
   createGroup: 建立分組
   currentVersion: 目前是 {current}
-  deletionHint: 您將移除這個模組的檔案和資訊。您確定嗎？| 您將移除這些模組的檔案和資訊。您確定嗎？
-  deletionRestHint: 等 {rest} 個模組……
   denseView: 密集檢視
   disableAll: 全部停用
   dropHint: 將模組 Jar 檔案拖入此處來匯入
@@ -683,9 +659,6 @@ modified:
 modpack:
   author: 署名
   authorHint: 這個遊戲/模組包的製作人
-  delete:
-    hint: 這將刪除模組包 {name} 和它的基本資料。您確定嗎？
-    title: 刪除模組包
   description: 遊戲簡介
   descriptionHint: 通用的模組包簡介。在匯出成 Curseforge 模組包或者其他格式時會使用。
   dropHint: 透過拖曳匯入模組包檔案
@@ -865,10 +838,7 @@ multiplayer:
   copy: 複製
   copyGroupToFriendHint: 讓您的聯機夥伴使用此 ID 加入聯機群組
   copyLocalHint: >
-    <span>一段令牌只能用<span style="color: red;
-    font-weight:bold;">一次</span>！您不能將一個令牌傳送給多個聯機夥伴！</span> <br> <span
-    class="hint-text" style="font-style: italic;">如果有多個聯機夥伴要加入您需要<span
-    style="font-weight: bold; color: rgba(245， 158， 11)">多次</span>建立連線。</span>
+    <span>一段令牌只能用<span style="color: red; font-weight:bold;">一次</span>！您不能將一個令牌傳送給多個聯機夥伴！</span> <br> <span class="hint-text" style="font-style: italic;">如果有多個聯機夥伴要加入您需要<span style="font-weight: bold; color: rgba(245， 158， 11)">多次</span>建立連線。</span>
   createLocalToken: 建立本地令牌
   currentIpTitle: 偵測到公用 IP 位址
   currentNatTitle: 目前網路 (NAT) 環境
@@ -881,12 +851,7 @@ multiplayer:
   exposedPortDescription: 您向其他聯機夥伴開放的連接埠
   exposedPorts: 開放連接埠
   gatheringIce: >
-    請將<span class="v-chip v-chip--label v-size--small" style="text-font:
-    bold">本地令牌</span>傳送給您的聯機夥伴，您的聯機夥伴在 <span class="v-chip v-chip--label
-    v-size--small" style="text-font: bold"> 加入連線 </span> 中輸入這段文字。 <br> 期間 ICE
-    伺服器可能需要時間收集足夠資訊來建立<span class="v-chip v-chip--label v-size--small"
-    style="text-font: bold">本地令牌</span>。 <br> <span class="hint-text"> 您不需要等 ICE
-    伺服器完全收集完畢，當下面的令牌已經有內容並且不再明顯變動後，您可以提前將令牌複製給對方。 </span>
+    請將<span class="v-chip v-chip--label v-size--small" style="text-font: bold">本地令牌</span>傳送給您的聯機夥伴，您的聯機夥伴在 <span class="v-chip v-chip--label v-size--small" style="text-font: bold"> 加入連線 </span> 中輸入這段文字。 <br> 期間 ICE 伺服器可能需要時間收集足夠資訊來建立<span class="v-chip v-chip--label v-size--small" style="text-font: bold">本地令牌</span>。 <br> <span class="hint-text"> 您不需要等 ICE 伺服器完全收集完畢，當下面的令牌已經有內容並且不再明顯變動後，您可以提前將令牌複製給對方。 </span>
   groupId: 小組 ID
   illegalTokenDescription: 無效的令牌，請確認對方給您的令牌是完整且正確的。
   initiateConnection: 發起連線
@@ -964,7 +929,6 @@ presence:
   save: 在 {instance} 瀏覽存檔
   setting: 瀏覽設定頁面
   shaderPack: 在 {instance} 瀏覽光影包
-  version: 瀏覽版本頁面
 proxy:
   host: 伺服器位址
   port: 埠號
@@ -991,11 +955,7 @@ resourcepack:
   unselected: 未選資源包
 save:
   copy:
-    cancel: 取消複製
-    confirm: 開始複製
-    description: 請勾選您想讓存檔複製到的啟動設定（目標啟動設定）
     name: 複製存檔
-    title: 複製存檔到其他啟動設定
   createNew: 新存檔
   createdWorlds: 建立了 {count} 個世界
   deleteHint: 該操作不可逆，您將永遠失去這個存檔的紀錄，您確定要刪除此存檔嗎？
@@ -1046,14 +1006,12 @@ server:
   ipAddress: IP 位址
   maxPlayers: 最大玩家數
   motd: 伺服器 MOTD
-  name: 伺服器名
   nogui: 無伺服器 GUI
   onlineMode: 線上模式
   ping: Ping 伺服器
   pings: 延遲
   players: 玩家
   port: 埠
-  status: 伺服器狀態
   unknown: 未知伺服器
   unknownDescription: 未知伺服器，請重新整理。
   upload: 上傳伺服器
@@ -1245,10 +1203,7 @@ setting:
   update: 升級
   useBmclAPI: 使用 BMCLAPI 映象
   useBmclAPIDescription: >
-    "BMCLAPI 是由 bangbang93 建立的映象服務。這個服務由 bangbang93 和 OpenBMCLAPI
-    社群共同提供。它透過提供國內下載伺服器來改善從 Mojang 官方 S3 物件儲存下載檔案慢的問題。由於 MCBBS 源已停服，BMCLAPI
-    會在下載高峰期時下載緩慢。有關 OpenBMCLAPI 伺服器的服務狀態，請存取 OpenBMCLAPI 排行榜網站
-    bd.bangbang93.com"
+    "BMCLAPI 是由 bangbang93 建立的映象服務。這個服務由 bangbang93 和 OpenBMCLAPI 社群共同提供。它透過提供國內下載伺服器來改善從 Mojang 官方 S3 物件儲存下載檔案慢的問題。由於 MCBBS 源已停服，BMCLAPI 會在下載高峰期時下載緩慢。有關 OpenBMCLAPI 伺服器的服務狀態，請存取 OpenBMCLAPI 排行榜網站 bd.bangbang93.com"
   useProxy: HTTP 代理伺服器設定
   useProxyDescription: HTTP 請求的代理伺服器位址
   viewBackgroundMusic: 檢視背景音樂
@@ -1290,8 +1245,7 @@ setup:
     name: 匯入已有的遊戲
   locale:
     description: >-
-      選擇您的語言，如果您在這裡沒有看到想要的語言，並且您有興趣協助我們的話，您可以去我們的 GitHub 上開啟 Pull Request
-      來新增新語言！
+      選擇您的語言，如果您在這裡沒有看到想要的語言，並且您有興趣協助我們的話，您可以去我們的 GitHub 上開啟 Pull Request 來新增新語言！
     language: 目前語言
     name: 設定語言
   path: 目前位置
@@ -1452,10 +1406,7 @@ tutorial:
   storeSearchResultDescription: 您將看到此處列出的所有搜尋結果。
   userAccountDescription: 按一下此圖示可新增或管理您的 Minecraft 帳戶。
 universalDrop:
-  start: 開始匯入
-  title: 將檔案拖到這並匯入為
   unknownResource: 無法解析
-update: {}
 upstream:
   downgrade: 降級
   onlyShowCurrentVersion: 只顯示適合目前 Minecraft 的版本

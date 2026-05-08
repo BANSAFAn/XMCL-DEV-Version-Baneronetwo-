@@ -7,24 +7,28 @@
     @dragleave="isDraggedOver = false;"
     @drop="onDrop"
   >
-    <div class="inline-flex whitespace-nowrap overflow-hidden text-ellipsis">
-      <v-icon v-shared-tooltip="() => tooltip || ''" small left> {{ icon }} </v-icon>
+    <div class="inline-flex items-center whitespace-nowrap overflow-hidden text-ellipsis">
+      <v-icon v-shared-tooltip="() => tooltip || ''" size="small" start> {{ icon }} </v-icon>
       <span
-        class="transition-colors"
+        class="home-card-item__text transition-colors"
         :style="{
-          color: isDraggedOver || highlighted ? 'var(--highlight-color)' : isHovered ? (isDark ? 'white' : 'black') : 'inherit',
-          fontWeight: isDraggedOver || highlighted ? 'bold' : 'normal'
+          color: isDraggedOver || highlighted
+            ? 'var(--highlight-color)'
+            : isHovered
+              ? (isDark ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.87)')
+              : (isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.55)'),
+          fontWeight: isDraggedOver || highlighted ? 'bold' : 'normal',
         }"
       >
         {{ text }}
       </span>
     </div>
     <div class="flex-grow" />
-    <v-btn :loading="loading" class="controls" v-if="!dragover" :color="isHovered ? 'primary' : 'default'" text small @click.stop="emit('install')">
+    <v-btn :loading="loading" class="controls" v-if="!dragover" :color="isHovered ? 'primary' : 'default'" @click.stop="emit('install')" size="small" variant="text">
       <span class="transition-all transition-duration-300" :style="{ opacity: isHovered ? 1 : 0 }">
         {{ t('shared.install') }}
       </span>
-      <v-icon :color="isHovered ? 'primary' : 'default'" class="material-symbols-outlined" right>
+      <v-icon :color="isHovered ? 'primary' : 'default'" class="material-symbols-outlined" end>
         file_download
       </v-icon>
     </v-btn>

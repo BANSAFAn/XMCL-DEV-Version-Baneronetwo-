@@ -2,7 +2,8 @@
   <section class="about">
     <SettingCard>
       <div>
-        <v-card-title class="w-full flex mr-2 title">
+        <v-card-item>
+          <v-card-title class="w-full flex mr-2 title">
           <v-img src="http://launcher/icons/logoDark" alt="XMCL Logo" max-width="64" class="mr-4"></v-img>
           <div>
             <a class="text-h5" href="https://www.xmcl.app" v-shared-tooltip="() => 'X Minecraft Launcher'">X Minecraft Launcher</a>
@@ -25,6 +26,7 @@
             </div>
           </div>
         </v-card-title>
+        </v-card-item>
 
         <v-textarea filled readonly class="px-4" :value="debugInfo" />
       </div>

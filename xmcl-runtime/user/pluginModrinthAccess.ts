@@ -14,8 +14,8 @@ export const pluginModrinthAccess: LauncherAppPlugin = async (app) => {
       if (parsed.searchParams.get('error')) {
         const err = parsed.searchParams.get('error')!
         const errDescription = parsed.searchParams.get('error')!
-        error = new Error(unescape(errDescription));
-        (error as any).error = err
+        error = new Error(unescape(errDescription))
+        ;(error as any).error = err
       }
       const code = parsed.searchParams.get('code') as string
       userService.emit('modrinth-authorize-code', error, code)
@@ -38,13 +38,15 @@ export const pluginModrinthAccess: LauncherAppPlugin = async (app) => {
       return
     }
 
-    if ( request.url.pathname === '/v2/version_files') {
+    if (request.url.pathname === '/v2/version_files') {
       return
     }
 
     const token = await getModrinthAccessToken(app)
     if (token) {
-      request.headers['Authorization'] = `Bearer ${token}`
+      // Modrinth's API accepts both `Bearer <token>` and the raw token; we
+      // use the raw form to match the original behavior.
+      request.headers['Authorization'] = token
     }
   })
 }

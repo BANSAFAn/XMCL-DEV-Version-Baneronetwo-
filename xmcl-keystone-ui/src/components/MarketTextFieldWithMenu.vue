@@ -1,261 +1,237 @@
 <template>
-  <v-menu
-    v-model="focused"
-    offset-y
-    bottom
-    :close-on-click="false"
-    :close-on-content-click="false"
-  >
-    <template #activator="{ }">
-      <MarketTextField
-        ref="field"
-        :clearable="!!curseforgeCategory || modrinthCategories.length > 0 || !!keyword"
-        :value="keyword"
-        :placeholder="placeholder"
-        :game-version="gameVersion !== runtime.minecraft ? gameVersion : undefined"
-        :category="!!curseforgeCategory || modrinthCategories.length > 0"
-        :icon="tab === 0 ? 'file_download' : tab === 1 ? 'search' : 'favorite'"
-        @clear="onClear"
-        @clear-version="emit('update:gameVersion', runtime.minecraft)"
-        @input="emit('update:keyword', $event)"
-        @clear-category="onClear"
-      />
-    </template>
-    <v-card
-      class="overflow-auto max-h-[80vh] flex flex-col modern-filter-card"
-      @mousedown.prevent
+  <div ref="anchor" class="market-text-field-with-menu flex flex-grow justify-end">
+    <MarketTextField
+      ref="field"
+      :clearable="!!curseforgeCategory || modrinthCategories.length > 0 || !!keyword"
+      :value="keyword"
+      :placeholder="placeholder"
+      :game-version="gameVersion !== runtime.minecraft ? gameVersion : undefined"
+      :category="!!curseforgeCategory || modrinthCategories.length > 0"
+      :icon="tab === 0 ? 'file_download' : tab === 1 ? 'search' : 'favorite'"
+      @clear="onClear"
+      @clear-version="emit('update:gameVersion', runtime.minecraft)"
+      @input="emit('update:keyword', $event)"
+      @clear-category="onClear"
+    />
+    <v-menu
+      v-model="showMenu"
+      :target="anchor"
+      location="bottom"
+      min-width="480"
+      :close-on-click="false"
+      :close-on-content-click="false"
     >
-      <v-tabs v-if="!noTab" v-model="tab" centered fixed-tabs>
-        <v-tab>
-          {{ t('search.market') }}
-        </v-tab>
-        <v-tab>
-          {{ t('search.local') }}
-        </v-tab>
-        <v-tab>
-          {{ t('search.favorate') }}
-        </v-tab>
-      </v-tabs>
+      <v-card
+        class="overflow-auto max-h-[80vh] flex flex-col modern-filter-card"
+        @mousedown.prevent
+      >
+        <v-tabs
+          v-if="!noTab"
+          v-model="tab"
+          color="primary"
+          slider-color="primary"
+          align-tabs="center"
+          fixed-tabs
+        >
+          <v-tab :value="0">
+            {{ t('search.market') }}
+          </v-tab>
+          <v-tab :value="1">
+            {{ t('search.local') }}
+          </v-tab>
+          <v-tab :value="2">
+            {{ t('search.favorate') }}
+          </v-tab>
+        </v-tabs>
 
-      <v-tabs-items v-model="tab" class="overflow-auto flex">
-        <v-tab-item class="tab">
-          <v-subheader class="flex">
-            {{ t('modrinth.sort.title') }}
-          </v-subheader>
-          <v-btn-toggle
-            background-color="transparent"
-            :value="sort"
-            mandatory
-            class="bg-transparent px-1"
-            @change="emit('update:sort', $event || 'alpha_asc')"
-          >
-            <v-btn
-              v-for="tag in sortByItems"
-              :key="tag.value"
-              v-shared-tooltip="tag.text"
-              small
-              outlined
-              class="transition-all duration-200"
-              :class="{ 'active-btn': sort === tag.value }"
-            >
-              <v-icon
-                class="material-icons-outlined"
-                small
-              >
-                {{ tag.icon }}
-              </v-icon>
-            </v-btn>
-          </v-btn-toggle>
-
-          <v-subheader class="flex">
-            {{ t('minecraftVersion.name') }}
-          </v-subheader>
-          <v-chip-group
-            ref="chipGroup"
-            v-model="gameVersionModel"
-            center-active
-            show-arrows
-            mandatory
-            @wheel.native.stop="onWheel"
-          >
-            <v-chip
-              v-for="v of versionIds"
-              :key="v"
-              filter
-              outlined
-              label
-            >
-              {{ v }}
-            </v-chip>
-          </v-chip-group>
-
-          <v-subheader
-            v-if="modLoaders"
-          >
-            {{ t('modrinth.modLoaders.name') }}
-          </v-subheader>
-          <v-btn-toggle
-            v-if="modLoaders"
-            background-color="transparent"
-            class="px-1"
-            dense
-            :value="modloader"
-            @change="emit('update:modloader', $event)"
-          >
-            <v-btn
-              v-for="loader in modLoaders"
-              :key="loader"
-              outlined
-              text
-              small
-              :value="loader"
-            >
-              <img
-                height="24"
-                :src="getIcon(loader)"
-              >
-            </v-btn>
-          </v-btn-toggle>
-
-          <template v-if="modrinthCategoryFilter">
-            <v-subheader class="flex gap-1">
-              Modrinth
-              <div class="flex-grow" />
-              <v-switch
-                dense
-                flat
-                :input-value="enableModrinth"
-                @change="emit('update:enableModrinth', $event)"
-              />
-            </v-subheader>
-            <v-chip-group
-              v-model="modrinthSelectModel"
-              column
-              multiple
-            >
-              <ModrinthCategoryChip
-                v-for="tag in _modrinthCategories"
-                :key="tag.name"
-                :tag="tag"
-                :disabled="!enableModrinth"
-              />
-            </v-chip-group>
-            <v-subheader class="flex">
-              {{ t('modrinth.environments.name') }}
-            </v-subheader>
+        <v-tabs-window v-model="tab" class="overflow-auto flex">
+          <v-tabs-window-item :value="0" class="tab">
+            <div class="filter-subheader flex">
+              {{ t('modrinth.sort.title') }}
+            </div>
             <v-btn-toggle
-              background-color="transparent"
+              :value="sort"
+              mandatory
+              density="compact"
+              divided
               class="px-1"
-              dense
-              :value="modrinthEnvironment"
-              :disabled="!enableModrinth"
-              @change="emit('update:modrinthEnvironment', $event || '')"
+              @change="emit('update:sort', $event || 'alpha_asc')"
             >
               <v-btn
-                v-shared-tooltip="t('modrinth.environments.all')"
-                outlined
-                text
-                small
-                value=""
-                :disabled="!enableModrinth"
+                v-for="tag in sortByItems"
+                :key="tag.value"
+                v-shared-tooltip="tag.text"
+                class="transition-all duration-200"
+                size="small"
+                variant="text"
+                border
               >
-                <v-icon small>
-                  devices
-                </v-icon>
-              </v-btn>
-              <v-btn
-                v-shared-tooltip="t('shared.client')"
-                outlined
-                text
-                small
-                value="client"
-                :disabled="!enableModrinth"
-              >
-                <v-icon small>
-                  computer
-                </v-icon>
-              </v-btn>
-              <v-btn
-                v-shared-tooltip="t('shared.server')"
-                text
-                small
-                value="server"
-                :disabled="!enableModrinth"
-              >
-                <v-icon small>
-                  dns
+                <v-icon class="material-icons-outlined" size="small">
+                  {{ tag.icon }}
                 </v-icon>
               </v-btn>
             </v-btn-toggle>
-          </template>
-          <template v-if="curseforgeCategoryFilter">
-            <v-subheader class="flex">
-              CurseForge
 
-
-              <div class="flex-grow" />
-              <v-switch
-                dense
-                flat
-                :input-value="enableCurseforge"
-                @change="emit('update:enableCurseforge', $event)"
-              />
-            </v-subheader>
+            <div class="filter-subheader flex">
+              {{ t('minecraftVersion.name') }}
+            </div>
             <v-chip-group
-              v-model="curseforgeSelectModel"
-              column
-              :disabled="!enableCurseforge"
+              ref="chipGroup"
+              v-model="gameVersionModel"
+              density="compact"
+              center-active
+              show-arrows
+              mandatory
+              @wheel.native.stop="onWheel"
             >
-              <CurseforgeCategoryChip
-                v-for="c of curseforgeCategories"
-                :key="c.id"
-                :disabled="!enableCurseforge"
-                :value="c"
-              />
+              <v-chip v-for="v of versionIds" :key="v" filter variant="outlined" label>
+                {{ v }}
+              </v-chip>
             </v-chip-group>
-          </template>
-        </v-tab-item>
-        <v-tab-item class="tab">
-          <v-subheader class="flex">
-            {{ t('modrinth.sort.title') }}
-          </v-subheader>
-          <v-btn-toggle
-            background-color="transparent"
-            :value="sortByItems.findIndex(i => i.value === localSort)"
-            class="bg-transparent px-1"
-            @change="updateLocalSort"
-          >
-            <v-btn
-              v-for="tag in sortByLocalItems"
-              :key="tag.value"
-              v-shared-tooltip="tag.text"
-              small
-              outlined
+
+            <div class="filter-subheader" v-if="modLoaders">
+              {{ t('modrinth.modLoaders.name') }}
+            </div>
+            <v-btn-toggle
+              v-if="modLoaders"
+              class="px-1"
+              density="compact"
+              divided
+              :value="modloader"
+              @change="emit('update:modloader', $event)"
             >
-              <v-icon
-                class="material-icons-outlined"
-                small
+              <v-btn
+                v-for="loader in modLoaders"
+                :key="loader"
+                :value="loader"
+                size="small"
+                variant="text"
+                border
               >
-                {{ tag.icon }}
-              </v-icon>
-              <v-icon small>
-                {{ tag.value.endsWith('asc') ? 'arrow_upward' : 'arrow_downward' }}
-              </v-icon>
-            </v-btn>
-          </v-btn-toggle>
+                <img height="24" :src="getIcon(loader)" />
+              </v-btn>
+            </v-btn-toggle>
 
+            <template v-if="modrinthCategoryFilter">
+              <div class="filter-subheader flex gap-1">
+                Modrinth
+                <div class="flex-grow" />
+                <v-switch
+                  density="compact"
+                  hide-details
+                  color="primary"
+                  :model-value="enableModrinth"
+                  @update:model-value="emit('update:enableModrinth', $event)"
+                />
+              </div>
+              <v-chip-group v-model="modrinthSelectModel" column multiple>
+                <ModrinthCategoryChip
+                  v-for="tag in _modrinthCategories"
+                  :key="tag.name"
+                  :tag="tag"
+                  :disabled="!enableModrinth"
+                />
+              </v-chip-group>
+              <div class="filter-subheader flex">
+                {{ t('modrinth.environments.name') }}
+              </div>
+              <v-btn-toggle
+                background-color="transparent"
+                class="px-1"
+                variant="outlined"
+                density="compact"
+                :value="modrinthEnvironment"
+                :disabled="!enableModrinth"
+                @change="emit('update:modrinthEnvironment', $event || '')"
+              >
+                <v-btn
+                  v-shared-tooltip="t('modrinth.environments.all')"
+                  value=""
+                  :disabled="!enableModrinth"
+                  size="small"
+                >
+                  <v-icon size="small"> devices </v-icon>
+                </v-btn>
+                <v-btn
+                  v-shared-tooltip="t('shared.client')"
+                  value="client"
+                  :disabled="!enableModrinth"
+                  size="small"
+                >
+                  <v-icon size="small"> computer </v-icon>
+                </v-btn>
+                <v-btn
+                  v-shared-tooltip="t('shared.server')"
+                  value="server"
+                  :disabled="!enableModrinth"
+                  size="small"
+                >
+                  <v-icon size="small"> dns </v-icon>
+                </v-btn>
+              </v-btn-toggle>
+            </template>
+            <template v-if="curseforgeCategoryFilter">
+              <div class="filter-subheader flex">
+                CurseForge
+                <div class="flex-grow" />
+                <v-switch
+                  density="compact"
+                  hide-details
+                  color="primary"
+                  :model-value="enableCurseforge"
+                  @update:model-value="emit('update:enableCurseforge', $event)"
+                />
+              </div>
+              <v-chip-group v-model="curseforgeSelectModel" column :disabled="!enableCurseforge">
+                <CurseforgeCategoryChip
+                  v-for="c of curseforgeCategories"
+                  :key="c.id"
+                  :disabled="!enableCurseforge"
+                  :value="c"
+                />
+              </v-chip-group>
+            </template>
+          </v-tabs-window-item>
+          <v-tabs-window-item :value="1" class="tab">
+            <div class="filter-subheader flex">
+              {{ t('modrinth.sort.title') }}
+            </div>
+            <v-btn-toggle
+              background-color="transparent"
+              density="compact"
+              :rounded="10"
+              :value="sortByItems.findIndex((i) => i.value === localSort)"
+              variant="outlined"
+              class="bg-transparent px-1"
+              @change="updateLocalSort"
+            >
+              <v-btn
+                v-for="tag in sortByLocalItems"
+                :key="tag.value"
+                v-shared-tooltip="tag.text"
+                size="small"
+              >
+                <v-icon class="material-icons-outlined" size="small">
+                  {{ tag.icon }}
+                </v-icon>
+                <v-icon size="small">
+                  {{ tag.value.endsWith('asc') ? 'arrow_upward' : 'arrow_downward' }}
+                </v-icon>
+              </v-btn>
+            </v-btn-toggle>
 
-          <slot name="local" />
-        </v-tab-item>
-        <v-tab-item class="tab">
-          <AppCollectionList
-            :select="collection"
-            @update:select="emit('update:collection', $event)"
-          />
-        </v-tab-item>
-      </v-tabs-items>
-    </v-card>
-  </v-menu>
+            <slot name="local" />
+          </v-tabs-window-item>
+          <v-tabs-window-item :value="2" class="tab">
+            <AppCollectionList
+              :select="collection"
+              @update:select="emit('update:collection', $event)"
+            />
+          </v-tabs-window-item>
+        </v-tabs-window>
+      </v-card>
+    </v-menu>
+  </div>
 </template>
 <script setup lang="ts">
 import MarketTextField from '@/components/MarketTextField.vue'
@@ -286,7 +262,7 @@ const props = defineProps<{
   keyword: string
   placeholder?: string
   sort?: number | string
-  modrinthSort?: 'relevance'| 'downloads' |'follows' |'newest' |'updated'
+  modrinthSort?: 'relevance' | 'downloads' | 'follows' | 'newest' | 'updated'
   curseforgeSort?: ModsSearchSortField
 
   noTab?: boolean
@@ -317,6 +293,10 @@ const emit = defineEmits<{
   (event: 'update:modrinthEnvironment', value: '' | 'client' | 'server'): void
 }>()
 
+const showMenu = ref(false)
+provide('focused', showMenu)
+const anchor = ref(null as any)
+
 const { versions } = useMinecraftVersions()
 const tab = computed({
   get() {
@@ -336,53 +316,66 @@ const tab = computed({
 const { interact } = injection(kModrinthAuthenticatedAPI)
 watch(tab, (i) => {
   if (i === 2) {
-    interact()
+    // Skip showing the global login dialog: AppCollectionList renders
+    // an inline login prompt when not authenticated.
+    interact({ silent: true })
   }
 })
-
-const focused = ref(false)
-provide('focused', focused)
 
 const { refresh, refreshing, categories: cCategories } = injection(kCurseforgeCategories)
 const curseforgeCategories = computed(() => {
   if (!props.curseforgeCategoryFilter) return []
   const result = cCategories.value
   if (!result) return []
-  const parent = result.find(c => c.slug === props.curseforgeCategoryFilter)
-  return result.filter(r => r.parentCategoryId === parent?.id)
+  const parent = result.find((c) => c.slug === props.curseforgeCategoryFilter)
+  return result.filter((r) => r.parentCategoryId === parent?.id)
 })
 
 const { categories: mCategories } = injection(kModrinthTags)
 const _modrinthCategories = computed(() => {
   const result = mCategories.value
   if (!result) return []
-  return result.filter(r => r.project_type === props.modrinthCategoryFilter)
+  return result.filter((r) => r.project_type === props.modrinthCategoryFilter)
 })
 const { t, te } = useI18n()
 
 const { runtime } = injection(kInstance)
-const versionIds = computed(() => getSelectableGameVersionIds(versions.value.map(v => v.id), props.gameVersion))
+const versionIds = computed(() =>
+  getSelectableGameVersionIds(
+    versions.value.map((v) => v.id),
+    props.gameVersion,
+  ),
+)
 
 const field = ref(null as any)
-watch(() => props.curseforgeCategory, (v) => {
-  field.value?.focus()
-})
-watch(() => props.modrinthCategories, (v) => {
-  field.value?.focus()
-}, { deep: true })
+watch(
+  () => props.curseforgeCategory,
+  (v) => {
+    field.value?.focus()
+  },
+)
+watch(
+  () => props.modrinthCategories,
+  (v) => {
+    field.value?.focus()
+  },
+  { deep: true },
+)
 
 const modrinthSelectModel = computed({
   get() {
-    return props.modrinthCategories.map(c => _modrinthCategories.value.findIndex(v => v.name === c))
+    return props.modrinthCategories.map((c) =>
+      _modrinthCategories.value.findIndex((v) => v.name === c),
+    )
   },
   set(v) {
-    const result = v.map(i => _modrinthCategories.value[i].name)
+    const result = v.map((i) => _modrinthCategories.value[i].name)
     emit('update:modrinthCategories', result)
   },
 })
 const curseforgeSelectModel = computed({
   get() {
-    return curseforgeCategories.value.findIndex(v => v.id === props.curseforgeCategory)
+    return curseforgeCategories.value.findIndex((v) => v.id === props.curseforgeCategory)
   },
   set(v) {
     emit('update:curseforgeCategory', !v ? v : curseforgeCategories.value[v].id)
@@ -390,7 +383,7 @@ const curseforgeSelectModel = computed({
 })
 const gameVersionModel = computed({
   get() {
-    return versionIds.value.findIndex(v => v === props.gameVersion)
+    return versionIds.value.findIndex((v) => v === props.gameVersion)
   },
   set(v) {
     emit('update:gameVersion', versionIds.value[v])
@@ -431,23 +424,28 @@ function updateLocalSort(i: number) {
 }
 
 const sortByLocalItems = computed(() => {
-  return [{
-    icon: 'sort_by_alpha',
-    value: 'alpha_asc',
-    text: t('sortBy.alphabetAsc')
-  }, {
-    icon: 'sort_by_alpha',
-    value: 'alpha_desc',
-    text: t('sortBy.alphabetDesc')
-  }, {
-    icon: 'calendar_month',
-    value: 'time_asc',
-    text: t('sortBy.timeAsc'),
-  }, {
-    icon: 'calendar_month',
-    value: 'time_desc',
-    text: t('sortBy.timeDesc'),
-  }]
+  return [
+    {
+      icon: 'sort_by_alpha',
+      value: 'alpha_asc',
+      text: t('sortBy.alphabetAsc'),
+    },
+    {
+      icon: 'sort_by_alpha',
+      value: 'alpha_desc',
+      text: t('sortBy.alphabetDesc'),
+    },
+    {
+      icon: 'calendar_month',
+      value: 'time_asc',
+      text: t('sortBy.timeAsc'),
+    },
+    {
+      icon: 'calendar_month',
+      value: 'time_desc',
+      text: t('sortBy.timeDesc'),
+    },
+  ]
 })
 
 const chipGroup = ref(null as any)
@@ -466,7 +464,6 @@ function getIcon(loader: string) {
   // @ts-ignore
   return BuiltinImages[loader]
 }
-
 </script>
 
 <style>
@@ -479,9 +476,8 @@ function getIcon(loader: string) {
 </style>
 <style scoped>
 .tab {
-  @apply px-2 h-120 w-120 max-h-120 max-w-120 overflow-auto
+  @apply px-2 h-120 w-120 max-h-120 max-w-120 overflow-auto;
 }
-
 
 .active-btn {
   @apply ring-2 ring-primary/50 ring-offset-1 ring-offset-transparent;

@@ -7,22 +7,24 @@
   >
     <v-card class="bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden" style="max-height: 85vh;">
       <!-- Compact Header Bar -->
-      <v-card-title class="py-2 px-4 bg-gray-100 dark:bg-[#212121] border-b border-gray-300 dark:border-white/10 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <v-icon color="success" size="18">collections</v-icon>
-          <span class="text-sm font-medium">{{ t('screenshots.gallery') }}</span>
-          <span class="text-gray-700 dark:text-gray-500 text-xs">({{ screenshots.length }})</span>
-        </div>
-        <div class="flex items-center gap-1">
-          <v-btn text x-small @click="onOpenFolder">
-            <v-icon x-small left>folder_open</v-icon>
-            <span class="text-xs">{{ t('screenshots.openFolder') }}</span>
-          </v-btn>
-          <v-btn icon x-small @click="close">
-            <v-icon small>close</v-icon>
-          </v-btn>
-        </div>
-      </v-card-title>
+      <v-card-item>
+        <v-card-title class="py-2 px-4 bg-gray-100 dark:bg-[#212121] border-b border-gray-300 dark:border-white/10 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <v-icon color="success" size="18">collections</v-icon>
+            <span class="text-sm font-medium">{{ t('screenshots.gallery') }}</span>
+            <span class="text-gray-700 dark:text-gray-500 text-xs">({{ screenshots.length }})</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <v-btn @click="onOpenFolder" size="x-small" variant="text">
+              <v-icon size="x-small" start>folder_open</v-icon>
+              <span class="text-xs">{{ t('screenshots.openFolder') }}</span>
+            </v-btn>
+            <v-btn icon variant="text" @click="close" size="x-small">
+              <v-icon size="small">close</v-icon>
+            </v-btn>
+          </div>
+        </v-card-title>
+      </v-card-item>
 
       <!-- Screenshots Grid -->
       <v-card-text class="p-3 overflow-y-auto" style="max-height: calc(85vh - 48px);">
@@ -31,7 +33,7 @@
           <p class="text-sm">{{ t('screenshots.empty') }}</p>
           <p class="text-xs text-gray-600 dark:text-gray-600">{{ t('screenshots.hint') }}</p>
         </div>
-        
+
         <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           <div
             v-for="(url, idx) in screenshots"
@@ -47,14 +49,14 @@
               <v-icon color="white">fullscreen</v-icon>
             </div>
             <!-- Delete button -->
-            <v-btn 
-              icon 
-              x-small
+            <v-btn
+              icon
+              variant="text"
               color="error"
-              class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg" 
+              class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
               @click.stop="onDeleteScreenshot(url)"
-            >
-              <v-icon x-small>delete</v-icon>
+             size="x-small">
+              <v-icon size="x-small">delete</v-icon>
             </v-btn>
           </div>
         </div>

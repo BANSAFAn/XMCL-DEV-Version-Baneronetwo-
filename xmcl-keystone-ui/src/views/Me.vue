@@ -1,28 +1,31 @@
 <script lang="ts" setup>
-import { useLocalStorageCacheBool } from "@/composables/cache";
-import { useDateString } from "@/composables/date";
-import { useDialog } from "@/composables/dialog";
-import { kInstance } from "@/composables/instance";
-import { useInstanceContextMenuFunc } from '@/composables/instanceContextMenu';
-import { useInstanceGroup } from "@/composables/instanceGroup";
-import { AddInstanceDialogKey } from "@/composables/instanceTemplates";
-import { kInstances } from "@/composables/instances";
-import { LauncherNews, useLauncherNews } from "@/composables/launcherNews";
-import { useMojangNews } from "@/composables/mojangNews";
-import { useInjectSidebarSettings } from '@/composables/sidebarSettings';
-import { useTextFieldBehavior } from '@/composables/textfieldBehavior';
-import { vContextMenu } from '@/directives/contextMenu';
-import { getInstanceIcon } from "@/util/favicon";
-import { injection } from "@/util/inject";
-import { useFocus, useLocalStorage } from '@vueuse/core';
-import { Instance } from "@xmcl/instance";
-import { Ref, computed, ref } from "vue";
-import { useRouter } from "vue-router/composables";
+import { useLocalStorageCacheBool } from '@/composables/cache'
+import { useDateString } from '@/composables/date'
+import { useDialog } from '@/composables/dialog'
+import { kInstance } from '@/composables/instance'
+import { useInstanceContextMenuFunc } from '@/composables/instanceContextMenu'
+import { useInstanceGroup } from '@/composables/instanceGroup'
+import { AddInstanceDialogKey } from '@/composables/instanceTemplates'
+import { kInstances } from '@/composables/instances'
+import { LauncherNews, useLauncherNews } from '@/composables/launcherNews'
+import { useMojangNews } from '@/composables/mojangNews'
+import { useInjectSidebarSettings } from '@/composables/sidebarSettings'
+import { useTextFieldBehavior } from '@/composables/textfieldBehavior'
+import { kTheme } from '@/composables/theme'
+import { vContextMenu } from '@/directives/contextMenu'
+import { getInstanceIcon } from '@/util/favicon'
+import { injection } from '@/util/inject'
+import { useFocus, useLocalStorage } from '@vueuse/core'
+import { Instance } from '@xmcl/instance'
+import { Ref, computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const { t } = useI18n();
-const { news } = useMojangNews();
-const { news: launcherNews } = useLauncherNews();
-const { getDateString } = useDateString();
+const { t } = useI18n()
+const { isDark } = injection(kTheme)
+const arrowColor = computed(() => isDark.value ? 'white' : 'black')
+const { news } = useMojangNews()
+const { news: launcherNews } = useLauncherNews()
+const { getDateString } = useDateString()
 
 const allNews = computed((): LauncherNews[] => {
   const result: LauncherNews[] = [
@@ -39,32 +42,34 @@ const allNews = computed((): LauncherNews[] => {
       },
       link: n.readMoreLink,
     })),
-  ];
-  return result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
-});
+  ]
+  return result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+})
 
-const filterKey = ref("");
-const displayNewsHeader = useLocalStorageCacheBool("displayNewsHeader", true);
-const { instances } = injection(kInstances);
-const { path } = injection(kInstance);
-const { groups } = useInstanceGroup();
-const { pinnedInstances } = useInjectSidebarSettings();
+const filterKey = ref('')
+const displayNewsHeader = useLocalStorageCacheBool('displayNewsHeader', true)
+const { instances } = injection(kInstances)
+const { path } = injection(kInstance)
+const { groups } = useInstanceGroup()
+const { pinnedInstances } = useInjectSidebarSettings()
 
 // View mode: folder, date, or plain
-const instanceViewMode = useLocalStorage('instanceViewMode', 'plain' as 'folder' | 'date' | 'plain');
+const instanceViewMode = useLocalStorage('instanceViewMode', 'plain' as 'folder' | 'date' | 'plain')
 
 const filteredInstances = computed(() =>
-  [...instances.value].filter(v => v.name.toLocaleLowerCase().includes(filterKey.value.toLocaleLowerCase())).sort((a, b) => b.lastAccessDate - a.lastAccessDate)
-);
+  [...instances.value]
+    .filter((v) => v.name.toLocaleLowerCase().includes(filterKey.value.toLocaleLowerCase()))
+    .sort((a, b) => b.lastAccessDate - a.lastAccessDate),
+)
 
 // Create a map from instance path to instance
 const instanceMap = computed(() => {
-  const map = new Map<string, Instance>();
+  const map = new Map<string, Instance>()
   for (const inst of filteredInstances.value) {
-    map.set(inst.path, inst);
+    map.set(inst.path, inst)
   }
-  return map;
-});
+  return map
+})
 
 interface GroupedItem {
   type: 'group'
@@ -76,14 +81,14 @@ interface GroupedItem {
 
 // Get grouped instances
 const groupedInstances = computed((): GroupedItem[] => {
-  const result: GroupedItem[] = [];
+  const result: GroupedItem[] = []
   for (const item of groups.value) {
     if (typeof item === 'object') {
-      const groupInstances: Instance[] = [];
+      const groupInstances: Instance[] = []
       for (const instancePath of item.instances) {
-        const inst = instanceMap.value.get(instancePath);
+        const inst = instanceMap.value.get(instancePath)
         if (inst) {
-          groupInstances.push(inst);
+          groupInstances.push(inst)
         }
       }
       if (groupInstances.length > 0) {
@@ -93,66 +98,66 @@ const groupedInstances = computed((): GroupedItem[] => {
           name: item.name,
           color: item.color,
           instances: groupInstances,
-        });
+        })
       }
     }
   }
-  return result;
-});
+  return result
+})
 
 // Get ungrouped instance paths
 const groupedPaths = computed(() => {
-  const paths = new Set<string>();
+  const paths = new Set<string>()
   for (const item of groups.value) {
     if (typeof item === 'object') {
       for (const instancePath of item.instances) {
-        paths.add(instancePath);
+        paths.add(instancePath)
       }
     }
   }
-  return paths;
-});
+  return paths
+})
 
 // Filter to only ungrouped instances
 const ungroupedInstances = computed(() => {
-  return filteredInstances.value.filter(inst => !groupedPaths.value.has(inst.path));
-});
+  return filteredInstances.value.filter((inst) => !groupedPaths.value.has(inst.path))
+})
 
 // Time-based grouping constants
-const now = Date.now();
-const oneDay = 1000 * 60 * 60 * 24;
-const threeDays = oneDay * 3;
+const now = Date.now()
+const oneDay = 1000 * 60 * 60 * 24
+const threeDays = oneDay * 3
 
 const timeGroupTitles = computed(() => [
   t('instanceAge.today'),
   t('instanceAge.threeDay'),
   t('instanceAge.older'),
-]);
+])
 
 // Helper function to group instances by time
 const groupByTime = (instances: Instance[]): Instance[][] => {
-  const todayR: Instance[] = [];
-  const threeR: Instance[] = [];
-  const other: Instance[] = [];
+  const todayR: Instance[] = []
+  const threeR: Instance[] = []
+  const other: Instance[] = []
   for (const p of instances) {
-    const diff = now - p.lastAccessDate;
+    const diff = now - p.lastAccessDate
     if (diff <= oneDay) {
-      todayR.push(p);
+      todayR.push(p)
     } else if (diff <= threeDays) {
-      threeR.push(p);
+      threeR.push(p)
     } else {
-      other.push(p);
+      other.push(p)
     }
   }
-  const result: Instance[][] = [];
-  if (todayR.length > 0) result.push(todayR);
-  if (threeR.length > 0) result.push(threeR);
-  if (other.length > 0) result.push(other);
-  return result;
-};
+  const result: Instance[][] = []
+  if (todayR.length > 0) result.push(todayR)
+  if (threeR.length > 0) result.push(threeR)
+  if (other.length > 0) result.push(other)
+  return result
+}
 
-const ungroupedByTime: Ref<Instance[][]> = computed(() => groupByTime(ungroupedInstances.value));
-const instancesByTime: Ref<Instance[][]> = computed(() => groupByTime(filteredInstances.value));
+const ungroupedByTime: Ref<Instance[][]> = computed(() => groupByTime(ungroupedInstances.value))
+const instancesByTime: Ref<Instance[][]> = computed(() => groupByTime(filteredInstances.value))
 
 // Unified data structure for both view modes
 interface InstanceSection {
@@ -164,8 +169,8 @@ interface InstanceSection {
 
 const instanceSections = computed((): InstanceSection[] => {
   if (instanceViewMode.value === 'folder') {
-    const sections: InstanceSection[] = [];
-    
+    const sections: InstanceSection[] = []
+
     // Add manual groups
     for (const group of groupedInstances.value) {
       sections.push({
@@ -173,9 +178,9 @@ const instanceSections = computed((): InstanceSection[] => {
         title: group.name || t('instances.folder'),
         icon: 'folder',
         instances: group.instances,
-      });
+      })
     }
-    
+
     // Add ungrouped instances directly
     if (ungroupedInstances.value.length > 0) {
       sections.push({
@@ -183,14 +188,14 @@ const instanceSections = computed((): InstanceSection[] => {
         title: ' ',
         icon: 'view_list',
         instances: ungroupedInstances.value,
-      });
+      })
     }
 
-    return sections;
+    return sections
   } else if (instanceViewMode.value === 'date') {
     // Date view mode - all instances by time
-    const sections: InstanceSection[] = [];
-    const timeGroups = instancesByTime.value;
+    const sections: InstanceSection[] = []
+    const timeGroups = instancesByTime.value
     timeGroups.forEach((timeGroup, i) => {
       if (timeGroup.length > 0) {
         sections.push({
@@ -198,29 +203,31 @@ const instanceSections = computed((): InstanceSection[] => {
           title: timeGroupTitles.value[i],
           icon: 'schedule',
           instances: timeGroup,
-        });
+        })
       }
-    });
-    
-    return sections;
+    })
+
+    return sections
   } else {
     // Plain view mode - all instances in one list
-    return [{
-      id: 'plain',
-      title: '',
-      icon: 'view_list',
-      instances: filteredInstances.value,
-    }];
+    return [
+      {
+        id: 'plain',
+        title: '',
+        icon: 'view_list',
+        instances: filteredInstances.value,
+      },
+    ]
   }
-});
+})
 
-const { show: openAddInstanceDialog } = useDialog(AddInstanceDialogKey);
+const { show: openAddInstanceDialog } = useDialog(AddInstanceDialogKey)
 
-const router = useRouter();
+const router = useRouter()
 
 function selectInstance(instancePath: string) {
   path.value = instancePath
-  if (router.currentRoute.path !== '/') {
+  if (router.currentRoute.value.path !== '/') {
     router.push('/')
   }
 }
@@ -232,19 +239,18 @@ const { focused } = useFocus(filter)
 useTextFieldBehavior(filter, focused)
 
 function openInBrowser(url: string) {
-  window.open(url, "_blank", "noopener,noreferrer");
+  window.open(url, '_blank', 'noopener,noreferrer')
 }
 </script>
 
 <template>
   <div ref="container" class="my-stuff-page h-full overflow-auto">
     <div class="classic-container">
-
       <!-- News Section (Hero Style) -->
       <section v-if="true && allNews.length > 0" class="news-section">
         <div class="section-header">
           <v-icon class="section-icon" color="primary">article</v-icon>
-          <h2 class="section-title">{{ t("news.name") }}</h2>
+          <h2 class="section-title">{{ t('news.name') }}</h2>
         </div>
 
         <div class="news-carousel-wrapper">
@@ -256,18 +262,16 @@ function openInBrowser(url: string) {
             :interval="6000"
             class="news-carousel"
           >
-            <v-carousel-item
-              v-for="(item, index) in allNews.slice(0, 8)"
-              :key="index"
-            >
+            <template #prev="{ props: btnProps }">
+              <v-btn variant="plain" icon="chevron_left" :color="arrowColor" @click="btnProps.onClick" />
+            </template>
+            <template #next="{ props: btnProps }">
+              <v-btn variant="plain" icon="chevron_right" :color="arrowColor" @click="btnProps.onClick" />
+            </template>
+            <v-carousel-item v-for="(item, index) in allNews.slice(0, 8)" :key="index">
               <div class="news-slide" @click="openInBrowser(item.link)">
                 <div class="news-image-wrapper">
-                  <v-img
-                    :src="item.image.url"
-                    height="280"
-                    cover
-                    class="news-image"
-                  >
+                  <v-img :src="item.image.url" height="280" cover class="news-image">
                     <template v-slot:placeholder>
                       <div class="d-flex align-center justify-center fill-height">
                         <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -280,13 +284,15 @@ function openInBrowser(url: string) {
                   <div class="news-meta">
                     <span class="news-category">{{ item.category }}</span>
                     <span class="news-dot">•</span>
-                    <span class="news-date">{{ getDateString(item.date, { dateStyle: 'medium' }) }}</span>
+                    <span class="news-date">{{
+                      getDateString(item.date, { dateStyle: 'medium' })
+                    }}</span>
                   </div>
                   <h3 class="news-title">{{ item.title }}</h3>
                   <p class="news-description">{{ item.description }}</p>
-                  <v-btn text color="primary" small class="news-read-more">
-                    {{ t("news.readMore") }}
-                    <v-icon right small>open_in_new</v-icon>
+                  <v-btn color="primary" class="news-read-more" size="small" variant="text">
+                    {{ t('news.readMore') }}
+                    <v-icon end size="small">open_in_new</v-icon>
                   </v-btn>
                 </div>
               </div>
@@ -303,25 +309,20 @@ function openInBrowser(url: string) {
             <h2 class="section-title">{{ t('instance.current', 2) }}</h2>
           </div>
           <div class="d-flex align-center gap-2">
-            <v-btn-toggle
-              v-model="instanceViewMode"
-              mandatory
-              dense
-              class="mr-2"
-            >
-              <v-btn small value="folder">
-                <v-icon small>folder</v-icon>
+            <v-btn-toggle v-model="instanceViewMode" mandatory dense class="mr-2">
+              <v-btn value="folder" size="small">
+                <v-icon size="small">folder</v-icon>
               </v-btn>
-              <v-btn small value="date">
-                <v-icon small>schedule</v-icon>
+              <v-btn value="date" size="small">
+                <v-icon size="small">schedule</v-icon>
               </v-btn>
-              <v-btn small value="plain">
-                <v-icon small>view_list</v-icon>
+              <v-btn value="" size="small" variant="plain">
+                <v-icon size="small">view_list</v-icon>
               </v-btn>
             </v-btn-toggle>
-            <v-btn color="primary" @click="openAddInstanceDialog" small depressed>
-              <v-icon left small>add</v-icon>
-              {{ t("instances.add") }}
+            <v-btn color="primary" @click="openAddInstanceDialog" size="small" variant="flat">
+              <v-icon start size="small">add</v-icon>
+              {{ t('instances.add') }}
             </v-btn>
           </div>
         </div>
@@ -331,8 +332,8 @@ function openInBrowser(url: string) {
           v-model="filterKey"
           :placeholder="t('shared.filter')"
           prepend-inner-icon="search"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           hide-details
           class="search-field mb-4"
         />
@@ -340,7 +341,7 @@ function openInBrowser(url: string) {
         <!-- Unified Instance Sections -->
         <div v-for="section in instanceSections" :key="section.id" class="mb-6">
           <div v-if="section.title" class="section-header-item mb-3">
-            <v-icon small class="mr-2">{{ section.icon }}</v-icon>
+            <v-icon size="small" class="mr-2">{{ section.icon }}</v-icon>
             <span class="section-title-item">{{ section.title }}</span>
             <span class="section-count">({{ section.instances.length }})</span>
           </div>
@@ -357,11 +358,8 @@ function openInBrowser(url: string) {
                 <v-avatar size="44" class="instance-avatar">
                   <v-img :src="getInstanceIcon(instance, undefined)" />
                 </v-avatar>
-                <div
-                  v-if="pinnedInstances.includes(instance.path)"
-                  class="pin-badge"
-                >
-                  <v-icon x-small color="white" style="font-size: 8px;">push_pin</v-icon>
+                <div v-if="pinnedInstances.includes(instance.path)" class="pin-badge">
+                  <v-icon size="x-small" color="white" style="font-size: 8px">push_pin</v-icon>
                 </div>
               </div>
               <div class="instance-info">
@@ -611,7 +609,7 @@ function openInBrowser(url: string) {
   right: -2px;
   width: 14px;
   height: 14px;
-  background-color: #EAB308;
+  background-color: #eab308;
   border-radius: 50%;
   display: flex;
   align-items: center;

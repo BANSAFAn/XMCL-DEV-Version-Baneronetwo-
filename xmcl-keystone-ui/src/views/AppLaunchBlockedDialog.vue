@@ -6,7 +6,7 @@
   >
     <v-alert
       class="blocked-dialog mb-0"
-      border="left"
+      border="start"
       type="error"
       prominent
     >
@@ -14,13 +14,8 @@
         color="transparent"
         elevation="0"
         text
+        :title="title"
       >
-        <v-card-title
-          primary-title
-          class="text-2xl font-bold"
-        >
-          {{ title }}
-        </v-card-title>
         <v-card-text class="text-lg">
           <span v-html="description" />
 
@@ -43,9 +38,8 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
-            text
             @click="hide"
-          >
+           variant="text">
             {{ t('shared.ok') }}
           </v-btn>
         </v-card-actions>

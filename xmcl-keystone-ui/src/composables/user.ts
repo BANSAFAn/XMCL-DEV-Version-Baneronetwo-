@@ -1,4 +1,4 @@
-import { computed, del, InjectionKey, reactive, Ref, set, toRefs } from 'vue'
+import { computed, InjectionKey, reactive, Ref, toRefs } from 'vue'
 import { GameProfileAndTexture, OfficialUserServiceKey, UserProfile, UserServiceKey, UserState } from '@xmcl/runtime-api'
 
 import { useService } from '@/composables'
@@ -14,13 +14,11 @@ const NO_USER_PROFILE: UserProfile = Object.freeze({
   profiles: {},
   id: '',
   username: '',
-  expiredAt: -1,
-})
+  expiredAt: -1 })
 const NO_GAME_PROFILE: GameProfileAndTexture = Object.freeze({
   id: '',
   name: '',
-  textures: { SKIN: { url: '' } },
-})
+  textures: { SKIN: { url: '' } } })
 
 export const kUserContext: InjectionKey<ReturnType<typeof useUserContext>> = Symbol('UserContext')
 
@@ -31,17 +29,16 @@ export function useUserContext() {
       const userProfile = this.users[userId]
       if (profile.id in userProfile.profiles) {
         const instance = { textures: { SKIN: { url: '' } }, ...profile }
-        set(userProfile.profiles, profile.id, instance)
+        userProfile.profiles[profile.id] = instance
       } else {
         userProfile.profiles[profile.id] = {
           textures: { SKIN: { url: '' } },
-          ...profile,
-        }
+          ...profile }
       }
     }
 
     override userProfileRemove(userId: string) {
-      del(this.users, userId)
+      delete this.users[userId]
     }
 
     override userProfile(user: UserProfile) {
@@ -54,7 +51,7 @@ export function useUserContext() {
         current.selectedProfile = user.selectedProfile
         current.invalidated = user.invalidated
       } else {
-        set(this.users, user.id, user)
+        this.users[user.id] = user
       }
     }
   })
@@ -95,8 +92,7 @@ export function useUserContext() {
     error,
     select,
     userProfile,
-    gameProfile,
-  }
+    gameProfile }
 }
 
 export function useUserExpired(user: Ref<UserProfile | undefined>) {
@@ -115,8 +111,7 @@ export function useLoginValidation(emailOnly: Ref<boolean>) {
   const usernameRules = computed(() => emailOnly.value ? emailRules : nameRules)
   return {
     usernameRules,
-    passwordRules,
-  }
+    passwordRules }
 }
 
 export function useMojangSecurityStatus() {
@@ -124,8 +119,7 @@ export function useMojangSecurityStatus() {
 
   return {
     security,
-    refreshing: ref(false),
-  }
+    refreshing: ref(false) }
 }
 
 export function useMojangSecurity(profile: Ref<UserProfile>) {
@@ -145,8 +139,7 @@ export function useMojangSecurity(profile: Ref<UserProfile>) {
   const data = reactive({
     loading: false,
     challenges: [] as MojangChallenge[],
-    error: undefined as any,
-  })
+    error: undefined as any })
   async function check() {
     try {
       if (data.loading) return
@@ -179,6 +172,5 @@ export function useMojangSecurity(profile: Ref<UserProfile>) {
     refreshing,
     security,
     check,
-    submit,
-  }
+    submit }
 }

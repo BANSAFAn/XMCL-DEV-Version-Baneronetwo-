@@ -365,7 +365,7 @@ const onDelete = () => {
 
 const { push, currentRoute } = useRouter()
 const onOpenDependency = (dep: ProjectDependency) => {
-  push({ query: { ...currentRoute.query, id: `curseforge:${dep.id}` } })
+  push({ query: { ...currentRoute.value.query, id: `curseforge:${dep.id}` } })
 }
 
 const onRefresh = () => {

@@ -1,24 +1,11 @@
 <template>
-  <div
-    class="mod-detail contained w-full overflow-auto"
-    @scroll="onScroll"
-  >
-    <v-alert
-      v-if="detail.archived"
-      type="error"
-      text
-      tile
-    >
+  <div class="mod-detail contained w-full overflow-auto" @scroll="onScroll">
+    <v-alert v-if="detail.archived" type="error" variant="tonal" class="rounded-0">
       {{ t('modInstall.archived', { name: detail.title }) }}
     </v-alert>
     <div class="header-container flex flex-grow gap-4 p-4">
       <div class="self-center">
-        <v-skeleton-loader
-          v-if="loading"
-          width="128"
-          height="128"
-          type="card"
-        />
+        <v-skeleton-loader v-if="loading" width="128" height="128" type="card" />
         <img
           v-else
           v-fallback-img="BuiltinImages.unknownServer"
@@ -26,23 +13,12 @@
           height="128"
           class="rounded-xl"
           :src="detail.icon || BuiltinImages.unknownServer"
-        >
-      </div>
-      <div class="flex flex-col">
-        <v-skeleton-loader
-          v-if="loading"
-          type="heading"
-          class="mb-2"
         />
-        <span
-          v-else
-          class="inline-flex items-center gap-2 text-2xl font-bold"
-        >
-          <a
-            v-if="detail.url"
-            target="browser"
-            :href="detail.url"
-          >
+      </div>
+      <div class="flex flex-col flex-grow">
+        <v-skeleton-loader v-if="loading" type="heading" class="mb-2" />
+        <span v-else class="inline-flex items-center gap-2 text-2xl font-bold">
+          <a v-if="detail.url" target="browser" :href="detail.url">
             {{ titleToDisplay }}
           </a>
           <template v-else>
@@ -51,54 +27,51 @@
 
           <v-btn
             icon
-            small
+            variant="text"
             :loading="loading"
             color="grey"
             @click="emit('refresh')"
+            size="small"
           >
-            <v-icon size="20">
-              sync
-            </v-icon>
+            <v-icon size="20"> sync </v-icon>
           </v-btn>
 
           <div class="flex-grow" />
           <template v-if="modrinth">
             <v-menu>
-              <template #activator="{ on }">
+              <template #activator="{ props }">
                 <v-btn
-                  small
-                  :plain="!collection"
+                  :variant="!collection ? 'plain' : 'text'"
                   icon
                   :loading="loadingCollections"
-                  v-on="on"
+                  size="small"
                 >
-                  <v-icon
-                    :class="!collection ? 'material-icons-outlined' : ''"
-                  >
-                    label
-                  </v-icon>
+                  <v-icon :class="!collection ? 'material-icons-outlined' : ''"> label </v-icon>
                 </v-btn>
               </template>
-              <AppCollectionList :project-id="modrinth" no-favorite :select="collection" @update:select="emit('collection', $event)" />
+              <AppCollectionList
+                :project-id="modrinth"
+                no-favorite
+                :select="collection"
+                @update:select="emit('collection', $event)"
+              />
             </v-menu>
             <v-btn
-              small
-              :plain="!followed"
+              :variant="!followed ? 'plain' : 'text'"
               icon
               color="yellow"
               :loading="following"
               @click="emit('follow', !followed)"
+              size="small"
             >
-              <v-icon
-                :class="followed ? '' : 'material-icons-outlined'"
-              >
+              <v-icon :class="followed ? '' : 'material-icons-outlined'">
                 {{ followed ? 'star' : 'star_rate' }}
               </v-icon>
             </v-btn>
           </template>
 
           <AppCopyChip
-            v-if="(currentTarget === 'curseforge' ? curseforge : modrinth)"
+            v-if="currentTarget === 'curseforge' ? curseforge : modrinth"
             label
             :value="(currentTarget === 'curseforge' ? curseforge : modrinth)?.toString() || ''"
             outlined
@@ -106,55 +79,29 @@
         </span>
         <div class="ml-1 flex flex-grow-0 items-center gap-2 pt-1">
           <template v-if="loading">
-            <v-skeleton-loader
-              width="100"
-              type="text"
-            />
-            <v-skeleton-loader
-              width="100"
-              type="text"
-            />
-            <v-skeleton-loader
-              width="100"
-              type="text"
-            />
+            <v-skeleton-loader width="100" type="text" />
+            <v-skeleton-loader width="100" type="text" />
+            <v-skeleton-loader width="100" type="text" />
           </template>
           <template v-else>
-            <template v-for="(h, i) of detailsHeaders">
-              <div :key="h.id" class="flex flex-grow-0">
-                <v-icon
-                  v-if="h.icon"
-                  :color="h.color"
-                  class="material-icons-outlined pb-0.5"
-                  left
-                >
+            <template v-for="(h, i) of detailsHeaders" :key="h.id">
+              <div class="flex flex-grow-0">
+                <v-icon v-if="h.icon" :color="h.color" class="material-icons-outlined pb-0.5" start>
                   {{ h.icon }}
                 </v-icon>
                 <template v-if="h.id.endsWith('-author')">
-                  <a
-                    href="#"
-                    :key="h.text"
-                    @click.prevent="onAuthorClicked(h.text.trim())"
-                  >{{ h.text }}</a>
+                  <a href="#" @click.prevent="onAuthorClicked(h.text.trim())">{{ h.text }}</a>
                 </template>
                 <template v-else>
                   {{ h.text }}
                 </template>
               </div>
-              <v-divider
-                v-if="i < detailsHeaders.length - 1"
-                :key="h.id + 'divider'"
-                class="ml-1"
-                vertical
-              />
+              <v-divider v-if="i < detailsHeaders.length - 1" class="ml-1" vertical />
             </template>
           </template>
         </div>
         <div class="my-1 ml-1">
-          <v-skeleton-loader
-            v-if="loading"
-            type="text, text"
-          />
+          <v-skeleton-loader v-if="loading" type="text, text" />
           <template v-else-if="descriptionToDisplay.includes('§')">
             <TextComponent :source="descriptionToDisplay" />
           </template>
@@ -162,21 +109,20 @@
             {{ descriptionToDisplay }}
           </template>
         </div>
-        <div
-          class="my-2 flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-end"
-        >
+        <div class="my-2 flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-end">
           <div class="flex items-end gap-2 flex-wrap">
             <v-btn
               v-if="selectedInstalled && !noEnabled"
               :disabled="updating"
               :loading="loadingVersions"
-              small
-              plain
-              outlined
               hide-details
               @click="_enabled = !_enabled"
+              size="small"
+              variant="text"
+              :color="enabled ? '' : 'primary'"
+              border
             >
-              <v-icon left>
+              <v-icon start>
                 {{ enabled ? 'flash_off' : 'flash_on' }}
               </v-icon>
               {{ !enabled ? t('shared.enable') : t('shared.disable') }}
@@ -186,15 +132,11 @@
               class="primary"
               :loading="loadingVersions || updating"
               :disabled="!selectedVersion"
-              small
               @click="onInstall"
+              size="small"
+              color="primary"
             >
-              <v-icon
-                class="material-icons-outlined"
-                left
-              >
-                file_download
-              </v-icon>
+              <v-icon class="material-icons-outlined" start> file_download </v-icon>
               {{ !hasInstalledVersion ? t('shared.install') : t('modInstall.switch') }}
             </v-btn>
             <div
@@ -204,11 +146,14 @@
             >
               <div class="v-card__subtitle overflow-hidden overflow-ellipsis p-0">
                 {{
-                  versions.length > 0 ?
-                    t('modInstall.installHint', { file: 1, dependencies: dependencies.filter(d => d.type === 'required').length })
+                  versions.length > 0
+                    ? t('modInstall.installHint', {
+                        file: 1,
+                        dependencies: dependencies.filter((d) => d.type === 'required').length,
+                      })
                     : t('modInstall.noVersionSupported', {
-                      supported: supportedVersions?.join(', ')
-                    })
+                        supported: supportedVersions?.join(', '),
+                      })
                 }}
               </div>
             </div>
@@ -217,36 +162,24 @@
               class="red"
               :loading="loadingVersions"
               :disabled="!selectedVersion || updating"
-              small
               @click="emit('delete')"
+              color="error"
+              size="small"
             >
-              <v-icon
-                class="material-icons-outlined"
-                left
-              >
-                delete
-              </v-icon>
+              <v-icon class="material-icons-outlined" start> delete </v-icon>
               {{ t('delete.yes') }}
             </v-btn>
           </div>
 
           <div class="flex-grow" />
-          <div
-            v-if="!noVersion"
-            class="text-center"
-          >
-            <v-menu
-              open-on-hover
-              :disabled="loadingVersions"
-              offset-y
-            >
-              <template #activator="{ on, attrs }">
+          <div v-if="!noVersion" class="text-center">
+            <v-menu open-on-hover :disabled="loadingVersions" offset-y>
+              <template #activator="{ props }">
                 <div
                   class="cursor-pointer items-center"
                   :class="{ flex: versions.length > 0, hidden: versions.length === 0 }"
                   style="color: var(--color-secondary-text)"
-                  v-bind="attrs"
-                  v-on="on"
+                  v-bind="props"
                 >
                   <span class="mr-2 whitespace-nowrap font-bold">
                     {{ t('modInstall.currentVersion') }}:
@@ -257,51 +190,31 @@
                     type="text"
                     class="self-center"
                   />
-                  <v-btn
-                    v-else
-                    small
-                    plain
-                    outlined
-                    hide-details
-                  >
-                    <span class="xl:max-w-50 max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap 2xl:max-w-full">
-
+                  <v-btn v-else hide-details size="small" variant="text" border>
+                    <span
+                      class="xl:max-w-50 max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap 2xl:max-w-full"
+                    >
                       {{ selectedVersion?.name }}
                     </span>
-                    <v-icon
-                      class="material-icons-outlined"
-                      right
-                    >
-                      arrow_drop_down
-                    </v-icon>
+                    <v-icon class="material-icons-outlined" end> arrow_drop_down </v-icon>
                   </v-btn>
                 </div>
               </template>
-              <v-list
-                class="max-h-[400px] overflow-auto"
-                dense
-              >
+              <v-list class="max-h-[400px] overflow-auto w-60">
                 <v-list-item
                   v-for="(item, index) in versions"
                   :key="item.id + index"
                   :class="{ 'v-list-item--active': item.id === selectedVersion?.id }"
                   :value="item.installed"
+                  :title="item.name"
+                  :subtitle="item.version"
                   @click="selectedVersion = item"
                 >
-                  <v-list-item-content>
-                    <v-list-item-title>{{ item.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ item.version }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-avatar
-                    class="self-center"
-                  >
-                    <v-icon
-                      v-if="item.installed"
-                      small
-                    >
-                      folder
-                    </v-icon>
-                  </v-list-item-avatar>
+                  <template #prepend>
+                    <v-avatar v-if="item.installed" class="self-center">
+                      <v-icon size="small"> folder </v-icon>
+                    </v-avatar>
+                  </template>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -310,109 +223,97 @@
       </div>
     </div>
 
-    <v-tabs
-      v-model="tab"
-      background-color="transparent"
-    >
-      <v-tab>
+    <v-tabs v-model="tab" bg-color="transparent">
+      <v-tab :value="0">
         {{ t('modrinth.description') }}
       </v-tab>
-      <v-tab :disabled="props.detail.galleries.length === 0">
+      <v-tab :value="1" :disabled="props.detail.galleries.length === 0">
         {{ t('modrinth.gallery') }}
       </v-tab>
-      <v-tab v-if="versions.length > 0 && !noVersion">
+      <v-tab v-if="versions.length > 0 && !noVersion" :value="2">
         {{ t('modrinth.versions') }}
       </v-tab>
     </v-tabs>
     <v-divider />
 
     <div class="grid w-full grid-cols-4 gap-2">
-      <v-tabs-items
+      <v-tabs-window
         v-model="tab"
         class="main-content h-full max-h-full max-w-full bg-transparent! p-4"
       >
-        <v-tab-item>
+        <v-tabs-window-item :value="0">
           <v-expansion-panels
             v-if="dependencies.length > 0"
             v-model="showDependencies"
             :disabled="dependencies.length === 0"
             class="mb-4"
+            variant="accordion"
           >
             <v-expansion-panel>
-              <v-expansion-panel-header>
-                <span>
-                  <v-badge
-                    inline
-                    :content="dependencies.length || '0'"
-                  >
-                    {{ t('dependencies.name') }}
-                  </v-badge>
+              <v-expansion-panel-title>
+                <span class="flex items-center gap-2">
+                  {{ t('dependencies.name') }}
+                  <v-chip size="x-small" label variant="tonal" color="primary">
+                    {{ dependencies.length || 0 }}
+                  </v-chip>
                 </span>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <div class="">
-                  <template
-                    v-if="loadingDependencies"
-                  >
-                    <v-skeleton-loader
-                      type="list-item-two-line, list-item-two-line"
-                    />
-                    <v-skeleton-loader
-                      type="list-item-two-line, list-item-two-line"
-                    />
-                    <v-skeleton-loader
-                      type="list-item-two-line, list-item-two-line"
-                    />
-                  </template>
-                  <template v-else>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <template v-if="loadingDependencies">
+                  <v-skeleton-loader type="list-item-two-line, list-item-two-line" />
+                  <v-skeleton-loader type="list-item-two-line, list-item-two-line" />
+                  <v-skeleton-loader type="list-item-two-line, list-item-two-line" />
+                </template>
+                <template v-else>
+                  <v-list lines="three" class="bg-transparent pa-0">
                     <v-list-item
                       v-for="dep of dependencies"
                       :key="dep.id + dep.parent"
+                      :title="dep.title"
                       @click="emit('open-dependency', dep)"
                     >
-                      <v-list-item-avatar>
-                        <v-img :src="dep.icon" />
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          {{ dep.title }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          {{ dep.description }}
-                        </v-list-item-subtitle>
-                        <v-list-item-subtitle class="flex gap-2">
-                          <div v-if="dep.parent">
-                            {{ dep.parent }}
+                      <template #prepend>
+                        <v-avatar>
+                          <v-img :src="dep.icon" />
+                        </v-avatar>
+                      </template>
+                      <template #subtitle>
+                        <div class="dep-subtitle">
+                          <div class="dep-subtitle__description">
+                            {{ dep.description }}
                           </div>
-                          <div
-                            class="inline font-bold"
-                            :class="{
-                              'text-red-400': dep.type === 'incompatible',
-                              'text-green-400': dep.type === 'required'
-                            }"
-                          >
-                            {{ tDepType(dep.type) }}
+                          <div class="dep-subtitle__meta flex gap-2 items-center">
+                            <span v-if="dep.parent">
+                              {{ dep.parent }}
+                            </span>
+                            <span
+                              class="font-bold"
+                              :class="{
+                                'text-red-400': dep.type === 'incompatible',
+                                'text-green-400': dep.type === 'required',
+                              }"
+                            >
+                              {{ tDepType(dep.type) }}
+                            </span>
+                            <v-divider v-if="dep.installedVersion" vertical />
+                            <span v-if="dep.installedVersion">
+                              {{ t('shared.installed') }}
+                            </span>
+                            <v-divider v-if="dep.installedDifferentVersion" vertical />
+                            <span v-if="dep.installedDifferentVersion">
+                              {{
+                                t('modInstall.dependencyHint', {
+                                  version: dep.installedDifferentVersion,
+                                })
+                              }}
+                            </span>
                           </div>
-                          <v-divider
-                            v-if="dep.installedVersion"
-                            vertical
-                          />
-                          <div v-if="dep.installedVersion">
-                            {{ t('shared.installed') }}
-                          </div>
-                          <v-divider
-                            v-if="dep.installedDifferentVersion"
-                            vertical
-                          />
-                          <span v-if="dep.installedDifferentVersion">
-                            {{ t('modInstall.dependencyHint', { version: dep.installedDifferentVersion }) }}
-                          </span>
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action class="self-center">
+                        </div>
+                      </template>
+                      <template #append>
                         <v-btn
-                          text
                           icon
+                          variant="text"
                           :disabled="!!dep.installedVersion"
                           :loading="dep.progress >= 0"
                           @click.stop="emit('install-dependency', dep)"
@@ -425,22 +326,21 @@
                               v-if="dep.progress >= 0"
                               :size="20"
                               :width="2"
-                              :value="dep.progress * 100"
+                              :model-value="dep.progress * 100"
                             />
                           </template>
                         </v-btn>
-                      </v-list-item-action>
+                      </template>
                     </v-list-item>
-                  </template>
-                </div>
-              </v-expansion-panel-content>
+                  </v-list>
+                </template>
+              </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
-          <v-card-text
-            v-if="loading"
-            class="overflow-auto"
-          >
-            <v-skeleton-loader type="heading, list-item, paragraph, card, sentences, image, paragraph, paragraph" />
+          <v-card-text v-if="loading" class="overflow-auto">
+            <v-skeleton-loader
+              type="heading, list-item, paragraph, card, sentences, image, paragraph, paragraph"
+            />
           </v-card-text>
           <slot v-if="$slots.content" name="content" />
           <div
@@ -457,42 +357,55 @@
           <template v-else>
             {{ detail.description }}
           </template>
-        </v-tab-item>
-        <v-tab-item>
-          <div class="grid grid-cols-2 gap-2 p-4">
+        </v-tabs-window-item>
+        <v-tabs-window-item :value="1">
+          <div class="gallery-grid p-4">
             <v-card
               v-for="(g, i) of detail.galleries"
               :key="g.url + g.title"
+              class="gallery-card overflow-hidden"
               hover
               @click="onShowImage(detail.galleries, i)"
             >
-              <v-img
-                :src="g.url"
-                height="200px"
-              />
-              <v-card-title>
-                {{ g.title }}
-              </v-card-title>
-              <v-card-subtitle>
-                {{ g.description }}
-                <div v-if="g.date">
+              <div class="gallery-card__media">
+                <v-img
+                  :src="g.url"
+                  :alt="g.title"
+                  cover
+                  class="gallery-card__image"
+                  :aspect-ratio="16 / 9"
+                >
+                  <template #placeholder>
+                    <div class="flex items-center justify-center fill-height">
+                      <v-progress-circular indeterminate color="grey-lighten-2" />
+                    </div>
+                  </template>
+                </v-img>
+                <div class="gallery-card__overlay">
+                  <v-icon size="40" color="white">zoom_in</v-icon>
+                </div>
+              </div>
+              <div v-if="g.title || g.description || g.date" class="gallery-card__content">
+                <div v-if="g.title" class="gallery-card__title">
+                  {{ g.title }}
+                </div>
+                <div v-if="g.description" class="gallery-card__description">
+                  {{ g.description }}
+                </div>
+                <div v-if="g.date" class="gallery-card__date">
+                  <v-icon size="x-small" class="material-icons-outlined">schedule</v-icon>
                   {{ getDateString(g.date) }}
                 </div>
-              </v-card-subtitle>
+              </div>
             </v-card>
           </div>
-        </v-tab-item>
-        <v-tab-item class="h-full">
-          <v-skeleton-loader
-            v-if="loadingVersions"
-            type="table-thead, table-tbody"
-          />
+        </v-tabs-window-item>
+        <v-tabs-window-item :value="2" class="h-full p-l-[2px]">
+          <v-skeleton-loader v-if="loadingVersions" type="table-thead, table-tbody" />
           <template v-else-if="versions.length > 0">
-            <v-subheader
-              v-if="installed"
-            >
+            <v-list-subheader v-if="installed">
               {{ t('shared.installed') }}
-            </v-subheader>
+            </v-list-subheader>
             <ModDetailVersion
               v-if="installed"
               :key="installed.id"
@@ -500,10 +413,7 @@
               :show-changelog="selectedVersion?.id === installed.id"
               @click="onVersionClicked"
             />
-            <v-divider
-              v-if="installed && notInstalled.length > 0"
-              class="my-2"
-            />
+            <v-divider v-if="installed && notInstalled.length > 0" class="my-2" />
             <ModDetailVersion
               v-for="version of notInstalled"
               :key="version.id"
@@ -519,119 +429,80 @@
             icon="cancel"
             :text="t('modInstall.noVersionSupported')"
           />
-        </v-tab-item>
-      </v-tabs-items>
-      <aside
-        class="side-content"
-      >
+        </v-tabs-window-item>
+      </v-tabs-window>
+      <aside class="side-content">
         <template v-if="curseforge || modrinth">
-          <v-subheader>
+          <v-list-subheader>
             {{ t('modInstall.source') }}
-          </v-subheader>
+          </v-list-subheader>
           <template v-if="loading">
-            <v-skeleton-loader
-              type="avatar"
-            />
+            <v-skeleton-loader type="avatar" />
           </template>
-          <span
-            v-else
-            class="flex flex-wrap gap-2 px-2"
-          >
+          <span v-else class="flex flex-wrap gap-2 px-2">
             <v-btn
               v-if="modrinth"
-              text
               icon
               :color="currentTarget === 'modrinth' ? 'primary' : ''"
               @click="goModrinthProject(modrinth)"
+              variant="text"
             >
-              <v-icon>
-                $vuetify.icons.modrinth
-              </v-icon>
+              <v-icon> xmcl:modrinth </v-icon>
             </v-btn>
             <v-btn
               v-if="curseforge"
-              text
               icon
               :color="currentTarget === 'curseforge' ? 'primary' : ''"
               @click="goCurseforgeProject(curseforge)"
+              variant="text"
             >
-              <v-icon
-                class="mt-0.5"
-                :size="30"
-              >
-                $vuetify.icons.curseforge
-              </v-icon>
+              <v-icon class="mt-0.5" :size="30"> xmcl:curseforge </v-icon>
             </v-btn>
           </span>
 
-          <v-divider
-            class="mt-4 w-full"
-          />
+          <v-divider class="mt-4 w-full" />
         </template>
 
         <template v-if="validModLoaders.length > 0">
-          <v-subheader>
+          <v-list-subheader>
             {{ t('modrinth.modLoaders.name') }}
-          </v-subheader>
+          </v-list-subheader>
           <span class="flex flex-wrap gap-2 px-2">
-            <div
-              v-for="l of validModLoaders"
-              :key="l"
-              style="width: 36px; height: 36px;"
-            >
-              <v-icon
-                v-shared-tooltip="l"
-                size="32px"
-              >
+            <div v-for="l of validModLoaders" :key="l" style="width: 36px; height: 36px">
+              <v-icon v-shared-tooltip="l" size="32px">
                 {{ iconMapping[l] }}
               </v-icon>
             </div>
           </span>
-          <v-divider
-            class="mt-4 w-full"
-          />
+          <v-divider class="mt-4 w-full" />
         </template>
 
-        <v-subheader v-if="detail.categories.length > 0">
+        <v-list-subheader v-if="detail.categories.length > 0">
           {{ t('modrinth.categories.categories') }}
-        </v-subheader>
+        </v-list-subheader>
         <span class="flex flex-wrap gap-2">
           <template v-if="loading">
-            <v-skeleton-loader
-              type="chip"
-            />
-            <v-skeleton-loader
-              type="chip"
-            />
-            <v-skeleton-loader
-              type="chip"
-            />
+            <v-skeleton-loader type="chip" />
+            <v-skeleton-loader type="chip" />
+            <v-skeleton-loader type="chip" />
           </template>
           <template v-else>
             <v-chip
               v-for="item of detail.categories"
               :key="item.id"
               label
-              outlined
+              variant="outlined"
               class="mr-2"
               @mousedown.prevent
               @click="emit('select:category', item.id)"
             >
-              <v-avatar
-                v-if="item.iconHTML"
-                left
-                v-html="item.iconHTML"
-              />
-              <v-icon
-                v-else-if="item.icon"
-                left
-              >{{ item.icon }}</v-icon>
-              <v-avatar
-                v-else-if="item.iconUrl"
-                left
-              >
-                <v-img :src="item.iconUrl" />
-              </v-avatar>
+              <template #prepend>
+                <v-avatar v-if="item.iconHTML" start v-html="item.iconHTML" />
+                <v-icon v-else-if="item.icon" start>{{ item.icon }}</v-icon>
+                <v-avatar v-else-if="item.iconUrl" start>
+                  <v-img :src="item.iconUrl" />
+                </v-avatar>
+              </template>
               {{ item.name }}
             </v-chip>
           </template>
@@ -642,30 +513,28 @@
           class="mt-4 w-full"
         />
 
-        <v-subheader v-if="detail.externals.length > 0">
+        <v-list-subheader v-if="detail.externals.length > 0">
           {{ t('modrinth.externalResources') }}
-        </v-subheader>
-        <div class="px-1">
+        </v-list-subheader>
+        <div v-if="detail.externals.length > 0 || loading" class="flex flex-col gap-1">
           <template v-if="loading">
-            <v-skeleton-loader
-              type="sentences, sentences"
-            />
+            <v-skeleton-loader type="list-item, list-item, list-item" />
           </template>
-          <template
-            v-else
-          >
-            <span
+          <template v-else>
+            <a
               v-for="item of detail.externals"
               :key="item.name + item.url"
-              class="flex flex-grow-0 items-center gap-1"
+              :href="item.url"
+              target="_blank"
+              rel="noopener"
+              class="external-row"
             >
-              <v-icon>
+              <v-icon size="small" class="external-row__icon">
                 {{ item.icon }}
               </v-icon>
-              <a :href="item.url">
-                {{ item.name }}
-              </a>
-            </span>
+              <span class="external-row__label">{{ item.name }}</span>
+              <v-icon size="x-small" class="external-row__arrow"> open_in_new </v-icon>
+            </a>
           </template>
         </div>
 
@@ -674,47 +543,39 @@
           class="mt-4 w-full"
         />
 
-        <div
-          v-if="detail.info.length > 0"
-          class="px-1"
-        >
-          <v-subheader>
+        <div v-if="detail.info.length > 0">
+          <v-list-subheader>
             {{ t('modrinth.technicalInformation') }}
-          </v-subheader>
-          <div class="grid grid-cols-1 gap-1 gap-y-3 overflow-auto overflow-y-hidden pr-2">
+          </v-list-subheader>
+          <div class="flex flex-col gap-2">
             <template v-if="loading">
-              <v-skeleton-loader
-                type="chip"
-              />
-              <v-skeleton-loader
-                type="chip"
-              />
-              <v-skeleton-loader
-                type="chip"
-              />
-              <v-skeleton-loader
-                type="chip"
-              />
+              <v-skeleton-loader type="list-item-two-line" />
+              <v-skeleton-loader type="list-item-two-line" />
+              <v-skeleton-loader type="list-item-two-line" />
             </template>
             <template v-else>
-              <div
-                v-for="item of detail.info"
-                :key="item.name"
-                class="item"
-              >
-                <v-icon>{{ item.icon }}</v-icon>
-                <div class="overflow-x-auto overflow-y-hidden">
-                  <span>{{ item.name }}</span>
+              <div v-for="item of detail.info" :key="item.name" class="info-row">
+                <div class="info-row__header">
+                  <v-icon size="x-small" class="info-row__icon">
+                    {{ item.icon }}
+                  </v-icon>
+                  <span class="info-row__label">{{ item.name }}</span>
+                </div>
+                <div class="info-row__value">
                   <a
                     v-if="item.url"
                     :href="item.url"
+                    target="_blank"
+                    rel="noopener"
+                    class="info-row__text info-row__text--link truncate"
+                    v-shared-tooltip="item.value"
                   >
                     {{ item.value }}
                   </a>
-                  <AppCopyChip
-                    :value="item.value"
-                    outlined
-                  />
+                  <span v-else v-shared-tooltip="item.value" class="info-row__text truncate">
+                    {{ item.value }}
+                  </span>
+                  <AppCopyChip :value="item.value" outlined class="info-row__copy" />
                 </div>
               </div>
             </template>
@@ -868,14 +729,28 @@ export interface ProjectDetail {
 const tab = ref(0)
 
 const _enabled = computed({
-  get() { return props.enabled },
+  get() {
+    return props.enabled
+  },
   set(v: boolean) {
     emit('enable', v)
   },
 })
 
-const titleToDisplay = computed(() => (isEnabled.value && props.detail.localizedTitle) || props.detail.title || props.error?.name || '')
-const descriptionToDisplay = computed(() => (isEnabled.value && props.detail.localizedDescription) || props.detail.description || props.error?.message || '')
+const titleToDisplay = computed(
+  () =>
+    (isEnabled.value && props.detail.localizedTitle) ||
+    props.detail.title ||
+    props.error?.name ||
+    '',
+)
+const descriptionToDisplay = computed(
+  () =>
+    (isEnabled.value && props.detail.localizedDescription) ||
+    props.detail.description ||
+    props.error?.message ||
+    '',
+)
 
 const detailsHeaders = computed(() => {
   const result: Array<{
@@ -913,14 +788,14 @@ const detailsHeaders = computed(() => {
 })
 
 const { getDateString } = useDateString()
-const hasInstalledVersion = computed(() => props.versions.some(v => v.installed))
+const hasInstalledVersion = computed(() => props.versions.some((v) => v.installed))
 
 const { push, replace, currentRoute } = useRouter()
 const goCurseforgeProject = (id: number) => {
-  replace({ query: { ...currentRoute.query, id: `curseforge:${id}` } })
+  replace({ query: { ...currentRoute.value.query, id: `curseforge:${id}` } })
 }
 const goModrinthProject = (id: string) => {
-  replace({ query: { ...currentRoute.query, id: `modrinth:${id}` } })
+  replace({ query: { ...currentRoute.value.query, id: `modrinth:${id}` } })
 }
 const { isDark } = injection(kTheme)
 const searchModel = injection(kSearchModel)
@@ -931,43 +806,61 @@ function onAuthorClicked(name: string) {
     searchModel.keyword.value = name
     searchModel.source.value = 'remote'
   }
-  replace({ query: { ...currentRoute.query, id: undefined } })
+  replace({ query: { ...currentRoute.value.query, id: undefined } })
 }
 
-const selectedVersion = inject('selectedVersion', ref(props.versions.find(v => v.installed) || props.versions[0] as ProjectVersion | undefined))
+const selectedVersion = inject(
+  'selectedVersion',
+  ref(props.versions.find((v) => v.installed) || (props.versions[0] as ProjectVersion | undefined)),
+)
 const onVersionClicked = (version: ProjectVersion) => {
   if (!selectedVersion.value || selectedVersion.value?.id === version.id) return
   selectedVersion.value = version
 }
-watch(selectedVersion, (v, o) => {
-  if (v !== o && v) {
-    emit('load-changelog', v)
-  }
-}, { immediate: true })
+watch(
+  selectedVersion,
+  (v, o) => {
+    if (v !== o && v) {
+      emit('load-changelog', v)
+    }
+  },
+  { immediate: true },
+)
 const { t } = useI18n()
-watch(() => props.detail, (d, o) => {
-  if (d?.id !== o?.id) {
-    showDependencies.value = false
-    selectedVersion.value = undefined
-    tab.value = 0
-  }
-})
+watch(
+  () => props.detail,
+  (d, o) => {
+    if (d?.id !== o?.id) {
+      showDependencies.value = undefined
+      selectedVersion.value = undefined
+      tab.value = 0
+    }
+  },
+)
 
 let dirty = false
-watch([() => props.detail, () => props.loading], () => {
-  dirty = true
-}, { immediate: true })
-watch(() => props.versions, (vers) => {
-  if (dirty || !selectedVersion.value) {
-    dirty = false
-    selectedVersion.value = props.versions.find(v => v.installed) || vers[0]
-  }
-}, { immediate: true })
+watch(
+  [() => props.detail, () => props.loading],
+  () => {
+    dirty = true
+  },
+  { immediate: true },
+)
+watch(
+  () => props.versions,
+  (vers) => {
+    if (dirty || !selectedVersion.value) {
+      dirty = false
+      selectedVersion.value = props.versions.find((v) => v.installed) || vers[0]
+    }
+  },
+  { immediate: true },
+)
 
-const showDependencies = ref(false)
+const showDependencies = ref<0 | undefined>(undefined)
 
-const installed = computed(() => props.versions.find(v => v.installed))
-const notInstalled = computed(() => props.versions.filter(v => !v.installed))
+const installed = computed(() => props.versions.find((v) => v.installed))
+const notInstalled = computed(() => props.versions.filter((v) => !v.installed))
 
 const tDepType = (ty: ProjectDependency['type']) => t(`dependencies.${ty}`)
 
@@ -987,7 +880,14 @@ const onScroll = (e: Event) => {
 // Image
 const imageDialog = injection(kImageDialog)
 const onShowImage = (imgs: ModGallery[], index: number) => {
-  imageDialog.showAll(imgs.map(img => ({ src: img.rawUrl || img.url, description: img.description, date: img.date })), index)
+  imageDialog.showAll(
+    imgs.map((img) => ({
+      src: img.rawUrl || img.url,
+      description: img.description,
+      date: img.date,
+    })),
+    index,
+  )
 }
 
 // Content clicked
@@ -1010,17 +910,17 @@ function onDescriptionDivClicked(e: MouseEvent) {
 }
 
 const iconMapping = {
-  forge: '$vuetify.icons.forge',
-  fabric: '$vuetify.icons.fabric',
-  quilt: '$vuetify.icons.quilt',
-  optifine: '$vuetify.icons.optifine',
-  neoforge: '$vuetify.icons.neoForged',
-  iris: '$vuetify.icons.iris',
-  oculus: '$vuetify.icons.oculus',
+  forge: 'xmcl:forge',
+  fabric: 'xmcl:fabric',
+  quilt: 'xmcl:quilt',
+  optifine: 'xmcl:optifine',
+  neoforge: 'xmcl:neoForged',
+  iris: 'xmcl:iris',
+  oculus: 'xmcl:oculus',
 } as Record<string, string>
 
 const validModLoaders = computed(() => {
-  return props.detail.modLoaders.filter(l => iconMapping[l])
+  return props.detail.modLoaders.filter((l) => iconMapping[l])
 })
 
 const { isEnabled } = inject(kLocalizedContent, useLocalizedContentControl())
@@ -1041,12 +941,15 @@ function onDescriptionLinkClicked(e: MouseEvent, href: string) {
     }
 
     if (domain !== 'modpacks' && slug && domain) {
-      push({ query: { ...currentRoute.query, id: `modrinth:${slug}` } })
+      push({ query: { ...currentRoute.value.query, id: `modrinth:${slug}` } })
       e.preventDefault()
       e.stopPropagation()
     }
   }
-  if ((url.host === 'www.curseforge.com' || url.host === 'curseforge.com') && url.pathname.startsWith('/minecraft')) {
+  if (
+    (url.host === 'www.curseforge.com' || url.host === 'curseforge.com') &&
+    url.pathname.startsWith('/minecraft')
+  ) {
     const slug = url.pathname.split('/')[3] ?? ''
     let domain: string = ''
     if (url.pathname.startsWith('/minecraft/mc-mods/')) {
@@ -1061,7 +964,7 @@ function onDescriptionLinkClicked(e: MouseEvent, href: string) {
       clientCurseforgeV1.searchMods({ slug, pageSize: 1 }).then((result) => {
         const id = result.data[0]?.id
         if (id) {
-          push({ query: { ...currentRoute.query, id: `curseforge:${id}` } })
+          push({ query: { ...currentRoute.value.query, id: `curseforge:${id}` } })
         } else {
           window.open(href, '_blank')
         }
@@ -1071,7 +974,6 @@ function onDescriptionLinkClicked(e: MouseEvent, href: string) {
     }
   }
 }
-
 </script>
 
 <style>
@@ -1082,7 +984,6 @@ function onDescriptionLinkClicked(e: MouseEvent, href: string) {
 }
 </style>
 <style scoped>
-
 .main-content {
   grid-column: span 4 / span 4;
 }
@@ -1108,17 +1009,186 @@ function onDescriptionLinkClicked(e: MouseEvent, href: string) {
   }
 }
 
-.item {
-  @apply flex items-center gap-2 overflow-x-auto overflow-y-hidden w-full;
+/* External resource link rows */
+.external-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.external-row:hover {
+  background-color: rgba(var(--v-theme-on-surface), 0.06);
+}
+.external-row:hover .external-row__arrow {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+.external-row__icon {
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+.external-row__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+.external-row__arrow {
+  flex-shrink: 0;
+  opacity: 0.4;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
-.item .v-icon {
-  @apply rounded-full p-2;
-  background-color: rgba(0, 0, 0, 0.2);
+/* Technical info rows */
+.info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background-color: rgba(var(--v-theme-on-surface), 0.03);
+}
+.info-row__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.info-row__icon {
+  opacity: 0.6;
+}
+.info-row__label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+.info-row__value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.info-row__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.875rem;
+  color: inherit;
+  text-decoration: none;
+}
+.info-row__text--link {
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--v-theme-on-surface), 0.2);
+  text-underline-offset: 2px;
+}
+.info-row__text--link:hover {
+  text-decoration-color: currentColor;
+}
+.info-row__copy {
+  flex-shrink: 0;
 }
 
-.item div {
-  @apply flex flex-col;
+/* Dependency list subtitle layout */
+.dep-subtitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dep-subtitle__description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dep-subtitle__meta {
+  font-size: 0.75rem;
+}
+
+/* Gallery grid layout */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.gallery-card {
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.gallery-card:hover {
+  transform: translateY(-2px);
+}
+.gallery-card:hover .gallery-card__image :deep(img) {
+  transform: scale(1.05);
+}
+.gallery-card:hover .gallery-card__overlay {
+  opacity: 1;
+}
+
+.gallery-card__media {
+  position: relative;
+  overflow: hidden;
+}
+.gallery-card__image :deep(img) {
+  transition: transform 0.4s ease;
+}
+.gallery-card__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.gallery-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+}
+.gallery-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.gallery-card__description {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  opacity: 0.75;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.gallery-card__date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  opacity: 0.6;
 }
 
 span {

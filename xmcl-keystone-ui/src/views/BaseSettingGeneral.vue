@@ -1,70 +1,57 @@
 <template>
-  <v-list
-    class="base-settings"
-    color="transparent"
-  >
-    <v-subheader style="">
-      {{ t("BaseSettingGeneral.title") }}
-    </v-subheader>
-
-    <v-list-item>
-      <v-list-item-action class="self-center">
+  <SettingCard :title="t('BaseSettingGeneral.title')" icon="badge">
+    <SettingItem
+      long-action
+      :title="t('instance.name')"
+      :description="t('instance.nameHint')"
+    >
+      <template #preaction>
         <v-menu
           v-model="changeIconModel"
           :close-on-content-click="false"
-          :nudge-width="380"
-          offset-x
+          location="end"
         >
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props: activatorProps }">
             <v-avatar
               id="instance-icon"
+              v-shared-tooltip="() => t('instance.changeIcon')"
               v-ripple
-              size="80"
-              v-bind="attrs"
-              v-on="on"
+              size="56"
+              rounded="lg"
+              v-bind="activatorProps"
+              class="cursor-pointer base-setting-general__icon"
+              :class="{ 'base-setting-general__icon--empty': !data.icon }"
             >
-              <img
+              <v-img
                 v-if="data.icon"
                 :src="data.icon"
-              >
-              <v-icon v-else>
-                add
+                :width="56"
+                :height="56"
+              />
+              <v-icon v-else size="28">
+                add_photo_alternate
               </v-icon>
             </v-avatar>
           </template>
           <AppChangeInstanceIconCard
             :color="highlighted ? 'info' : ''"
-            :icon.sync="data.icon"
+            v-model:icon="data.icon"
           />
         </v-menu>
-      </v-list-item-action>
-      <v-list-item-content>
-        <v-list-item-subtitle>
-          {{ t("instance.iconHint") }}
-        </v-list-item-subtitle>
-        <div class="mt-1">
-          <v-btn
-            outlined
-            text
-            @click="changeIconModel = true"
-          >
-            {{ t("instance.changeIcon") }}
-          </v-btn>
-        </div>
-      </v-list-item-content>
-
-      <div class="w-60">
+      </template>
+      <template #action>
         <v-text-field
           v-model="data.name"
-          :label="t('instance.name')"
-          :hint="t('instance.nameHint')"
-          filled
-          dense
+          variant="outlined"
+          density="compact"
+          hide-details
           :placeholder="`Minecraft ${data.runtime.minecraft}`"
         />
-      </div>
-    </v-list-item>
+      </template>
+    </SettingItem>
+  </SettingCard>
 
+  <SettingCard :title="t('setting.quickLaunchSettings')" icon="flash_on">
     <SettingItemCheckbox
       v-model="hideLauncher"
       :title="t('instanceSetting.hideLauncher')"
@@ -74,6 +61,7 @@
         @clear="resetHideLauncher"
       />
     </SettingItemCheckbox>
+    <v-divider class="my-2" />
     <SettingItemCheckbox
       v-model="showLog"
       :title="t('instanceSetting.showLog')"
@@ -83,6 +71,13 @@
         @clear="resetShowLog"
       />
     </SettingItemCheckbox>
+  </SettingCard>
+
+  <SettingCard
+    v-if="isThirdparty || isElyBy"
+    :title="t('setting.authenticationSettings')"
+    icon="security"
+  >
     <SettingItemCheckbox
       v-if="isThirdparty"
       v-model="disableAuthlibInjector"
@@ -94,6 +89,7 @@
         @clear="resetDisableAuthlibInjector"
       />
     </SettingItemCheckbox>
+    <v-divider v-if="isThirdparty && isElyBy" class="my-2" />
     <SettingItemCheckbox
       v-if="isElyBy"
       v-model="disableElyByAuthlib"
@@ -105,14 +101,17 @@
         @clear="resetDisableElyByAuthlib"
       />
     </SettingItemCheckbox>
-  </v-list>
+  </SettingCard>
 </template>
 
 <script lang=ts setup>
 import AppChangeInstanceIconCard from '@/components/AppChangeInstanceIconCard.vue'
+import SettingCard from '@/components/SettingCard.vue'
+import SettingItem from '@/components/SettingItem.vue'
 import SettingItemCheckbox from '@/components/SettingItemCheckbox.vue'
 import { useQuery } from '@/composables/query'
 import { kUserContext } from '@/composables/user'
+import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { injection } from '@/util/inject'
 import { useTimeout } from '@vueuse/core'
 import { AUTHORITY_MICROSOFT } from '@xmcl/runtime-api'
@@ -160,11 +159,16 @@ const highlighted = computed(() => !ready.value && changeIconModel.value)
 
 </script>
 
-<style scoped=true>
-.flex {
-  padding: 6px 8px !important
+<style scoped>
+.base-setting-general__icon {
+  background-color: rgba(var(--v-theme-on-surface), 0.06);
+  transition: outline-color 0.15s ease;
+  outline: 2px solid transparent;
 }
-.v-btn {
-  margin: 0
+.base-setting-general__icon:hover {
+  outline-color: rgb(var(--v-theme-primary));
+}
+.base-setting-general__icon--empty {
+  border: 1px dashed rgba(var(--v-theme-on-surface), 0.24);
 }
 </style>

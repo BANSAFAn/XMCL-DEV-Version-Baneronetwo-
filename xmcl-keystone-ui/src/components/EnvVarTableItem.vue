@@ -10,7 +10,7 @@
       :key="key"
       class="flex items-center v-list-item__subtitle"
     >
-      <v-icon left>
+      <v-icon start>
         key
       </v-icon>
       <span

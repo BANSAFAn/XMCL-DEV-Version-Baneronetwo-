@@ -1,21 +1,20 @@
 <template>
-  <div class="base-setting px-10 overflow-auto" ref="root" @wheel.stop>
+  <div class="base-setting px-10 py-6 overflow-auto" ref="root" @wheel.stop>
     <template v-if="!targetQuery || targetQuery === 'general'">
-      <div>
-        <BaseSettingGeneral class="" />
-        <BaseSettingVersions :isExpanded="isExpanded" class=""  />
-        <v-divider v-if="!isExpanded" />
-      </div>
-      <div>
-        <BaseSettingJava class="" />
-        <BaseSettingSync class="" />
-        <BaseSettingLaunch class="" />
-        <BaseSettingResolution class="" />
+      <div class="flex flex-col gap-4">
+        <BaseSettingGeneral />
+        <BaseSettingVersions :isExpanded="isExpanded" />
+        <BaseSettingJava />
+        <BaseSettingSync />
+        <BaseSettingLaunch />
+        <BaseSettingResolution />
       </div>
     </template>
     <template v-else-if="targetQuery === 'modpack'">
-      <BaseSettingModpack />
-      <BaseSettingModpackFiles />
+      <div class="flex flex-col gap-4">
+        <BaseSettingModpack />
+        <BaseSettingModpackFiles />
+      </div>
     </template>
     <template v-else-if="targetQuery === 'advanced'">
       <BaseSettingAdvanced />
@@ -24,22 +23,19 @@
       <BaseSettingAppearance />
     </template>
     <v-snackbar
+      :model-value="isModified"
       :color="snackbarColor"
       :class="{ 'shake-animation': hasAnimation }"
       :timeout="-1"
-      :value="isModified"
     >
       <div class="text-button mr-4">
         {{ t('modified.unsaved') }}
       </div>
 
-      <template #action="{ attrs }">
-        <div
-          class="mr-2 flex gap-1"
-          v-bind="attrs"
-        >
+      <template #actions>
+        <div class="mr-2 flex gap-1">
           <v-btn
-            text
+            variant="text"
             @click="onReset"
           >
             {{ t('modified.reset') }}

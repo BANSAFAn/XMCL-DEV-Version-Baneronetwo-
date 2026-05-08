@@ -1,6 +1,6 @@
 import { ResourceAction, ResourceActionTuple, UpdateResourcePayload } from '@xmcl/resource'
 import { ResourceState, applyUpdateToResource } from '@xmcl/runtime-api'
-import { set } from 'vue'
+
 
 export class ReactiveResourceState extends ResourceState {
   override filesUpdates(ops: ResourceActionTuple[]) {
@@ -26,6 +26,6 @@ export class ReactiveResourceState extends ResourceState {
         }
       }
     }
-    set(this, 'files', mods)
+    this['files'] = mods
   }
 }

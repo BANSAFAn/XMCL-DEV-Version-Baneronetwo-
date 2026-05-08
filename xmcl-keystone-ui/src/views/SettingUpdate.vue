@@ -9,6 +9,7 @@
         <v-btn
           v-shared-tooltip="() => t('setting.checkUpdate')"
           icon
+          variant="text"
           :loading="checkingUpdate"
           @click="checkUpdate"
         >
@@ -27,7 +28,7 @@
         </span>
         <v-chip
           v-if="hasNewUpdate"
-          x-small
+          size="x-small"
           color="primary"
           class="ml-2"
           label
@@ -42,10 +43,9 @@
           :disabled="updateStatus === 'none'"
           :color="updateStatus !== 'none' ? 'primary' : ''"
           :outlined="updateStatus === 'none'"
-          small
           @click="showUpdateInfo()"
-        >
-          <v-icon left small v-if="updateStatus !== 'none'">system_update</v-icon>
+         size="small">
+          <v-icon start size="small" v-if="updateStatus !== 'none'">system_update</v-icon>
           {{
             updateStatus === "none"
               ? t("launcherUpdate.alreadyLatest")
@@ -61,7 +61,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { injection } from '@/util/inject'
 import { useDialog } from '../composables/dialog'

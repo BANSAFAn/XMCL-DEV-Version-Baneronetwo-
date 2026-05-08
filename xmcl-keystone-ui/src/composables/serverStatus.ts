@@ -1,5 +1,5 @@
 import { PingServerOptions, ServerStatus, ServerStatusServiceKey } from '@xmcl/runtime-api'
-import { InjectionKey, Ref, computed, ref, set, watch } from 'vue'
+import { InjectionKey, Ref, computed, ref, watch } from 'vue'
 
 import { useService } from '@/composables'
 import { useLocalStorageCache } from '@/composables/cache'
@@ -23,16 +23,13 @@ function usePinging() {
     return {
       version: {
         name: t('server.ping'),
-        protocol: -1,
-      },
+        protocol: -1 },
       players: {
         max: -1,
-        online: -1,
-      },
+        online: -1 },
       description: t('serverStatus.ping'),
       favicon: '',
-      ping: 0,
-    }
+      ping: 0 }
   })
 }
 
@@ -42,16 +39,13 @@ function useUnknown() {
     return {
       version: {
         name: t('server.unknown'),
-        protocol: -1,
-      },
+        protocol: -1 },
       players: {
         max: -1,
-        online: -1,
-      },
+        online: -1 },
       description: t('server.unknownDescription'),
       favicon: '',
-      ping: 0,
-    }
+      ping: 0 }
   })
 }
 
@@ -62,8 +56,7 @@ function usePingServer() {
     'serverStatus.nohost': t('serverStatus.nohost'),
     'serverStatus.refuse': t('serverStatus.refuse'),
     'serverStatus.timeout': t('serverStatus.timeout'),
-    'serverStatus.ping': t('serverStatus.ping'),
-  } as Record<string, string>))
+    'serverStatus.ping': t('serverStatus.ping') } as Record<string, string>))
   return async function (options: PingServerOptions) {
     const result = await pingServer(options)
     result.description = typeof result.description !== 'string' ? result.description : (tStatus.value[result.description] ?? (te(result.description) ? t(result.description) : result.description))
@@ -80,11 +73,10 @@ export function useInstancesServerStatus() {
   const pingingStatus = usePinging()
   async function refreshOne(server: { host: string; port?: number }) {
     const id = `${server.host}:${server.port ?? 25565}`
-    set(cache.value, id, pingingStatus.value)
-    set(cache.value, id, await pingServer({
+    cache.value[id] = pingingStatus.value
+    cache.value[id] = await pingServer({
       host: server.host,
-      port: server.port,
-    }))
+      port: server.port })
     // Workaround to force save as reactivity is broken
     localStorage.setItem('serverStatusCache', JSON.stringify(cache.value))
   }
@@ -94,8 +86,7 @@ export function useInstancesServerStatus() {
   }
   return {
     pinging,
-    refresh,
-  }
+    refresh }
 }
 
 export const kServerStatus: InjectionKey<ReturnType<typeof useServerStatus>> = Symbol('ServerStatus')
@@ -107,16 +98,15 @@ export function useServerStatus(serverRef: Ref<{ host: string; port?: number }>,
   const serverId = computed(() => `${serverRef.value.host}:${serverRef.value.port ?? 25565}`)
   watch(serverId, () => {
     if (!cache.value[serverId.value]) {
-      set(cache.value, serverId.value, unknownStatus.value)
+      cache.value[serverId.value] = unknownStatus.value
     }
   }, { immediate: true })
   const status = computed<ServerStatus>({
     get() { return cache.value[serverId.value] ?? unknownStatus.value },
     set(v) {
-      set(cache.value, serverId.value, v)
+      cache.value[serverId.value] = v
       localStorage.setItem('serverStatusCache', JSON.stringify(cache.value))
-    },
-  })
+    } })
   const pingingStatus = usePinging()
   const pinging = ref(false)
   /**
@@ -130,8 +120,7 @@ export function useServerStatus(serverRef: Ref<{ host: string; port?: number }>,
     status.value = await pingServer({
       host: server.host,
       port: server.port,
-      protocol: protocol.value,
-    }).finally(() => {
+      protocol: protocol.value }).finally(() => {
       pinging.value = false
     })
   }
@@ -148,6 +137,5 @@ export function useServerStatus(serverRef: Ref<{ host: string; port?: number }>,
     status,
     pinging,
     refresh,
-    reset,
-  }
+    reset }
 }

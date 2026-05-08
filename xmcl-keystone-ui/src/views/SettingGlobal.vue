@@ -3,20 +3,20 @@
   <div class="flex flex-col gap-4">
     <!-- Quick Launch Settings Card -->
     <SettingCard :title="t('setting.quickLaunchSettings')" icon="flash_on">
-      <SettingItemCheckbox :value="fastLaunch" @input="fastLaunch = $event" :title="t('instanceSetting.fastLaunch')"
+      <SettingItemCheckbox v-model="fastLaunch" :title="t('instanceSetting.fastLaunch')"
         :description="t('instanceSetting.fastLaunchHint')" />
       <v-divider class="my-2" />
-      <SettingItemCheckbox :value="hideLauncher" @input="hideLauncher = $event" :title="t('instanceSetting.hideLauncher')" />
+      <SettingItemCheckbox v-model="hideLauncher" :title="t('instanceSetting.hideLauncher')" />
       <v-divider class="my-2" />
-      <SettingItemCheckbox :value="showLog" @input="showLog = $event" :title="t('instanceSetting.showLog')"
+      <SettingItemCheckbox v-model="showLog" :title="t('instanceSetting.showLog')"
         :description="t('instanceSetting.showLogHint')" />
     </SettingCard>
 
     <SettingCard :title="t('setting.authenticationSettings')" icon="security">
-      <SettingItemCheckbox :value="disableAuthlibInjector" @input="disableAuthlibInjector = $event" :title="t('instanceSetting.disableAuthlibInjector')"
+      <SettingItemCheckbox v-model="disableAuthlibInjector" :title="t('instanceSetting.disableAuthlibInjector')"
         :description="t('instanceSetting.disableAuthlibInjectorDescription')" />
       <v-divider class="my-2" />
-      <SettingItemCheckbox :value="disableElyByAuthlib" @input="disableElyByAuthlib = $event" :title="t('instanceSetting.disableElyByAuthlib')"
+      <SettingItemCheckbox v-model="disableElyByAuthlib" :title="t('instanceSetting.disableElyByAuthlib')"
         :description="t('instanceSetting.disableElyByAuthlibDescription')" />
     </SettingCard>
 
@@ -27,7 +27,7 @@
         <v-spacer />
         <SettingJavaMemoryAssign :value="assignMemory" @input="assignMemory = $event" />
       </div>
-      <SettingJavaMemory :assign-memory="assignMemory" :min.sync="minMem" :max.sync="maxMem" />
+      <SettingJavaMemory :assign-memory="assignMemory" v-model:min="minMem" v-model:max="maxMem" />
     </SettingCard>
 
     <!-- Advanced Java Options Card -->
@@ -35,18 +35,18 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
           <div class="font-weight-medium mb-2">
-            <v-icon left small>terminal</v-icon>
+            <v-icon start size="small">terminal</v-icon>
             {{ t("instance.prependCommand") }}
           </div>
-          <v-text-field v-model="prependCommand" outlined dense filled hide-details
+          <v-text-field v-model="prependCommand" variant="outlined" density="compact" hide-details
             :placeholder="t('instance.prependCommandHint')" />
         </div>
         <div>
           <div class="font-weight-medium mb-2">
-            <v-icon left small>settings_applications</v-icon>
+            <v-icon start size="small">settings_applications</v-icon>
             {{ t("instance.vmOptions") }}
           </div>
-          <v-text-field v-model="vmOptions" outlined dense filled hide-details
+          <v-text-field v-model="vmOptions" variant="outlined" density="compact" hide-details
             :placeholder="t('instance.vmOptionsHint')" />
         </div>
       </div>
@@ -58,8 +58,8 @@
         <div class="text-subtitle-2">
           {{ t("instance.vmVarHint") }}
         </div>
-        <v-btn small color="primary" outlined @click="onAddEnvVar">
-          <v-icon left small>add</v-icon>
+        <v-btn color="primary" @click="onAddEnvVar" size="small" variant="text" border>
+          <v-icon start size="small">add</v-icon>
           {{ t('shared.add') }}
         </v-btn>
       </div>
@@ -72,18 +72,18 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div class="font-weight-medium mb-2">
-            <v-icon left small>play_arrow</v-icon>
+            <v-icon start size="small">play_arrow</v-icon>
             {{ t("instance.preExecCommand") }}
           </div>
-          <v-text-field v-model="preExecuteCommand" outlined dense filled hide-details
+          <v-text-field v-model="preExecuteCommand" variant="outlined" density="compact" hide-details
             :placeholder="t('instance.preExecCommandHint')" />
         </div>
         <div>
           <div class="font-weight-medium mb-2">
-            <v-icon left small>tune</v-icon>
+            <v-icon start size="small">tune</v-icon>
             {{ t("instance.mcOptions") }}
           </div>
-          <v-text-field v-model="mcOptions" outlined dense filled hide-details
+          <v-text-field v-model="mcOptions" variant="outlined" density="compact" hide-details
             :placeholder="t('instance.mcOptionsHint')" />
         </div>
       </div>
@@ -92,12 +92,12 @@
     <!-- Game Window Resolution Card -->
     <SettingCard :title="t('instance.resolution')" icon="aspect_ratio">
       <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center">
-        <v-text-field v-model="resolutionWidth" :label="t('instance.width')" type="number" outlined dense filled
+        <v-text-field v-model="resolutionWidth" :label="t('instance.width')" type="number" variant="outlined" density="compact"
           hide-details />
-        <v-text-field v-model="resolutionHeight" :label="t('instance.height')" type="number" outlined dense filled
+        <v-text-field v-model="resolutionHeight" :label="t('instance.height')" type="number" variant="outlined" density="compact"
           hide-details />
         <v-switch v-model="resolutionFullscreen" :label="t('instance.fullscreen')" class="mt-0" color="primary" hide-details />
-        <v-select v-model="selectedResolutionPreset" :items="resolutionPresets" item-text="text" item-value="value"
+        <v-select v-model="selectedResolutionPreset" :items="resolutionPresets" item-title="text" item-value="value"
           :label="t('instance.resolutionPreset')" outlined filled hide-details dense />
       </div>
     </SettingCard>
@@ -106,7 +106,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 import { useEventListener } from '@vueuse/core'
 import { useGlobalSettings } from '@/composables/setting'
 import { useResolutionPresets } from '@/composables/resolutionPresets'
@@ -149,7 +149,7 @@ const hideLauncher = ref(globalHideLauncher.value)
 const showLog = ref(globalShowLog.value)
 const disableAuthlibInjector = ref(globalDisableAuthlibInjector.value)
 const disableElyByAuthlib = ref(globalDisableElyByAuthlib.value)
-const env = ref(globalEnv.value)
+const env = ref({ ...globalEnv.value })
 const adding = ref(false) // For adding environment variables
 
 // Resolution Settings
@@ -208,7 +208,9 @@ function save() {
     globalDisableElyByAuthlib: disableElyByAuthlib.value,
     globalPrependCommand: prependCommand.value,
     globalPreExecuteCommand: preExecuteCommand.value,
-    globalEnv: env.value,
+    // Deep-clone reactive proxies before sending over IPC so structured clone
+    // doesn't fail with "An object could not be cloned".
+    globalEnv: { ...env.value },
     globalResolution: {
       width: resolutionWidth.value,
       height: resolutionHeight.value,

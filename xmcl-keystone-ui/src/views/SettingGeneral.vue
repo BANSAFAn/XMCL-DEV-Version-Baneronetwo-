@@ -1,47 +1,34 @@
 <template>
   <SettingCard>
     <!-- Language Selection -->
-    <SettingItem :description="t('setting.languageDescription')">
-      <template #title>
-        <v-icon left small color="primary">language</v-icon>
-        {{ t('setting.language') }}
-      </template>
-      <template #action>
-        <v-select
-          v-model="selectedLocale"
-          :items="locales"
-          outlined
-          dense
-          hide-details
-          class="language-select"
-        >
-          <template #selection="{ item }">
-            <span class="font-weight-medium">{{ item.text }}</span>
-          </template>
-        </v-select>
-      </template>
-    </SettingItem>
+    <SettingItemSelect
+      v-model="selectedLocale"
+      icon="language"
+      :title="t('setting.language')"
+      :description="t('setting.languageDescription')"
+      :items="locales"
+    />
 
     <v-divider class="my-3" />
 
     <!-- Data Directory -->
     <SettingItem :description="errorText || root" :title-class="`${errorText ? 'error--text' : ''}`" long-action>
       <template #title>
-        <v-icon left small :color="errorText ? 'error' : 'primary'">folder</v-icon>
+        <v-icon start size="small" :color="errorText ? 'error' : 'primary'">folder</v-icon>
         {{ t("setting.location") }}
       </template>
       <template #action>
         <div class="flex gap-2 justify-end">
-          <v-btn small outlined color="primary" @click="onMigrateFromOther">
-            <v-icon left small>local_shipping</v-icon>
+          <v-btn color="primary" @click="onMigrateFromOther">
+            <v-icon start size="small">local_shipping</v-icon>
             {{ t("setting.migrateFromOther") }}
           </v-btn>
-          <v-btn small outlined color="primary" @click="browseRootDir">
-            <v-icon left small>edit</v-icon>
+          <v-btn color="primary" @click="browseRootDir">
+            <v-icon start size="small">edit</v-icon>
             {{ t("setting.browseRoot") }}
           </v-btn>
-          <v-btn small outlined color="primary" @click="showGameDirectory()">
-            <v-icon left small>folder_open</v-icon>
+          <v-btn color="primary" @click="showGameDirectory()">
+            <v-icon start size="small">folder_open</v-icon>
             {{ t("setting.showRoot") }}
           </v-btn>
         </div>
@@ -52,8 +39,7 @@
 
     <!-- Privacy & Telemetry -->
     <SettingItemSwitcher
-      :value="disableTelemetry"
-      @input="disableTelemetry = $event"
+      v-model="disableTelemetry"
       :title="t('setting.disableTelemetry')"
       :description="t('setting.disableTelemetryDescription')"
       icon="privacy_tip"
@@ -63,8 +49,7 @@
     <template v-if="env?.os === 'linux' || env?.os === 'windows'">
       <v-divider class="my-3" />
       <SettingItemSwitcher
-        :value="enableDedicatedGPUOptimization"
-        @input="enableDedicatedGPUOptimization = $event"
+        v-model="enableDedicatedGPUOptimization"
         :title="t('setting.enableDedicatedGPUOptimization')"
         :description="t('setting.enableDedicatedGPUOptimizationDescription')"
         icon="memory"
@@ -74,8 +59,7 @@
     <!-- Discord Presence -->
     <v-divider class="my-3" />
     <SettingItemSwitcher
-      :value="enableDiscord"
-      @input="enableDiscord = $event"
+      v-model="enableDiscord"
       :title="t('setting.enableDiscord')"
       :description="t('setting.enableDiscordDescription')"
       icon="discord"
@@ -84,20 +68,18 @@
     <!-- Developer Mode -->
     <v-divider class="my-3" />
     <SettingItemSwitcher
-      :value="developerMode"
-      @input="developerMode = $event"
+      v-model="developerMode"
       :title="t('setting.developerMode')"
       :description="t('setting.developerModeDescription')"
       icon="code"
     >
-      <v-chip v-if="developerMode" x-small color="warning" class="ml-2">{{ t('setting.devModeLabel') }}</v-chip>
+      <v-chip v-if="developerMode" size="x-small" color="warning" class="ml-2">{{ t('setting.devModeLabel') }}</v-chip>
     </SettingItemSwitcher>
 
     <!-- Streamer Mode -->
     <v-divider class="my-3" />
     <SettingItemSwitcher
-      :value="streamerMode"
-      @input="streamerMode = $event"
+      v-model="streamerMode"
       :title="t('setting.streamerMode')"
       :description="t('setting.streamerModeDescription')"
       icon="videocam"
@@ -105,36 +87,28 @@
 
     <v-divider class="my-3" />
 
-    <SettingItem :description="t('setting.replaceNativeDescription')">
-      <template #title>
-        <v-icon left small color="primary">swap_horiz</v-icon>
-        {{ t('setting.replaceNative') }}
-      </template>
-      <template #action>
-        <v-select
-          :value="replaceNative === false ? '' : replaceNative"
-          :items="replaceNativeItems"
-          outlined
-          dense
-          hide-details
-          class="native-select"
-          @change="replaceNative = !$event ? false : $event"
-        />
-      </template>
-    </SettingItem>
+    <SettingItemSelect
+      :model-value="replaceNative === false ? '' : replaceNative"
+      icon="swap_horiz"
+      :title="t('setting.replaceNative')"
+      :description="t('setting.replaceNativeDescription')"
+      :items="replaceNativeItems"
+      @update:model-value="replaceNative = !$event ? false : $event"
+    />
   </SettingCard>
 </template>
 
 <script lang="ts" setup>
 import SettingCard from '@/components/SettingCard.vue'
 import SettingItem from '@/components/SettingItem.vue'
+import SettingItemSelect from '@/components/SettingItemSelect.vue'
+import SettingItemSwitcher from '@/components/SettingItemSwitcher.vue'
 import { kCriticalStatus } from '@/composables/criticalStatus'
 import { useGetDataDirErrorText } from '@/composables/dataRootErrors'
 import { kEnvironment } from '@/composables/environment'
 import { injection } from '@/util/inject'
 import { useDialog } from '../composables/dialog'
 import { useGameDirectory, useSettings } from '../composables/setting'
-import SettingItemSwitcher from '@/components/SettingItemSwitcher.vue'
 
 const { isNoEmptySpace, invalidGameDataPath } = injection(kCriticalStatus)
 const getDirErroText = useGetDataDirErrorText()
@@ -184,12 +158,6 @@ const { show: onMigrateFromOther } = useDialog('migrate-wizard')
 
 :deep(.transparent-list) {
   background: transparent !important;
-}
-
-.language-select,
-.native-select {
-  min-width: 200px;
-  max-width: 300px;
 }
 
 .v-list-item {

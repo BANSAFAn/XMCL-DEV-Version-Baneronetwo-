@@ -63,14 +63,14 @@ const model = computed(() => {
     const result: ExternalResource[] = []
     if (file?.links.home) {
       result.push({
-        icon: 'mdi-home',
+        icon: 'home',
         name: 'Home',
         url: file.links.home,
       })
     }
     if (file?.links.issues) {
       result.push({
-        icon: 'mdi-bug',
+        icon: 'bugs',
         name: 'Issues',
         url: file.links.issues,
       })

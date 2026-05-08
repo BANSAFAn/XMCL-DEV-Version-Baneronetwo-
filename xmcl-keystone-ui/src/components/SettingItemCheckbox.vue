@@ -1,58 +1,39 @@
 <template>
-  <v-list-item
-    :disabled="disabled"
-    @click="!disabled ? emit('input', !value) : undefined"
+  <SettingItem
+    :description="description"
+    class="setting-item-checkbox cursor-pointer"
+    @click="model = !model"
   >
-    <v-list-item-action class="self-center">
+    <template #preaction>
       <v-checkbox
+        v-bind="$attrs"
+        :model-value="model"
+        class="mr-2"
         hide-details
-        :disabled="disabled"
-        :readonly="true"
-        :input-value="value"
-        :value="value"
-        @click.stop.prevent.capture="!disabled ? emit('input', !value) : undefined"
-        @change="emit('input', !value)"
+        readonly
       />
-    </v-list-item-action>
-    <v-list-item-content>
-      <v-list-item-title class="font-weight-medium">
-        {{ title }}
-        <slot />
-      </v-list-item-title>
-      <v-list-item-subtitle v-if="description">
-        {{ description }}
-      </v-list-item-subtitle>
-    </v-list-item-content>
-  </v-list-item>
+    </template>
+    <template #title>
+      {{ title }}
+      <slot />
+    </template>
+  </SettingItem>
 </template>
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core'
+import SettingItem from './SettingItem.vue'
 
-const props = defineProps<{
-  value: boolean
+defineOptions({ inheritAttrs: false })
+
+const model = defineModel<boolean>({ required: true })
+
+defineProps<{
   title: string
-  disabled?: boolean
   description?: string
 }>()
-const emit = defineEmits<{
-  (event: 'input', value: boolean): void
-}>()
-
-const model = useVModel(props, 'value', emit)
 </script>
 
 <style scoped>
-/* Remove gray-black rectangle backgrounds */
-.v-list-item {
-  background: transparent !important;
-}
-
-.v-list-item::before,
-.v-list-item::after {
-  opacity: 0 !important;
-}
-
-.v-list-item:hover::before {
-  opacity: 0.04 !important;
+.setting-item-checkbox:hover {
+  background-color: rgba(255, 255, 255, 0.04);
 }
 </style>

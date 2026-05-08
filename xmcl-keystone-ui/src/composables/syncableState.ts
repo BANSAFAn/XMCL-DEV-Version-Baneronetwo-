@@ -1,5 +1,6 @@
 import { SharedState } from '@xmcl/runtime-api'
 import { useEventListener } from '@vueuse/core'
+import { shallowRef, triggerRef } from 'vue'
 
 export type Handler<T> = { [k in keyof T]?: T[k] /* extends (...args: infer A) => infer R ? (state: T, ...args: A) => R : never */ }
 
@@ -7,11 +8,17 @@ export function useState<T extends object>(fetcher: (abortSignal: AbortSignal) =
   Type: { prototype: Handler<T>; new(): T }) {
   const isValidating = ref(false)
 
-  const state = ref<SharedState<T> | undefined>()
+  // Use shallowRef: the SharedState object is mutated in-place by the preload
+  // 'commit' IPC handler (see xmcl-electron-app/preload/service.ts). A deep
+  // reactive() wrapper would never observe those mutations because they hit
+  // the raw target, not the Vue Proxy. Instead we keep a shallow ref and
+  // trigger it manually whenever the state is mutated.
+  const state = shallowRef<SharedState<T> | undefined>()
   const error = ref(undefined as any)
   let controller: AbortController | undefined
-  const onMutation = (state: any) => (mutation: string, payload: any) => {
-    ((Type.prototype as any)?.[mutation] as Function)?.call(state, payload)
+  const onMutation = (data: any) => (mutation: string, payload: any) => {
+    ((Type.prototype as any)?.[mutation] as Function)?.call(data, payload)
+    triggerRef(state)
   }
   const onStateValidating = (data: any) => (v: number) => {
     if (data === state.value) {

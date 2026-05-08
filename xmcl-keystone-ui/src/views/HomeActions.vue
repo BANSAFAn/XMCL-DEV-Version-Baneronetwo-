@@ -9,8 +9,9 @@
   >
     <v-btn
       v-shared-tooltip="() => t('logsCrashes.title')"
-      text
       icon
+      variant="text"
+      density="comfortable"
       :loading="isValidating"
       @click="showLogDialog()"
     >
@@ -19,8 +20,9 @@
 
     <v-btn
       v-shared-tooltip="() => t('instance.showInstance')"
-      text
       icon
+      variant="text"
+      density="comfortable"
       :loading="isValidating"
       @click="showInstanceFolder"
     >
@@ -34,8 +36,9 @@
       <template #activator>
         <v-btn
           v-shared-tooltip="() => t('baseSetting.title', 2)"
-          text
           icon
+          variant="text"
+          density="comfortable"
           :loading="isValidating"
           to="/base-setting"
           @click.stop
@@ -45,8 +48,9 @@
       </template>
       <v-btn
         v-shared-tooltip.left="() => t('modpack.export')"
-        text
         icon
+        variant="text"
+        density="comfortable"
         :loading="isValidating"
         to="/base-setting?target=modpack"
       >
@@ -55,6 +59,8 @@
       <v-btn
         v-shared-tooltip.left="() => t('server.export')"
         icon
+        variant="text"
+        density="comfortable"
         :loading="isValidating"
         @click="showExportServer()"
       >
@@ -63,8 +69,9 @@
       <v-btn
         v-if="instance && !instance.upstream"
         v-shared-tooltip.left="() => t('instance.installModpack')"
-        text
         icon
+        variant="text"
+        density="comfortable"
         :loading="isValidating || loading"
         @click="onClickInstallFromModpack()"
       >

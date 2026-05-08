@@ -1,5 +1,5 @@
 import { computed, ref, watch, type Ref } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 import { clientCurseforgeV1, clientModrinthV2 } from '@/util/clients'
 import { injection } from '@/util/inject'
 import { mergeSorted } from '@/util/sort'

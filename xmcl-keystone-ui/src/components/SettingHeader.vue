@@ -3,12 +3,12 @@
     class="v-heading w-full select-none"
   >
     <h3 class="xtext-h5">
-      <v-icon color="primary" left v-if="icon">{{ icon }}</v-icon>
+      <v-icon color="primary" start v-if="icon">{{ icon }}</v-icon>
       {{ title }}
     </h3>
-    <v-subheader v-if="subtitle" class="p-0 h-[1.25rem]">
+    <v-list-subheader v-if="subtitle" class="p-0 h-[1.25rem]">
       {{ subtitle }}
-    </v-subheader>
+    </v-list-subheader>
   </div>
 </template>
 <script setup lang="ts">

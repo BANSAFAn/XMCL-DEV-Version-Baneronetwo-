@@ -31,17 +31,15 @@
             <v-btn
               v-if="hasMultipleImages"
               icon
-              small
               @click.stop="prev"
-            >
+             size="small">
               <v-icon>chevron_left</v-icon>
             </v-btn>
           </template>
           <v-btn
             icon
-            small
             @click="isShown=false"
-          >
+           size="small">
             <v-icon>close</v-icon>
           </v-btn>
 
@@ -49,9 +47,8 @@
             <v-btn
               v-if="hasMultipleImages"
               icon
-              small
               @click.stop="next"
-            >
+             size="small">
               <v-icon>chevron_right</v-icon>
             </v-btn>
           </template>

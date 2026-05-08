@@ -1,10 +1,9 @@
 <template>
   <div class="flex gap-4">
     <v-btn
-      text
       :disabled="creating"
       @click="emit('quit')"
-    >
+     variant="text">
       {{ t('shared.cancel') }}
     </v-btn>
     <v-spacer />

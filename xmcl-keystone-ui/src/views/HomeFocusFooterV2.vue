@@ -4,7 +4,7 @@
       <HomeFooterCard />
       <div
         key="launch-button-group"
-        class="flex flex-wrap justify-end items-center gap-y-6 gap-x-2"
+        class="flex flex-wrap justify-end items-center gap-y-6 gap-x-2 flex-grow"
       >
         <HomeLaunchButtonStatus
           class="mr-4 ml-2"

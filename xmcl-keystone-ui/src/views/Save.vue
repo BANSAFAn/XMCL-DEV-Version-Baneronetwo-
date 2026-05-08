@@ -11,8 +11,14 @@
     }"
     @load="loadMore"
   >
+    <template #actions>
+      <MarketListHeader
+        v-model:dense="denseView"
+        :label="`${items.length} ${t('save.name', items.length)}`"
+      />
+    </template>
     <template #item="{ item, hasUpdate, checked, selectionMode, selected, on, index }">
-      <v-subheader
+      <v-list-subheader
         v-if="typeof item === 'string'"
         class="flex"
         :style="{ height: itemHeight + 'px' }"
@@ -22,16 +28,7 @@
           item === 'shared' ? t("save.unselected") :
           t("modInstall.search")
         }}
-        <div class="flex-grow" />
-        <v-btn
-          v-if="index === 0"
-          v-shared-tooltip="() => t('mod.denseView')"
-          icon
-          @click="denseView = !denseView"
-        >
-          <v-icon> {{ denseView ? 'reorder' : 'list' }} </v-icon>
-        </v-btn>
-      </v-subheader>
+      </v-list-subheader>
       <SaveItem
         v-else
         :item="item"
@@ -92,6 +89,7 @@
 <script lang="ts" setup>
 import Hint from '@/components/Hint.vue'
 import MarketBase from '@/components/MarketBase.vue'
+import MarketListHeader from '@/components/MarketListHeader.vue'
 import MarketProjectDetailCurseforge from '@/components/MarketProjectDetailCurseforge.vue'
 import MarketRecommendation from '@/components/MarketRecommendation.vue'
 import { useService } from '@/composables'

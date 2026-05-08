@@ -1,26 +1,32 @@
 import { LauncherApp } from '~/app'
 import { AnyError } from '@xmcl/utils'
 import { UserService } from '../UserService'
-import { kGFW } from '~/infra'
+import { fetch as undiciFetch } from 'undici'
 
 interface ModrinthOAuthResponse {
   access_token: string
   expires_in: number
   token_type: string
+  /** Epoch milliseconds when this token was issued (added by us). */
+  issued_at?: number
 }
 
 export async function getModrinthAccessToken(app: LauncherApp) {
   const metadata = await app.secretStorage.get('modrinth', 'MODRINTH_USER')
   try {
     if (metadata) {
-      const { access_token, expires_in, token_type } = JSON.parse(metadata) as ModrinthOAuthResponse
-      const now = Date.now()
-      const expirationTime = now + (expires_in * 1000)
-      if (now < expirationTime) {
+      const { access_token, expires_in, issued_at } = JSON.parse(metadata) as ModrinthOAuthResponse
+      // If we don't know when the token was issued (legacy data), assume it
+      // is still valid and let the API call fail naturally if it isn't —
+      // that path will trigger a fresh OAuth flow via `loginModrinth(true)`.
+      if (!issued_at) {
         return access_token
-      } else {
-        return false
       }
+      const expirationTime = issued_at + (expires_in * 1000)
+      if (Date.now() < expirationTime) {
+        return access_token
+      }
+      return false
     }
   } catch (e) {
     return undefined
@@ -53,8 +59,11 @@ export async function loginModrinth(app: LauncherApp, userService: UserService, 
         }
       })
     })
-    const gfw = await app.registry.get(kGFW)
-    const authUrl = gfw.inside ? new URL('https://xmcl-highfreq-function.azurewebsites.net/api/modrinth-auth') : new URL('https://api.xmcl.app/modrinth/auth')
+    // Always use api.xmcl.app — the GFW-region Azure Function endpoint
+    // (xmcl-highfreq-function.azurewebsites.net/api/modrinth-auth) is
+    // currently returning a broken response (content encoding mismatch),
+    // and api.xmcl.app works regardless of region.
+    const authUrl = new URL('https://api.xmcl.app/modrinth/auth')
     authUrl.searchParams.set('code', code)
     authUrl.searchParams.set('redirect_uri', redirect_uri)
     const response = await app.fetch(authUrl)
@@ -62,6 +71,8 @@ export async function loginModrinth(app: LauncherApp, userService: UserService, 
       throw new AnyError('ModrinthAuthError', `Failed to get auth code: ${response.statusText}: ${await response.text()}`)
     }
     const data = await response.json() as ModrinthOAuthResponse
+    // Stamp the issue time so we can compute real expiration later.
+    data.issued_at = Date.now()
 
     await app.secretStorage.put('modrinth', 'MODRINTH_USER', JSON.stringify(data))
   }

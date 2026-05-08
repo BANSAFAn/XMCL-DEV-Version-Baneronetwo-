@@ -22,26 +22,29 @@
       <v-chip
         v-shared-tooltip="tooltip"
         label
-        outlined
-        small
+        variant="outlined"
+        size="small"
       >
-        <v-avatar left>
-          <v-img
-            :src="BuiltinImages.minecraft"
-            left
-          />
-        </v-avatar>
+        <template #prepend>
+          <v-avatar start>
+            <v-img
+              :src="BuiltinImages.minecraft"
+            />
+          </v-avatar>
+        </template>
         {{ pack.installed[0].acceptingRange }}
-        <v-avatar right>
-          {{ icon }}
-        </v-avatar>
+        <template #append>
+          <v-avatar end>
+            {{ icon }}
+          </v-avatar>
+        </template>
       </v-chip>
       <v-icon
         v-if="pack.modrinth || pack.curseforge || pack.modrinthProjectId || pack.curseforgeProjectId"
         class="mt-1"
-        small
+        size="small"
       >
-        {{ (pack.modrinth || pack.modrinthProjectId) ? '$vuetify.icons.modrinth' : (pack.curseforge || pack.curseforgeProjectId) ? '$vuetify.icons.curseforge' : '' }}
+        {{ (pack.modrinth || pack.modrinthProjectId) ? 'xmcl:modrinth' : (pack.curseforge || pack.curseforgeProjectId) ? 'xmcl:curseforge' : '' }}
       </v-icon>
     </template>
   </MarketItem>
@@ -133,7 +136,7 @@ const getContextMenuItems = () => {
   //     onClick: () => {
   //       goCurseforgeProject(props.pack.curseforgeProjectId || props.pack.curseforge?.id || 0, 'texture-packs')
   //     },
-  //     icon: '$vuetify.icons.curseforge',
+  //     icon: 'xmcl:curseforge',
   //   })
   // } else {
   //   all.push({
@@ -151,7 +154,7 @@ const getContextMenuItems = () => {
   //     onClick: () => {
   //       goModrinthProject(props.pack.modrinthProjectId || props.pack.modrinth?.project_id || '')
   //     },
-  //     icon: '$vuetify.icons.modrinth',
+  //     icon: 'xmcl:modrinth',
   //   })
   // } else {
   //   all.push({

@@ -14,56 +14,57 @@
         />
         <div>
           <v-list-item>
-            <v-list-item-avatar class="md:hidden lg:block">
-              <v-icon>
-                badge
-              </v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ t('user.name') }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ t('user.nameHint') }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action class="flex grow-0 flex-row">
+            <template #prepend>
+              <v-avatar class="md:hidden lg:block">
+                <v-icon>
+                  badge
+                </v-icon>
+              </v-avatar>
+            </template>
+            <template #title>
+              {{ t('user.name') }}
+            </template>
+            <template #subtitle>
+              {{ t('user.nameHint') }}
+            </template>
+            <template #append>
               <v-text-field
                 v-model="name"
-                dense
-                outlined
+                density="compact"
+                variant="outlined"
                 hide-details
+                style="min-width: 180px"
               />
-            </v-list-item-action>
+            </template>
           </v-list-item>
           <v-list-item>
-            <v-list-item-avatar class="md:hidden lg:block">
-              <v-icon>
-                accessibility_new
-              </v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ t('userSkin.useSlim') }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ t('userSkin.skinType') }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-switch v-model="slim" />
-            </v-list-item-action>
+            <template #prepend>
+              <v-avatar class="md:hidden lg:block">
+                <v-icon>
+                  accessibility_new
+                </v-icon>
+              </v-avatar>
+            </template>
+            <template #title>
+              {{ t('userSkin.useSlim') }}
+            </template>
+            <template #subtitle>
+              {{ t('userSkin.skinType') }}
+            </template>
+            <template #append>
+              <v-switch v-model="slim" hide-details />
+            </template>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ t('userCape.changeTitle') }}
-              </v-list-item-title>
-              <v-list-item-subtitle class="max-w-100 overflow-hidden whitespace-pre-wrap">
+            <template #title>
+              {{ t('userCape.changeTitle') }}
+            </template>
+            <template #subtitle>
+              <span class="max-w-100 overflow-hidden whitespace-pre-wrap">
                 {{ t('userCape.description') }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
+              </span>
+            </template>
           </v-list-item>
 
           <v-slide-group
@@ -72,11 +73,11 @@
             show-arrows
             class="max-w-[400px] overflow-x-auto"
           >
-            <v-slide-item
-              v-slot="{ active, toggle }"
+            <v-slide-group-item
+              v-slot="{ isSelected, toggle }"
             >
               <v-card
-                :color="active ? 'primary' : 'grey lighten-1'"
+                :color="isSelected ? 'primary' : 'grey lighten-1'"
                 class="ma-4 py-2"
                 height="200"
                 width="100"
@@ -91,14 +92,14 @@
                   </div>
                 </div>
               </v-card>
-            </v-slide-item>
-            <v-slide-item
+            </v-slide-group-item>
+            <v-slide-group-item
               v-for="c of capes"
               :key="c.id"
-              v-slot="{ active, toggle }"
+              v-slot="{ isSelected, toggle }"
             >
               <v-card
-                :color="active ? 'primary' : 'grey lighten-1'"
+                :color="isSelected ? 'primary' : 'grey lighten-1'"
                 class="ma-4 py-2"
                 height="200"
                 width="100"
@@ -116,7 +117,7 @@
                   </div>
                 </div>
               </v-card>
-            </v-slide-item>
+            </v-slide-group-item>
           </v-slide-group>
         </div>
       </div>
@@ -126,11 +127,10 @@
         <v-btn
           :disabled="!changed"
           :loading="saving"
-          text
           @click="save"
-        >
+         variant="text">
           {{ t('userSkin.save') }}
-          <v-icon right>
+          <v-icon end>
             save
           </v-icon>
         </v-btn>

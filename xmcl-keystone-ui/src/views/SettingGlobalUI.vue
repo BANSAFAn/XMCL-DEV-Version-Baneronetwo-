@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <SettingCard class="mb-4" :title="t('setting.sidebarStyle')" icon="dashboard">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div class="md:col-span-5 flex justify-center items-center">
@@ -7,7 +7,12 @@
           <div class="sidebar-preview-container elevation-1 rounded-lg">
             <div class="sidebar-preview-wrapper">
               <div
-                :class="['sidebar-preview', `position-${sidebarPosition}`, `style-${sidebarStyle}`, `align-${sidebarAlign}`]"
+                :class="[
+                  'sidebar-preview',
+                  `position-${sidebarPosition}`,
+                  `style-${sidebarStyle}`,
+                  `align-${sidebarAlign}`,
+                ]"
                 :style="{ transform: `scale(${sidebarScale / 100})` }"
               >
                 <div class="sidebar-preview-main">
@@ -28,21 +33,31 @@
                 </div>
               </div>
             </div>
-            <div class="text-caption text-center mt-2 grey--text">{{ t('setting.livePreview') }}</div>
+            <div class="text-caption text-center mt-2 grey--text">
+              {{ t('setting.livePreview') }}
+            </div>
           </div>
         </div>
         <div class="md:col-span-7">
           <v-list class="transparent-list">
             <!-- Style -->
-            <SettingItem :title="t('setting.sidebarStyle')" :description="t('setting.sidebarStyleHint')">
+            <SettingItem
+              :title="t('setting.sidebarStyle')"
+              :description="t('setting.sidebarStyleHint')"
+            >
               <template #action>
-                <v-btn-toggle v-model="sidebarStyleIndex" mandatory dense color="primary" rounded>
-                  <v-btn small>
-                    <v-icon left small>view_sidebar</v-icon>
+                <v-btn-toggle
+                  v-model="sidebarStyleIndex"
+                  mandatory
+                  density="compact"
+                  color="primary"
+                >
+                  <v-btn size="small">
+                    <v-icon start size="small">view_sidebar</v-icon>
                     {{ t('setting.sidebarClassic') }}
                   </v-btn>
-                  <v-btn small>
-                    <v-icon left small>dashboard</v-icon>
+                  <v-btn size="small">
+                    <v-icon start size="small">dashboard</v-icon>
                     {{ t('setting.sidebarNotch') }}
                   </v-btn>
                 </v-btn-toggle>
@@ -53,18 +68,23 @@
             <!-- Position -->
             <SettingItem :title="t('setting.sidebarPosition')">
               <template #action>
-                <v-btn-toggle v-model="sidebarPositionIndex" mandatory dense color="primary" rounded>
-                  <v-btn small>
-                    <v-icon small>arrow_back</v-icon>
+                <v-btn-toggle
+                  v-model="sidebarPositionIndex"
+                  mandatory
+                  density="compact"
+                  color="primary"
+                >
+                  <v-btn size="small">
+                    <v-icon size="small">arrow_back</v-icon>
                   </v-btn>
-                  <v-btn small>
-                    <v-icon small>arrow_forward</v-icon>
+                  <v-btn size="small">
+                    <v-icon size="small">arrow_forward</v-icon>
                   </v-btn>
-                  <v-btn small v-if="sidebarStyle === 'notch'">
-                    <v-icon small>arrow_upward</v-icon>
+                  <v-btn v-if="sidebarStyle === 'notch'" size="small">
+                    <v-icon size="small">arrow_upward</v-icon>
                   </v-btn>
-                  <v-btn small v-if="sidebarStyle === 'notch'">
-                    <v-icon small>arrow_downward</v-icon>
+                  <v-btn v-if="sidebarStyle === 'notch'" size="small">
+                    <v-icon size="small">arrow_downward</v-icon>
                   </v-btn>
                 </v-btn-toggle>
               </template>
@@ -75,16 +95,25 @@
               <v-divider class="my-2" />
               <SettingItem :title="t('setting.sidebarAlign')">
                 <template #action>
-                  <v-btn-toggle v-model="sidebarAlignIndex" mandatory dense color="primary" rounded>
-                    <v-btn small><v-icon small>format_align_left</v-icon></v-btn>
-                    <v-btn small><v-icon small>format_align_center</v-icon></v-btn>
-                    <v-btn small><v-icon small>format_align_right</v-icon></v-btn>
+                  <v-btn-toggle
+                    v-model="sidebarAlignIndex"
+                    mandatory
+                    dense
+                    color="primary"
+                    rounded="pill"
+                  >
+                    <v-btn size="small"><v-icon size="small">format_align_left</v-icon></v-btn>
+                    <v-btn size="small"><v-icon size="small">format_align_center</v-icon></v-btn>
+                    <v-btn size="small"><v-icon size="small">format_align_right</v-icon></v-btn>
                   </v-btn-toggle>
                 </template>
               </SettingItem>
 
               <v-divider class="my-2" />
-              <SettingItem :title="t('setting.sidebarAutoHide')" :description="t('setting.sidebarAutoHideHint')">
+              <SettingItem
+                :title="t('setting.sidebarAutoHide')"
+                :description="t('setting.sidebarAutoHideHint')"
+              >
                 <template #action>
                   <v-switch v-model="sidebarAutoHide" color="primary" hide-details dense />
                 </template>
@@ -94,7 +123,16 @@
               <SettingItem :title="`${t('setting.sidebarScale')} (${sidebarScale}%)`">
                 <template #action>
                   <div class="w-32">
-                    <v-slider v-model="sidebarScale" :min="50" :max="150" :step="5" hide-details thumb-label color="primary" dense></v-slider>
+                    <v-slider
+                      v-model="sidebarScale"
+                      :min="50"
+                      :max="150"
+                      :step="5"
+                      hide-details
+                      thumb-label
+                      color="primary"
+                      dense
+                    ></v-slider>
                   </div>
                 </template>
               </SettingItem>
@@ -102,7 +140,10 @@
 
             <v-divider class="my-2" />
             <!-- Show Only Pinned Instances -->
-            <SettingItem :title="t('setting.sidebarShowOnlyPinned')" :description="t('setting.sidebarShowOnlyPinnedHint')">
+            <SettingItem
+              :title="t('setting.sidebarShowOnlyPinned')"
+              :description="t('setting.sidebarShowOnlyPinnedHint')"
+            >
               <template #action>
                 <v-switch v-model="sidebarShowOnlyPinned" color="primary" hide-details dense />
               </template>
@@ -121,8 +162,8 @@
         :description="t('setting.themeStore.description')"
       >
         <template #action>
-          <v-btn outlined text @click="showSaveDialog = true">
-            <v-icon left small>save</v-icon>
+          <v-btn variant="outlined" @click="showSaveDialog = true">
+            <v-icon start size="small">save</v-icon>
             {{ t('setting.themeStore.saveToStore') }}
           </v-btn>
         </template>
@@ -135,12 +176,15 @@
           <v-chip
             v-for="theme in storedThemes"
             :key="theme.name"
-            close
-            outlined
+            closable
+            density="compact"
+            variant="outlined"
             @click="onLoadTheme(theme.name)"
             @click:close="onDeleteTheme(theme.name)"
           >
-            <v-icon left small>palette</v-icon>
+            <template #prepend>
+              <v-icon size="small">palette</v-icon>
+            </template>
             {{ theme.name }}
           </v-chip>
         </div>
@@ -151,8 +195,7 @@
 
       <!-- Save Theme Dialog -->
       <v-dialog v-model="showSaveDialog" max-width="400">
-        <v-card>
-          <v-card-title>{{ t('setting.themeStore.saveDialogTitle') }}</v-card-title>
+        <v-card :title="t('setting.themeStore.saveDialogTitle')">
           <v-card-text>
             <v-text-field
               v-model="newThemeName"
@@ -165,8 +208,13 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn text @click="showSaveDialog = false">{{ t('shared.cancel') }}</v-btn>
-            <v-btn color="primary" text :disabled="!newThemeName.trim()" @click="onSaveToStore">
+            <v-btn @click="showSaveDialog = false" variant="text">{{ t('shared.cancel') }}</v-btn>
+            <v-btn
+              color="primary"
+              :disabled="!newThemeName.trim()"
+              @click="onSaveToStore"
+              variant="text"
+            >
               {{ t('modified.save') }}
             </v-btn>
           </v-card-actions>
@@ -175,15 +223,16 @@
 
       <!-- Load Theme Confirmation Dialog -->
       <v-dialog v-model="showLoadConfirmDialog" max-width="400">
-        <v-card>
-          <v-card-title>{{ t('setting.themeStore.loadConfirmTitle') }}</v-card-title>
-          <v-card-text>
-            {{ t('setting.themeStore.loadConfirmMessage') }}
-          </v-card-text>
+        <v-card
+          :title="t('setting.themeStore.loadConfirmTitle')"
+          :text="t('setting.themeStore.loadConfirmMessage')"
+        >
           <v-card-actions>
             <v-spacer />
-            <v-btn text @click="showLoadConfirmDialog = false">{{ t('shared.cancel') }}</v-btn>
-            <v-btn color="warning" text @click="confirmLoadTheme">
+            <v-btn @click="showLoadConfirmDialog = false" variant="text">{{
+              t('shared.cancel')
+            }}</v-btn>
+            <v-btn color="warning" @click="confirmLoadTheme" variant="text">
               {{ t('setting.themeStore.loadTheme') }}
             </v-btn>
           </v-card-actions>
@@ -193,10 +242,9 @@
       <template v-if="env && env.os === 'linux'">
         <v-divider class="my-4" />
         <SettingItemCheckbox
-          :value="linuxTitlebar"
+          v-model="linuxTitlebar"
           :title="t('setting.linuxTitlebar')"
           :description="t('setting.linuxTitlebarDescription')"
-          @input="v => linuxTitlebar = v"
         />
       </template>
     </SettingCard>
@@ -215,11 +263,19 @@ import { useInjectSidebarSettings } from '@/composables/sidebarSettings'
 import { kTheme } from '@/composables/theme'
 import { injection } from '@/util/inject'
 import { Ref, computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const env = injection(kEnvironment)
-const { currentTheme, saveCurrentTheme, storedThemes, saveToStore, loadFromStore, deleteFromStore, refreshStoredThemes } = injection(kTheme)
+const {
+  currentTheme,
+  saveCurrentTheme,
+  storedThemes,
+  saveToStore,
+  loadFromStore,
+  deleteFromStore,
+  refreshStoredThemes,
+} = injection(kTheme)
 const { state } = injection(kSettingsState)
 
 const linuxTitlebar = computed({
@@ -280,21 +336,25 @@ const sidebarPositionIndex = computed({
   set: (v: number) => {
     const positions: Array<'left' | 'right' | 'top' | 'bottom'> = ['left', 'right', 'top', 'bottom']
     sidebarPosition.value = positions[v] || 'left'
-  }
+  },
 })
 
 // Sidebar Style Selector
 const sidebarStyles = ['classic', 'notch'] as const
 const sidebarStyleIndex = computed({
   get: () => sidebarStyles.indexOf(sidebarStyle.value),
-  set: (v) => { sidebarStyle.value = sidebarStyles[v] }
+  set: (v) => {
+    sidebarStyle.value = sidebarStyles[v]
+  },
 })
 
 // My Stuff Style Selector
 const myStuffStyles = ['old', 'new'] as const
 const myStuffStyleIndex = computed({
   get: () => myStuffStyles.indexOf(myStuffStyle.value as any),
-  set: (v) => { myStuffStyle.value = myStuffStyles[v] as 'old' | 'new' }
+  set: (v) => {
+    myStuffStyle.value = myStuffStyles[v] as 'old' | 'new'
+  },
 })
 
 // Sidebar Alignment Selector
@@ -307,13 +367,16 @@ const sidebarAlignIndex = computed({
   set: (v: number) => {
     const aligns: Array<'start' | 'center' | 'end'> = ['start', 'center', 'end']
     sidebarAlign.value = aligns[v] || 'center'
-  }
+  },
 })
 
 // --- Watchers ---
 // Auto-reset position to Left when switching to Classic from Top/Bottom
 watch(sidebarStyle, (newStyle) => {
-  if (newStyle === 'classic' && (sidebarPosition.value === 'top' || sidebarPosition.value === 'bottom')) {
+  if (
+    newStyle === 'classic' &&
+    (sidebarPosition.value === 'top' || sidebarPosition.value === 'bottom')
+  ) {
     sidebarPosition.value = 'left'
   }
 })
@@ -361,7 +424,8 @@ watch(sidebarStyle, (newStyle) => {
 }
 
 /* Preview Styles */
-.style-preview-old, .style-preview-new {
+.style-preview-old,
+.style-preview-new {
   width: 100%;
   height: 100%;
   display: flex;
@@ -449,10 +513,18 @@ watch(sidebarStyle, (newStyle) => {
 }
 
 /* Position modifiers */
-.sidebar-preview.position-left .sidebar-preview-main { flex-direction: row; }
-.sidebar-preview.position-right .sidebar-preview-main { flex-direction: row-reverse; }
-.sidebar-preview.position-top .sidebar-preview-main { flex-direction: column; }
-.sidebar-preview.position-bottom .sidebar-preview-main { flex-direction: column-reverse; }
+.sidebar-preview.position-left .sidebar-preview-main {
+  flex-direction: row;
+}
+.sidebar-preview.position-right .sidebar-preview-main {
+  flex-direction: row-reverse;
+}
+.sidebar-preview.position-top .sidebar-preview-main {
+  flex-direction: column;
+}
+.sidebar-preview.position-bottom .sidebar-preview-main {
+  flex-direction: column-reverse;
+}
 
 /* Classic Sidebar */
 .sidebar-preview-classic {
@@ -501,19 +573,31 @@ watch(sidebarStyle, (newStyle) => {
 
 /* Notch Alignment - Horizontal (Top/Bottom) */
 .sidebar-preview.position-top.align-start .sidebar-preview-notch,
-.sidebar-preview.position-bottom.align-start .sidebar-preview-notch { justify-content: flex-start; }
+.sidebar-preview.position-bottom.align-start .sidebar-preview-notch {
+  justify-content: flex-start;
+}
 .sidebar-preview.position-top.align-center .sidebar-preview-notch,
-.sidebar-preview.position-bottom.align-center .sidebar-preview-notch { justify-content: center; }
+.sidebar-preview.position-bottom.align-center .sidebar-preview-notch {
+  justify-content: center;
+}
 .sidebar-preview.position-top.align-end .sidebar-preview-notch,
-.sidebar-preview.position-bottom.align-end .sidebar-preview-notch { justify-content: flex-end; }
+.sidebar-preview.position-bottom.align-end .sidebar-preview-notch {
+  justify-content: flex-end;
+}
 
 /* Notch Alignment - Vertical (Left/Right) */
 .sidebar-preview.position-left.align-start .sidebar-preview-notch,
-.sidebar-preview.position-right.align-start .sidebar-preview-notch { justify-content: flex-start; }
+.sidebar-preview.position-right.align-start .sidebar-preview-notch {
+  justify-content: flex-start;
+}
 .sidebar-preview.position-left.align-center .sidebar-preview-notch,
-.sidebar-preview.position-right.align-center .sidebar-preview-notch { justify-content: center; }
+.sidebar-preview.position-right.align-center .sidebar-preview-notch {
+  justify-content: center;
+}
 .sidebar-preview.position-left.align-end .sidebar-preview-notch,
-.sidebar-preview.position-right.align-end .sidebar-preview-notch { justify-content: flex-end; }
+.sidebar-preview.position-right.align-end .sidebar-preview-notch {
+  justify-content: flex-end;
+}
 
 .sidebar-preview-content {
   flex-grow: 1;

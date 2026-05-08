@@ -1,19 +1,17 @@
 export function useSingleton<T extends (...args: any[]) => Promise<any>>(f: T): T {
-  const active = ref<Promise<ReturnType<T>> | undefined>(undefined)
+  let active: Promise<any> | undefined
   return ((...args: Parameters<T>): any => {
-    if (active.value) {
-      return active.value
+    if (active) {
+      return active
     }
-    active.value = new Promise((resolve, reject) => {
+    const p = (async () => {
       try {
-        const result = f(...args)
-        resolve(result)
-      } catch (error) {
-        reject(error)
+        return await f(...args)
       } finally {
-        active.value = undefined
+        active = undefined
       }
-    })
-    return active.value
-  }) as any
+    })()
+    active = p
+    return p
+  }) as T
 }

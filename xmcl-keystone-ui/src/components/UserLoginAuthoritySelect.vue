@@ -11,9 +11,8 @@
       <v-list-item
         v-bind="attr"
         :key="item.value"
-        v-on="on"
       >
-        <v-list-item-avatar>
+        <template #prepend><v-avatar>
           <v-img
             v-if="item.icon.startsWith('http')"
             :src="item.icon"
@@ -21,13 +20,11 @@
           <v-icon v-else>
             {{ item.icon }}
           </v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
+        </v-avatar></template>
+        <v-list-item-title>
             {{ item.text }}
           </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+</v-list-item>
     </template>
     <template
       v-if="allowAddService"
@@ -35,15 +32,13 @@
     >
       <v-divider />
       <v-list-item @click="$emit('add-service')">
-        <v-list-item-avatar>
+        <template #prepend><v-avatar>
           <v-icon>add</v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
+        </v-avatar></template>
+        <v-list-item-title>
             {{ t('userService.add') }}
           </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+</v-list-item>
     </template>
   </v-select>
 </template>

@@ -5,7 +5,7 @@ import { kSWRVConfig, useSWRVConfig } from '@/composables/swrvConfig'
 import { i18n } from '@/i18n'
 import { vuetify } from '@/vuetify'
 import 'virtual:uno.css'
-import Vue, { defineComponent, h, provide } from 'vue'
+import { createApp, defineComponent, h, provide } from 'vue'
 import App from './App.vue'
 import Context from './Context'
 
@@ -16,9 +16,7 @@ document.addEventListener('dragstart', (e) => {
   }
 })
 
-const app = new Vue(defineComponent({
-  i18n,
-  vuetify,
+const app = createApp(defineComponent({
   setup() {
     provide(kServiceFactory, useServiceFactory())
     provide(kDialogModel, useDialogModel())
@@ -28,10 +26,13 @@ const app = new Vue(defineComponent({
   },
 }))
 
-Vue.component('TextComponent', TextComponent)
+app.use(i18n)
+app.use(vuetify)
+app.component('TextComponent', TextComponent as any)
 
-app.$mount('#app')
+app.mount('#app')
 
 window.addEventListener('message', (e) => {
   windowController.focus()
 })
+

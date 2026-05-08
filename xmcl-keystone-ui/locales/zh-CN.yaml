@@ -34,18 +34,6 @@ HomeLaunchMultiInstanceDialog:
   confirm: 是的，多实例启动
   description: 正在尝试启动多个 Minecraft 实例，您确定么？
   title: 多实例启动
-HomeSyncDialog:
-  pull: 拉取更新
-  push: 上传实例
-HomeSyncDialogPull:
-  failText: 获取更新失败。{url}
-  refresh: 刷新
-  update: 更新
-HomeSyncDialogPush:
-  authError: 用户验证失败，请确定您是更新服务器的管理员！
-  refresh: 刷新
-  unknownError: 未知错误，请重试
-  upload: 上传更新
 SettingMigrationDialog:
   selectRootDirectory: 选择新的根目录
 ago:
@@ -76,8 +64,6 @@ create: 创建
 curseforge:
   category: 分类
   createdDate: 创建日期
-  installTo: 安装到 {path}
-  installToStorage: 安装到库
   lastUpdate: 上次更新日期
   releasedDate: 发布日期
 curseforgeCategory:
@@ -165,8 +151,7 @@ diagnosis:
   corruptedLibraries:
     message: 启动器将重新下载不完整的文件
     name: >-
-      Libraries 文件不完整: {name} | Libraries 文件不完整: {name} | {count} 个 Libraries
-      文件不完整 | {count} 个 Libraries 文件不完整
+      Libraries 文件不完整: {name} | Libraries 文件不完整: {name} | {count} 个 Libraries 文件不完整 | {count} 个 Libraries 文件不完整
   corruptedVersionJar:
     message: 启动器将重新下载不完整的文件
     name: Minecraft {version} 游戏 Jar 文件不完整。
@@ -183,8 +168,7 @@ diagnosis:
   missingLibraries:
     message: 启动器将自动下载并安装 Libraries 文件
     name: >-
-      缺少 {name} 依赖 | 缺少 {name} 依赖 | 缺少 {count} 个 Libraries 文件 | 缺少 {count} 个
-      Libraries 文件
+      缺少 {name} 依赖 | 缺少 {name} 依赖 | 缺少 {count} 个 Libraries 文件 | 缺少 {count} 个 Libraries 文件
   missingVersion:
     message: 启动器将自动安装该版本
     name: 未安装 {version}
@@ -450,7 +434,6 @@ instances:
   folderSetting: 文件夹设置
   importFolderDescription: 导入 Minecraft 到启动器
   loadingFiles: 加载整合包文件
-  refreshServers: 刷新服务器
 items:
   count: '{count} 个'
   total: 共 {total} 个
@@ -488,13 +471,11 @@ launchBlocked:
     title: 无法启动
   launchInvalidJavaPath:
     description: >-
-      当前 Java 路径可能无效，请检查 Java 可执行文件是否存在 <span class="highlight"> {javaPath}
-      </span>
+      当前 Java 路径可能无效，请检查 Java 可执行文件是否存在 <span class="highlight"> {javaPath} </span>
     title: Java 路径无效
   launchJavaNoPermission:
     description: >-
-      没有权限执行 <span class="highlight"> {javaPath} </span>，请尝试给启动器更高权限，给 Java
-      文件增加可执行权限，或者更换 Java。
+      没有权限执行 <span class="highlight"> {javaPath} </span>，请尝试给启动器更高权限，给 Java 文件增加可执行权限，或者更换 Java。
     title: 无权限使用 Java
   launchNoProperJava:
     description: 找不到合适的 Java 来启动游戏。({javaPath} 可能无效？)
@@ -537,11 +518,8 @@ launcherUpdate:
   updateToThisVersion: 下载并安装
 localVersion:
   auto: 自动选择
-  delete: 删除本地版本
-  deleteDescription: 这将删除本地版本游戏
   empty: 本地没有安装任何版本
   hint: 直接启动某个本地版本
-  refresh: 刷新本地版本
   reinstallDescription: 如果您觉得此版本安装的有问题，可以尝试重新安装该版本。
   reinstallTitle: 重新安装 {version}
   title: 本地版本
@@ -600,8 +578,6 @@ mod:
   compatible: 可用于当前版本。
   createGroup: 创建分组
   currentVersion: 当前是 {current}
-  deletionHint: 您将移除这个模组的文件和信息。您确定吗？| 您将移除这些模组的文件和信息。您确定吗？
-  deletionRestHint: 等 {rest} 个模组……
   denseView: 简略模式
   disableAll: 全部禁用
   dropHint: 将模组 Jar 文件拖入此处来导入
@@ -696,9 +672,6 @@ modified:
 modpack:
   author: 署名
   authorHint: 这个游戏/整合包的制作人
-  delete:
-    hint: 这将删除整合包 {name} 和它的基本资料。您确定么？
-    title: 删除整合包
   description: 游戏简介
   descriptionHint: 通用的整合包简介。在导出成 Curseforge 整合包或者其他格式时会使用
   dropHint: 通过拖拽导入整合包文件
@@ -882,10 +855,7 @@ multiplayer:
   copy: 复制
   copyGroupToFriendHint: 让您的小伙伴使用此 ID 加入联机群组
   copyLocalHint: >
-    <span>一段令牌只能用<span style="color: red;
-    font-weight:bold;">一次</span>！您不能将一个令牌发送给多个小伙伴！</span> <br> <span
-    class="hint-text" style="font-style: italic;">如果有多个小伙伴要加入您需要<span
-    style="font-weight: bold; color: rgba(245, 158, 11)">多次</span>建立连接。</span>
+    <span>一段令牌只能用<span style="color: red; font-weight:bold;">一次</span>！您不能将一个令牌发送给多个小伙伴！</span> <br> <span class="hint-text" style="font-style: italic;">如果有多个小伙伴要加入您需要<span style="font-weight: bold; color: rgba(245, 158, 11)">多次</span>建立连接。</span>
   createLocalToken: 创建本地令牌
   currentIpTitle: 检测到公网 IP
   currentNatTitle: 当前网络 (NAT) 环境
@@ -898,12 +868,7 @@ multiplayer:
   exposedPortDescription: 您向其他伙伴公开的端口
   exposedPorts: 转发端口
   gatheringIce: >
-    请将<span class="v-chip v-chip--label v-size--small" style="text-font:
-    bold">本地令牌</span>发送给您的联机伙伴，您的联机伙伴在 <span class="v-chip v-chip--label
-    v-size--small" style="text-font: bold"> 加入连接 </span> 中输入这段文字。 <br> 期间 ICE
-    服务器可能需要时间收集足够信息来创建<span class="v-chip v-chip--label v-size--small"
-    style="text-font: bold">本地令牌</span>。 <br> <span class="hint-text"> 您不需要等 ICE
-    服务器完全收集完毕，当下面的令牌已经有内容并且不怎么变化后，您可以提前将令牌复制给对方。 </span>
+    请将<span class="v-chip v-chip--label v-size--small" style="text-font: bold">本地令牌</span>发送给您的联机伙伴，您的联机伙伴在 <span class="v-chip v-chip--label v-size--small" style="text-font: bold"> 加入连接 </span> 中输入这段文字。 <br> 期间 ICE 服务器可能需要时间收集足够信息来创建<span class="v-chip v-chip--label v-size--small" style="text-font: bold">本地令牌</span>。 <br> <span class="hint-text"> 您不需要等 ICE 服务器完全收集完毕，当下面的令牌已经有内容并且不怎么变化后，您可以提前将令牌复制给对方。 </span>
   groupId: 小组 ID
   illegalTokenDescription: 非法的令牌，请确认对方给您的令牌是完整且正确的。
   initiateConnection: 发起连接
@@ -981,7 +946,6 @@ presence:
   save: '{instance}中的世界观'
   setting: 查看设置页面
   shaderPack: 查看 {instance}中的着色器集
-  version: 查看版本页面
 proxy:
   host: 服务器地址
   port: 端口号
@@ -1009,11 +973,7 @@ resourcepack:
 save:
   allowCheats: 允许作弊
   copy:
-    cancel: 取消复制
-    confirm: 开始复制
-    description: 请勾选您想让存档复制到的启动配置（目标启动配置）
     name: 复制存档
-    title: 复制存档到其他启动配置
   createNew: 新存档
   createdWorlds: 创建了 {count} 个世界
   deleteHint: 该操作不可逆，您将永远失去这个存档的记录，您确定要删除此存档吗？
@@ -1073,14 +1033,12 @@ server:
   ipAddress: IP 地址
   maxPlayers: 最大玩家数
   motd: 服务器 MOTD
-  name: 服务器名
   nogui: 隐藏服务器 GUI
   onlineMode: 在线模式 (只允许正版)
   ping: Ping 服务器
   pings: 延迟
   players: 玩家
   port: 端口
-  status: 服务器状态
   unknown: 未知服务器
   unknownDescription: 未知服务器，请刷新。
   upload: 上传服务器
@@ -1320,8 +1278,7 @@ setup:
     name: 导入已有的游戏
   locale:
     description: >-
-      选择您的语言，如果您在这里没有看到想要的语言，并且您有兴趣帮助我们的话，您可以在我们的 GitHub 上打开 Pull Request
-      来添加新语言！
+      选择您的语言，如果您在这里没有看到想要的语言，并且您有兴趣帮助我们的话，您可以在我们的 GitHub 上打开 Pull Request 来添加新语言！
     language: 当前语言
     name: 设置语言
   path: 当前位置
@@ -1482,10 +1439,7 @@ tutorial:
   storeSearchResultDescription: 您将看到此处列出的所有搜索结果。
   userAccountDescription: 单击此图标可添加或管理您的 Minecraft 帐户。
 universalDrop:
-  start: 开始导入
-  title: 将文件拖到这并导入为
   unknownResource: 无法解析
-update: {}
 upstream:
   downgrade: 降级
   onlyShowCurrentVersion: 只显示适合当前 Minecraft 的版本

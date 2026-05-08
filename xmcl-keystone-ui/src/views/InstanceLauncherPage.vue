@@ -11,7 +11,7 @@
         <!-- Header -->
         <div class="launcher-header">
           <h1 class="launcher-title">{{ t('instanceLauncher.title') }}</h1>
-          <v-btn v-if="!embedded" icon @click="close" class="close-btn">
+          <v-btn v-if="!embedded" icon variant="text" @click="close" class="close-btn">
             <v-icon>close</v-icon>
           </v-btn>
         </div>
@@ -22,8 +22,8 @@
             v-model="searchQuery"
             :placeholder="t('instanceLauncher.search')"
             prepend-inner-icon="search"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             hide-details
             class="search-input"
           />
@@ -100,13 +100,13 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 import { useInjectInstanceLauncher } from '@/composables/instanceLauncher'
 import { useDialog } from '@/composables/dialog'
 import { AddInstanceDialogKey } from '@/composables/instanceTemplates'
 import { kInstances } from '@/composables/instances'
 import { injection } from '@/util/inject'
-import { useRouter } from 'vue-router/composables'
+import { useRouter } from 'vue-router'
 import { useMojangNews } from '@/composables/mojangNews'
 import { LauncherNews, useLauncherNews } from '@/composables/launcherNews'
 import { useDateString } from '@/composables/date'

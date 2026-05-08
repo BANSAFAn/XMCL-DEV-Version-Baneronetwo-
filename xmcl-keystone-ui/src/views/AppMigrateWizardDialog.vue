@@ -25,14 +25,14 @@
         </v-btn>
       </v-toolbar>
       <v-stepper v-model="step">
-        <v-stepper-items class="visible-scroll overflow-y-auto">
-          <v-stepper-content
+        <v-stepper-window class="visible-scroll overflow-y-auto">
+          <v-stepper-window-item
             class="max-h-[70vh]"
             :step="1"
           >
             <StepSelect @select="onSelectType" />
-          </v-stepper-content>
-          <v-stepper-content
+          </v-stepper-window-item>
+          <v-stepper-window-item
             class="max-h-[70vh]"
             :step="2"
           >
@@ -41,26 +41,24 @@
                 color="transparent"
                 class="overflow-auto"
               >
-                <v-subheader>
+                <v-list-subheader>
                   {{ t('instanceDiscover.gameFolder', { count: activeFolders.length }) }}
-                </v-subheader>
+                </v-list-subheader>
                 <v-list-item
                   v-for="folder in activeFolders"
                   :key="folder"
                   @click="onEnableFolder(folder)"
                 >
-                  <v-list-item-avatar>
+                  <template #prepend><v-avatar>
                     <v-icon>
                       folder
                     </v-icon>
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title>{{ basename(folder) }}</v-list-item-title>
+                  </v-avatar></template>
+                  <v-list-item-title>{{ basename(folder) }}</v-list-item-title>
                     <v-list-item-subtitle>
                       {{ folder }}
                     </v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-action>
+<v-list-item-action>
                     <v-checkbox
                       :value="included.includes(folder)"
                       :input-value="included.includes(folder)"
@@ -69,9 +67,9 @@
                     />
                   </v-list-item-action>
                 </v-list-item>
-                <v-subheader>
+                <v-list-subheader>
                   {{ t('instanceDiscover.instanceFolder', { count: manifest.instances.length }) }}
-                </v-subheader>
+                </v-list-subheader>
 
                 <InstanceItem
                   v-for="m of manifest.instances"
@@ -107,8 +105,8 @@
                 </v-alert>
               </div>
             </StepperFooter>
-          </v-stepper-content>
-        </v-stepper-items>
+          </v-stepper-window-item>
+        </v-stepper-window>
       </v-stepper>
     </v-card>
   </v-dialog>

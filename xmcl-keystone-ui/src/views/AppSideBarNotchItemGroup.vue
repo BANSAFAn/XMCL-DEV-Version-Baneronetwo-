@@ -5,10 +5,9 @@
     content-class="sidebar-notch-group-menu"
     transition="slide-x-transition"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ props }">
       <AppSideBarNotchItem
-        v-bind="attrs"
-        v-on="on"
+        v-bind="props"
         :tooltip="() => ({ text: group.name, list: instances.map(instance => instance.name || `Minecraft ${instance.runtime.minecraft}`), direction: props.direction })"
         clickable
       >
@@ -24,9 +23,9 @@
     </template>
 
     <v-card class="rounded-lg elevation-4 p-2" outlined>
-      <v-subheader class="pl-2">
+      <v-list-subheader class="pl-2">
         {{ group.name || t('instances.folder') }}
-      </v-subheader>
+      </v-list-subheader>
       <div class="grid grid-cols-2 gap-2 items-center justify-center">
         <AppSideBarNotchItemInstance
           v-for="(instance, index) in group.instances"

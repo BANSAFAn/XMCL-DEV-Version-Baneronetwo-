@@ -23,7 +23,7 @@ export function useFeedTheBeast(props: FeedTheBeastProps) {
   const currentKeyword = computed({
     get() { return props.keyword ?? '' },
     set(v: string) {
-      router.replace({ query: { ...router.currentRoute.query, keyword: v } })
+      router.replace({ query: { ...router.currentRoute.value.query, keyword: v } })
     },
   })
 
@@ -130,7 +130,7 @@ export function useFeedTheBeastModpackInstall() {
 
     const path = await createInstance(options)
     selectedInstance.value = path
-    if (currentRoute.path !== '/') {
+    if (currentRoute.value.path !== '/') {
       push('/')
     }
 

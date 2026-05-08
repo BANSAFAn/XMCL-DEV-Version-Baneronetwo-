@@ -1,15 +1,15 @@
 <template>
   <div
     ref="container"
-    class="mt-1 flex gap-1 overflow-x-auto"
+    class="flex gap-1"
     @wheel="onWheel"
   >
     <v-chip
       v-if="modid"
-      small
+      size="small"
       class="mod-tag"
-      :outlined="isDark"
-      color="orange en-1"
+      :variant="isDark ? 'outlined' : undefined"
+      color="orange-lighten-1"
       :disabled="disabled"
       label
       style="margin-left: 1px;"
@@ -23,42 +23,46 @@
       v-shared-tooltip="getTooltip(com)"
       class="mod-tag cursor-pointer"
       :disabled="disabled"
-      small
+      size="small"
       label
-      outlined
+      variant="outlined"
       @click.stop="emit('click-dependency', com.modId)"
       @mousedown.stop
     >
-      <v-avatar left v-if="com.compatible === true">
-        <img
-          v-if="getDepIcon(com.modId, icons[com.modId])"
-          :src="getDepIcon(com.modId, icons[com.modId])"
-        >
-        <v-icon v-else>
-          $vuetify.icons.package
-        </v-icon>
-      </v-avatar>
+      <template #prepend v-if="com.compatible === true">
+        <v-avatar start>
+          <img
+            v-if="getDepIcon(com.modId, icons[com.modId])"
+            :src="getDepIcon(com.modId, icons[com.modId])"
+          >
+          <v-icon v-else>
+            xmcl:package
+          </v-icon>
+        </v-avatar>
+      </template>
       <span class="color-orange mr-1" v-if="com.optional">
         {{ t('optional') }}
       </span>
       {{ com.modId }}
       <!-- {{ com.requirements || '⭕' }} -->
-      <v-avatar right>
-        {{ getCompatibleIcon(com) }}
-      </v-avatar>
+      <template #append>
+        <v-avatar end>
+          {{ getCompatibleIcon(com) }}
+        </v-avatar>
+      </template>
     </v-chip>
 
     <v-chip
       v-for="(tag, index) in tags"
       :key="`${tag}-${index}`"
-      :outlined="isDark"
+      :variant="isDark ? 'outlined' : undefined"
       class="mod-tag"
-      small
+      size="small"
       label
       :disabled="disabled"
       :color="getColor(tag)"
       style="margin-left: 1px;"
-      close
+      closable
       @click.stop
       @mousedown.stop
       @click:close="emit('delete-tag', tag)"
@@ -75,7 +79,6 @@
 </template>
 
 <script lang=ts setup>
-import { useScrollRight } from '@/composables'
 import { getCompatibleIcon } from '@/composables/compatibleIcon'
 import { useModCompatibleTooltip } from '@/composables/modCompatibleTooltip'
 import { vSharedTooltip } from '@/directives/sharedTooltip'
@@ -115,7 +118,22 @@ const getDepIcon = (name: string, icon?: string) => {
 const { isDark } = injection(kTheme)
 
 const container = ref(null as null | HTMLElement)
-const { onWheel } = useScrollRight(container)
+function onWheel(e: WheelEvent) {
+  // Walk up to find the nearest horizontally-scrollable ancestor.
+  // The container itself may not scroll because the parent (MarketItem.market-item__tags)
+  // is the actual overflow:auto container, so we need to scroll that.
+  let el: HTMLElement | null = container.value
+  while (el) {
+    const style = getComputedStyle(el)
+    const overflowX = style.overflowX
+    if ((overflowX === 'auto' || overflowX === 'scroll') && el.scrollWidth > el.clientWidth) {
+      el.scrollLeft += e.deltaY / 2
+      e.preventDefault()
+      return
+    }
+    el = el.parentElement
+  }
+}
 
 const { t } = useI18n()
 
@@ -124,5 +142,6 @@ const { t } = useI18n()
 <style scoped>
 .mod-tag {
   overflow: unset !important;
+  flex-shrink: 0;
 }
 </style>

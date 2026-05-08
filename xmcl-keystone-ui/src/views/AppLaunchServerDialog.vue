@@ -18,19 +18,19 @@
           <div v-html="errorDescription">
           </div>
         </v-alert>
-        <v-subheader>{{ t('baseSetting.title') }}</v-subheader>
+        <v-list-subheader>{{ t('baseSetting.title') }}</v-list-subheader>
         <div class="grid grid-cols-3 gap-3 pt-2 px-2">
-          <v-text-field v-model="motd" :label="t('server.motd')" outlined hide-details />
-          <v-text-field v-model="port" :label="t('server.port')" outlined type="number" hide-details />
-          <v-text-field v-model="maxPlayers" :label="t('server.maxPlayers')" outlined type="number" hide-details />
+          <v-text-field v-model="motd" :label="t('server.motd')" variant="outlined" hide-details />
+          <v-text-field v-model="port" :label="t('server.port')" variant="outlined" type="number" hide-details />
+          <v-text-field v-model="maxPlayers" :label="t('server.maxPlayers')" variant="outlined" type="number" hide-details />
           <v-checkbox v-model="nogui" class="col-start-1" :label="t('server.nogui')" />
           <v-checkbox v-model="onlineMode" class="col-start-3" :label="t('server.onlineMode')" />
         </div>
-        <v-subheader>{{ t('save.name') }}</v-subheader>
+        <v-list-subheader>{{ t('save.name') }}</v-list-subheader>
         <v-item-group v-model="selectedSave" mandatory class="pt-2 px-2">
           <div class="grid grid-cols-3 gap-2 max-h-40 overflow-auto">
-            <v-item v-slot="{ active, toggle }">
-              <v-card :color="active ? 'primary' : ''" class="flex flex-col items-center justify-center h-[120px] gap-1"
+            <v-item v-slot="{ isSelected, toggle }">
+              <v-card :color="isSelected ? 'primary' : ''" class="flex flex-col items-center justify-center h-[120px] gap-1"
                 @click="toggle">
                 <v-icon size="80">
                   {{ rawWorldExists ? 'save' : 'add' }}
@@ -38,8 +38,8 @@
                 {{ rawWorldExists ? t('save.useCurrent') : t('save.createNew') }}
               </v-card>
             </v-item>
-            <v-item v-for="s of saves" :key="s.path" v-slot="{ active, toggle }">
-              <v-card :color="active ? 'primary' : ''" class="flex flex-col items-center justify-center gap-1"
+            <v-item v-for="s of saves" :key="s.path" v-slot="{ isSelected, toggle }">
+              <v-card :color="isSelected ? 'primary' : ''" class="flex flex-col items-center justify-center gap-1"
                 @click="toggle">
                 <img v-fallback-img="BuiltinImages.unknownServer" class="rounded-lg object-contain" :src="s.icon"
                   width="80px" height="80px">
@@ -51,33 +51,33 @@
 
         <template v-if="enabled.length > 0">
           <div class="flex items-center mt-4 gap-2">
-            <v-subheader class="">
+            <v-list-subheader class="">
               {{ t('mod.name') }}
-            </v-subheader>
-            <v-btn v-if="serverModsLocked" small color="primary" @click="unlockServerMods()">
-              <v-icon left>
+            </v-list-subheader>
+            <v-btn v-if="serverModsLocked" color="primary" @click="unlockServerMods()" size="small">
+              <v-icon start>
                 edit
               </v-icon>
               {{ t('shared.edit') }}
             </v-btn>
             <div class="flex-grow" />
-            <v-btn v-shared-tooltip="() => t('env.select.all')" text icon @click="selectAll">
+            <v-btn v-shared-tooltip="() => t('env.select.all')" variant="text" icon @click="selectAll">
               <v-icon>
                 select_all
               </v-icon>
             </v-btn>
-            <v-btn v-shared-tooltip="() => t('env.select.fit')" text icon @click="selectFit">
+            <v-btn v-shared-tooltip="() => t('env.select.fit')" variant="text" icon @click="selectFit">
               <v-icon>
                 tab_unselected
               </v-icon>
             </v-btn>
 
-            <v-btn v-shared-tooltip="() => t('env.select.none')" text icon @click="selectNone">
+            <v-btn v-shared-tooltip="() => t('env.select.none')" variant="text" icon @click="selectNone">
               <v-icon>
                 deselect
               </v-icon>
             </v-btn>
-            <v-text-field v-model="search" class="max-w-50 pl-1" dense outlined flat prepend-inner-icon="search"
+            <v-text-field v-model="search" class="max-w-50 pl-1" density="compact" variant="outlined" prepend-inner-icon="search"
               hide-details />
           </div>
 
@@ -85,9 +85,9 @@
             <v-data-table v-model="selectedMods" :disabled="loadingSelectedMods || serverModsLocked" item-key="path" :show-select="!serverModsLocked"
               :search="search" :headers="headers" :items="enabled">
               <template #item.name="{ item }">
-                <v-list-item-avatar :size="30">
+                <v-avatar :size="30">
                   <img :src="item.icon || BuiltinImages.unknownServer">
-                </v-list-item-avatar>
+                </v-avatar>
 
                 {{ item.name }}
               </template>
@@ -128,7 +128,6 @@ import { useRefreshable } from '@/composables'
 import { useDialog } from '@/composables/dialog'
 import { kInstance } from '@/composables/instance'
 import { kInstanceLaunch } from '@/composables/instanceLaunch'
-import { useInstanceModpackMetadata } from '@/composables/instanceModpackMetadata'
 import { kInstanceModsContext } from '@/composables/instanceMods'
 import { kInstanceSave } from '@/composables/instanceSave'
 import { kInstanceVersion } from '@/composables/instanceVersion'
@@ -294,9 +293,9 @@ watch([enabled, isShown], async () => {
 
 const sides = computed(() => {
   // join computedSides and requestedSides
-  const computed = computedSides.value
+  const computedMap = computedSides.value
   const requested = requestedSides.value || {}
-  const result = Object.fromEntries(Object.keys(computed).map(k => [k, requested[k] || computed[k]] as const))
+  const result = Object.fromEntries(Object.keys(computedMap).map(k => [k, requested[k] || computedMap[k]] as const))
   return result
 })
 

@@ -1,11 +1,12 @@
 import VueI18n from '@intlify/unplugin-vue-i18n/vite'
-import createVuePlugin from '@vitejs/plugin-vue2'
+import vue from '@vitejs/plugin-vue'
 import { readdirSync } from 'fs'
 import { join, resolve } from 'path'
-import { visualizer } from "rollup-plugin-visualizer"
+import { visualizer } from 'rollup-plugin-visualizer'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig } from 'vite'
+import vuetify from 'vite-plugin-vuetify'
 
 const entries = readdirSync(join(__dirname, './src'))
   .filter((f) => f.endsWith('.html'))
@@ -43,48 +44,33 @@ export default defineConfig({
       '~main': join(__dirname, './src/windows/main'),
       '~logger': join(__dirname, './src/windows/logger'),
       '~setup': join(__dirname, './src/windows/setup'),
-      '@vue/composition-api': 'vue',
-      'vue-i18n-bridge':
-        'vue-i18n-bridge/dist/vue-i18n-bridge.runtime.esm-bundler.js',
     },
   },
   optimizeDeps: {
     exclude: ['electron', '@xmcl/utils', '@xmcl/resource'],
-    esbuildOptions: {
-      minify: false,
-      keepNames: true,
+    rolldownOptions: {
     },
   },
   plugins: [
-    createVuePlugin(),
+    vue(),
+    vuetify({ autoImport: true }),
     UnoCSS(),
-    // WindiCSS({
-    //   config: {
-    //     important: true,
-    //   },
-    //   scan: {
-    //     dirs: [join(__dirname, './src')],
-    //     fileExtensions: ['vue', 'ts'],
-    //   },
-    // }),
 
     VueI18n({
       include: [
         resolve(__dirname, 'locales/**'),
       ],
-      esm: true,
       strictMessage: false,
-      bridge: false,
     }),
 
     AutoImport({
       imports: [
         'vue',
         {
-          'vue-i18n-bridge': [
+          'vue-i18n': [
             'useI18n',
           ],
-          'vue-router/composables': [
+          'vue-router': [
             'useRouter',
             'useRoute',
           ],
@@ -94,9 +80,10 @@ export default defineConfig({
       exclude: ['node_modules', /xmcl\/packages.+/],
       eslintrc: {
         enabled: true,
-        filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
-        globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+        filepath: './.eslintrc-auto-import.json',
+        globalsPropValue: true,
       },
     }),
   ],
 })
+

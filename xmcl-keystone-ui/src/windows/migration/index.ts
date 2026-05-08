@@ -2,21 +2,19 @@ import { i18n } from '@/i18n'
 import { vuetify } from '@/vuetify'
 import { usePreferredDark } from '@vueuse/core'
 import 'virtual:uno.css'
-import Vue, { h } from 'vue'
+import { createApp, defineComponent, h } from 'vue'
 import App from './App.vue'
 
-const app = new Vue(defineComponent({
-  vuetify,
-  i18n,
+const app = createApp(defineComponent({
   setup(props, context) {
     const preferDark = usePreferredDark()
     const updateTheme = (theme: string) => {
       if (theme === 'system') {
-        vuetify.framework.theme.dark = preferDark.value
+        vuetify.theme.global.name.value = preferDark.value ? 'dark' : 'light'
       } else if (theme === 'dark') {
-        vuetify.framework.theme.dark = true
+        vuetify.theme.global.name.value = 'dark'
       } else if (theme === 'light') {
-        vuetify.framework.theme.dark = false
+        vuetify.theme.global.name.value = 'light'
       }
     }
     updateTheme('dark')
@@ -25,4 +23,8 @@ const app = new Vue(defineComponent({
   },
 }))
 
-app.$mount('#app')
+app.use(i18n)
+app.use(vuetify)
+
+app.mount('#app')
+

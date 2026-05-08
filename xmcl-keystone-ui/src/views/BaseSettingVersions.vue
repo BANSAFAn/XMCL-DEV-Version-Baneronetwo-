@@ -1,39 +1,28 @@
 <template>
-  <v-list
-    class="base-settings"
-    subheader
-    color="transparent"
-  >
-    <v-subheader>
-      {{ t('version.name', 2) }}
-      <div class="flex-grow" />
+  <SettingCard :title="t('version.name', 2)" icon="layers">
+    <template #header-action>
       <v-btn
-        text
         :disabled="!versionHeader || isModified"
+        size="small"
+        variant="text"
         @click="onFix"
       >
-        <v-icon left>
-          build
-        </v-icon>
+        <v-icon start>build</v-icon>
         {{ t('version.checkIntegrity') }}
       </v-btn>
       <v-btn
         v-if="!isExpanded"
         icon
+        variant="text"
+        size="small"
         @click="showAll = !showAll"
       >
-        <v-icon v-if="!showAll">
-          add
-        </v-icon>
-        <v-icon v-else>
-          unfold_less
-        </v-icon>
+        <v-icon v-if="!showAll">add</v-icon>
+        <v-icon v-else>unfold_less</v-icon>
       </v-btn>
-    </v-subheader>
-    <VersionInputMinecraft
-      :value="data.runtime.minecraft"
-      @input="onSelectMinecraft"
-    />
+    </template>
+
+    <VersionInputMinecraft :value="data.runtime.minecraft" @input="onSelectMinecraft" />
     <VersionInputNeoForged
       v-if="showNeoForged"
       :value="data.runtime.neoForged"
@@ -89,10 +78,11 @@
     >
       {{ t('localVersion.reinstallDescription') }}
     </SimpleDialog>
-  </v-list>
+  </SettingCard>
 </template>
 
-<script lang=ts setup>
+<script lang="ts" setup>
+import SettingCard from '@/components/SettingCard.vue'
 import SimpleDialog from '@/components/SimpleDialog.vue'
 import VersionInputFabric from '@/components/VersionInputFabric.vue'
 import VersionInputForge from '@/components/VersionInputForge.vue'
@@ -116,19 +106,26 @@ const props = defineProps<{
 }>()
 
 const { instance } = injection(kInstance)
-const {
-  data,
-  isModified,
-} = injection(InstanceEditInjectionKey)
+const { data, isModified } = injection(InstanceEditInjectionKey)
 const { versions } = injection(kLocalVersions)
 
 const showAll = ref(false)
 const showForge = computed(() => props.isExpanded || showAll.value || instance.value.runtime.forge)
-const showNeoForged = computed(() => props.isExpanded || showAll.value || instance.value.runtime.neoForged)
-const showFabric = computed(() => props.isExpanded || showAll.value || instance.value.runtime.fabricLoader)
-const showQuilt = computed(() => props.isExpanded || showAll.value || instance.value.runtime.quiltLoader)
-const showOptifine = computed(() => props.isExpanded || showAll.value || instance.value.runtime.optifine)
-const showLabyMod = computed(() => props.isExpanded || showAll.value || instance.value.runtime.labyMod)
+const showNeoForged = computed(
+  () => props.isExpanded || showAll.value || instance.value.runtime.neoForged,
+)
+const showFabric = computed(
+  () => props.isExpanded || showAll.value || instance.value.runtime.fabricLoader,
+)
+const showQuilt = computed(
+  () => props.isExpanded || showAll.value || instance.value.runtime.quiltLoader,
+)
+const showOptifine = computed(
+  () => props.isExpanded || showAll.value || instance.value.runtime.optifine,
+)
+const showLabyMod = computed(
+  () => props.isExpanded || showAll.value || instance.value.runtime.labyMod,
+)
 
 const {
   onSelectMinecraft,
@@ -160,12 +157,3 @@ const reinstallDialogModel = reinstallDialog.model
 
 const { t } = useI18n()
 </script>
-
-<style scoped=true>
-.flex {
-  padding: 6px 8px !important
-}
-.v-btn {
-  margin: 0
-}
-</style>

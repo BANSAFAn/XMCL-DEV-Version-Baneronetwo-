@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-toolbar color="warning">
-        <v-icon left>
+        <v-icon start>
           local_shipping
         </v-icon>
         {{ t("dataMigration.setRootTitle") }}
@@ -20,8 +20,8 @@
         <p>{{ t("dataMigration.setRootDescription") }}</p>
         <p>{{ t("dataMigration.setRootCause") }}</p>
         <v-text-field
-          outlined
-          :value="root"
+          variant="outlined"
+          :model-value="root"
           readonly
           :placeholder="t('dataMigration.placeholder')"
           :error="!!errorText"
@@ -47,23 +47,19 @@
       <v-divider />
       <v-card-actions class="gap-2">
         <v-btn
-          text
-          large
           :disable="migrating"
           @click="cancelApply"
-        >
+         size="large" variant="text">
           {{ t("shared.cancel") }}
         </v-btn>
         <v-spacer />
         <v-btn
-          text
-          large
           :disabled="!!errorText || !root"
           color="primary"
           :loading="migrating"
           @click="apply()"
-        >
-          <v-icon left>
+         size="large" variant="text">
+          <v-icon start>
             local_shipping
           </v-icon>
           {{ t("dataMigration.apply") }}

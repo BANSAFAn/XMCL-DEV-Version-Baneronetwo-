@@ -17,7 +17,7 @@
         {{ t('multiplayer.enterRemoteToken') }}
       </v-stepper-step>
 
-      <v-stepper-content step="1">
+      <v-stepper-window-item step="1">
         <div>
           {{ t('multiplayer.receiveRemoteTokenHint') }}
         </div>
@@ -32,23 +32,21 @@
         <div class="flex w-full">
           <div class="flex-grow" />
           <v-btn
-            text
-            outlined
             color="primary"
             :loading="answering"
             @click="answer(); "
-          >
+           variant="text">
             {{ t('multiplayer.next') }}
           </v-btn>
         </div>
-      </v-stepper-content>
+      </v-stepper-window-item>
       <v-stepper-step
         step="2"
       >
         {{ t('multiplayer.sendTokenToRemote') }}
       </v-stepper-step>
 
-      <v-stepper-content
+      <v-stepper-window-item
         step="2"
       >
         <div class="flex items-center justify-center gap-4">
@@ -83,19 +81,17 @@
         </div>
         <div class="flex">
           <v-btn
-            text
-            outlined
             @click="copyLocalDescription"
-          >
+           variant="text">
             <v-icon
               v-if="!copied"
-              left
+              start
             >
               content_copy
             </v-icon>
             <v-icon
               v-else
-              left
+              start
               color="success"
             >
               check
@@ -110,7 +106,7 @@
             {{ t('multiplayer.complete') }}
           </v-btn>
         </div>
-      </v-stepper-content>
+      </v-stepper-window-item>
     </v-stepper>
   </v-dialog>
 </template>

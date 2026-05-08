@@ -1,93 +1,70 @@
 <template>
   <v-list-item
-    :three-line="!!(localized.subtitle && (item.error || (item.progress && 'url' in item.progress)))"
+    class="task-item"
+    @mouseenter="hovered = true"
+    @mouseleave="hovered = false"
   >
-    <v-list-item-content>
-      <v-list-item-title>
-        {{ localized.title }}
-      </v-list-item-title>
-      <v-list-item-subtitle v-if="localized.subtitle">
-        <div style="color: grey; font-size: 12px; font-style: italic; max-width: 400px;">
-        {{ localized.subtitle }}
-        </div>
-      </v-list-item-subtitle>
-      <v-list-item-subtitle
-        v-if="item.error && typeof item.error === 'object' && 'message' in item.error"
-        class="text-red-400"
-        style="color: grey; font-size: 12px; font-style: italic; max-width: 400px; word-wrap: normal; overflow-wrap: break-word; white-space: normal;"
-      >
-        <AppTaskDialogTaskViewMessage :value="String(item.error.message)" />
-      </v-list-item-subtitle>
-      <v-list-item-subtitle
-        v-else-if="item.progress && 'url' in item.progress"
-        class="text-red-400"
-        style="color: grey; font-size: 12px; font-style: italic; max-width: 400px; word-wrap: normal; overflow-wrap: break-word; white-space: normal;"
-      >
-        {{ item.progress.url }}
-      </v-list-item-subtitle>
-    </v-list-item-content>
-    <v-list-item-action
-      class="self-center!"
-      @mouseenter="hovered = true"
-      @mouseleave="hovered = false"
+    <v-list-item-title class="font-medium pr-2">
+      {{ localized.title }}
+    </v-list-item-title>
+    <v-list-item-subtitle v-if="localized.subtitle" class="task-item__subtitle">
+      {{ localized.subtitle }}
+    </v-list-item-subtitle>
+    <v-list-item-subtitle
+      v-if="item.error && typeof item.error === 'object' && 'message' in item.error"
+      class="task-item__error"
     >
-      <div class="flex items-center justify-center gap-1 mr-2">
-        <div v-if="item.state === TaskState.Failed">
-          {{ t('task.failed') }}
-          <v-icon
-            color="error"
-            :size="20"
-            style="border-radius: 100%; padding: 3px;"
-          >
-            error_outline
-          </v-icon>
-        </div>
-        <div v-else-if="item.state === TaskState.Cancelled">
-          {{ t('task.cancelled') }}
-          <v-icon
-            :size="20"
-            style="border-radius: 100%; padding: 3px;"
-          >
-            stop
-          </v-icon>
-        </div>
-        <div v-else-if="item.state === TaskState.Succeed">
-          <v-icon :color="color" :size="20" style="border-radius: 100%; padding: 3px;">
-            check
-          </v-icon>
-        </div>
-        <template v-if="item.state === TaskState.Running">
-          <span
-            style="margin-right: 7px"
-          >{{ percentage.toFixed(2) }} %</span>
-          <v-icon
+      <AppTaskDialogTaskViewMessage :value="String(item.error.message)" />
+    </v-list-item-subtitle>
+    <v-list-item-subtitle
+      v-else-if="item.progress && 'url' in item.progress"
+      class="task-item__url"
+    >
+      {{ item.progress.url }}
+    </v-list-item-subtitle>
+
+    <template #append>
+      <div class="flex items-center gap-2 ml-2">
+        <template v-if="item.state === TaskState.Failed">
+          <span class="text-xs text-error font-semibold">{{ t('task.failed') }}</span>
+          <v-icon color="error" size="20">error_outline</v-icon>
+        </template>
+        <template v-else-if="item.state === TaskState.Cancelled">
+          <span class="text-xs text-medium-emphasis font-semibold">{{ t('task.cancelled') }}</span>
+          <v-icon size="20">stop</v-icon>
+        </template>
+        <template v-else-if="item.state === TaskState.Succeed">
+          <v-icon color="green" size="20">check_circle</v-icon>
+        </template>
+        <template v-else-if="item.state === TaskState.Running">
+          <span class="text-xs font-semibold tabular-nums">
+            {{ percentage.toFixed(1) }}%
+          </span>
+          <v-btn
             v-if="hovered"
-            v-ripple
-            :size="20"
-            style="border-radius: 100%; padding: 3px;"
+            icon
+            variant="text"
+            size="x-small"
             :color="color"
             @click.stop="onCancel"
           >
-            close
-          </v-icon>
+            <v-icon size="18">close</v-icon>
+          </v-btn>
           <v-progress-circular
-            v-else-if="indeterminate || !hovered"
-            style="margin-left: 6px; padding: 3px;"
-            class="mb-0"
-            :color="isDark ? 'white' : undefined"
-            small
+            v-else
+            :color="isDark ? 'white' : 'primary'"
             :size="20"
-            :value="percentage"
-            :width="3"
+            :width="2.5"
+            :model-value="percentage"
             :indeterminate="indeterminate"
           />
         </template>
       </div>
-    </v-list-item-action>
+    </template>
   </v-list-item>
 </template>
 
-<script lang=ts setup>
+<script lang="ts" setup>
 import { useLocalizedTaskFunc } from '@/composables/task'
 import { kTheme } from '@/composables/theme'
 import { injection } from '@/util/inject'
@@ -129,12 +106,17 @@ const current = computed(() => progress.value?.progress ?? 0)
 const indeterminate = computed(() => !total.value || total.value === -1)
 const percentage = computed(() => {
   if (total.value <= 0) return 0
-  const value = current.value / total.value * 100
+  const value = (current.value / total.value) * 100
   return Math.min(100, Math.max(0, value))
 })
 
 function onTaskClick() {
-  if (props.item.error && typeof props.item.error === 'object' && 'message' in props.item.error && typeof props.item.error.message === 'string') {
+  if (
+    props.item.error &&
+    typeof props.item.error === 'object' &&
+    'message' in props.item.error &&
+    typeof props.item.error.message === 'string'
+  ) {
     windowController.writeClipboard(props.item.error.message ?? '')
   }
 }
@@ -143,3 +125,34 @@ function onCancel() {
   emit('cancel')
 }
 </script>
+
+<style scoped>
+.task-item__subtitle {
+  font-size: 12px;
+  font-style: italic;
+  opacity: 0.7;
+  max-width: 460px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-item__url {
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  opacity: 0.55;
+  max-width: 460px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-item__error {
+  font-size: 12px;
+  color: rgb(var(--v-theme-error));
+  max-width: 460px;
+  word-wrap: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+</style>

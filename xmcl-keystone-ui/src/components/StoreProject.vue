@@ -61,11 +61,10 @@
       />
     </div>
     <StoreProjectInstallVersionDialog
-      :value="installDialog"
+      v-model="installDialog"
       :versions="versions || []"
       :get-version-detail="getVersionDetail"
       @load="emit('load')"
-      @input="installDialog = false"
       @install="onInstallVersion"
     />
   </div>

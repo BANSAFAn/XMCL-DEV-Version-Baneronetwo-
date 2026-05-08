@@ -1,7 +1,7 @@
 import { InjectionKey } from 'vue'
 import { useMarketSort } from './marketSort'
 import { searlizers, useQuery, useQueryOverride } from './query'
-import { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from '@vueuse/core'
 import { RuntimeVersions } from '@xmcl/instance'
 
 /**

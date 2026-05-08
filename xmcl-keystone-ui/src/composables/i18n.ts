@@ -1,21 +1,21 @@
 import { Settings } from '@xmcl/runtime-api'
 import { Ref } from 'vue'
-import { Framework } from 'vuetify'
+import { useLocale } from 'vuetify'
 import { useI18nSearchFlights } from './flights'
 
 const locales = import.meta.glob('../../locales/*.yaml')
 
-export function useI18nSync(framework: Framework, state: Ref<Settings | undefined>) {
+export function useI18nSync(state: Ref<Settings | undefined>) {
   const { locale, setLocaleMessage } = useI18n()
+  const vuetifyLocale = useLocale()
   watch(computed(() => state.value?.locale || ''), (newValue: string, oldValue: string) => {
     console.log(`Locale changed ${oldValue} -> ${newValue}`)
-    const lang = framework.lang
     if (newValue === 'zh-CN') {
-      lang.current = 'zhHans'
+      vuetifyLocale.current.value = 'zhHans'
     } else if (newValue === 'ru') {
-      lang.current = 'ru'
+      vuetifyLocale.current.value = 'ru'
     } else {
-      lang.current = 'en'
+      vuetifyLocale.current.value = 'en'
     }
 
     if (!locales[`../../locales/${newValue}.yaml`]) {
@@ -28,6 +28,7 @@ export function useI18nSync(framework: Framework, state: Ref<Settings | undefine
     })
   })
 }
+
 
 export function useAutoI18nEnabled() {
   const i18nSearch = useI18nSearchFlights()

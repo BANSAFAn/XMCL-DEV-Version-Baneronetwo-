@@ -1,5 +1,5 @@
 import { VersionHeader } from '@xmcl/runtime-api'
-import { InjectionKey, Ref, set } from 'vue'
+import { InjectionKey, Ref } from 'vue'
 import type { EditInstanceOptions, Instance, InstanceData, RuntimeVersions } from '@xmcl/instance'
 import { useGlobalSettings } from './setting'
 import debounce from 'lodash.debounce'
@@ -7,7 +7,8 @@ import { injection } from '@/util/inject'
 import { kLaunchButton } from './launchButton'
 import { AnyError } from '@/util/error'
 
-export const InstanceEditInjectionKey: InjectionKey<ReturnType<typeof useInstanceEdit>> = Symbol('InstanceEdit')
+export const InstanceEditInjectionKey: InjectionKey<ReturnType<typeof useInstanceEdit>> =
+  Symbol('InstanceEdit')
 
 /**
  * Edit the instance data model.
@@ -15,13 +16,25 @@ export const InstanceEditInjectionKey: InjectionKey<ReturnType<typeof useInstanc
  * @param instance The instance to edit
  * @returns The instance edit data
  */
-export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditInstanceOptions & { instancePath: string }) => Promise<void>) {
+export function useInstanceEdit(
+  instance: Ref<Instance>,
+  edit: (instance: EditInstanceOptions & { instancePath: string }) => Promise<void>,
+) {
   const {
-    globalAssignMemory, globalFastLaunch, globalHideLauncher, globalMaxMemory,
-    globalMcOptions, globalMinMemory, globalShowLog, globalVmOptions,
-    globalDisableAuthlibInjector, globalDisableElyByAuthlib,
-    globalPrependCommand, globalPreExecuteCommand,
-    globalEnv, globalResolution,
+    globalAssignMemory,
+    globalFastLaunch,
+    globalHideLauncher,
+    globalMaxMemory,
+    globalMcOptions,
+    globalMinMemory,
+    globalShowLog,
+    globalVmOptions,
+    globalDisableAuthlibInjector,
+    globalDisableElyByAuthlib,
+    globalPrependCommand,
+    globalPreExecuteCommand,
+    globalEnv,
+    globalResolution,
   } = useGlobalSettings()
 
   const data = reactive({
@@ -87,34 +100,34 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
   const isGlobalResolution = computed(() => data.resolution === undefined)
 
   const resetAssignMemory = () => {
-    set(data, 'assignMemory', undefined)
-    set(data, 'minMemory', undefined)
-    set(data, 'maxMemory', undefined)
+    data['assignMemory'] = undefined
+    data['minMemory'] = undefined
+    data['maxMemory'] = undefined
     saveJIT()
   }
   const resetVmOptions = () => {
-    set(data, 'vmOptions', undefined)
+    data['vmOptions'] = undefined
     saveJIT()
   }
   const resetPrependCommand = () => {
-    set(data, 'prependCommand', undefined)
+    data['prependCommand'] = undefined
     saveJIT()
   }
   const resetPreExecuteCommand = () => {
-    set(data, 'preExecuteCommand', undefined)
+    data['preExecuteCommand'] = undefined
     saveJIT()
   }
 
   const resetResolution = () => {
-    set(data, 'resolution', undefined)
+    data['resolution'] = undefined
     saveJIT()
   }
   const resetMcOptions = () => {
-    set(data, 'mcOptions', undefined)
+    data['mcOptions'] = undefined
     saveJIT()
   }
   const resetFastLaunch = () => {
-    set(data, 'fastLaunch', undefined)
+    data['fastLaunch'] = undefined
     saveJIT()
   }
   const resetHideLauncher = () => {
@@ -136,15 +149,18 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
 
   const assignMemory = computed({
     get: () => data.assignMemory ?? globalAssignMemory.value,
-    set: (v) => { set(data, 'assignMemory', v); saveJIT() },
+    set: (v) => {
+      data['assignMemory'] = v
+      saveJIT()
+    },
   })
   const minMemory = computed({
     get: () => data.minMemory ?? globalMinMemory.value,
     set: (v) => {
       if (data.assignMemory !== true) {
-        set(data, 'assignMemory', true)
+        data['assignMemory'] = true
       }
-      set(data, 'minMemory', v)
+      data['minMemory'] = v
       saveJIT()
     },
   })
@@ -152,59 +168,95 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
     get: () => data.maxMemory ?? globalMaxMemory.value,
     set: (v) => {
       if (data.assignMemory !== true) {
-        set(data, 'assignMemory', true)
+        data['assignMemory'] = true
       }
-      set(data, 'maxMemory', v)
+      data['maxMemory'] = v
       saveJIT()
     },
   })
   const vmOptions = computed({
     get: () => data.vmOptions ?? globalVmOptions.value.join(' '),
-    set: (v) => { set(data, 'vmOptions', v); saveJIT() },
+    set: (v) => {
+      data['vmOptions'] = v
+      saveJIT()
+    },
   })
   const mcOptions = computed({
     get: () => data.mcOptions ?? globalMcOptions.value.join(' '),
-    set: (v) => { set(data, 'mcOptions', v); saveJIT() },
+    set: (v) => {
+      data['mcOptions'] = v
+      saveJIT()
+    },
   })
   const prependCommand = computed({
     get: () => data.prependCommand ?? globalPrependCommand.value,
-    set: (v) => { set(data, 'prependCommand', v); saveJIT() },
+    set: (v) => {
+      data['prependCommand'] = v
+      saveJIT()
+    },
   })
   const preExecuteCommand = computed({
     get: () => data.preExecuteCommand ?? globalPreExecuteCommand.value,
-    set: (v) => { set(data, 'preExecuteCommand', v); saveJIT() },
+    set: (v) => {
+      data['preExecuteCommand'] = v
+      saveJIT()
+    },
   })
   const fastLaunch = computed({
     get: () => data.fastLaunch ?? globalFastLaunch.value,
-    set: (v) => { set(data, 'fastLaunch', v); saveJIT() },
+    set: (v) => {
+      data['fastLaunch'] = v
+      saveJIT()
+    },
   })
   const hideLauncher = computed({
     get: () => data.hideLauncher ?? globalHideLauncher.value,
-    set: (v) => { set(data, 'hideLauncher', v); saveJIT() },
+    set: (v) => {
+      data['hideLauncher'] = v
+      saveJIT()
+    },
   })
   const showLog = computed({
     get: () => data.showLog ?? globalShowLog.value,
-    set: (v) => { set(data, 'showLog', v); saveJIT() },
+    set: (v) => {
+      data['showLog'] = v
+      saveJIT()
+    },
   })
   const disableAuthlibInjector = computed({
     get: () => data.disableAuthlibInjector ?? globalDisableAuthlibInjector.value,
-    set: (v) => { set(data, 'disableAuthlibInjector', v); saveJIT() },
+    set: (v) => {
+      data['disableAuthlibInjector'] = v
+      saveJIT()
+    },
   })
   const disableElyByAuthlib = computed({
     get: () => data.disableElyByAuthlib ?? globalDisableElyByAuthlib.value,
-    set: (v) => { set(data, 'disableElyByAuthlib', v); saveJIT() },
+    set: (v) => {
+      data['disableElyByAuthlib'] = v
+      saveJIT()
+    },
   })
   const javaPath = computed({
     get: () => data.javaPath,
-    set: (v) => { data.javaPath = v; saveJIT() },
+    set: (v) => {
+      data.javaPath = v
+      saveJIT()
+    },
   })
   const resolution = computed({
     get: () => data.resolution ?? globalResolution.value,
-    set: (v) => { set(data, 'resolution', v); saveJIT() },
+    set: (v) => {
+      data['resolution'] = v
+      saveJIT()
+    },
   })
   const env = computed({
     get: () => data.env,
-    set: (v) => { data.env = v; saveJIT() },
+    set: (v) => {
+      data.env = v
+      saveJIT()
+    },
   })
 
   const isModified = computed(() => {
@@ -245,12 +297,16 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
     return false
   })
 
-  watch(computed(() => instance.value), () => load(), {
-    immediate: true,
-    deep: true,
-  })
+  watch(
+    computed(() => instance.value),
+    () => load(),
+    {
+      immediate: true,
+      deep: true,
+    },
+  )
 
-  let buffer: EditInstanceOptions & { instancePath: string } | undefined
+  let buffer: (EditInstanceOptions & { instancePath: string }) | undefined
   const queue = debounce(flush, 2000)
 
   async function flush() {
@@ -285,8 +341,8 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
       fileApi: data.fileServerApi,
       minMemory: data.minMemory,
       maxMemory: data.maxMemory,
-      vmOptions: data.vmOptions?.split(' ').filter(v => v.length !== 0),
-      mcOptions: data.mcOptions?.split(' ').filter(v => v.length !== 0),
+      vmOptions: data.vmOptions?.split(' ').filter((v) => v.length !== 0),
+      mcOptions: data.mcOptions?.split(' ').filter((v) => v.length !== 0),
       assignMemory: data.assignMemory,
       fastLaunch: data.fastLaunch,
       showLog: data.showLog,
@@ -304,9 +360,9 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
     if (instance.value.server) {
       payload.server = instance.value?.server
         ? {
-          host: data.host,
-          port: Number.parseInt(data.port, 10),
-        }
+            host: data.host,
+            port: Number.parseInt(data.port, 10),
+          }
         : undefined
     }
     enqueue({
@@ -319,9 +375,9 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
     const payload = {
       name: data.name,
       version: data.version,
-      runtime: data.runtime,
+      runtime: { ...data.runtime },
       icon: data.icon,
-      resolution: data.resolution,
+      resolution: data.resolution ? { ...data.resolution } : undefined,
     }
     if (!instance.value?.server) {
       await edit({
@@ -434,7 +490,10 @@ export function useInstanceEdit(instance: Ref<Instance>, edit: (instance: EditIn
   }
 }
 
-export function useInstanceEditVersions(data: Pick<InstanceData, 'runtime' | 'version'>, versions: Ref<VersionHeader[]>) {
+export function useInstanceEditVersions(
+  data: Pick<InstanceData, 'runtime' | 'version'>,
+  versions: Ref<VersionHeader[]>,
+) {
   function onSelectMinecraft(version: string) {
     if (data?.runtime) {
       const runtime = data.runtime
@@ -515,7 +574,7 @@ export function useInstanceEditVersions(data: Pick<InstanceData, 'runtime' | 've
       if ('labyMod' in runtime) {
         runtime.labyMod = version
       } else {
-        set(runtime, 'labyMod', version)
+        runtime['labyMod'] = version
       }
       if (version) {
         data.version = ''
@@ -529,7 +588,7 @@ export function useInstanceEditVersions(data: Pick<InstanceData, 'runtime' | 've
   }
   function onSelectLocalVersion(version: string) {
     data.version = version
-    const v = versions.value.find(ver => ver.id === version)
+    const v = versions.value.find((ver) => ver.id === version)
     if (v) {
       data.runtime.minecraft = v.minecraft
       data.runtime.forge = v.forge

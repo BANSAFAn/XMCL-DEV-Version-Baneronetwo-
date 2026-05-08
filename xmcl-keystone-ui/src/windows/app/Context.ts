@@ -21,12 +21,12 @@ export default defineComponent({
     provide(kServerStatusCache, useServerStatusCache())
     provide(kNotificationQueue, useNotificationQueue())
 
-    provide(kTheme, useTheme(ref(undefined), vuetify.framework))
+    provide(kTheme, useTheme(ref(undefined)))
 
     const settings = useSettingsState()
     provide(kSettingsState, settings)
 
-    useI18nSync(vuetify.framework, settings.state)
+    useI18nSync(settings.state)
 
     const userContext = useUserContext()
     provide(kUserContext, userContext)

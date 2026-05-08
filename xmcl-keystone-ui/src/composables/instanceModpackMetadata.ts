@@ -28,7 +28,7 @@ export function useInstanceModpackMetadata() {
   })
 
   const saveMetadata = useDebounceFn(() => {
-    setInstanceModpackMetadata(path.value, modpackMetadata)
+    setInstanceModpackMetadata(path.value, JSON.parse(JSON.stringify(modpackMetadata)))
   }, 1000)
 
   watch(modpackMetadata, () => {

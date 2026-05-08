@@ -29,18 +29,6 @@ HomeLaunchMultiInstanceDialog:
   confirm: はい、起動します。
   description: 複数の起動構成を起動しようとしています。続行しますか?
   title: 複数の起動構成
-HomeSyncDialog:
-  pull: プル
-  push: プッシュ
-HomeSyncDialogPull:
-  failText: アップデートの取得に失敗しました。 {url}
-  refresh: 最新の情報に更新
-  update: アップデート
-HomeSyncDialogPush:
-  authError: ユーザー認証に失敗しました。サーバーにファイルをアップロードする権限があるか確認してください!
-  refresh: リフレッシュ
-  unknownError: 未知のエラーです。再度試してください。
-  upload: 起動構成をアップロード
 SettingMigrationDialog:
   selectRootDirectory: ルートディレクトリを選択
 ago:
@@ -71,8 +59,6 @@ create: 作成
 curseforge:
   category: カテゴリ
   createdDate: 作成日
-  installTo: '{path} にインストール'
-  installToStorage: ストレージにインストール
   lastUpdate: 最終アップデート日
   releasedDate: リリース日
 curseforgeCategory:
@@ -176,8 +162,7 @@ diagnosis:
   missingLibraries:
     message: ランチャーがライブラリをインストールします。
     name: >-
-      見つからない {name} ライブラリ | 見つからない {name} ライブラリ | {count} 個のライブラリが見つかりません |
-      {count} 個のライブラリが見つかりません
+      見つからない {name} ライブラリ | 見つからない {name} ライブラリ | {count} 個のライブラリが見つかりません | {count} 個のライブラリが見つかりません
   missingVersion:
     message: クリックしてこのバージョンをインストールします。
     name: バージョン {version} はインストールされていません!
@@ -201,16 +186,14 @@ env:
     none: 選択しない
 errors:
   BadForgeInstallerJarError: >-
-    Forge インストーラーのJarを解析できません。Forgeが新しいインストーラーのフォーマットを採用したのかもしれません?
-    この問題が続く場合は開発者に連絡してください。
+    Forge インストーラーのJarを解析できません。Forgeが新しいインストーラーのフォーマットを採用したのかもしれません? この問題が続く場合は開発者に連絡してください。
   BadInstanceType: '有効な起動構成ではありません: {type}'
   BodyTimeoutError: HTTPがタイムアウトしました
   ChecksumNotMatchError: 'チェックサムが一致しませんでした! 想定: {expect}. 結果 {actual}.'
   ConnectTimeoutError: サーバーへの接続がタイムアウトしました。
   DNSNotFoundError: DNS ルックアップエラー
   DatabaseNotOpened: >-
-    データベースが開けませんでした! ランチャーは適切に動作できません!
-    ランチャーがアクセスできるデータディレクトリを選択するか、データのルートディレクトリを設定からリセットすることができます。
+    データベースが開けませんでした! ランチャーは適切に動作できません! ランチャーがアクセスできるデータディレクトリを選択するか、データのルートディレクトリを設定からリセットすることができます。
   DiskIsFull: |-
     あなたのディスクはいっぱいです！
     ディスクに何も書くことはできません！
@@ -224,8 +207,7 @@ eula:
   body: このチェックボックスを押すことで、Minecraftの {eula} に同意したことになります。
 exception:
   http: >-
-    {url} へのHTTPリクエストに失敗しました。ステータスコードは {statusCode}
-    です。再度試すか、ネットワーク接続を確認してください。エラーが続く場合は、レポートを開発者に送ってください。
+    {url} へのHTTPリクエストに失敗しました。ステータスコードは {statusCode} です。再度試すか、ネットワーク接続を確認してください。エラーが続く場合は、レポートを開発者に送ってください。
 extensions:
   mrpack: Modrinth Modpack
   zip: Zip ファイル
@@ -401,8 +383,7 @@ instanceUpdate:
   basic: 設定の更新
   files: ファイルのアップデート
   loaderChanged: >-
-    この起動構成のModloaderが変更されました。以前のModloaderは {modloader}, 現在のModloacerは
-    {newModLoader}です。
+    この起動構成のModloaderが変更されました。以前のModloaderは {modloader}, 現在のModloacerは {newModLoader}です。
   summary: |-
     {add}ファイルを追加します。
     {remove}ファイルを削除します。
@@ -433,7 +414,6 @@ instances:
   folderSetting: フォルダーの設定
   importFolderDescription: Minecraftをランチャーにインポート
   loadingFiles: Modpackファイルを読み込み中
-  refreshServers: サーバーを更新
 items:
   count: '{count} 個'
   total: 合計 {total} 個
@@ -471,13 +451,11 @@ launchBlocked:
     title: 起動に失敗
   launchInvalidJavaPath:
     description: >-
-      選択されたJavaは存在しないか、無効です。他のJavaを選択してください。<span class="highlight"> {javaPath}
-      </span>
+      選択されたJavaは存在しないか、無効です。他のJavaを選択してください。<span class="highlight"> {javaPath} </span>
     title: 無効なJavaパス
   launchJavaNoPermission:
     description: >-
-      ランチャーはJava <span class="highlight"> {javaPath} </span>
-      を実行する権限がありません。Javaのファイルの権限を変更するか、ランチャーの権限を昇格してください。
+      ランチャーはJava <span class="highlight"> {javaPath} </span> を実行する権限がありません。Javaのファイルの権限を変更するか、ランチャーの権限を昇格してください。
     title: 起動する権限が不足
   launchNoProperJava:
     description: ゲームを起動するための適切なJavaがありません。 ({javaPath}が無効かもしれません)
@@ -494,8 +472,7 @@ launchFailed:
   description: クラッシュレポートはありません。エラーログと最新のログです。
   elyByAuthlib:
     description: >-
-      Minecraft バージョン {version} に対して Ely.by の Authlib
-      置換が使用されましたが、このバージョンは完全に互換性がない可能性があります。
+      Minecraft バージョン {version} に対して Ely.by の Authlib 置換が使用されましたが、このバージョンは完全に互換性がない可能性があります。
     suggestion: この問題を回避するには、インスタンス設定で Ely.by の Authlib 置換を無効にできます。
     title: Ely.by Authlib の互換性の問題
   failedToLaunch: ランチャーの起動に失敗
@@ -504,8 +481,7 @@ launchFailed:
 launchStatus:
   assigningMemory: メモリを割り当て中
   elyByWarning: >-
-    Ely.by の Authlib 置換が有効になっています。いくつかの Minecraft
-    バージョンは互換性がなく、クラッシュする可能性があります。問題が発生した場合はインスタンス設定で無効にしてください。
+    Ely.by の Authlib 置換が有効になっています。いくつかの Minecraft バージョンは互換性がなく、クラッシュする可能性があります。問題が発生した場合はインスタンス設定で無効にしてください。
   exit: ゲームを終了しますか?
   injectingAuthLib: サードパーティAuthLibを設定中
   launching: 起動中...
@@ -519,11 +495,8 @@ launcherUpdate:
   updateToThisVersion: ダウンロードしてインストール
 localVersion:
   auto: 自動で計算済み
-  delete: ローカルバージョンを削除
-  deleteDescription: この操作はローカルのjarとjsonを削除します。再度使うにはダウンロードし直す必要があります。
   empty: バージョンがインストールされていません
   hint: 特定のローカルバージョンを直接起動する
-  refresh: バージョンをリフレッシュ
   reinstallDescription: もしこのバージョンのインストールに問題があるのなら、再インストールを試すことができます。
   reinstallTitle: 再インストール {version}
   title: ローカルバージョン
@@ -584,8 +557,6 @@ mod:
   compatible: 利用可能なModです。
   createGroup: グループを作成
   currentVersion: 現在 {current}
-  deletionHint: あなたはこのModとそのメタデータを失います。削除しますか? | あなたはこれらのModとそのメタデータを失います。本当に続行しますか?
-  deletionRestHint: '{rest} 個のmod...'
   denseView: コンパクトなビュー
   disableAll: すべて無効化
   dropHint: ここにModファイル(.jar/.litemod)をドロップしてインポートします。
@@ -641,8 +612,7 @@ modInstall:
   archived: '{name} はアーカイブされました。 作者がアーカイブを解除しない限り {name} はアップデートを受け取りません。'
   autoUpgrade:
     description: >-
-      Minecraftのバージョンを変更しました。互換性のあるModを自動的に Minecraft {version}
-      に対応するバージョンに更新しますか？
+      Minecraftのバージョンを変更しました。互換性のあるModを自動的に Minecraft {version} に対応するバージョンに更新しますか？
     'no': スキップ
     title: Modをアップデートしますか？
     'yes': Modをアップデート
@@ -680,9 +650,6 @@ modified:
 modpack:
   author: 著者名
   authorHint: これらはエクスポートされたModpackに署名する際使われます (Curseforge)
-  delete:
-    hint: Modpack {name} とメタデータを削除します。続行しますか?
-    title: Modpackを削除
   description: 説明
   descriptionHint: このModpackにおける全般的な説明です。Curseforge Modpackとしてエクスポートする際使われます。
   dropHint: ここにModpackのzipをドロップしてインポートします。
@@ -866,11 +833,7 @@ multiplayer:
   copy: コピー
   copyGroupToFriendHint: このIDでフレンドをグループに追加できます
   copyLocalHint: >-
-    "ローカルSDPテキストをコピーして接続に参加してください <span>一つのトークンで接続できるピアは <span style="color:
-    red; font-weight: bold;">1つ</span>のみです! 同じトークンを複数のピアに送ることはできません!</span> <br>
-    <span class="hint-text" style="font-style: italic;">複数のピアに接続する必要がある場合、 <span
-    style="font-weight: bold; color: rgba(245, 158,
-    11)">複数の</span>接続を作ってください</span>"
+    "ローカルSDPテキストをコピーして接続に参加してください <span>一つのトークンで接続できるピアは <span style="color: red; font-weight: bold;">1つ</span>のみです! 同じトークンを複数のピアに送ることはできません!</span> <br> <span class="hint-text" style="font-style: italic;">複数のピアに接続する必要がある場合、 <span style="font-weight: bold; color: rgba(245, 158, 11)">複数の</span>接続を作ってください</span>"
   createLocalToken: ローカルトークンを作成
   currentIpTitle: 検出されたパブリックIP
   currentNatTitle: '現在のネットワーク (NAT):'
@@ -966,7 +929,6 @@ presence:
   save: セーブデータを {instance} で閲覧中
   setting: 設定ページを閲覧中
   shaderPack: '{instance} でシェーダーパックを閲覧中'
-  version: バージョンページを閲覧中
 proxy:
   host: ホスト
   port: ポート
@@ -993,11 +955,7 @@ resourcepack:
   unselected: リソースパックの選択が解除されました
 save:
   copy:
-    cancel: キャンセル
-    confirm: コピーを開始
-    description: セーブデータをコピーする起動構成を選択してください。
     name: セーブデータをコピー
-    title: 他の起動構成にセーブデータをコピー
   createNew: 新しいワールドを作る
   createdWorlds: '{count} 個のワールドがあります'
   deleteHint: セーブデータを削除します。この操作は取り消せません。続行しますか?
@@ -1048,14 +1006,12 @@ server:
   ipAddress: IP アドレス
   maxPlayers: 最大プレイヤー数
   motd: サーバー MOTD
-  name: サーバー
   nogui: サーバーのGUIなし
   onlineMode: オンラインモード
   ping: Ping
   pings: Ping
   players: プレイヤー数
   port: ポート
-  status: サーバーの状態
   unknown: 未知のサーバー
   unknownDescription: 未知のサーバーです。情報を更新してください。
   upload: サーバーをアップロードします
@@ -1286,8 +1242,7 @@ setup:
     name: すでに存在するゲームをインポート
   locale:
     description: >-
-      もしある場合はあなたの最も好ましい言語を選択してください!
-      もしネイティブの言語が無く足すケア必要な場合は、私達のGithubで翻訳についてプルリクエストをしてください!
+      もしある場合はあなたの最も好ましい言語を選択してください! もしネイティブの言語が無く足すケア必要な場合は、私達のGithubで翻訳についてプルリクエストをしてください!
     language: 言語
     name: 言語を設定
   path: 現在のパス
@@ -1426,10 +1381,7 @@ tutorial:
   storeSearchResultDescription: すべての検索履歴
   userAccountDescription: このアイコンをクリックしてMinecraftアカウントを追加/管理できます
 universalDrop:
-  start: インポートが開始されました
-  title: ここにファイルをドロップしてインポート
   unknownResource: 未知
-update: {}
 upstream:
   downgrade: ダウングレード
   onlyShowCurrentVersion: 現在のMinecraftバージョンのみ表示

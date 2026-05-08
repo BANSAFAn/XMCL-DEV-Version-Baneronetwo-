@@ -1,81 +1,83 @@
 <template>
   <v-snackbar
     v-model="data.show"
-    :multi-line="data.operations.length > 0"
-    :top="true"
-    :right="true"
-    class="select-none"
+    location="top right"
+    :timeout="data.level === 'error' ? -1 : 6000"
+    :color="surfaceColor"
+    rounded="lg"
+    :min-width="320"
+    :max-width="480"
+    elevation="8"
+    class="select-none app-notifier"
   >
-    <v-icon
-      v-if="data.level"
-      :color="colors[data.level]"
-      left
-    >
-      {{ icons[data.level] }}
-    </v-icon>
-
-    <!-- <span v-if="data.level === 'error' || data.level === 'warning'">{{ levelText }}</span> -->
-
-    <span v-if="!data.body && !data.operations">
-      {{ data.title }}
-    </span>
-    <div
-      v-else
-      class="w-full"
-    >
-      <v-card
-        color="transparent"
-        flat
+    <div class="flex items-center gap-3 py-1">
+      <div
+        v-if="data.level"
+        class="level-badge flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full"
+        :style="{ backgroundColor: `rgba(var(--v-theme-${colors[data.level]}), 0.18)` }"
       >
-        <v-card-title>
+        <v-icon
+          :color="colors[data.level]"
+          size="small"
+        >
+          {{ icons[data.level] }}
+        </v-icon>
+      </div>
+
+      <div class="min-w-0 flex-1">
+        <div
+          v-if="data.title"
+          class="text-sm font-medium leading-snug"
+        >
           {{ data.title }}
-        </v-card-title>
-        <v-card-text v-if="data.body">
+        </div>
+        <div
+          v-if="data.body"
+          class="text-caption mt-1 leading-relaxed opacity-80"
+        >
           {{ data.body }}
-        </v-card-text>
-        <v-card-actions v-if="data.operations.length > 0">
-          <div class="flex-grow" />
+        </div>
+
+        <div
+          v-if="data.operations.length > 0"
+          class="mt-3 flex flex-wrap items-center gap-2"
+        >
           <v-btn
             v-for="op in data.operations"
             :key="op.text"
-            text
-            small
-            :color="op.color"
+            :color="op.color || colors[data.level || 'info']"
+            :prepend-icon="op.icon"
+            size="small"
+            variant="tonal"
             @click="op.handler(); close()"
           >
-            <v-icon
-              v-if="op.icon"
-              left
-            >
-              {{ op.icon }}
-            </v-icon>
             {{ op.text }}
           </v-btn>
-        </v-card-actions>
-      </v-card>
+        </div>
+      </div>
     </div>
-    <template #action>
+
+    <template #actions>
       <v-btn
         v-if="data.more"
-        icon
-        text
+        v-shared-tooltip="() => t('shared.next')"
+        icon="arrow_right"
+        variant="text"
+        size="small"
         @click="more"
-      >
-        <v-icon>arrow_right</v-icon>
-      </v-btn>
+      />
       <v-btn
-        icon
-        color="pink"
-        text
+        icon="close"
+        variant="text"
+        size="small"
         @click="close"
-      >
-        <v-icon>close</v-icon>
-      </v-btn>
+      />
     </template>
   </v-snackbar>
 </template>
 
-<script lang=ts setup>
+<script lang="ts" setup>
+import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { Level, kNotificationQueue } from '../composables/notifier'
 import { injection } from '@/util/inject'
 
@@ -117,44 +119,42 @@ watch(queueLength, (newLength, oldLength) => {
     consume()
   }
 })
+
+// Pull next item from the queue when the user dismisses the current one
+watch(() => data.show, (shown) => {
+  if (!shown && queue.value.length > 0) {
+    setTimeout(consume, 200)
+  }
+})
+
 const { t } = useI18n()
 
-const levelText = computed(() => data.level === 'info' ? t('logLevel.info') : data.level === 'error' ? t('logLevel.error') : data.level === 'success' ? t('logLevel.success') : t('logLevel.warning'))
-
-// function handleNotification(payload: TaskLifeCyclePayload) {
-//   const handler = registry[payload.type]
-//   if (handler) {
-//     queue.value.push({ level: handler.level, title: handler.title(payload), more: handler.more, full: handler.full })
-//   } else {
-//     console.warn(`Cannot handle the notification ${payload.type}`)
-//   }
-// }
-onMounted(() => {
-  // taskMonitor.on('task-start', handleNotification)
-  // ipc.on('notification', handleNotification)
-})
-onUnmounted(() => {
-  // ipc.removeListener('notification', handleNotification)
-})
+onMounted(() => { })
+onUnmounted(() => { })
 
 const icons = {
   success: 'check_circle',
   info: 'info',
-  warning: 'priority_high',
-  error: 'warning',
+  warning: 'warning',
+  error: 'error',
 }
 const colors = {
-  success: 'green',
-  error: 'red',
-  info: 'white',
-  warning: 'orange',
+  success: 'success',
+  error: 'error',
+  info: 'info',
+  warning: 'warning',
 }
+
+// Subtle surface tint based on level so the snackbar feels themed but not loud
+const surfaceColor = computed(() => 'surface')
 </script>
 
-<style>
-.v-snack__content {
-  display: flex;
-  padding-top: 0;
-  padding-bottom: 4px;
+<style scoped>
+.app-notifier :deep(.v-snackbar__wrapper) {
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+
+.app-notifier :deep(.v-snackbar__content) {
+  padding: 12px 14px;
 }
 </style>

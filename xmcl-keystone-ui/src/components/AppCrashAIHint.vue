@@ -1,40 +1,58 @@
 <template>
-  <div class="items-center justify-center flex flex-col gap-6 select-none">
-    <v-icon size="60">
-      hail
-    </v-icon>
-    <span class="text-lg">
-      {{ t('askAICrash.description') }}
-    </span>
-    <ol>
-      <li>
-        {{ t('askAICrash.copyPrompt') }}
-        <v-btn color="primary" :outlined="copied" small @click="onCopyPrompt">
-          <v-icon left>
-            {{ copied ? 'check' : 'smart_toy'}}
-          </v-icon>
-          {{ t( 'copyClipboard.success' )}}
-        </v-btn>
-      </li>
-      <li>
-        {{ t('askAICrash.selectPlatform') }}
-        <ul>
-          <template v-if="useCNAI">
-            <li><a href="https://chatglm.cn/share/kFiK3rVp" @click="onCopyRaw"> <img width="21" src="https://chatglm.cn/img/icons/favicon.svg" > GLM</a></li>
-            <li><a href="https://doubao.com/bot/uic8dYCs" @click="onCopyRaw"> <img width="21" src="https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/web/logo-icon.png" > 豆包</a></li>
-            <li><a href="https://chat.deepseek.com/" @click="onCopyPrompt"><img width="21" src="https://chat.deepseek.com/favicon.svg" >Deepseek</a></li>
-            <li><a href="https://www.tongyi.com/" @click="onCopyPrompt"><img width="21" src="https://assets.alicdn.com/g/qwenweb/qwen-webui-fe/0.0.209/static/favicon.png" > Qwen </a></li>
-          </template>
-          <template v-else>
-            <li><a href="https://chat.openai.com"> <img width="21" src="https://openai.com/favicon.svg" > ChatGPT</a></li>
-            <li><a href="https://gemini.google.com"> <img width="21" src="https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg" > Gemini</a></li>
-            <li><a href="https://chat.deepseek.com/"><img width="21" src="https://chat.deepseek.com/favicon.svg" >Deepseek</a></li>
-            <li><a href="https://chat.z.ai"> <img width="21" src="https://z-cdn.chatglm.cn/z-ai/static/logo.svg" > z.ai</a></li>
-            <li><a href="https://chat.qwen.ai/"> <img width="21" src="https://assets.alicdn.com/g/qwenweb/qwen-webui-fe/0.0.209/static/favicon.png" > Qwen</a></li>
-          </template>
-        </ul>
-      </li>
-    </ol>
+  <div class="crash-ai-hint flex flex-col gap-4 select-none">
+    <div class="flex items-start gap-3">
+      <v-avatar size="44" color="primary" variant="tonal">
+        <v-icon size="28">smart_toy</v-icon>
+      </v-avatar>
+      <div class="flex-1 min-w-0">
+        <div class="text-base font-medium leading-snug">
+          {{ t('askAICrash.description') }}
+        </div>
+      </div>
+    </div>
+
+    <v-divider />
+
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2 text-sm font-medium opacity-80">
+        <v-avatar size="20" color="primary" variant="flat">
+          <span class="text-xs">1</span>
+        </v-avatar>
+        <span>{{ t('askAICrash.copyPrompt') }}</span>
+      </div>
+      <v-btn
+        :color="copied ? 'success' : 'primary'"
+        :variant="copied ? 'tonal' : 'flat'"
+        :prepend-icon="copied ? 'check' : 'content_copy'"
+        block
+        @click="onCopyPrompt"
+      >
+        {{ copied ? t('copyClipboard.success') : t('askAICrash.copyPrompt') }}
+      </v-btn>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2 text-sm font-medium opacity-80">
+        <v-avatar size="20" color="primary" variant="flat">
+          <span class="text-xs">2</span>
+        </v-avatar>
+        <span>{{ t('askAICrash.selectPlatform') }}</span>
+      </div>
+      <div class="ai-platform-list flex flex-col gap-1">
+        <a
+          v-for="p in platforms"
+          :key="p.url"
+          :href="p.url"
+          target="browser"
+          class="ai-platform-item flex items-center gap-3 rounded-md px-3 py-2"
+          @click="p.copyRaw ? onCopyRaw() : onCopyPrompt()"
+        >
+          <PlatformIcon :src="p.icon" :name="p.name" />
+          <span class="flex-1 text-sm">{{ p.name }}</span>
+          <v-icon size="16" class="opacity-50">open_in_new</v-icon>
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -43,6 +61,39 @@ const props = defineProps<{
   getPrompt: (raw?: boolean) => string
   useCNAI: boolean
 }>()
+
+const PlatformIcon = defineComponent({
+  props: { src: String, name: String },
+  setup(p) {
+    const failed = ref(false)
+    return () => failed.value || !p.src
+      ? h('div', {
+        class: 'flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-medium',
+      }, (p.name || '?').charAt(0).toUpperCase())
+      : h('img', {
+        src: p.src,
+        width: 24,
+        height: 24,
+        class: 'w-6 h-6 rounded-sm object-contain',
+        onError: () => { failed.value = true },
+      })
+  },
+})
+
+const platforms = computed(() => props.useCNAI
+  ? [
+    { name: 'GLM', url: 'https://chatglm.cn/share/kFiK3rVp', icon: 'https://chatglm.cn/img/icons/favicon.svg', copyRaw: true },
+    { name: '豆包', url: 'https://doubao.com/bot/uic8dYCs', icon: 'https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/web/logo-icon.png', copyRaw: true },
+    { name: 'Deepseek', url: 'https://chat.deepseek.com/', icon: 'https://chat.deepseek.com/favicon.svg', copyRaw: false },
+    { name: 'Qwen', url: 'https://www.tongyi.com/', icon: 'https://img.alicdn.com/imgextra/i4/O1CN01EfJVFQ1uZPd7W4W6V_!!6000000006052-2-tps-112-112.png', copyRaw: false },
+  ]
+  : [
+    { name: 'ChatGPT', url: 'https://chat.openai.com', icon: 'https://chat.openai.com/favicon.ico', copyRaw: false },
+    { name: 'Gemini', url: 'https://gemini.google.com', icon: 'https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg', copyRaw: false },
+    { name: 'Deepseek', url: 'https://chat.deepseek.com/', icon: 'https://chat.deepseek.com/favicon.svg', copyRaw: false },
+    { name: 'z.ai', url: 'https://chat.z.ai', icon: 'https://z-cdn.chatglm.cn/z-ai/static/logo.svg', copyRaw: false },
+    { name: 'Qwen', url: 'https://chat.qwen.ai/', icon: 'https://img.alicdn.com/imgextra/i4/O1CN01EfJVFQ1uZPd7W4W6V_!!6000000006052-2-tps-112-112.png', copyRaw: false },
+  ])
 
 const copied = ref(false)
 function onCopyPrompt() {
@@ -57,3 +108,17 @@ function onCopyRaw() {
   windowController.writeClipboard(props.getPrompt(true))
 }
 </script>
+
+<style scoped>
+.ai-platform-item {
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  background: rgba(var(--v-theme-on-surface), 0.02);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.ai-platform-item:hover {
+  background: rgba(var(--v-theme-primary), 0.08);
+  border-color: rgba(var(--v-theme-primary), 0.4);
+}
+</style>

@@ -80,7 +80,7 @@ export function useInstanceContextMenuFunc() {
           if (path.value !== inst.path) {
             path.value = inst.path
           }
-          if (currentRoute.fullPath !== '/base-setting') {
+          if (currentRoute.value.fullPath !== '/base-setting') {
             push('/base-setting?changeIcon=true')
           }
         },

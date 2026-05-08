@@ -28,9 +28,9 @@
     :top="inFoucsMode"
     :bottom="!inFoucsMode"
   >
-    <template #activator="{ attrs }">
+    <template #activator="{ props }">
       <HomeLaunchButtonStatusItem
-        v-bind="attrs"
+        v-bind="props"
         class="flex-shrink-1 flex-grow-0"
         :active="active || showMenu"
         :item="menuItems[0]"
@@ -48,9 +48,8 @@
         nav
         color="rgba(0,0,0,0.5)"
       >
-        <template v-for="(item, index) in menuItems.slice(1)">
+        <template v-for="(item, index) in menuItems.slice(1)" :key="index">
           <HomeLaunchButtonStatusItem
-            :key="index"
             :item="item"
             :active="true"
             @mouseenter="onMouseEnter"

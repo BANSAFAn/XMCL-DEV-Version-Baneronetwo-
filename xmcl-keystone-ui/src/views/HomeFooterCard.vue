@@ -33,7 +33,7 @@
         </div>
           <div class="flex-grow" />
           <div class="controls" style="margin-right: 0.18rem">
-            <v-btn icon small @click="onViewDashboard">
+            <v-btn icon variant="text" density="comfortable" @click="onViewDashboard" size="small">
               <v-icon size="20" class="rotate-[45deg]">
                 unfold_more
               </v-icon>
@@ -56,12 +56,11 @@
         </div>
       </v-card-text>
       <StoreProjectInstallVersionDialog
-        :value="showVersionDialog"
+        v-model="showVersionDialog"
         :versions="dialogVersions"
         :initial-selected-detail="selectedVersion"
         :get-version-detail="getVersionDetail"
         :installing="updating"
-        @input="showVersionDialog = $event"
         @install="onInstallVersion"
       />
     </div>
@@ -513,16 +512,5 @@ transition: all 0.2s ease-in-out;
 
 .visibled {
   opacity: 1 !important;
-}
-
-.tabs {
-  @apply rounded-md!;
-  margin-bottom: 0.125rem;
-}
-
-.tabs-items, .tabs-items .v-window-item {
-  min-height: 8rem;
-  max-height: 8rem;
-  height: 8rem;
 }
 </style>

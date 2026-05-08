@@ -3,18 +3,18 @@
     <slot name="left"></slot>
     <v-btn
       icon
-      small
+      variant="text"
       @click.stop="onCopy"
-    >
+     size="small">
       <v-icon v-if="!copied">content_copy</v-icon>
       <v-icon color="green" v-else>check</v-icon>
     </v-btn>
     <slot></slot>
     <v-btn
       icon
-      small
+      variant="text"
       @click.stop="onOpen"
-    >
+     size="small">
       <v-icon>open_in_new</v-icon>
     </v-btn>
     <slot name="right"></slot>

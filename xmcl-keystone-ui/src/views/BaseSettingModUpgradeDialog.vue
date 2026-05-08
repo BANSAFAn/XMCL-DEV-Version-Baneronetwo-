@@ -4,14 +4,7 @@
     :persistent="false"
     :width="450"
   >
-    <v-card>
-      <v-card-title
-        class="headline"
-        primary-title
-      >
-        {{ t('modInstall.autoUpgrade.title') }}
-      </v-card-title>
-
+    <v-card :title="t('modInstall.autoUpgrade.title')">
       <v-card-text>
         {{ t('modInstall.autoUpgrade.description', { version: minecraftVersion }) }}
       </v-card-text>
@@ -19,9 +12,8 @@
       <v-divider />
       <v-card-actions>
         <v-btn
-          text
           @click="onSkip"
-        >
+         variant="text">
           {{ t('modInstall.autoUpgrade.no') }}
         </v-btn>
         <v-spacer />
@@ -29,7 +21,7 @@
           color="primary"
           @click="onUpgrade"
         >
-          <v-icon left>
+          <v-icon start>
             upgrade
           </v-icon>
           {{ t('modInstall.autoUpgrade.yes') }}

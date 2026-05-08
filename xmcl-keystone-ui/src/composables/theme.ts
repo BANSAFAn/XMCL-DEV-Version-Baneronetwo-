@@ -4,8 +4,8 @@ import { deserialize, deserialize as deserializeV0, serialize } from '@/util/the
 import { useDark, usePreferredDark, useStyleTag } from '@vueuse/core'
 import { InstanceThemeServiceKey, MediaData, StoredTheme, ThemeServiceKey } from '@xmcl/runtime-api'
 import debounce from 'lodash.debounce'
-import { InjectionKey, Ref, computed, set } from 'vue'
-import { Framework } from 'vuetify'
+import { InjectionKey, Ref, computed } from 'vue'
+import { useTheme as useVuetifyTheme } from 'vuetify'
 import { useService } from './service'
 
 export const kTheme: InjectionKey<ReturnType<typeof useTheme>> = Symbol('theme')
@@ -14,16 +14,14 @@ export enum ParticleMode {
   PUSH = 'push',
   REMOVE = 'remove',
   REPULSE = 'repulse',
-  BUBBLE = 'bubble',
-}
+  BUBBLE = 'bubble' }
 
 export enum BackgroundType {
   NONE = 'none',
   PARTICLE = 'particle',
   HALO = 'halo',
   IMAGE = 'image',
-  VIDEO = 'video',
-}
+  VIDEO = 'video' }
 
 export interface UIThemeDataV1 {
   dark: boolean | 'system'
@@ -97,8 +95,7 @@ export function getDefaultTheme(): UIThemeDataV1 {
       lightWarningColor: '#FB8C00',
       lightSuccessColor: '#4CAF50',
       lightAccentColor: '#82B1FF',
-      lightCardColor: '#e0e0e080',
-    },
+      lightCardColor: '#e0e0e080' },
     backgroundColorOverlay: true,
     backgroundVolume: 1,
     backgroundImage: undefined,
@@ -111,9 +108,7 @@ export function getDefaultTheme(): UIThemeDataV1 {
       background: 3,
       card: 20,
       appBar: 3,
-      sideBar: 3,
-    },
-  }
+      sideBar: 3 } }
 }
 
 export function useStoredThemes() {
@@ -128,8 +123,7 @@ export function useStoredThemes() {
 
   return {
     storedThemes,
-    refresh,
-  }
+    refresh }
 }
 
 export interface UIThemeData {
@@ -284,8 +278,7 @@ async function resolveMediaFromUrl(
   return {
     url,
     type,
-    mimeType,
-  }
+    mimeType }
 }
 
 export interface ThemeWritterOptions {
@@ -329,8 +322,7 @@ export function useThemeWritter(
     set: (v: boolean | 'system') => {
       currentTheme.value.dark = v
       writeTheme()
-    },
-  })
+    } })
   const backgroundType = computed({
     get() {
       return currentTheme.value.backgroundType ?? BackgroundType.NONE
@@ -338,8 +330,7 @@ export function useThemeWritter(
     set(v: BackgroundType) {
       currentTheme.value.backgroundType = v
       writeTheme()
-    },
-  })
+    } })
   const blur = computed({
     get() {
       return currentTheme.value.blur?.background ?? 0
@@ -348,8 +339,7 @@ export function useThemeWritter(
       if (!currentTheme.value.blur) currentTheme.value.blur = {}
       currentTheme.value.blur.background = v
       writeTheme()
-    },
-  })
+    } })
   const blurCard = computed({
     get() {
       return currentTheme.value.blur.card ?? 22
@@ -357,8 +347,7 @@ export function useThemeWritter(
     set(v: number) {
       currentTheme.value.blur.card = v
       writeTheme()
-    },
-  })
+    } })
   const backgroundImage = computed(() =>
     isDark.value
       ? (currentTheme.value.backgroundImageDark ?? currentTheme.value.backgroundImage)
@@ -371,8 +360,7 @@ export function useThemeWritter(
     set(v: boolean) {
       currentTheme.value.backgroundColorOverlay = v
       writeTheme()
-    },
-  })
+    } })
   const backgroundMusic = computed(() => currentTheme.value.backgroundMusic ?? [])
   const backgroundImageFit = computed({
     get() {
@@ -381,8 +369,7 @@ export function useThemeWritter(
     set(v: 'cover' | 'contain') {
       currentTheme.value.backgroundImageFit = v
       writeTheme()
-    },
-  })
+    } })
   const particleMode = computed({
     get() {
       return currentTheme.value.particleMode ?? ParticleMode.PUSH
@@ -390,8 +377,7 @@ export function useThemeWritter(
     set(v: ParticleMode) {
       currentTheme.value.particleMode = v
       writeTheme()
-    },
-  })
+    } })
   const blurSidebar = computed({
     get() {
       return currentTheme.value.blur?.sideBar ?? 4
@@ -401,8 +387,7 @@ export function useThemeWritter(
       if (!currentTheme.value.blur) currentTheme.value.blur = {}
       currentTheme.value.blur.sideBar = v
       writeTheme()
-    },
-  })
+    } })
   const blurAppBar = computed({
     get() {
       return currentTheme.value.blur?.appBar ?? 4
@@ -412,8 +397,7 @@ export function useThemeWritter(
       if (!currentTheme.value.blur) currentTheme.value.blur = {}
       currentTheme.value.blur.appBar = v
       writeTheme()
-    },
-  })
+    } })
   const volume = computed({
     get() {
       return currentTheme.value.backgroundVolume ?? 0
@@ -422,8 +406,7 @@ export function useThemeWritter(
       if (!currentTheme.value) return
       currentTheme.value.backgroundVolume = v
       writeTheme()
-    },
-  })
+    } })
   const appBarColor = computed({
     get: () =>
       isDark.value
@@ -436,8 +419,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightAppBarColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const sideBarColor = computed({
     get: () =>
       isDark.value
@@ -450,8 +432,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightSideBarColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const primaryColor = computed({
     get: () =>
       isDark.value
@@ -464,8 +445,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightPrimaryColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const backgroundColor = computed({
     get: () =>
       isDark.value
@@ -478,8 +458,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightBackground = v
       }
       writeTheme()
-    },
-  })
+    } })
   const infoColor = computed({
     get: () =>
       isDark.value
@@ -492,8 +471,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightInfoColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const errorColor = computed({
     get: () =>
       isDark.value
@@ -506,8 +484,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightErrorColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const warningColor = computed({
     get: () =>
       isDark.value
@@ -520,8 +497,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightWarningColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const successColor = computed({
     get: () =>
       isDark.value
@@ -534,8 +510,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightSuccessColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const accentColor = computed({
     get: () =>
       isDark.value
@@ -548,8 +523,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightAccentColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const cardColor = computed({
     get: () =>
       isDark.value
@@ -562,8 +536,7 @@ export function useThemeWritter(
         currentTheme.value.colors.lightCardColor = v
       }
       writeTheme()
-    },
-  })
+    } })
   const font = computed(() => currentTheme.value.font)
   const fontSize = computed({
     get() {
@@ -572,8 +545,7 @@ export function useThemeWritter(
     set(v: number) {
       currentTheme.value.fontSize = v
       writeTheme()
-    },
-  })
+    } })
 
   function resetDarkToDefault() {
     const colors = currentTheme.value.colors
@@ -642,7 +614,7 @@ export function useThemeWritter(
     if (old && old.url.startsWith('http://launcher/')) {
       await _removeMedia(old.url).catch(() => {})
     }
-    set(theme, isDark.value ? 'backgroundImageDark' : 'backgroundImage', media)
+    theme[isDark.value ? 'backgroundImageDark' : 'backgroundImage'] = media
     writeTheme()
   }
 
@@ -654,7 +626,7 @@ export function useThemeWritter(
     if (old && old.url.startsWith('http://launcher/')) {
       await _removeMedia(old.url).catch(() => {})
     }
-    set(theme, isDark.value ? 'backgroundImageDark' : 'backgroundImage', media)
+    theme[isDark.value ? 'backgroundImageDark' : 'backgroundImage'] = media
     writeTheme()
   }
 
@@ -772,22 +744,20 @@ export function useThemeWritter(
     setFontUrl,
     resetFont,
     exportTheme: _exportTheme,
-    importTheme: _importTheme,
-  }
+    importTheme: _importTheme }
 }
 
 export function useTheme(
   override: Ref<UIThemeDataV1 | undefined>,
-  framework: Framework,
   {
     getCurrentTheme,
     setCurrentTheme,
     saveThemeToStore,
     loadThemeFromStore,
     getStoredThemes,
-    deleteStoredTheme,
-  } = useService(ThemeServiceKey),
+    deleteStoredTheme } = useService(ThemeServiceKey),
 ) {
+  const framework = useVuetifyTheme()
   const currentTheme = ref<UIThemeDataV1>(getDefaultTheme())
   const storedThemes = ref<StoredTheme[]>([])
 
@@ -831,7 +801,9 @@ export function useTheme(
 
   async function saveCurrentTheme() {
     const serialized = serialize(currentTheme.value)
-    await setCurrentTheme(serialized)
+    // Strip Vue reactive proxies so the data can be structured-cloned over IPC.
+    const cloned = JSON.parse(JSON.stringify(serialized))
+    await setCurrentTheme(cloned)
   }
 
   async function saveToStore(name: string) {
@@ -921,7 +893,7 @@ export function useTheme(
   watch(
     isDark,
     (dark) => {
-      framework.theme.dark = dark
+      framework.global.name.value = dark ? 'dark' : 'light'
     },
     { immediate: true },
   )
@@ -929,42 +901,42 @@ export function useTheme(
   watch(
     primaryColor,
     (newColor) => {
-      framework.theme.currentTheme.primary = newColor
+      framework.themes.value[framework.global.name.value].colors.primary = newColor
     },
     { immediate: true },
   )
   watch(
     accentColor,
     (newColor) => {
-      framework.theme.currentTheme.accent = newColor
+      ;(framework.themes.value[framework.global.name.value].colors as any).accent = newColor
     },
     { immediate: true },
   )
   watch(
     infoColor,
     (newColor) => {
-      framework.theme.currentTheme.info = newColor
+      framework.themes.value[framework.global.name.value].colors.info = newColor
     },
     { immediate: true },
   )
   watch(
     errorColor,
     (newColor) => {
-      framework.theme.currentTheme.error = newColor
+      framework.themes.value[framework.global.name.value].colors.error = newColor
     },
     { immediate: true },
   )
   watch(
     successColor,
     (newColor) => {
-      framework.theme.currentTheme.success = newColor
+      framework.themes.value[framework.global.name.value].colors.success = newColor
     },
     { immediate: true },
   )
   watch(
     warningColor,
     (newColor) => {
-      framework.theme.currentTheme.warning = newColor
+      framework.themes.value[framework.global.name.value].colors.warning = newColor
     },
     { immediate: true },
   )
@@ -991,8 +963,7 @@ export function useTheme(
     ),
     {
       immediate: true,
-      id: 'font-style',
-    },
+      id: 'font-style' },
   )
 
   useStyleTag(
@@ -1066,6 +1037,5 @@ export function useTheme(
     loadFromStore,
     deleteFromStore,
     refreshStoredThemes,
-    serialize,
-  }
+    serialize }
 }

@@ -96,6 +96,10 @@ export class UserService extends StatefulService<UserState> implements IUserServ
     return !!await getModrinthAccessToken(this.app)
   }
 
+  // Dedupe concurrent calls so we never open multiple OAuth browser windows.
+  // The `invalidate` flag is part of the singleton key so a forced re-auth
+  // can still proceed even while a non-invalidating call is in flight.
+  @Singleton((invalidate?: boolean) => `loginModrinth-${invalidate ? '1' : '0'}`)
   async loginModrinth(invalidate = false): Promise<void> {
     await loginModrinth(this.app, this, ['USER_READ_EMAIL', 'USER_READ', 'USER_WRITE', 'COLLECTION_CREATE', 'COLLECTION_READ', 'COLLECTION_WRITE', 'COLLECTION_DELETE'], invalidate, this.loginController?.signal)
   }

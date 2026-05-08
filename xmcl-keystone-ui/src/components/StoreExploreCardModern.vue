@@ -1,61 +1,108 @@
 <template>
   <div
     ref="el"
-    class="group relative bg-surface rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-white/5 flex flex-col h-full cursor-pointer z-1"
+    class="explore-card group relative bg-surface rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer"
     @click="$emit('click')"
   >
     <!-- Image Area -->
-    <div class="aspect-[16/9] relative rounded-2xl overflow-hidden z-1">
+    <div class="explore-card__media aspect-[16/9] relative overflow-hidden">
       <transition name="fade-transition" mode="out-in">
         <img
           :key="imgSrc"
           :src="imgSrc"
-          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-0"
+          class="explore-card__img w-full h-full object-cover"
           loading="lazy"
         />
       </transition>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60 group-hover:opacity-0 transition-opacity"></div>
 
-      <div class="absolute top-3 right-3 flex gap-2">
-        <v-chip x-small class="bg-black/60 dark:bg-white/60 text-white backdrop-blur-md font-bold uppercase tracking-wider text-3">
-          {{ value.type }}
-        </v-chip>
+      <!-- Gradient overlay -->
+      <div class="explore-card__gradient absolute inset-0 pointer-events-none" />
+
+      <!-- Source badge (top-left) -->
+      <div class="absolute top-3 left-3 flex items-center gap-1.5">
+        <div
+          class="explore-card__source flex items-center gap-1.5 px-2 py-1 rounded-full backdrop-blur-md"
+          :class="sourceBadgeClass"
+        >
+          <v-icon v-if="sourceIcon" size="14" :color="sourceIconColor">
+            {{ sourceIcon }}
+          </v-icon>
+          <span class="text-[10px] font-bold uppercase tracking-wider">
+            {{ sourceLabel }}
+          </span>
+        </div>
       </div>
 
+      <!-- Version pill (top-right) -->
+      <div v-if="value.version" class="absolute top-3 right-3">
+        <div
+          class="explore-card__version flex items-center gap-1 px-2 py-1 rounded-full bg-black/55 backdrop-blur-md"
+        >
+          <v-icon size="12" color="white" class="material-icons-outlined"> sell </v-icon>
+          <span class="text-[10px] font-semibold text-white">
+            {{ value.version }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Hover CTA -->
+      <div
+        class="explore-card__cta absolute inset-x-0 bottom-0 p-3 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-1.5 text-white/95">
+          <v-icon size="14" color="white">visibility</v-icon>
+          <span class="text-xs font-semibold">{{ t('shared.browse') }}</span>
+        </div>
+        <v-icon size="18" color="white">arrow_forward</v-icon>
+      </div>
     </div>
 
     <!-- Content Area -->
-    <div class="p-4 flex flex-col flex-1 gap-2">
-      <div class="flex items-start gap-3">
-        <img :src="value.iconUrl" class="w-10 h-10 rounded-lg object-cover bg-surface-variant shadow-sm border border-white/10" />
-        <div class="overflow-hidden">
-          <h3 class="font-bold text-base leading-tight truncate text-gray-900 dark:text-white group-hover:text-primary transition-colors" v-shared-tooltip="value.localizedTitle || value.title">
+    <div class="explore-card__content p-4 flex flex-col flex-1 gap-2.5">
+      <!-- Header row: floating avatar + title/author inline -->
+      <div class="flex items-center gap-3">
+        <img
+          :src="value.iconUrl"
+          class="explore-card__avatar w-12 h-12 rounded-xl object-cover bg-surface-variant shrink-0"
+        />
+        <div class="overflow-hidden min-w-0 flex-1">
+          <h3
+            v-shared-tooltip="value.localizedTitle || value.title"
+            class="my-0 mt-1 font-bold text-base leading-tight truncate text-gray-900 dark:text-white group-hover:text-primary transition-colors"
+          >
             {{ value.localizedTitle || value.title }}
           </h3>
-          <p class="text-xs text-gray-600 dark:text-gray-500 mt-0.5 truncate">{{ value.author }}</p>
+          <p
+            v-if="value.author"
+            class="text-xs mt-1 text-gray-500 dark:text-gray-400 truncate flex items-center gap-1"
+          >
+            <v-icon size="11" class="material-icons-outlined">person</v-icon>
+            {{ value.author }}
+          </p>
         </div>
       </div>
 
-      <p 
-        class="text-xs text-gray-700 dark:text-gray-400 line-clamp-2 h-9 leading-relaxed"
+      <p
         v-shared-tooltip.bottom="value.localizedDescription || value.description"
-      >{{ value.localizedDescription || value.description }}</p>
+        class="text-xs text-gray-700 dark:text-gray-400 line-clamp-2 h-9 leading-relaxed"
+      >
+        {{ value.localizedDescription || value.description }}
+      </p>
 
-      <div class="mt-auto pt-2 border-t border-white/5 text-3 text-gray-600 dark:text-gray-500 font-medium">
-        <div class="grid grid-cols-2 gap-2">
-          <div class="flex items-center gap-1.5">
-            <v-icon x-small color="grey">file_download</v-icon>
-            {{ value.downloadCount }}
-          </div>
-          <div class="flex items-center gap-1.5">
-            <v-icon x-small color="grey">event</v-icon>
-            {{ value.updatedAt }}
-          </div>
+      <!-- Stats row -->
+      <div
+        class="explore-card__stats mt-auto pt-2.5 flex items-center justify-between gap-2 text-[11px] text-gray-600 dark:text-gray-400"
+      >
+        <div
+          v-shared-tooltip="t('modrinth.downloads')"
+          class="flex items-center gap-1 font-semibold"
+        >
+          <v-icon size="13" class="material-icons-outlined" color="grey">file_download</v-icon>
+          {{ value.downloadCount }}
         </div>
-        <div v-if="value.version" class="flex justify-end mt-2">
-          <v-chip x-small outlined color="grey" class="px-1.5">
-            {{ value.version }}
-          </v-chip>
+        <div v-shared-tooltip="t('modrinth.updateAt')" class="flex items-center gap-1">
+          <v-icon size="13" class="material-icons-outlined" color="grey">schedule</v-icon>
+          {{ value.updatedAt }}
         </div>
       </div>
     </div>
@@ -63,10 +110,14 @@
 </template>
 
 <script setup lang="ts">
-import { vSharedTooltip } from '@/directives/sharedTooltip';
-import { useElementHover, useInterval } from '@vueuse/core';
+import { vSharedTooltip } from '@/directives/sharedTooltip'
+import { useElementHover, useInterval } from '@vueuse/core'
 
 const props = defineProps<{ value: ExploreProjectModern }>()
+
+defineEmits(['click'])
+
+const { t } = useI18n()
 
 const el = ref<HTMLElement | null>(null)
 const hover = useElementHover(el)
@@ -88,6 +139,47 @@ const imgSrc = computed(() => {
   return props.value.iconUrl
 })
 
+const sourceIcon = computed(() => {
+  switch (props.value.type) {
+    case 'modrinth':
+      return 'xmcl:modrinth'
+    case 'curseforge':
+      return 'xmcl:curseforge'
+    case 'ftb':
+      return ''
+    default:
+      return ''
+  }
+})
+
+const sourceIconColor = computed(() => {
+  switch (props.value.type) {
+    case 'modrinth':
+      return '#00AF5C'
+    case 'curseforge':
+      return '#F16436'
+    default:
+      return 'white'
+  }
+})
+
+const sourceLabel = computed(() => {
+  switch (props.value.type) {
+    case 'modrinth':
+      return 'Modrinth'
+    case 'curseforge':
+      return 'CurseForge'
+    case 'ftb':
+      return 'FTB'
+    default:
+      return props.value.type
+  }
+})
+
+const sourceBadgeClass = computed(() => {
+  return 'bg-black/55 text-white'
+})
+
 export interface ExploreProjectModern {
   id: string
   type: 'modrinth' | 'curseforge' | 'ftb'
@@ -103,3 +195,85 @@ export interface ExploreProjectModern {
   localizedDescription?: string
 }
 </script>
+
+<style scoped>
+.explore-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.explore-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 24px -8px rgba(0, 0, 0, 0.25),
+    0 4px 12px -4px rgba(0, 0, 0, 0.15);
+  border-color: rgba(var(--v-theme-primary), 0.35);
+}
+
+:global(.theme--light) .explore-card {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.explore-card__media {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.explore-card__img {
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explore-card:hover .explore-card__img {
+  transform: scale(1.08);
+}
+
+.explore-card__gradient {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.15) 35%,
+    rgba(0, 0, 0, 0) 60%
+  );
+  transition: opacity 0.3s ease;
+}
+
+.explore-card:hover .explore-card__gradient {
+  opacity: 0.4;
+}
+
+.explore-card__source {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.explore-card__cta {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explore-card:hover .explore-card__cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.explore-card__avatar {
+  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgb(var(--v-theme-surface));
+  background-color: rgb(var(--v-theme-surface));
+  position: relative;
+  z-index: 1;
+}
+
+.explore-card__stats {
+  border-top: 1px solid rgba(128, 128, 128, 0.15);
+}
+</style>

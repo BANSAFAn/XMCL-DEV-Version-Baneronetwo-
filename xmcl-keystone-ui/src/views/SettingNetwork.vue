@@ -2,7 +2,7 @@
   <SettingCard>
     <!-- Download Source -->
     <SettingItemSelect
-      :select.sync="apiSetsPreference"
+      v-model="apiSetsPreference"
       :title="''"
       :description="t('setting.useBmclAPIDescription')"
       :items="apiSetItems"
@@ -14,7 +14,7 @@
           target="browser"
           href="https://bmclapidoc.bangbang93.com/"
         >
-          <v-icon small>
+          <v-icon size="small">
             question_mark
           </v-icon>
         </a>
@@ -34,8 +34,8 @@
         <div class="d-flex gap-4">
           <v-text-field
             v-model="proxy.host"
-            filled
-            dense
+            variant="filled"
+            density="compact"
             hide-details
             :label="t('proxy.host')"
             prepend-inner-icon="dns"
@@ -44,8 +44,8 @@
           <v-text-field
             v-model="proxy.port"
             class="w-24 flex-grow-0"
-            filled
-            dense
+            variant="filled"
+            density="compact"
             hide-details
             type="number"
             :label="t('proxy.port')"
@@ -62,8 +62,8 @@
         <v-text-field
           v-model="maxSockets"
           class="w-32"
-          filled
-          dense
+          variant="filled"
+          density="compact"
           hide-details
           type="number"
           :label="t('setting.maxSockets')"
@@ -76,7 +76,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 import SettingItemSelect from '@/components/SettingItemSelect.vue'
 import { useDialog } from '../composables/dialog'
 import { useSettings } from '../composables/setting'

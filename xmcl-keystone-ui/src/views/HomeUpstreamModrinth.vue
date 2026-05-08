@@ -139,7 +139,7 @@ async function onDuplicate(v: ProjectVersionProps) {
     :header="headerData"
     :updating="updating"
     :duplicating="duplicating"
-    :only-current-version.sync="onlyCurrentVersion"
+    v-model:only-current-version="onlyCurrentVersion"
     @update="onUpdate"
     @duplicate="onDuplicate"
   />

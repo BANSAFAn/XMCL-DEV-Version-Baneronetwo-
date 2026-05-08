@@ -1,26 +1,22 @@
 <template>
-  <div>
-    <v-list-item class="items-center justify-center">
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ t("setting.instanceTheme.name") }}
-        </v-list-item-title>
-        <v-list-item-subtitle v-if="!instanceTheme">
-          {{ t("setting.instanceTheme.description") }}
-        </v-list-item-subtitle>
-        <v-list-item-subtitle v-else>
-          {{ t("setting.instanceTheme.activeDescription") }}
-        </v-list-item-subtitle>
-      </v-list-item-content>
+  <v-list-item class="items-center justify-center">
+    <v-list-item-title>
+        {{ t("setting.instanceTheme.name") }}
+      </v-list-item-title>
+      <v-list-item-subtitle v-if="!instanceTheme">
+        {{ t("setting.instanceTheme.description") }}
+      </v-list-item-subtitle>
+      <v-list-item-subtitle v-else>
+        {{ t("setting.instanceTheme.activeDescription") }}
+      </v-list-item-subtitle>
       <v-list-item-action>
-        <v-switch
-          :input-value="!!instanceTheme"
-          @change="toggleInstanceTheme"
-        />
-      </v-list-item-action>
-    </v-list-item>
-    <AppearanceItems v-if="instanceTheme" :theme="instanceTheme" dense :instance-path="instancePath" @save="onSave" />
-  </div>
+      <v-switch
+        :input-value="!!instanceTheme"
+        @change="toggleInstanceTheme"
+      />
+    </v-list-item-action>
+  </v-list-item>
+  <AppearanceItems v-if="instanceTheme" :theme="instanceTheme" dense :instance-path="instancePath" @save="onSave" />
 </template>
 <script lang="ts" setup>
 import AppearanceItems from '@/components/AppearanceItems.vue'

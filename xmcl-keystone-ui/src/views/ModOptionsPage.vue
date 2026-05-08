@@ -1,23 +1,27 @@
 <template>
   <div class="w-full mod-options-page overflow-auto">
-    <v-subheader>
+    <div class="filter-subheader">
       {{ t('dependencies.name') }}
-    </v-subheader>
+    </div>
     <SettingItem
       :title="t('modInstall.checkDependencies')"
-      :description="checkedDependencies ? t('modInstall.checkedDependencies') : t('modInstall.checkDependencies')"
+      :description="
+        checkedDependencies
+          ? t('modInstall.checkedDependencies')
+          : t('modInstall.checkDependencies')
+      "
     >
       <template #preaction>
         <v-btn
           icon
+          size="small"
+          variant="text"
           v-shared-tooltip="() => t('shared.refresh')"
           :disabled="mods.length === 0 || checkingDependencies"
           :loading="checkingDependencies"
           @click="checkDependencies"
         >
-          <v-icon
-            :color="checkedDependencies ? 'primary' : ''"
-          >
+          <v-icon :color="checkedDependencies ? 'primary' : ''">
             {{ checkedDependencies ? 'check' : 'restart_alt' }}
           </v-icon>
         </v-btn>
@@ -25,14 +29,12 @@
       <template #action>
         <div class="flex">
           <v-btn
-            text
             :loading="installingDependencies"
             :disabled="dependenciesToUpdate.length === 0"
             @click="installDependencies"
+            variant="text"
           >
-            <v-icon left class="material-icons-outlined">
-              file_download
-            </v-icon>
+            <v-icon start class="material-icons-outlined"> file_download </v-icon>
             {{ t('shared.install') }}
           </v-btn>
         </div>
@@ -46,127 +48,92 @@
       <template #preaction>
         <v-btn
           icon
+          size="small"
+          variant="text"
           v-shared-tooltip="() => t('shared.refresh')"
           :loading="scanningUnusedMods"
           :disabled="mods.length === 0 || scanningUnusedMods"
           @click="scanUnusedMods"
         >
-          <v-icon class="material-icons-outlined">
-            restart_alt
-          </v-icon>
+          <v-icon class="material-icons-outlined"> restart_alt </v-icon>
         </v-btn>
       </template>
       <template #action>
         <div class="flex gap-2">
           <v-btn
-            color="red"
+            color="error"
+            variant="text"
             :loading="scanningUnusedMods"
             :disabled="unusedMods.length === 0"
             @click="onCleanUnused"
           >
-            <v-icon left>
-              delete
-            </v-icon>
+            <v-icon start> delete </v-icon>
             {{ t('shared.remove') }}
           </v-btn>
         </div>
       </template>
     </SettingItem>
-    <v-divider />
-    <v-subheader>
-        {{ t('modInstall.checkUpgrade') }}
-    </v-subheader>
+    <div class="filter-subheader">
+      {{ t('modInstall.checkUpgrade') }}
+    </div>
     <SettingItem
       :title="t('modUpgradePolicy.name')"
-      :description="t(`modUpgradePolicy.${upgradePolicy}`) "
+      :description="t(`modUpgradePolicy.${upgradePolicy}`)"
     >
       <template #action>
-        <v-btn-toggle
-          v-model="upgradePolicy"
-          mandatory
-          color="primary"
-        >
-          <v-btn
-            small
-            outlined
-            value="modrinth"
-          >
-            <v-icon small>$vuetify.icons.modrinth</v-icon>
-            <v-icon small>$vuetify.icons.curseforge</v-icon>
+        <v-btn-toggle density="compact" v-model="upgradePolicy" mandatory color="primary">
+          <v-btn value="modrinth" size="small" variant="text" border>
+            <v-icon size="small">xmcl:modrinth</v-icon>
+            <v-icon size="small">xmcl:curseforge</v-icon>
           </v-btn>
-          <v-btn
-            small
-            outlined
-            value="curseforge"
-          >
-            <v-icon small>$vuetify.icons.curseforge</v-icon>
-            <v-icon small>$vuetify.icons.modrinth</v-icon>
+          <v-btn value="curseforge" size="small" variant="text" border>
+            <v-icon size="small">xmcl:curseforge</v-icon>
+            <v-icon size="small">xmcl:modrinth</v-icon>
           </v-btn>
 
-          <v-btn
-            small
-            outlined
-            value="modrinthOnly"
-          >
-            <v-icon small>$vuetify.icons.modrinth</v-icon>
+          <v-btn value="modrinthOnly" size="small" variant="text" border>
+            <v-icon size="small">xmcl:modrinth</v-icon>
           </v-btn>
 
-          <v-btn
-            small
-            outlined
-            value="curseforgeOnly"
-          >
-            <v-icon small>$vuetify.icons.curseforge</v-icon>
+          <v-btn value="curseforgeOnly" size="small" variant="text" border>
+            <v-icon size="small">xmcl:curseforge</v-icon>
           </v-btn>
         </v-btn-toggle>
       </template>
     </SettingItem>
-    <SettingItemCheckbox
-      :value="skipVersion"
-      :title="t('modInstall.skipVersion')"
-      @input="skipVersion = $event"
-    />
+    <SettingItemCheckbox v-model="skipVersion" :title="t('modInstall.skipVersion')" />
     <SettingItem>
       <template #action>
         <div class="flex gap-1">
-          <v-btn
-            large
-            text
-            :loading="checkingUpgrade"
-            @click="onCheckUpgrade"
-          >
-            <v-icon left>
-              refresh
-            </v-icon>
+          <v-btn :loading="checkingUpgrade" @click="onCheckUpgrade" size="large" variant="text">
+            <v-icon start> refresh </v-icon>
             {{ t('modInstall.checkUpgrade') }}
           </v-btn>
           <v-spacer />
           <v-btn
-            large
             :loading="upgrading"
             :disabled="Object.keys(plans).length === 0"
             @click="upgrade"
+            size="large"
           >
-            <v-icon left>
-              upgrade
-            </v-icon>
+            <v-icon start> upgrade </v-icon>
             {{ t('modInstall.upgrade') }}
           </v-btn>
         </div>
       </template>
     </SettingItem>
-  </div>  
+  </div>
 </template>
 
 <script setup lang="ts">
-import SettingItem from '@/components/SettingItem.vue';
-import SettingItemCheckbox from '@/components/SettingItemCheckbox.vue';
-import { kInstanceModsContext } from '@/composables/instanceMods';
-import { kModDependenciesCheck } from '@/composables/modDependenciesCheck';
-import { kModLibCleaner } from '@/composables/modLibCleaner';
-import { kModUpgrade } from '@/composables/modUpgrade';
-import { vSharedTooltip } from '@/directives/sharedTooltip';
-import { injection } from '@/util/inject';
+import SettingItem from '@/components/SettingItem.vue'
+import SettingItemCheckbox from '@/components/SettingItemCheckbox.vue'
+import { kInstanceModsContext } from '@/composables/instanceMods'
+import { kModDependenciesCheck } from '@/composables/modDependenciesCheck'
+import { kModLibCleaner } from '@/composables/modLibCleaner'
+import { kModUpgrade } from '@/composables/modUpgrade'
+import { vSharedTooltip } from '@/directives/sharedTooltip'
+import { injection } from '@/util/inject'
 
 defineProps<{
   denseView: boolean
@@ -182,7 +149,17 @@ const { t } = useI18n()
 const { mods } = injection(kInstanceModsContext)
 
 // Upgrade
-const { plans, error: upgradeError, skipVersion, upgradePolicy, refresh: checkUpgrade, refreshing: checkingUpgrade, checked: checkedUpgrade, upgrade, upgrading } = injection(kModUpgrade)
+const {
+  plans,
+  error: upgradeError,
+  skipVersion,
+  upgradePolicy,
+  refresh: checkUpgrade,
+  refreshing: checkingUpgrade,
+  checked: checkedUpgrade,
+  upgrade,
+  upgrading,
+} = injection(kModUpgrade)
 
 function onCheckUpgrade() {
   const policy = upgradePolicy.value as any
@@ -193,8 +170,20 @@ function onCheckUpgrade() {
 }
 
 // Dependencies check
-const { installation: dependenciesToUpdate, refresh: checkDependencies, refreshing: checkingDependencies, checked: checkedDependencies, apply: installDependencies, installing: installingDependencies } = injection(kModDependenciesCheck)
+const {
+  installation: dependenciesToUpdate,
+  refresh: checkDependencies,
+  refreshing: checkingDependencies,
+  checked: checkedDependencies,
+  apply: installDependencies,
+  installing: installingDependencies,
+} = injection(kModDependenciesCheck)
 
 // Mod cleaner
-const { unusedMods, refresh: scanUnusedMods, refreshing: scanningUnusedMods, apply: onCleanUnused } = injection(kModLibCleaner)
+const {
+  unusedMods,
+  refresh: scanUnusedMods,
+  refreshing: scanningUnusedMods,
+  apply: onCleanUnused,
+} = injection(kModLibCleaner)
 </script>

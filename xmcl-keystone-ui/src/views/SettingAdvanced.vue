@@ -13,8 +13,8 @@
         :description="t('setting.resetAllSettingsHint')"
       >
         <template #action>
-          <v-btn color="error" outlined small @click="showResetDialog = true">
-            <v-icon left small>restore</v-icon>
+          <v-btn color="error" @click="showResetDialog = true" size="small" variant="text" border>
+            <v-icon start size="small">restore</v-icon>
             {{ t('setting.resetAllSettings') }}
           </v-btn>
         </template>
@@ -30,12 +30,12 @@
       >
         <template #action>
           <div class="flex gap-2">
-            <v-btn color="primary" outlined small @click="handleExportSettings">
-              <v-icon left small>file_download</v-icon>
+            <v-btn color="primary" @click="handleExportSettings" size="small" variant="text" border>
+              <v-icon start size="small">file_download</v-icon>
               {{ t('setting.exportSettings') }}
             </v-btn>
-            <v-btn color="primary" outlined small @click="handleImportSettings">
-              <v-icon left small>file_upload</v-icon>
+            <v-btn color="primary" @click="handleImportSettings" size="small" variant="text" border>
+              <v-icon start size="small">file_upload</v-icon>
               {{ t('setting.importSettings') }}
             </v-btn>
           </div>
@@ -46,16 +46,18 @@
     <!-- Reset Confirmation Dialog -->
     <v-dialog v-model="showResetDialog" max-width="500" persistent>
       <v-card>
-        <v-card-title class="text-h5 error--text">
-          <v-icon left color="error" large>warning</v-icon>
-          {{ t('setting.resetAllSettingsConfirmTitle') }}
-        </v-card-title>
+        <v-card-item>
+          <v-card-title class="text-h5 error--text">
+            <v-icon start color="error" size="large">warning</v-icon>
+            {{ t('setting.resetAllSettingsConfirmTitle') }}
+          </v-card-title>
+        </v-card-item>
         <v-card-text class="pt-4">
           <p class="text-body-1">{{ t('setting.resetAllSettingsConfirmMessage') }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="showResetDialog = false">
+          <v-btn @click="showResetDialog = false" variant="text">
             {{ t('shared.cancel') }}
           </v-btn>
           <v-btn color="error" @click="handleResetAllSettings" :loading="resetting">
@@ -69,7 +71,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 import { BaseServiceKey } from '@xmcl/runtime-api'
 import { useService } from '@/composables'
 import SettingCard from '@/components/SettingCard.vue'

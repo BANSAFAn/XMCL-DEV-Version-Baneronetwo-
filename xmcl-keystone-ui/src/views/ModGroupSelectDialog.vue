@@ -6,10 +6,8 @@
   >
     <v-card
       class="flex flex-col overflow-auto max-h-[90vh] visible-scroll"
+      :title="t('mod.selectOrCreateGroup')"
     >
-      <v-card-title>
-        {{ t('mod.selectOrCreateGroup') }}
-      </v-card-title>
       <v-divider />
       <v-card-text class="overflow-auto pt-4">
         <!-- Search bar for filtering groups (only shown when not creating new) -->
@@ -21,19 +19,19 @@
           clearable
           autofocus
           hide-details
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           class="mb-2"
         />
-        
+
         <!-- New group name input (shown when creating new) -->
         <v-expand-transition>
           <div v-if="creatingNew" class="mb-4">
             <v-text-field
               v-model="newGroupName"
               :label="t('mod.groupName')"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               autofocus
               hide-details
               :rules="rules"
@@ -41,25 +39,23 @@
             />
           </div>
         </v-expand-transition>
-        
+
         <v-list dense v-if="!creatingNew">
           <v-list-item
             @click="onCreateNew"
           >
-            <v-list-item-avatar>
+            <template #prepend><v-avatar>
               <v-icon color="primary">
                 create_new_folder
               </v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title class="primary--text font-weight-bold">
+            </v-avatar></template>
+            <v-list-item-title class="primary--text font-weight-bold">
                 {{ t('mod.newFolder') }}
               </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          
+</v-list-item>
+
           <v-divider v-if="filteredGroups.length > 0" class="mb-2" />
-          
+
           <!-- Existing groups (filtered and sorted) -->
           <div
             v-if="filteredGroups.length > 0"
@@ -72,43 +68,36 @@
               dense
               @click="onSelectGroup(g[0])"
             >
-              <v-list-item-avatar>
+              <template #prepend><v-avatar>
                 <v-icon>folder</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>{{ g[0] }}</v-list-item-title>
+              </v-avatar></template>
+              <v-list-item-title>{{ g[0] }}</v-list-item-title>
                 <v-list-item-subtitle>
                   {{ t('mod.mods', { count: groupModCounts[g[0]] || 0 }) }}
                 </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+</v-list-item>
           </div>
-          
+
           <!-- No groups message -->
           <v-list-item v-else-if="Object.keys(groups).length === 0">
-            <v-list-item-content>
-              <v-list-item-subtitle class="text-center">
+            <v-list-item-subtitle class="text-center">
                 {{ t('mod.noGroupsYet') }}
               </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          
+</v-list-item>
+
           <!-- No results message -->
           <v-list-item v-else>
-            <v-list-item-content>
-              <v-list-item-subtitle class="text-center">
+            <v-list-item-subtitle class="text-center">
                 {{ t('mod.noGroupsFound') }}
               </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+</v-list-item>
         </v-list>
       </v-card-text>
       <v-divider />
       <v-card-actions>
         <v-btn
-          text
           @click="onCancel"
-        >
+         variant="text">
           {{ creatingNew ? t('shared.back') : t('shared.cancel') }}
         </v-btn>
         <v-spacer />
@@ -118,7 +107,7 @@
           :disabled="!newGroupName.trim()"
           @click="onConfirmNewGroup"
         >
-          <v-icon left>
+          <v-icon start>
             add
           </v-icon>
           {{ t('mod.createGroup') }}
@@ -152,11 +141,11 @@ const groupModCounts = computed(() => parameter.value?.groupModCounts || {})
 const filteredGroups = computed(() => {
   const query = searchQuery.value?.toLowerCase().trim()
   let filtered = Object.entries(groups.value)
-  
+
   if (query) {
     filtered = filtered.filter(([g]) => g.toLowerCase().includes(query))
   }
-  
+
   return filtered.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
 })
 

@@ -1,115 +1,76 @@
 <template>
-  <v-navigation-drawer
+  <div
     v-if="!isHorizontal"
-    :value="true"
-    permanent
-    :mini-variant="true"
-    :color="sideBarColor"
-    class="sidebar moveable z-10 rounded-[0.75rem]"
-    :style="{ 'backdrop-filter': `blur(${blurSidebar}px)` }"
+    class="sidebar moveable z-10"
+    :style="{ 'backdrop-filter': `blur(${blurSidebar}px)`, backgroundColor: sideBarColor }"
   >
-    <v-list
-      nav
-      dense
-      class="ml-1 px-2"
-    >
-      <v-list-item
-        class="non-moveable"
+    <div class="sidebar__section">
+      <button
+        v-shared-tooltip.right="() => t('shared.back')"
+        type="button"
+        class="sidebar-back-btn non-moveable"
         @click="goBack"
       >
-        <v-icon class="text-[18px]">
+        <v-icon :size="18">
           arrow_back
         </v-icon>
-      </v-list-item>
+      </button>
 
-      <v-list-item
+      <AppSideBarItem
         id="my-stuff-button"
         v-shared-tooltip.right="() => t('myStuff')"
-        link
-        push
+        icon="widgets"
         to="/me"
-        class="non-moveable"
-      >
-        <v-list-item-icon>
-          <v-icon> widgets </v-icon>
-        </v-list-item-icon>
-        <v-list-item-title v-text="t('myStuff')" />
-      </v-list-item>
-      <v-list-item
-        v-if="true"
-        v-shared-tooltip.right="() => t('store.name', 2)"
-        link
-        push
-        to="/store"
-        class="non-moveable"
-      >
-        <v-list-item-icon>
-          <v-icon
-            :size="28"
-          >
-            store
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-title v-text="t('store.name', 2)" />
-      </v-list-item>
-      <v-divider />
-    </v-list>
+      />
 
-    <div class="flex-1 h-full overflow-y-auto">
+      <AppSideBarItem
+        v-shared-tooltip.right="() => t('store.name', 2)"
+        to="/store"
+      >
+        <v-icon class="sidebar-item__icon" :size="28">
+          store
+        </v-icon>
+      </AppSideBarItem>
+    </div>
+
+    <div class="sidebar__divider" />
+
+    <div class="sidebar__instances">
       <AppSideBarInstances />
     </div>
 
-    <v-list
-      nav
-      dense
-      class="ml-1 px-2"
-      style=""
-    >
-      <v-list-item
+    <div class="sidebar__divider" />
+
+    <div class="sidebar__section">
+      <AppSideBarItem
         v-shared-tooltip.right="() => t('multiplayer.name')"
-        link
-        class="non-moveable"
+        clickable
         @click="goMultiplayer"
       >
-        <v-list-item-icon>
-          <v-icon
-            :size="23"
-          >
-            hub
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>{{ t('multiplayer.name') }}</v-list-item-title>
-      </v-list-item>
+        <v-icon class="sidebar-item__icon" :size="23">
+          hub
+        </v-icon>
+      </AppSideBarItem>
 
-      <v-divider
-        class="mx-1 block"
-      />
-
-      <v-list-item
+      <AppSideBarItem
         v-shared-tooltip.right="() => t('setting.name', 2)"
-        link
-        push
         to="/setting"
-        class="non-moveable"
       >
-        <v-list-item-icon>
-          <v-badge
-            right
-            overlap
-            :value="state?.updateStatus !== 'none'"
-          >
-            <template #badge>
-              <span>{{ 1 }}</span>
-            </template>
-            <v-icon>
-              settings
-            </v-icon>
-          </v-badge>
-        </v-list-item-icon>
-        <v-list-item-title>{{ t('setting.name', 2) }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
+        <v-badge
+          right
+          overlap
+          :model-value="state?.updateStatus !== 'none'"
+        >
+          <template #badge>
+            <span>{{ 1 }}</span>
+          </template>
+          <v-icon class="sidebar-item__icon">
+            settings
+          </v-icon>
+        </v-badge>
+      </AppSideBarItem>
+    </div>
+  </div>
 
   <div
     v-else
@@ -117,58 +78,63 @@
     :style="{ 'backdrop-filter': `blur(${blurSidebar}px)`, backgroundColor: sideBarColor }"
   >
     <div class="flex flex-row items-center flex-grow-0">
-      <v-btn icon class="non-moveable mr-1" @click="goBack">
+      <v-btn
+        v-shared-tooltip.bottom="t('back')"
+        icon
+        class="non-moveable mr-1"
+        @click="goBack"
+      >
         <v-icon>arrow_back</v-icon>
       </v-btn>
 
       <v-btn
         id="my-stuff-button"
+        v-shared-tooltip.bottom="t('myStuff')"
         icon
         to="/me"
         class="non-moveable mr-1"
-        v-shared-tooltip.bottom="t('myStuff')"
       >
         <v-icon>widgets</v-icon>
       </v-btn>
 
       <v-btn
+        v-shared-tooltip.bottom="t('store.name', 2)"
         icon
         to="/store"
         class="non-moveable mr-1"
-        v-shared-tooltip.bottom="t('store.name', 2)"
       >
         <v-icon :size="28">store</v-icon>
       </v-btn>
-      
+
       <v-divider vertical class="mx-2 h-6" />
     </div>
 
     <div class="flex-grow-1 overflow-hidden h-full flex items-center relative" style="min-width: 0;">
-      <AppSideBarContentNext :horizontal="true" />
+      <AppSideBarInstances />
     </div>
 
     <div class="flex flex-row items-center flex-grow-0">
       <v-divider vertical class="mx-2 h-6" />
 
       <v-btn
+        v-shared-tooltip.bottom="t('multiplayer.name')"
         icon
         class="non-moveable mr-1"
         @click="goMultiplayer"
-        v-shared-tooltip.bottom="t('multiplayer.name')"
       >
         <v-icon :size="23">hub</v-icon>
       </v-btn>
 
       <v-btn
+        v-shared-tooltip.bottom="t('setting.name', 2)"
         icon
         to="/setting"
         class="non-moveable"
-        v-shared-tooltip.bottom="t('setting.name', 2)"
       >
         <v-badge
           right
           overlap
-          :value="state?.updateStatus !== 'none'"
+          :model-value="state?.updateStatus !== 'none'"
         >
           <template #badge>
             <span>{{ 1 }}</span>
@@ -180,22 +146,22 @@
   </div>
 </template>
 
-<script lang=ts setup>
+<script lang="ts" setup>
 import { kSettingsState } from '@/composables/setting'
 import { useInjectSidebarSettings } from '@/composables/sidebarSettings'
 import { kTheme } from '@/composables/theme'
 import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { injection } from '@/util/inject'
 import AppSideBarInstances from './AppSideBarInstances.vue'
+import AppSideBarItem from './AppSideBarItem.vue'
 
-const { blurSidebar } = injection(kTheme)
+const { blurSidebar, sideBarColor } = injection(kTheme)
 const { state } = injection(kSettingsState)
 const { position } = useInjectSidebarSettings()
 
 const isHorizontal = computed(() => position.value === 'top' || position.value === 'bottom')
 
 const { t } = useI18n()
-const { sideBarColor } = injection(kTheme)
 const { back } = useRouter()
 
 function goBack() {
@@ -210,46 +176,72 @@ function goMultiplayer() {
 <style scoped>
 .sidebar {
   min-width: 80px;
+  width: 80px;
   max-height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  /* @apply rounded-r-xl border-r-[hsla(0,0%,100%,.12)]; */
-}
-</style>
-<style>
-
-.dark .sidebar .v-list-item .theme--dark.v-icon {
-  color: var(--icon-color);
+  align-items: stretch;
+  border-radius: 0.75rem;
+  padding: 8px 0;
+  overflow: hidden;
 }
 
-.dark .sidebar .v-list-item:hover .theme--dark.v-icon {
-  color: var(--icon-color-hovered);
+.sidebar__section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 4px;
 }
 
-
-.v-navigation-drawer__content {
-  @apply flex flex-col flex-grow-0 h-full;
+.sidebar__instances {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 4px;
+  scrollbar-width: none;
 }
 
-.sidebar .v-list .v-list-item--active, .v-list .v-list-item--active .v-icon {
-  /* color: #4caf50 !important; */
-  color: var(--color-primary);
+.sidebar__instances::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
-.sidebar .v-list-item--link:before {
-  @apply text-white;
+.sidebar__divider {
+  margin: 6px 16px;
+  height: 2px;
+  border-radius: 1px;
+  background-color: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
 }
 
-.sidebar .theme--dark.v-list-item--active:hover:before {
-  opacity: .5;
+/* Rounded rectangle back button (mimics v2 list-item) */
+.sidebar-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 32px;
+  margin: 4px auto 8px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar .theme--light.v-list-item--active:before {
-  opacity: .25;
-  background-color: gray;
+.sidebar-back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
-.avatar .v-list-group__header.v-list-item--active:not(:hover):not(:focus):before {
-  opacity: .24;
+.sidebar-back-btn:active {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 </style>

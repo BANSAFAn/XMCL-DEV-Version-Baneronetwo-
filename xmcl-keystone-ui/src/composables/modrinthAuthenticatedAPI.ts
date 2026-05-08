@@ -32,6 +32,10 @@ export function useModrinthAuthenticatedAPI() {
 
   function acceptSignal() {
     signal.resolve()
+    // Reset so the next awaitLogin round starts with a fresh pending promise.
+    // Existing awaiters already captured the previous `.promise`, so this
+    // reassignment is safe for them.
+    signal = Promise.withResolvers<void>()
   }
 
   function rejectSignal() {
@@ -39,8 +43,29 @@ export function useModrinthAuthenticatedAPI() {
     signal = Promise.withResolvers<void>()
   }
 
-  async function interact() {
-    await awaitLogin()
+  /**
+   * Cancel an in-progress login attempt.
+   *
+   * Note: this cannot abort the underlying network request to Modrinth, but it
+   * resets the in-flight signal and clears the validating flag so the UI can
+   * return to the login prompt and the user can try again.
+   */
+  function cancelLogin() {
+    rejectSignal()
+    isValidatingUser.value = false
+  }
+
+  async function interact(options?: { silent?: boolean }) {
+    try {
+      await awaitLogin(options)
+    } catch {
+      // User cancelled or login failed; just bail. error.value will be set
+      // and the UI's reactive guards (userData / isValidatingUser) handle it.
+      return
+    }
+    if (!userData.value) {
+      return
+    }
     if (!follows.value) {
       mutateFollows()
     }
@@ -49,19 +74,68 @@ export function useModrinthAuthenticatedAPI() {
     }
   }
 
-  async function login(slient = false) {
-    try {
-      isValidatingUser.value = true
-      await loginModrinth()
-      userData.value = await clientModrinthV2.getAuthenticatedUser()
-    } catch (e) {
-      if (!slient) {
-        await loginModrinth(true)
-      }
-      error.value = e as Error
-    } finally {
-      isValidatingUser.value = false
+  // Dedupe concurrent login() calls. Without this an onMounted silent login
+  // can race with a user-triggered explicit login and double-invoke OAuth.
+  let loginInFlight: Promise<void> | undefined
+  function login(silent = false): Promise<void> {
+    if (loginInFlight) {
+      return loginInFlight
     }
+    loginInFlight = (async () => {
+      isValidatingUser.value = true
+      try {
+        try {
+          await loginModrinth()
+        } catch (e) {
+          if (silent) {
+            // Silent mode is for the initial token check. Don't surface an
+            // OAuth window — just record the error and bail.
+            error.value = e as Error
+            return
+          }
+          // Existing token (if any) is invalid. Force a fresh OAuth flow.
+          await loginModrinth(true)
+        }
+        // Token is valid now — fetch the authenticated user.
+        try {
+          userData.value = await clientModrinthV2.getAuthenticatedUser()
+        } catch (e) {
+          // The token in our local cache appears valid (not expired by our
+          // bookkeeping) but Modrinth rejected it (e.g. revoked, or stored
+          // before we tracked `issued_at` and is actually expired). Force a
+          // fresh OAuth and retry once. Skip in silent mode to avoid popping
+          // the browser unexpectedly.
+          if (silent || !isUnauthorizedLikeError(e)) {
+            throw e
+          }
+          await loginModrinth(true)
+          userData.value = await clientModrinthV2.getAuthenticatedUser()
+        }
+      } catch (e) {
+        error.value = e as Error
+      } finally {
+        isValidatingUser.value = false
+        loginInFlight = undefined
+      }
+    })()
+    return loginInFlight
+  }
+
+  /**
+   * Heuristic: detect responses from Modrinth that indicate the bearer token
+   * is invalid/revoked/expired so we can force a fresh OAuth.
+   *
+   * The Modrinth API client throws `Error` whose message embeds the body and
+   * status code from the failed response. Matching on text isn't ideal but
+   * the client doesn't expose the status code on the thrown error.
+   */
+  function isUnauthorizedLikeError(e: unknown): boolean {
+    if (!e) return false
+    const message = (e as Error)?.message ?? String(e)
+    if (typeof message !== 'string') return false
+    return /\b401\b/.test(message) ||
+      /unauthorized/i.test(message) ||
+      /invalid authentication credentials/i.test(message)
   }
 
   async function mutateFollows() {
@@ -102,12 +176,16 @@ export function useModrinthAuthenticatedAPI() {
     return followSet.value.has(id)
   }
 
-  const awaitLogin = useSingleton(async () => {
+  const awaitLogin = useSingleton(async (options?: { silent?: boolean }) => {
     if (userData.value) {
       return
     }
-    show()
-    await signal.promise
+    if (!options?.silent) {
+      show()
+    }
+    // Capture the current signal's promise once, before any reassignment.
+    const promise = signal.promise
+    await promise
     await login()
   })
 
@@ -190,6 +268,7 @@ export function useModrinthAuthenticatedAPI() {
     follows,
     rejectSignal,
     acceptSignal,
+    cancelLogin,
     userData,
     userError: error,
     isValidatingUser,

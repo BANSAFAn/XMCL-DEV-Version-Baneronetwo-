@@ -1,7 +1,7 @@
 <template>
   <div
     ref="container"
-    class="visible-scroll flex gap-2 overflow-auto"
+    class="visible-scroll flex gap-2 overflow-auto items-center justify-center"
     @wheel="onWheel"
   >
     <div
@@ -18,21 +18,19 @@
       <div class="my-2 flex items-center justify-center">
         <v-btn
           v-if="offline"
-          text
           :disabled="Object.keys(user.profiles).length === 1"
           color="red"
           @click="removeGameProfile(profile.name)"
-        >
+         variant="text">
           <v-icon>
             delete
           </v-icon>
         </v-btn>
         <v-btn
-          text
           color="primary"
           :disabled="profile.id === user.selectedProfile"
           @click="selectGameProfile(user, profile.id)"
-        >
+         variant="text">
           <v-icon>
             {{ profile.id === user.selectedProfile ? 'check_circle' : 'done' }}
           </v-icon>

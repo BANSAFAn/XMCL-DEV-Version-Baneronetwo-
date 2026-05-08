@@ -3,25 +3,23 @@
     <!-- Navigation Sidebar (Only in Wide/Scroll Mode) -->
     <div v-if="!isNarrowView" class="setting-sidebar pt-6 pl-4 pr-2">
       <v-card class="rounded-lg" elevation="0" color="transparent">
-        <v-list nav dense color="transparent" class="rounded-lg">
-          <v-subheader class="text-uppercase font-weight-bold grey--text text--darken-1 text-caption pl-4 mb-1">
+        <v-list nav density="compact" color="transparent" class="rounded-lg" :selected="[activeSectionIndex]" @update:selected="v => activeSectionIndex = (v[0] as number) ?? 0">
+          <v-list-subheader class="text-uppercase font-weight-bold grey--text text--darken-1 text-caption pl-4 mb-1">
             {{ t('setting.name') }}
-          </v-subheader>
-          <v-list-item-group v-model="activeSectionIndex" color="primary">
-            <v-list-item
-              v-for="item in sections"
-              :key="item.id"
-              @click="scrollTo(item.id)"
-              class="mb-1 rounded-lg"
-            >
-              <v-list-item-icon class="mr-3">
-                <v-icon small>{{ item.icon }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="font-weight-medium">{{ t(item.title) }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
+          </v-list-subheader>
+          <v-list-item
+            v-for="(item, idx) in sections"
+            :key="item.id"
+            :value="idx"
+            class="mb-1 rounded-lg"
+            color="primary"
+            :title="t(item.title)"
+            @click="scrollTo(item.id)"
+          >
+            <template #prepend>
+              <v-icon size="small">{{ item.icon }}</v-icon>
+            </template>
+          </v-list-item>
         </v-list>
       </v-card>
     </div>
@@ -37,15 +35,15 @@
       <div v-if="isNarrowView" class="sticky-tabs-wrapper">
         <v-tabs
           v-model="activeSectionIndex"
-          centered
-          background-color="transparent"
+          align-tabs="center"
+          bg-color="transparent"
           color="primary"
           show-arrows
           class="rounded-lg"
-          @change="onTabChange"
+          @update:model-value="onTabChange"
         >
           <v-tab v-for="item in sections" :key="item.id">
-            <v-icon left small>{{ item.icon }}</v-icon>
+            <v-icon start size="small">{{ item.icon }}</v-icon>
             {{ t(item.title) }}
           </v-tab>
         </v-tabs>
@@ -101,7 +99,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, onUnmounted, provide } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { useI18n } from 'vue-i18n'
 import SettingUpdateInfoDialog from './SettingUpdateInfoDialog.vue'
 import SettingUpdate from './SettingUpdate.vue'
 import SettingGeneral from './SettingGeneral.vue'

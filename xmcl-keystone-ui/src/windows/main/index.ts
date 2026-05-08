@@ -7,7 +7,7 @@ import { kTaskManager, useTaskManager } from '@/composables/taskManager'
 import { i18n } from '@/i18n'
 import { vuetify } from '@/vuetify'
 import 'virtual:uno.css'
-import Vue, { defineComponent, getCurrentInstance, h, provide } from 'vue'
+import { createApp, defineComponent, h, provide } from 'vue'
 import App from './App.vue'
 import Context from './Context'
 import { router } from './router'
@@ -61,10 +61,7 @@ function handleMigrate(from: string, to: string) {
   }
 }
 
-const app = new Vue(defineComponent({
-  i18n,
-  vuetify,
-  router,
+const app = createApp(defineComponent({
   setup() {
     document.body.classList.remove('unloaded')
     // get from to from the query
@@ -74,19 +71,6 @@ const app = new Vue(defineComponent({
     if (from && to) {
       handleMigrate(from, to)
     }
-
-    const root = getCurrentInstance()!.proxy.$root
-    Object.defineProperty(root, '$router', {
-      value: new Proxy(root.$router, {
-        get(target, key) {
-          const prop = Reflect.get(target, key)
-          if (prop instanceof Function) {
-            return (prop as Function).bind(target)
-          }
-          return prop
-        },
-      }),
-    })
 
     provide(kFlights, (window as any).flights || {})
     provide(kNotificationQueue, useNotificationQueue())
@@ -100,20 +84,14 @@ const app = new Vue(defineComponent({
   },
 }))
 
-Vue.component('TextComponent', TextComponent)
+app.use(i18n)
+app.use(vuetify)
+app.use(router)
 
-app.$mount('#app')
+app.component('TextComponent', TextComponent as any)
 
-Vue.config.warnHandler = (msg, vm, trace) => {
+app.config.warnHandler = (msg, vm, trace) => {
   const level = msg.indexOf('TypeError') !== -1 ? 4 : 3
-  // appInsights.trackException({
-  //   exception: {
-  //     name: 'VueWarn',
-  //     message: msg,
-  //     stack: trace,
-  //   },
-  //   severityLevel: level,
-  // })
   console.warn(msg)
 
   if (level === 4) {
@@ -123,13 +101,13 @@ Vue.config.warnHandler = (msg, vm, trace) => {
   }
 }
 
-Vue.config.errorHandler = (err, vm, info) => {
-  if (err.message.indexOf('ResizeObserver') !== -1) {
+app.config.errorHandler = (err: any, vm, info) => {
+  if (err?.message?.indexOf('ResizeObserver') !== -1) {
     // ignore ResizeObserver error
     return
   }
 
-  const level = err.message.indexOf('TypeError') !== -1 ? 4 : 3
+  const level = err?.message?.indexOf('TypeError') !== -1 ? 4 : 3
   appInsights.trackException({
     exception: err,
     severityLevel: level,
@@ -142,3 +120,6 @@ Vue.config.errorHandler = (err, vm, info) => {
     })
   }
 }
+
+app.mount('#app')
+

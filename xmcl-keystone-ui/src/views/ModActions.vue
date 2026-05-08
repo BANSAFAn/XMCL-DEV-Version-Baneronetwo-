@@ -4,7 +4,7 @@
       v-if="i18nEnabled"
       v-shared-tooltip="() => 'Alt'"
       icon
-      large
+      size="large"
       :class="{ 'v-btn--active': isEnabledState }"
       @click="isEnabledState = !isEnabledState"
     >
@@ -13,7 +13,7 @@
     <v-btn
       v-shared-tooltip="() => t('mod.showDirectory')"
       icon
-      large
+      size="large"
       @click="showDirectory(path)"
     >
       <v-icon>folder</v-icon>

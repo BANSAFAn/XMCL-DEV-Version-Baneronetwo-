@@ -3,16 +3,14 @@
     v-model="isShown"
     :close-on-content-click="false"
     transition="slide-y-transition"
-    :nudge-width="280"
-    offset-y
+    location="bottom"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ props: activatorProps }">
       <div
         id="user-avatar"
-        v-bind="attrs"
+        v-bind="activatorProps"
         class="non-moveable flex flex-grow-0 cursor-pointer items-center gap-2 rounded px-2 transition-all hover:bg-[rgba(255,255,255,0.2)] py-1"
         :class="{ 'bg-[rgba(244,67,54,0.6)]': needLogin }"
-        v-on="on"
       >
         <PlayerAvatar
           class="overflow-hidden rounded-full transition-all duration-300"
@@ -25,8 +23,6 @@
 
     <UserCard
       class="user-menu w-[600px] max-w-[600px] overflow-y-auto"
-      outlined
-      flat
       :show="isShown"
     />
   </v-menu>

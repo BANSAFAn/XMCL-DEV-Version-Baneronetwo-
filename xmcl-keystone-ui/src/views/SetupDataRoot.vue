@@ -6,36 +6,28 @@
     style="background: transparent; width: 100%"
   >
     <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title class="whitespace-pre-wrap">
+      <v-list-item-title class="whitespace-pre-wrap">
           {{ t('setup.dataRoot.description') }}
         </v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
+</v-list-item>
     <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title>{{ t('setup.path') }}</v-list-item-title>
+      <v-list-item-title>{{ t('setup.path') }}</v-list-item-title>
         <v-list-item-subtitle>{{ value }}</v-list-item-subtitle>
-      </v-list-item-content>
-      <v-list-item-action class="self-center">
+<v-list-item-action class="self-center">
         <v-btn
           :disabled="value === defaultPath"
-          outlined
-          text
           style="margin-right: 10px;"
           @click="restore"
-        >
+         variant="text">
           {{ t('setup.defaultPath') }}
         </v-btn>
       </v-list-item-action>
       <v-list-item-action class="self-center">
         <v-btn
-          outlined
           color="primary"
-          text
           style="margin-right: 10px;"
           @click="browse"
-        >
+         variant="text">
           {{ t('shared.browse') }}
         </v-btn>
       </v-list-item-action>
@@ -47,9 +39,9 @@
     >
       {{ errorText }}
     </v-alert>
-    <v-subheader>
+    <v-list-subheader>
       {{ t('setup.dataRoot.drives') }}
-    </v-subheader>
+    </v-list-subheader>
     <v-list-item
       v-for="d of drives"
       :key="d.mounted"
@@ -58,12 +50,11 @@
       :class="{'v-list-item--active': d.selectedPath === value }"
       @click="onSelect(d)"
     >
-      <v-list-item-avatar>
+      <template #prepend><v-avatar>
         <v-icon>storage</v-icon>
-      </v-list-item-avatar>
+      </v-avatar></template>
 
-      <v-list-item-content>
-        <v-list-item-title class="flex w-full flex-grow-0 p-0 align-baseline">
+      <v-list-item-title class="flex w-full flex-grow-0 p-0 align-baseline">
           {{ d.mounted }}
           <div class="flex-grow" />
 
@@ -90,8 +81,7 @@
             {{ d.capacity }}
           </span>
         </v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
+</v-list-item>
   </v-list>
 </template>
 <script lang="ts" setup>

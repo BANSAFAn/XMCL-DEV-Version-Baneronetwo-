@@ -25,18 +25,17 @@ import StoreEntry from '@/views/StoreEntry.vue'
 import StoreProjectCurseforge from '@/views/StoreProjectCurseforge.vue'
 import StoreProjectFeedTheBeast from '@/views/StoreProjectFeedTheBeast.vue'
 import StoreProjectModrinth from '@/views/StoreProjectModrinth.vue'
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
-Vue.use(Router)
-export const router = new Router({
+export const router = createRouter({
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/',
       component: HomeLayout,
       children: [
         {
-          path: '/',
+          path: '',
           components: {
             default: Home,
             extensions: HomeExtension,
@@ -44,7 +43,7 @@ export const router = new Router({
           },
         },
         {
-          path: '/save',
+          path: 'save',
           components: {
             default: Save,
             extensions: SaveExtension,
@@ -52,7 +51,7 @@ export const router = new Router({
           },
         },
         {
-          path: '/mods',
+          path: 'mods',
           components: {
             default: Mod,
             extensions: ModExtension,
@@ -60,7 +59,7 @@ export const router = new Router({
           },
         },
         {
-          path: '/resourcepacks',
+          path: 'resourcepacks',
           components: {
             default: ResourcePack,
             extensions: ResourcePackExtension,
@@ -68,7 +67,7 @@ export const router = new Router({
           },
         },
         {
-          path: '/shaderpacks',
+          path: 'shaderpacks',
           components: {
             default: ShaderPack,
             extensions: ShaderPackExtension,
@@ -76,7 +75,7 @@ export const router = new Router({
           },
         },
         {
-          path: '/base-setting',
+          path: 'base-setting',
           components: {
             default: BaseSetting,
             extensions: BaseSettingExtension,
@@ -90,23 +89,23 @@ export const router = new Router({
       component: Store,
       children: [
         {
-          path: '/',
+          path: '',
           component: StoreEntry,
         },
         {
-          path: '/store/modrinth/:id',
+          path: 'modrinth/:id',
           component: StoreProjectModrinth,
-          props: (route) => ({ id: route.path.split('/')[3] }),
+          props: (route) => ({ id: route.params.id }),
         },
         {
-          path: '/store/curseforge/:id',
+          path: 'curseforge/:id',
           component: StoreProjectCurseforge,
-          props: (route) => ({ id: Number(route.path.split('/')[3]) }),
+          props: (route) => ({ id: Number(route.params.id) }),
         },
         {
-          path: '/store/ftb/:id',
+          path: 'ftb/:id',
           component: StoreProjectFeedTheBeast,
-          props: (route) => ({ id: Number(route.path.split('/')[3]) }),
+          props: (route) => ({ id: Number(route.params.id) }),
         },
       ],
     },
@@ -124,3 +123,4 @@ export const router = new Router({
     },
   ],
 })
+

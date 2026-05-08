@@ -6,24 +6,21 @@
     style="background: transparent; width: 100%"
   >
     <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title class="flex-wrap whitespace-pre-wrap">
+      <v-list-item-title class="flex-wrap whitespace-pre-wrap">
           {{ t('setup.locale.description') }}
         </v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
+</v-list-item>
     <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title>
+      <v-list-item-title>
           {{
             t("setup.locale.language")
           }}
         </v-list-item-title>
-      </v-list-item-content>
-      <v-list-item-action>
+<v-list-item-action>
         <v-select
           :value="value"
           filled
+          item-title="text"
           style="max-width: 185px"
           hide-details
           :items="locales"

@@ -3,9 +3,9 @@
     confirm-icon="check" :confirm="t('shared.yes')" color="primary">
     <v-divider />
     <v-form class="mt-4">
-      <v-text-field small filled v-model="newCollection.name" :label="t('shared.name')"
+      <v-text-field variant="filled" v-model="newCollection.name" :label="t('shared.name')"
         :rules="rules" />
-      <v-text-field small filled v-model="newCollection.description" :label="t('shared.description')" />
+      <v-text-field variant="filled" v-model="newCollection.description" :label="t('shared.description')" />
     </v-form>
   </SimpleDialog>
 </template>
@@ -23,7 +23,7 @@ const newCollection = reactive({
   projectId: undefined,
 })
 
-const { isShown, hide } = useDialog('collection', (id) => { 
+const { isShown, hide } = useDialog('collection', (id) => {
   newCollection.projectId = id
   newCollection.name = ''
   newCollection.description = ''

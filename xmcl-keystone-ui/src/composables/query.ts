@@ -1,4 +1,5 @@
-import { MaybeRef, get } from '@vueuse/core'
+import { get } from '@vueuse/core'
+import type { MaybeRef } from '@vueuse/core'
 import { Ref } from 'vue'
 import type { Dictionary } from 'vue-router/types/router'
 

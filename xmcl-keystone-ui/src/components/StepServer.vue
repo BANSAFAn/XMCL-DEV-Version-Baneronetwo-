@@ -48,9 +48,9 @@
               <div class="mb-2 grid grid-cols-12 gap-4">
                 <v-combobox
                   class="col-span-6"
-                  outlined
+                  variant="outlined"
                   hide-details
-                  :value="acceptingMinecrafts"
+                  :model-value="acceptingMinecrafts"
                   append-icon="title"
                   :label="t('server.version')"
                   :readonly="true"
@@ -58,9 +58,9 @@
                 />
                 <v-text-field
                   class="col-span-4"
-                  outlined
+                  variant="outlined"
                   hide-details
-                  :value="status.players.online + '/' + status.players.max"
+                  :model-value="status.players.online + '/' + status.players.max"
                   append-icon="people"
                   :label="t('server.players')"
                   :readonly="true"
@@ -68,8 +68,8 @@
                 />
                 <v-text-field
                   class="col-span-2"
-                  :value="status.ping"
-                  outlined
+                  :model-value="status.ping"
+                  variant="outlined"
                   hide-details
                   append-icon="signal_cellular_alt"
                   :label="t('server.ping')"
@@ -85,7 +85,7 @@
               <v-text-field
                 v-model="serverField"
                 :rules="[!serverField ? 'Required' : undefined]"
-                outlined
+                variant="outlined"
                 persistent-hint
                 autofocus
                 :hint="t('server.hostHint')"
@@ -95,15 +95,12 @@
               <div />
               <div class="flex justify-end">
                 <v-btn
-                  text
-                  x-large
                   color="primary"
                   :disabled="!server.host"
                   :loading="pinging"
-                  outlined
                   @click="refresh"
-                >
-                  <v-icon left>
+                 size="x-large" variant="text">
+                  <v-icon start>
                     wifi
                   </v-icon>
                   {{ t('shared.refresh') }}

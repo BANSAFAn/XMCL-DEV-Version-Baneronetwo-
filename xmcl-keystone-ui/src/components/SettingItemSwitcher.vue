@@ -1,49 +1,36 @@
 <template>
   <SettingItem :description="description" :title-class="titleClass">
     <template #title>
-      <v-icon left small color="primary" v-if="icon">{{ icon }}</v-icon>
+      <v-icon v-if="icon" start size="small" color="primary">{{ icon }}</v-icon>
       {{ title }}
     </template>
     <template #action>
       <v-switch
         v-model="model"
-        :disabled="disabled"
+        v-bind="$attrs"
         color="primary"
-        @click.stop.prevent.capture="!disabled ? emit('input', !value) : undefined"
+        hide-details
       />
     </template>
   </SettingItem>
 </template>
 <script setup lang="ts">
-import { useVModel } from "@vueuse/core";
 import SettingItem from "./SettingItem.vue";
 
-const props = defineProps<{
-  value: boolean;
+defineOptions({ inheritAttrs: false });
+
+const model = defineModel<boolean>({ required: true });
+
+defineProps<{
   title: string;
   icon?: string;
-  disabled?: boolean;
   titleClass?: string;
   description?: string;
 }>();
-const emit = defineEmits<{
-  (event: "input", value: boolean): void;
-}>();
-
-const model = useVModel(props, "value", emit);
 </script>
 
 <style scoped>
-.v-list-item {
-  background: transparent !important;
-}
-
-.v-list-item::before,
-.v-list-item::after {
-  opacity: 0 !important;
-}
-
-.v-list-item:hover::before {
-  opacity: 0.04 !important;
+.setting-item-switcher :deep(.setting-item__action .v-switch) {
+  flex: none;
 }
 </style>

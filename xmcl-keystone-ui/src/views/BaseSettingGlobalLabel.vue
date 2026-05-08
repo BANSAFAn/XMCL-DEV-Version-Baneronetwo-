@@ -1,12 +1,15 @@
 <template>
   <v-chip
     v-shared-tooltip="() => global ? t('settingLabel.globalHint') : t('settingLabel.localHint')"
-    class="mb-1 ml-2"
+    class="ml-2"
     label
-    small
-    dark
-    :color="global ? 'lighten-2 purple' : 'lighten-2 blue'"
-    :close="!global"
+    size="small"
+    variant="tonal"
+    :model-value="true"
+    :prepend-icon="global ? 'public' : 'edit'"
+    :color="global ? 'purple-lighten-2' : 'blue-lighten-2'"
+    :closable="!global"
+    @update:model-value="() => {}"
     @click.stop="emit('click')"
     @click:close="emit('clear')"
   >

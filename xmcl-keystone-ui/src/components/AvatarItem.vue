@@ -1,20 +1,22 @@
 <template>
   <div
     class="flex flex-grow-0 items-center rounded pr-2 text-sm"
-    :class="{ 'cursor-pointer': !!$listeners.click || !!onclick }"
+    :class="{ 'cursor-pointer': hasClickHandler }"
     @click="onclick ? onclick($event) : emit('click', $event)"
   >
     <v-avatar
-      :left="true"
-      class="hidden lg:block"
-      style="height: 34px; width: 34px"
+      class="mr-2 hidden lg:block"
+      :size="34"
+      color="transparent"
       :class="{ responsive }"
     >
-      <img
+      <v-img
         v-if="avatar"
         :src="avatar"
-      >
-      <v-icon v-else-if="icon">
+        :width="34"
+        :height="34"
+      />
+      <v-icon v-else-if="icon" :size="24">
         {{ icon }}
       </v-icon>
     </v-avatar>
@@ -51,6 +53,8 @@ const props = defineProps<AvatarItemProps>()
 const { getColorCode } = useVuetifyColor()
 const bgColor = computed(() => props.color ? getColorCode(props.color) : undefined)
 const emit = defineEmits(['click'])
+const attrs = useAttrs()
+const hasClickHandler = computed(() => !!attrs.onClick || !!props.onclick)
 </script>
 <style scoped>
 
@@ -61,8 +65,9 @@ const emit = defineEmits(['click'])
   padding-left: 0.5rem;
 }
 @media (min-width: 1000px) {
+  /* Use inline-flex (Vuetify 4 v-avatar default) so the icon centers vertically. */
   .responsive {
-    display: block !important;
+    display: inline-flex !important;
   }
   .text {
   }

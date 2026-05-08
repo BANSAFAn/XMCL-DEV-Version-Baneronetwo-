@@ -4,9 +4,11 @@
     :width="javaIssue ? 580 : 380"
   >
     <v-card class="h-full flex select-none flex-col">
-      <v-card-title v-if="exiting">
-        {{ t('launchStatus.exit') }}
-      </v-card-title>
+      <v-card-item v-if="exiting">
+        <v-card-title>
+          {{ t('launchStatus.exit') }}
+        </v-card-title>
+      </v-card-item>
       <AppLoadingCircular
         v-if="launching || !windowReady || javaIssue"
         class="mb-4"
@@ -71,19 +73,17 @@
       >
         <v-btn
           v-if="exiting || javaIssue"
-          text
           @click="onCancel"
-        >
+         variant="text">
           {{ t('shared.cancel') }}
         </v-btn>
         <div class="flex-grow" />
         <v-btn
           v-if="exiting"
-          text
           color="red"
           @click="onKill"
-        >
-          <v-icon left>
+         variant="text">
+          <v-icon start>
             exit_to_app
           </v-icon>
           {{ t('shared.yes') }}
@@ -92,10 +92,9 @@
           <v-btn
             color="warning"
             :loading="selected"
-            text
             @click="onLaunchAnyway"
-          >
-            <v-icon left>
+           variant="text">
+            <v-icon start>
               play_arrow
             </v-icon>
             {{ t('launch.launchAnyway') }}
@@ -105,7 +104,7 @@
             :loading="selected"
             @click="selectLocalJava"
           >
-            <v-icon left>
+            <v-icon start>
               play_arrow
             </v-icon>
             {{ t('HomeJavaIssueDialog.optionSwitch.name', {
@@ -115,10 +114,9 @@
         </template>
         <v-btn
           v-if="refreshUserTimeout"
-          text
           color="primary"
           @click="skipRefresh()"
-        >
+         variant="text">
           <v-icon>
             skip_next
           </v-icon>
@@ -126,10 +124,9 @@
         </v-btn>
         <v-btn
           v-if="authLibTimeout"
-          text
           color="primary"
           @click="skipAuthLib()"
-        >
+         variant="text">
           {{ t('shared.skipForNow') }}
         </v-btn>
       </div>

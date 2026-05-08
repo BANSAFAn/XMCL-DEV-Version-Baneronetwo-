@@ -1,9 +1,6 @@
 <template>
-  <v-list
-    class="base-settings modpacks z-1"
-    color="transparent"
-  >
-    <SettingItem :title="t('modpack.modpackVersion')" :description="t('modpack.modpackVersion')">
+  <SettingCard :title="t('modpack.name', 1)" icon="folder_zip">
+    <SettingItem long-action :title="t('modpack.modpackVersion')" :description="t('modpack.modpackVersion')">
       <template #preaction>
         <v-icon>history</v-icon>
       </template>
@@ -12,141 +9,188 @@
           v-model="modpackMetadata.modpackVersion"
           hide-details
           :placeholder="modpackMetadata.modpackVersion"
-          outlined
-          filled
-          dense
+          variant="outlined"
+          density="compact"
           required
         >
-          <template #append>
-            <div>
-              <v-icon @click="onIncr(true)">add_circle</v-icon>
-              <v-icon @click="onIncr(false)">add</v-icon>
-            </div>
+          <template #append-inner>
+            <v-btn
+              v-shared-tooltip="() => 'patch'"
+              size="x-small"
+              variant="text"
+              icon="add"
+              @click="onIncr(false)"
+            />
+            <v-btn
+              v-shared-tooltip="() => 'minor'"
+              size="x-small"
+              variant="text"
+              icon="add_circle"
+              @click="onIncr(true)"
+            />
           </template>
         </v-text-field>
       </template>
     </SettingItem>
-    <SettingItem :title="t('modpack.author', 2)" :description="t('modpack.authorHint')">
+    <v-divider class="my-2" />
+    <SettingItem long-action :title="t('modpack.author', 2)" :description="t('modpack.authorHint')">
+      <template #preaction>
+        <v-icon>person</v-icon>
+      </template>
       <template #action>
         <v-text-field
           v-model="data.author"
           hide-details
           :placeholder="gameProfile.name"
-          outlined
-          filled
-          dense
+          variant="outlined"
+          density="compact"
           required
         />
       </template>
     </SettingItem>
-    <v-list-item style="margin-top: 5px">
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ t("modpack.description") }}
-        </v-list-item-title>
-        <v-list-item-subtitle>
-          <v-text-field
-            v-model="data.description"
-            class="m-1 mt-2"
-            outlined
-            filled
-            dense
-            hide-details
-            :placeholder="t('modpack.descriptionHint')"
-          />
-        </v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-
+    <v-divider class="my-2" />
+    <SettingItem
+      long-action
+      :title="t('modpack.description')"
+      :description="t('modpack.descriptionHint')"
+    >
+      <template #preaction>
+        <v-icon>notes</v-icon>
+      </template>
+      <template #action>
+        <v-text-field
+          v-model="data.description"
+          variant="outlined"
+          density="compact"
+          hide-details
+          :placeholder="t('modpack.descriptionHint')"
+        />
+      </template>
+    </SettingItem>
+    <v-divider class="my-2" />
     <SettingItem long-action :title="t('modpack.url')" :description="t('modpack.urlHint')">
+      <template #preaction>
+        <v-icon>link</v-icon>
+      </template>
       <template #action>
         <v-text-field
           v-model="data.url"
-          class="m-1 mt-2"
-          outlined
-          filled
-          dense
+          variant="outlined"
+          density="compact"
           hide-details
           :placeholder="t('modpack.urlHint')"
         />
       </template>
     </SettingItem>
+  </SettingCard>
 
-    <v-checkbox
-      v-model="modpackMetadata.emitCurseforge"
-      :label="t('modpack.emitCurseforge')"
-      class="z-10"
-      prepend-icon="$vuetify.icons.curseforge"
-      hide-details
-    />
-    <v-checkbox
-      v-model="modpackMetadata.emitModrinth"
-      :label="t('modpack.emitModrinth')"
-      class="z-10"
-      hide-details
-      prepend-icon="$vuetify.icons.modrinth"
-    />
-
-    <v-checkbox
-      v-if="modpackMetadata.emitModrinth"
-      v-model="modpackMetadata.emitModrinthStrict"
-      :label="t('modpack.emitModrinthStrict')"
-      class="z-10"
-      hide-details
-      prepend-icon="$vuetify.icons.modrinth"
+  <SettingCard :title="t('modpack.export')" icon="ios_share">
+    <SettingItem
+      :title="t('modpack.emitCurseforge')"
+      class="cursor-pointer"
+      @click="modpackMetadata.emitCurseforge = !modpackMetadata.emitCurseforge"
     >
-      <template #append>
-        <v-tooltip
-          top
-        >
-          <template #activator="{ on }">
-            <!-- <v-btn
-                  text
-                  icon
-                > -->
+      <template #preaction>
+        <v-icon>xmcl:curseforge</v-icon>
+      </template>
+      <template #action>
+        <v-switch
+          v-model="modpackMetadata.emitCurseforge"
+          color="primary"
+          hide-details
+          inset
+          density="compact"
+          @click.stop
+        />
+      </template>
+    </SettingItem>
+    <v-divider class="my-2" />
+    <SettingItem
+      :title="t('modpack.emitModrinth')"
+      class="cursor-pointer"
+      @click="modpackMetadata.emitModrinth = !modpackMetadata.emitModrinth"
+    >
+      <template #preaction>
+        <v-icon>xmcl:modrinth</v-icon>
+      </template>
+      <template #action>
+        <v-switch
+          v-model="modpackMetadata.emitModrinth"
+          color="primary"
+          hide-details
+          inset
+          density="compact"
+          @click.stop
+        />
+      </template>
+    </SettingItem>
+    <template v-if="modpackMetadata.emitModrinth">
+      <v-divider class="my-2" />
+      <SettingItem
+        :title="t('modpack.emitModrinthStrict')"
+        class="cursor-pointer"
+        @click="modpackMetadata.emitModrinthStrict = !modpackMetadata.emitModrinthStrict"
+      >
+        <template #preaction>
+          <v-icon class="opacity-60">verified</v-icon>
+        </template>
+        <template #subtitle>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span>{{ t('modpack.emitModrinthStrictDescription') }}</span>
             <a
-              class="rounded border border-dashed border-green-300 pb-[2px]"
+              class="inline-flex items-center rounded border border-dashed border-green-300 px-1 text-xs"
               target="browser"
               href="https://docs.modrinth.com/docs/modpacks/format_definition/#downloads"
-              v-on="on"
+              @click.stop
             >
-              <v-icon
-                color="primary"
-                class="cursor-pointer"
-                small
-              >
-                question_mark
-              </v-icon>
+              docs.modrinth.com
             </a>
-            <!-- </v-btn> -->
-          </template>
-          {{ t('modpack.emitModrinthStrictDescription') }}
-          <ul class="list-disc">
-            <li> cdn.modrinth.com </li>
-            <li>github.com</li>
-            <li>raw.githubusercontent.com</li>
-            <li>gitlab.com</li>
-          </ul>
-        </v-tooltip>
+          </div>
+        </template>
+        <template #action>
+          <v-switch
+            v-model="modpackMetadata.emitModrinthStrict"
+            color="primary"
+            hide-details
+            inset
+            density="compact"
+            @click.stop
+          />
+        </template>
+      </SettingItem>
+    </template>
+    <v-divider class="my-2" />
+    <SettingItem
+      :title="t('modpack.includeAssets')"
+      class="cursor-pointer"
+      @click="modpackMetadata.emitOffline = !modpackMetadata.emitOffline"
+    >
+      <template #preaction>
+        <v-icon>texture</v-icon>
       </template>
-    </v-checkbox>
-    <v-checkbox
-      v-model="modpackMetadata.emitOffline"
-      :label="t('modpack.includeAssets')"
-      class="z-10"
-      prepend-icon="texture"
-      hide-details
-    />
-  </v-list>
+      <template #action>
+        <v-switch
+          v-model="modpackMetadata.emitOffline"
+          color="primary"
+          hide-details
+          inset
+          density="compact"
+          @click.stop
+        />
+      </template>
+    </SettingItem>
+  </SettingCard>
 </template>
 
 <script lang="ts" setup>
+import SettingCard from '@/components/SettingCard.vue'
+import SettingItem from '@/components/SettingItem.vue'
+import { useInstanceModpackMetadata } from '@/composables/instanceModpackMetadata'
+import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { injection } from '@/util/inject'
+import { inc } from 'semver'
 import { InstanceEditInjectionKey } from '../composables/instanceEdit'
 import { kUserContext } from '../composables/user'
-import { useInstanceModpackMetadata } from '@/composables/instanceModpackMetadata'
-import SettingItem from '@/components/SettingItem.vue'
-import { inc } from 'semver'
 
 const { data } = injection(InstanceEditInjectionKey)
 const { gameProfile } = injection(kUserContext)
@@ -155,18 +199,19 @@ const { t } = useI18n()
 const { modpackMetadata } = inject('modpackMetadata', useInstanceModpackMetadata())
 
 const onIncr = (minor: boolean = false) => {
-  modpackMetadata.modpackVersion = inc(modpackMetadata.modpackVersion, minor ? 'minor' : 'patch') || modpackMetadata.modpackVersion
+  modpackMetadata.modpackVersion =
+    inc(modpackMetadata.modpackVersion, minor ? 'minor' : 'patch') || modpackMetadata.modpackVersion
 }
-
 </script>
+
 
 <style scoped="true">
 .flex {
-  padding: 6px 8px !important
+  padding: 6px 8px !important;
 }
 
 .v-btn {
-  margin: 0
+  margin: 0;
 }
 </style>
 

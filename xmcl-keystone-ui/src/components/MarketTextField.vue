@@ -3,39 +3,24 @@
     id="search-text-field"
     ref="searchTextField"
     v-model="_keyword"
-    class="max-w-80 min-w-40"
+    class="max-w-80 min-w-40 market-search-field"
     :placeholder="placeholder"
-    small
+    variant="solo-filled"
+    density="compact"
+    flat
     hide-details
-    outlined
-    filled
-    dense
     :prepend-inner-icon="icon"
     @focus="searchTextFieldFocused = true"
-    @blur="searchTextFieldFocused = false"
-    @click="emit('click', $event)"
+    @blur="onBlur"
+    @click="onClickField"
   >
-    <!-- <template #prepend>
-      <div class="flex items-center justify-center h-[40px] pr-1">
-        <v-btn
-          v-shared-tooltip="t('filter.favoriteOnly')"
-          :class="{ 'v-btn--active': localOnly }"
-          icon
-          @click="emit('update:localOnly', !localOnly)"
-        >
-          <v-icon>
-            filter_alt
-          </v-icon>
-        </v-btn>
-      </div>
-    </template> -->
-    <template #append>
+    <template #append-inner>
       <v-chip
         v-if="gameVersion"
         label
-        outlined
-        small
-        close
+        variant="outlined"
+        size="small"
+        closable
         @click:close="emit('clear-version')"
       >
         {{ gameVersion }}
@@ -43,12 +28,12 @@
       <v-chip
         v-if="category"
         label
-        outlined
-        small
-        close
+        variant="outlined"
+        size="small"
+        closable
         @click:close="emit('clear-category')"
       >
-        <v-icon small>
+        <v-icon size="small">
           filter_alt
         </v-icon>
       </v-chip>
@@ -58,8 +43,6 @@
 
 <script lang=ts setup>
 import { useTextFieldBehavior } from '@/composables/textfieldBehavior'
-import { vSharedTooltip } from '@/directives/sharedTooltip'
-import { useEventListener } from '@vueuse/core'
 
 const props = defineProps<{
   value?: string
@@ -96,10 +79,19 @@ const clear = () => {
   emit('clear')
 }
 
+function onBlur(e: FocusEvent) {
+  // searchTextFieldFocused.value = false
+}
+
+function onClickField(e: MouseEvent) {
+  searchTextFieldFocused.value = true
+}
+
 const { t } = useI18n()
 
 const searchTextField = ref(undefined as any | undefined)
 const searchTextFieldFocused = inject('focused', ref(false))
+
 const transitioning = inject('transitioning', ref(false))
 let pendingFocus = false
 watch(transitioning, (v) => {

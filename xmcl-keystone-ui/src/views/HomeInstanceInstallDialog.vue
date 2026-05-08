@@ -1,140 +1,178 @@
 <template>
-  <v-dialog
-    v-model="isShown"
-    hide-overlay
-    scrollable
-    width="800"
-  >
-    <v-card class="select-none max-h-[90vh]!">
-      <v-toolbar
-        flat
-        tabs
-      >
-        <v-toolbar-title>
+  <v-dialog v-model="isShown" hide-overlay scrollable width="860">
+    <v-card class="select-none flex max-h-[90vh] flex-col overflow-hidden">
+      <v-toolbar color="primary" flat density="comfortable">
+        <v-app-bar-nav-icon
+          icon="system_update_alt"
+          :ripple="false"
+          style="cursor: default"
+        />
+        <v-toolbar-title class="font-medium">
           {{ t('instanceUpdate.title') }}
         </v-toolbar-title>
+        <v-spacer />
+        <v-chip
+          v-if="!refreshing && upgrade"
+          size="small"
+          variant="flat"
+          color="white"
+          class="text-primary mr-2 font-medium"
+        >
+          <v-icon start size="small">summarize</v-icon>
+          {{ t('instanceUpdate.summary', {
+            add: counts.add,
+            remove: counts.remove,
+            keep: counts.keep,
+          }) }}
+        </v-chip>
+        <v-btn
+          icon="close"
+          variant="text"
+          @click="cancel"
+        />
       </v-toolbar>
+
       <v-skeleton-loader
         v-if="refreshing"
+        class="px-4 py-2"
         type="list-item-avatar-two-line, list-item-avatar-two-line, list-item-avatar-two-line, list-item-avatar-two-line, list-item-avatar-two-line, list-item-avatar-two-line"
       />
       <ErrorView :error="error" />
+
       <div
         v-if="upgrade && !refreshing"
         ref="scrollRef"
-        class="visible-scroll mx-0 max-h-screen items-center justify-center overflow-y-auto overflow-x-hidden px-6 py-2"
+        class="visible-scroll flex flex-1 flex-col gap-3 overflow-y-auto overflow-x-hidden px-6 py-4"
       >
         <template v-if="upgrade && upgrade.edit">
-          <v-subheader>
-            {{ t('instanceUpdate.basic') }}
-          </v-subheader>
+          <div class="flex items-center gap-2">
+            <v-icon size="small" color="primary">tune</v-icon>
+            <h3 class="text-base font-medium">{{ t('instanceUpdate.basic') }}</h3>
+          </div>
 
-          <div
-            class="grid grid-cols-2 gap-4"
-          >
+          <div class="grid grid-cols-2 gap-3">
             <v-text-field
-              :value="getVersionString(oldRuntime.minecraft, runtime.minecraft)"
+              :model-value="getVersionString(oldRuntime.minecraft, runtime.minecraft)"
               persistent-hint
               label="Minecraft"
               readonly
-              flat
-              outlined
-              dense
-              required
+              variant="outlined"
+              density="compact"
+              hide-details
             >
               <template #prepend-inner>
-                <img
-                  :src="BuiltinImages.minecraft"
-                  width="32"
-                >
+                <img :src="BuiltinImages.minecraft" width="28" />
               </template>
             </v-text-field>
             <v-text-field
               v-if="runtime.forge"
-              :value="getVersionString(oldRuntime.forge, runtime.forge)"
+              :model-value="getVersionString(oldRuntime.forge, runtime.forge)"
               persistent-hint
               label="Forge"
-              outlined
+              variant="outlined"
               readonly
-              flat
-              dense
-              required
+              density="compact"
+              hide-details
             >
               <template #prepend-inner>
-                <img
-                  :src="BuiltinImages.forge"
-                  width="32"
-                >
+                <img :src="BuiltinImages.forge" width="28" />
               </template>
             </v-text-field>
             <v-text-field
               v-if="runtime.neoForged"
-              :value="getVersionString(oldRuntime.neoForged, runtime.neoForged)"
+              :model-value="getVersionString(oldRuntime.neoForged, runtime.neoForged)"
               persistent-hint
               label="NeoForge"
-              outlined
+              variant="outlined"
               readonly
-              flat
-              dense
-              required
+              density="compact"
+              hide-details
             >
               <template #prepend-inner>
-                <img
-                  :src="BuiltinImages.neoForged"
-                  width="32"
-                >
+                <img :src="BuiltinImages.neoForged" width="28" />
               </template>
             </v-text-field>
             <v-text-field
               v-if="runtime.fabricLoader"
-              :value="getVersionString(oldRuntime.fabricLoader, runtime.fabricLoader)"
+              :model-value="getVersionString(oldRuntime.fabricLoader, runtime.fabricLoader)"
               persistent-hint
-              outlined
+              variant="outlined"
               readonly
               label="Fabric"
-              flat
-              dense
-              required
+              density="compact"
+              hide-details
             >
               <template #prepend-inner>
-                <img
-                  :src="BuiltinImages.fabric"
-                  width="32"
-                >
+                <img :src="BuiltinImages.fabric" width="28" />
               </template>
             </v-text-field>
             <v-text-field
               v-if="runtime.quiltLoader"
-              :value="getVersionString(oldRuntime.quiltLoader, runtime.quiltLoader)"
+              :model-value="getVersionString(oldRuntime.quiltLoader, runtime.quiltLoader)"
               persistent-hint
-              outlined
+              variant="outlined"
               readonly
               label="Quilt"
-              flat
-              dense
-              required
+              density="compact"
+              hide-details
             >
               <template #prepend-inner>
-                <img
-                  :src="BuiltinImages.quilt"
-                  width="32"
-                >
+                <img :src="BuiltinImages.quilt" width="28" />
               </template>
             </v-text-field>
           </div>
 
           <InstanceVersionShiftAlert :old-runtime="oldRuntime" :runtime="runtime" />
+
+          <v-divider class="my-1" />
         </template>
 
-        <div>
-          <v-subheader>
-            {{ t('instanceUpdate.files') }}
-            <v-spacer />
-            <v-btn class="z-3" icon @click="filterKeep = !filterKeep">
-              <v-icon v-if="filterKeep">visibility_off</v-icon>
-              <v-icon v-else>visibility</v-icon>
-            </v-btn>
-          </v-subheader>
+        <div class="flex items-center gap-2">
+          <v-icon size="small" color="primary">folder_open</v-icon>
+          <h3 class="text-base font-medium">{{ t('instanceUpdate.files') }}</h3>
+
+          <div class="ml-2 flex items-center gap-1">
+            <v-chip
+              v-if="counts.add > 0"
+              size="x-small"
+              variant="tonal"
+              color="success"
+              label
+            >
+              <v-icon start size="x-small">add</v-icon>
+              {{ counts.add }}
+            </v-chip>
+            <v-chip
+              v-if="counts.remove > 0"
+              size="x-small"
+              variant="tonal"
+              color="error"
+              label
+            >
+              <v-icon start size="x-small">delete</v-icon>
+              {{ counts.remove }}
+            </v-chip>
+            <v-chip
+              v-if="counts.keep > 0"
+              size="x-small"
+              variant="tonal"
+              color="info"
+              label
+            >
+              <v-icon start size="x-small">save</v-icon>
+              {{ counts.keep }}
+            </v-chip>
+          </div>
+
+          <v-spacer />
+
+          <v-btn
+            :icon="filterKeep ? 'visibility_off' : 'visibility'"
+            class="z-1"
+            size="small"
+            variant="text"
+            @click="filterKeep = !filterKeep"
+          />
         </div>
 
         <InstanceManifestFileTree
@@ -147,44 +185,50 @@
             <v-chip
               v-if="item.data"
               class="pointer-events-none"
+              size="small"
               label
-              outlined
+              variant="tonal"
               :color="cOperations[item.data.operation]"
             >
-              <v-icon left>
+              <v-icon start size="small">
                 {{ iOperations[item.data.operation] }}
               </v-icon>
               {{ tOperations[item.data.operation] }}
             </v-chip>
           </template>
         </InstanceManifestFileTree>
+
         <Hint
           v-if="fileNodes.length === 0 && counts.hidden > 0"
-          class="min-h-80 static"
+          class="min-h-60 static"
           icon="visibility_off"
-          :text="t('instanceUpdate.summary', { add: counts.add, remove: counts.remove, keep: counts.keep })"
+          :text="t('instanceUpdate.summary', {
+            add: counts.add,
+            remove: counts.remove,
+            keep: counts.keep,
+          })"
         />
-        <div v-else class="flex items-center gap-4 h-4 my-8">
-          <v-divider />
-          {{ t('instanceUpdate.summary', { add: counts.add, remove: counts.remove, keep: counts.keep }) }}
-          <v-divider />
-        </div>
       </div>
-      <v-card-actions class="items-baseline gap-5">
+
+      <v-divider />
+
+      <v-card-actions class="px-6 py-3">
         <v-btn
-          text
-          large
           :disabled="refreshing"
+          variant="text"
           @click="cancel"
         >
           {{ t('shared.cancel') }}
         </v-btn>
         <v-spacer />
         <v-btn
-          text
           color="primary"
-          large
+          variant="flat"
+          size="large"
+          rounded="pill"
           :loading="refreshing"
+          :disabled="!upgrade"
+          prepend-icon="download"
           @click="confirm"
         >
           {{ t('instanceUpdate.update') }}
@@ -210,7 +254,12 @@ import { basename } from '@/util/basename'
 import { getFTBTemplateAndFile } from '@/util/ftb'
 import { injection } from '@/util/inject'
 import type { EditInstanceOptions } from '@xmcl/instance'
-import { InstallInstanceOptions, InstanceFileUpdate, InstanceInstallServiceKey, ModpackServiceKey } from '@xmcl/runtime-api'
+import {
+  InstallInstanceOptions,
+  InstanceFileUpdate,
+  InstanceInstallServiceKey,
+  ModpackServiceKey,
+} from '@xmcl/runtime-api'
 import { useDialog } from '../composables/dialog'
 import { BuiltinImages } from '../constant'
 
@@ -233,19 +282,23 @@ const { refresh, refreshing, error } = useRefreshable<InstanceInstallOptions>(as
     delta: updateDelta,
   }
   if (selectable.value) {
-    const selectedResult = upgradeValue.installation.files.map(f => f.path)
+    const selectedResult = upgradeValue.installation.files.map((f) => f.path)
     if ('oldFiles' in upgradeValue.installation) {
-      selectedResult.push(...upgradeValue.installation.oldFiles.map(f => f.path))
+      selectedResult.push(...upgradeValue.installation.oldFiles.map((f) => f.path))
     }
     selected.value = selectedResult
   }
 })
 
-const { isShown } = useDialog(InstanceInstallDialog, (parm) => {
-  refresh(parm)
-}, () => {
-  upgrade.value = undefined
-})
+const { isShown } = useDialog(
+  InstanceInstallDialog,
+  (parm) => {
+    refresh(parm)
+  },
+  () => {
+    upgrade.value = undefined
+  },
+)
 
 const { openModpack } = useService(ModpackServiceKey)
 const { installInstanceFiles, previewInstanceFiles } = useService(InstanceInstallServiceKey)
@@ -259,25 +312,29 @@ type UpgradeValueType = {
   delta: InstanceFileUpdate[]
 }
 
-const tOperations = computed(() => ({
-  add: t('instanceFileOperation.add'),
-  remove: t('instanceFileOperation.remove'),
-  keep: t('instanceFileOperation.keep'),
-  'backup-add': t('instanceFileOperation.backup-add'),
-  'backup-remove': t('instanceFileOperation.backup-remove'),
-} as Record<string, string>))
+const tOperations = computed(
+  () =>
+    ({
+      add: t('instanceFileOperation.add'),
+      remove: t('instanceFileOperation.remove'),
+      keep: t('instanceFileOperation.keep'),
+      'backup-add': t('instanceFileOperation.backup-add'),
+      'backup-remove': t('instanceFileOperation.backup-remove'),
+    }) as Record<string, string>,
+)
 
 const { getColorCode } = useVuetifyColor()
-const runtime = computed(() => upgrade.value?.edit?.runtime || {} as Record<string, string>)
+const runtime = computed(() => upgrade.value?.edit?.runtime || ({} as Record<string, string>))
 
-const getVersionString = (oldVersion?: string, newVersion?: string) => oldVersion !== newVersion ? `${oldVersion} -> ${newVersion}` : newVersion
+const getVersionString = (oldVersion?: string, newVersion?: string) =>
+  oldVersion !== newVersion ? `${oldVersion} -> ${newVersion}` : newVersion
 
 const cOperations = {
-  add: 'green',
-  remove: 'red',
+  add: 'success',
+  remove: 'error',
   keep: 'info',
-  'backup-add': 'darken green',
-  'backup-remove': 'lighten red',
+  'backup-add': 'success-darken-1',
+  'backup-remove': 'error-lighten-1',
 } as Record<string, string>
 
 const iOperations = {
@@ -296,7 +353,8 @@ function getFileNode(f: InstanceFileUpdate): FileOperationNode {
     path: f.file.path,
     size: f.file.size ?? 0,
     style: {
-      textDecorationLine: f.operation === 'remove' || f.operation === 'backup-remove' ? 'line-through' : '',
+      textDecorationLine:
+        f.operation === 'remove' || f.operation === 'backup-remove' ? 'line-through' : '',
       color: f.operation !== 'keep' ? getColorCode(cOperations[f.operation]) : '',
     },
     data: {
@@ -312,32 +370,46 @@ const filterKeep = ref(false)
 
 const fileNodes = shallowRef([] as FileOperationNode[])
 const counts = shallowRef({ add: 0, remove: 0, keep: 0, hidden: 0 })
-watch([upgrade, filterKeep], ([newVal, keep]) => {
-  if (!newVal?.delta) {
-    fileNodes.value = []
-    return
-  }
-  const delta = newVal.delta
-  const nodes = delta.map(getFileNode)
-  const filtered = nodes.filter(n => n.data?.operation === 'keep' ? !keep : true)
-
-  counts.value = nodes.reduce((acc, n) => {
-    const op = n.data?.operation === 'backup-add' ? 'add' : n.data?.operation === 'backup-remove' ? 'remove' : n.data?.operation
-    if (op) {
-      acc[op]++
+watch(
+  [upgrade, filterKeep],
+  ([newVal, keep]) => {
+    if (!newVal?.delta) {
+      fileNodes.value = []
+      return
     }
-    return acc
-  }, { add: 0, remove: 0, keep: 0, hidden: nodes.length - filtered.length })
+    const delta = newVal.delta
+    const nodes = delta.map(getFileNode)
+    const filtered = nodes.filter((n) => (n.data?.operation === 'keep' ? !keep : true))
 
-  fileNodes.value = filtered
-}, { immediate: true })
+    counts.value = nodes.reduce(
+      (acc, n) => {
+        const op =
+          n.data?.operation === 'backup-add'
+            ? 'add'
+            : n.data?.operation === 'backup-remove'
+              ? 'remove'
+              : n.data?.operation
+        if (op) {
+          acc[op]++
+        }
+        return acc
+      },
+      { add: 0, remove: 0, keep: 0, hidden: nodes.length - filtered.length },
+    )
+
+    fileNodes.value = filtered
+  },
+  { immediate: true },
+)
 provideFileNodes(fileNodes)
 
 const { runtime: oldRuntime, path: instancePath } = injection(kInstance)
 
 const { all: javas } = injection(kJavaContext)
 
-async function getUpgradeValueFromParam(param: InstanceInstallOptions): Promise<Omit<UpgradeValueType, 'delta'>> {
+async function getUpgradeValueFromParam(
+  param: InstanceInstallOptions,
+): Promise<Omit<UpgradeValueType, 'delta'>> {
   if (param.type === 'ftb') {
     const oldManifest = param.oldManifest
     const newManifest = param.newManifest
@@ -351,7 +423,7 @@ async function getUpgradeValueFromParam(param: InstanceInstallOptions): Promise<
         oldFiles: oldVersionFiles,
         files: newVersionFiles,
         upstream: param.upstream,
-      }
+      },
     })
   }
 
@@ -369,20 +441,19 @@ async function getUpgradeValueFromParam(param: InstanceInstallOptions): Promise<
         path: instancePath,
         files: files,
         upstream: param.upstream,
-      }
+      },
     })
-  } 
-  
+  }
+
   return markRaw({
     installation: {
       path: instancePath.value,
       oldFiles: param.oldFiles,
       files: param.files,
       id: param.id,
-    }
+    },
   })
 }
-
 
 const selectable = computed(() => {
   const upgradeValue = upgrade.value
@@ -405,9 +476,9 @@ const confirm = async () => {
   try {
     if (selectable.value) {
       if ('oldFiles' in installation) {
-        installation.oldFiles = installation.oldFiles.filter(f => selectedPath.includes(f.path))
+        installation.oldFiles = installation.oldFiles.filter((f) => selectedPath.includes(f.path))
       }
-      installation.files = installation.files.filter(f => selectedPath.includes(f.path))
+      installation.files = installation.files.filter((f) => selectedPath.includes(f.path))
     }
     await installInstanceFiles(installation)
   } catch (e) {
