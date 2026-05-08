@@ -232,11 +232,11 @@ export function useInstanceLaunch(
     await track(token, _launch(instancePath, user, operationId, side, overrides), 'launching', operationId)
   }
 
-  async function killGame(side: 'client' | 'server' = 'client') {
+  async function killGame(side: 'client' | 'server' = 'client', force?: boolean) {
     if (data.value) {
       for (const p of data.value) {
         if (p.side === side) {
-          await kill(p.pid)
+          await kill(p.pid, force)
         }
       }
     }

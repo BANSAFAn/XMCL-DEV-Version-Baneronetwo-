@@ -471,6 +471,7 @@ launch:
   cancel: Cancel
   createShortcut: Create shortcut
   kill: Stop
+  forceKill: Force Kill
   killServer: Kill Localhost Server
   launch: Launch
   launchAnyway: Launch Anyway

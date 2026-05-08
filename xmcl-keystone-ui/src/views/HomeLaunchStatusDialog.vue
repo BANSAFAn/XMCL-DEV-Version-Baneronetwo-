@@ -88,6 +88,16 @@
           </v-icon>
           {{ t('shared.yes') }}
         </v-btn>
+        <v-btn
+          v-if="exiting"
+          color="red darken-2"
+          @click="onForceKill"
+         variant="text">
+          <v-icon start>
+            dangerous
+          </v-icon>
+          {{ t('launch.forceKill') }}
+        </v-btn>
         <template v-if="javaIssue && !selected">
           <v-btn
             color="warning"
@@ -253,6 +263,11 @@ const launchingSteps = computed(() => [
 
 const onKill = () => {
   kill()
+  hide()
+}
+const onForceKill = () => {
+  // gh #1395 — force-terminate the JVM process tree when graceful kill fails.
+  kill('client', true)
   hide()
 }
 const onCancel = () => hide()

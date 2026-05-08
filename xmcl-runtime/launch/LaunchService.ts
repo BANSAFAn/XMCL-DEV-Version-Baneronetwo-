@@ -570,18 +570,58 @@ export class LaunchService extends AbstractService implements ILaunchService {
     }
   }
 
-  async kill(pid: number) {
+  async kill(pid: number, force?: boolean) {
     const process = this.processes[pid]
     delete this.processes[pid]
     if (process) {
       if (process.side === 'client') {
-        process.process.kill()
-      } else {
-        if (process.ready) {
-          process.process.stdin?.write('/stop\n')
+        if (force) {
+          this.#forceKill(process.process)
         } else {
           process.process.kill()
         }
+      } else {
+        if (process.ready && !force) {
+          process.process.stdin?.write('/stop\n')
+        } else if (force) {
+          this.#forceKill(process.process)
+        } else {
+          process.process.kill()
+        }
+      }
+    }
+  }
+
+  /**
+   * Force-terminate a child process and (best-effort) its descendants.
+   *
+   * On Windows we use `taskkill /F /T /PID <pid>` so child processes spawned
+   * by the JVM (e.g. native helpers) are also killed, since `process.kill()`
+   * only terminates the immediate child. On Unix we send SIGKILL.
+   * See gh #1395.
+   */
+  #forceKill(proc: ChildProcess) {
+    if (typeof proc.pid !== 'number') return
+    if (process.platform === 'win32') {
+      try {
+        const killer = spawn('taskkill', ['/pid', String(proc.pid), '/f', '/t'], {
+          stdio: 'ignore',
+          windowsHide: true,
+        })
+        killer.on('error', (e) => {
+          this.warn(`Failed to spawn taskkill for pid ${proc.pid}: ${e.message}`)
+          // Fall back to direct termination
+          try { proc.kill('SIGKILL' as any) } catch (err) { this.warn(err as any) }
+        })
+      } catch (e) {
+        this.warn(e as Error)
+        try { proc.kill('SIGKILL' as any) } catch (err) { this.warn(err as any) }
+      }
+    } else {
+      try {
+        proc.kill('SIGKILL')
+      } catch (e) {
+        this.warn(e as Error)
       }
     }
   }

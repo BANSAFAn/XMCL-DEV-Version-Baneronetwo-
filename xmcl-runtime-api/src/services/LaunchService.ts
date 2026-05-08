@@ -184,8 +184,11 @@ export interface LaunchService extends GenericEventEmitter<LaunchServiceEventMap
   /**
    * Kill the Minecraft process
    * @param pid The process id
+   * @param force If true, force-terminate the process tree (SIGKILL on Unix,
+   *   `taskkill /F /T` on Windows). Useful when the JVM hangs on exit and the
+   *   default graceful shutdown does not work. See gh #1395.
    */
-  kill(pid: number): Promise<void>
+  kill(pid: number, force?: boolean): Promise<void>
   /**
    * Get the game process
    * @param pid The process id

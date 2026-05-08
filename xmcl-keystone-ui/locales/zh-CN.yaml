@@ -459,6 +459,7 @@ launch:
   cancel: 中止
   createShortcut: 创建快捷方式
   kill: 停止
+  forceKill: 强制结束
   killServer: 停止本地服务器
   launch: 启动
   launchAnyway: 直接启动
