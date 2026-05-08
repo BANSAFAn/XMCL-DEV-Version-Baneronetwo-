@@ -23,6 +23,18 @@ export interface MultiMCConfig {
   MinecraftWinHeight: string
   JoinServerOnLaunch: string
   JoinServerOnLaunchAddress: string
+  /**
+   * Whether per-instance commands override the launcher-global commands.
+   * Only when this is `"true"` does MultiMC actually run the per-instance
+   * `PreLaunchCommand` / `WrapperCommand` / `PostExitCommand`. See gh #1386.
+   */
+  OverrideCommands: string
+  /** Per-instance command run before launching Minecraft */
+  PreLaunchCommand: string
+  /** Per-instance command that wraps (prepends) the JVM invocation */
+  WrapperCommand: string
+  /** Per-instance command run after the game exits (no xmcl equivalent yet) */
+  PostExitCommand: string
 }
 
 /**
@@ -78,11 +90,15 @@ export function detectMMCRoot(path: string): string {
  */
 export async function parseMultiMCInstance(path: string): Promise<CreateInstanceOptions> {
   const instanceCFGText = await readFile(join(path, 'instance.cfg'), 'utf-8')
-  const instanceCFG = instanceCFGText.split('\n').reduce(
+  const instanceCFG = instanceCFGText.split(/\r?\n/).reduce(
     (acc, line) => {
-      if (!line || line.trim().length === 0) return acc
-      const [key, value] = line.split('=')
-      acc[key] = value
+      if (!line || line.trim().length === 0 || line.startsWith('#') || line.startsWith('[')) return acc
+      const eq = line.indexOf('=')
+      if (eq < 0) return acc
+      const key = line.substring(0, eq).trim()
+      // Values may legitimately contain '=' (e.g. wrapper command env vars),
+      // so we only split on the first '='.
+      acc[key] = line.substring(eq + 1)
       return acc
     },
     {} as Record<string, string>,
@@ -134,6 +150,19 @@ export async function parseMultiMCInstance(path: string): Promise<CreateInstance
       width: parseInt(instanceCFG.MinecraftWinWidth),
       height: parseInt(instanceCFG.MinecraftWinHeight),
       fullscreen: false,
+    }
+  }
+
+  // gh #1386 — Import per-instance commands from MultiMC's instance.cfg.
+  // MultiMC only honors the per-instance commands when `OverrideCommands=true`;
+  // global commands are not exposed in instance.cfg so we cannot import them
+  // here. PostExitCommand has no xmcl equivalent and is dropped.
+  if (instanceCFG.OverrideCommands === 'true') {
+    if (instanceCFG.PreLaunchCommand) {
+      instanceOptions.preExecuteCommand = instanceCFG.PreLaunchCommand
+    }
+    if (instanceCFG.WrapperCommand) {
+      instanceOptions.prependCommand = instanceCFG.WrapperCommand
     }
   }
 

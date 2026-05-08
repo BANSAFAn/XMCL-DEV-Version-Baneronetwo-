@@ -160,6 +160,16 @@ export interface MMCModpackManifest {
   cfg: {
     name: string
     notes: string
+    /** See gh #1386 — only honored when `OverrideCommands === 'true'`. */
+    OverrideCommands?: string
+    PreLaunchCommand?: string
+    WrapperCommand?: string
+    PostExitCommand?: string
+    JvmArgs?: string
+    MinMemAlloc?: string
+    MaxMemAlloc?: string
+    // Other instance.cfg keys are passed through but not strongly typed.
+    [key: string]: string | undefined
   }
 }
 
@@ -261,7 +271,22 @@ export function getInstanceConfigFromMmcModpack(manifest: MMCModpackManifest) {
   const quilt = manifest.json.components.find((c) => c.uid === 'net.quiltmc.quilt-loader')
   const neoForge = manifest.json.components.find((c) => c.uid === 'net.neoforge')
 
-  return {
+  const result: {
+    name: string
+    description: string
+    runtime: {
+      minecraft: string
+      forge?: string
+      fabricLoader?: string
+      quiltLoader?: string
+      neoForged?: string
+    }
+    vmOptions?: string[]
+    minMemory?: number
+    maxMemory?: number
+    preExecuteCommand?: string
+    prependCommand?: string
+  } = {
     name: manifest.cfg.name,
     description: manifest.cfg.notes,
     runtime: {
@@ -272,6 +297,31 @@ export function getInstanceConfigFromMmcModpack(manifest: MMCModpackManifest) {
       neoForged: neoForge ? neoForge.version : undefined,
     },
   }
+
+  if (manifest.cfg.JvmArgs) {
+    result.vmOptions = manifest.cfg.JvmArgs.split(' ').filter(v => !!v)
+  }
+  const minMem = manifest.cfg.MinMemAlloc ? parseInt(manifest.cfg.MinMemAlloc, 10) : NaN
+  if (!Number.isNaN(minMem) && minMem > 0) {
+    result.minMemory = minMem
+  }
+  const maxMem = manifest.cfg.MaxMemAlloc ? parseInt(manifest.cfg.MaxMemAlloc, 10) : NaN
+  if (!Number.isNaN(maxMem) && maxMem > 0) {
+    result.maxMemory = maxMem
+  }
+
+  // gh #1386 — Import per-instance commands when OverrideCommands is enabled.
+  // PostExitCommand has no xmcl equivalent and is intentionally dropped.
+  if (manifest.cfg.OverrideCommands === 'true') {
+    if (manifest.cfg.PreLaunchCommand) {
+      result.preExecuteCommand = manifest.cfg.PreLaunchCommand
+    }
+    if (manifest.cfg.WrapperCommand) {
+      result.prependCommand = manifest.cfg.WrapperCommand
+    }
+  }
+
+  return result
 }
 
 /**

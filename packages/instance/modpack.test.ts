@@ -119,6 +119,55 @@ describe('Modpack Conversion Functions', () => {
       expect(result.runtime?.fabricLoader).toBeUndefined()
       expect(result.runtime?.neoForged).toBeUndefined()
     })
+
+    it('should import per-instance commands when OverrideCommands=true (gh #1386)', () => {
+      const manifest: MMCModpackManifest = {
+        json: {
+          formatVersion: 1,
+          components: [{ uid: 'net.minecraft', version: '1.20.1' }],
+        },
+        cfg: {
+          name: 'Pack With Commands',
+          notes: '',
+          OverrideCommands: 'true',
+          PreLaunchCommand: 'echo hello && sync',
+          WrapperCommand: 'prime-run env LIBVA_DRIVER_NAME=radeonsi',
+          PostExitCommand: 'echo bye',
+          JvmArgs: '-XX:+UseG1GC -Dfile.encoding=UTF-8',
+          MinMemAlloc: '1024',
+          MaxMemAlloc: '4096',
+        },
+      }
+
+      const result = getInstanceConfigFromMmcModpack(manifest)
+
+      expect(result.preExecuteCommand).toBe('echo hello && sync')
+      // Wrapper command containing '=' must be preserved verbatim.
+      expect(result.prependCommand).toBe('prime-run env LIBVA_DRIVER_NAME=radeonsi')
+      expect(result.vmOptions).toEqual(['-XX:+UseG1GC', '-Dfile.encoding=UTF-8'])
+      expect(result.minMemory).toBe(1024)
+      expect(result.maxMemory).toBe(4096)
+    })
+
+    it('should ignore per-instance commands when OverrideCommands is not enabled (gh #1386)', () => {
+      const manifest: MMCModpackManifest = {
+        json: {
+          formatVersion: 1,
+          components: [{ uid: 'net.minecraft', version: '1.20.1' }],
+        },
+        cfg: {
+          name: 'Pack With Commands',
+          notes: '',
+          PreLaunchCommand: 'echo hello',
+          WrapperCommand: 'prime-run',
+        },
+      }
+
+      const result = getInstanceConfigFromMmcModpack(manifest)
+
+      expect(result.preExecuteCommand).toBeUndefined()
+      expect(result.prependCommand).toBeUndefined()
+    })
   })
 
   describe('getInstanceConfigFromCurseforgeModpack', () => {
