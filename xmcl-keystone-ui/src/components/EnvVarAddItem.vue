@@ -1,10 +1,10 @@
 <template>
-  <div class="env-var-add flex items-center gap-2 px-2 py-2">
+  <div class="env-var-add">
     <v-text-field
       v-model="envVarKey"
       autofocus
       label="Key"
-      placeholder="Key"
+      placeholder="MY_VAR"
       variant="outlined"
       density="compact"
       hide-details
@@ -12,11 +12,11 @@
       class="flex-1"
       @keydown.enter="onSubmit"
     />
-    <v-icon size="small" class="text-medium-emphasis">drag_handle</v-icon>
+    <span class="env-var-add__sep">=</span>
     <v-text-field
       v-model="envVarValue"
       label="Value"
-      placeholder="Value"
+      placeholder="value"
       variant="outlined"
       density="compact"
       hide-details
@@ -71,3 +71,19 @@ function onSubmit() {
   envVarValue.value = ''
 }
 </script>
+
+<style scoped>
+.env-var-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px 4px;
+}
+
+.env-var-add__sep {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1rem;
+  opacity: 0.5;
+  user-select: none;
+}
+</style>
