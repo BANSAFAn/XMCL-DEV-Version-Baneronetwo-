@@ -1,6 +1,6 @@
 import { parse } from '@/util/forgeWebParser'
 import { get } from '@vueuse/core'
-import type { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 import type { JavaRuntimeManifest, JavaRuntimeTarget, JavaRuntimes, LabyModManifest } from '@xmcl/installer'
 import { FabricArtifactVersion, ForgeVersion, MinecraftVersions, OptifineVersion, QuiltArtifactVersion, VersionMetadataServiceKey } from '@xmcl/runtime-api'
 import { InjectionKey, Ref, computed } from 'vue'

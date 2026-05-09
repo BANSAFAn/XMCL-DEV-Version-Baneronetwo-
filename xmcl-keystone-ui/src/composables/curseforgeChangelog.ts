@@ -3,7 +3,7 @@ import { kSWRVConfig } from './swrvConfig'
 import { clientCurseforgeV1 } from '@/util/clients'
 import { useSWRVModel } from './swrv'
 import { get } from '@vueuse/core'
-import type { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 
 export function getCurseforgeChangelogModel(modId: MaybeRef<number>, fileId: MaybeRef<number | undefined>) {
   return {

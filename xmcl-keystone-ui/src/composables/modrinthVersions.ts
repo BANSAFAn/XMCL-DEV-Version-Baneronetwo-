@@ -1,7 +1,7 @@
 import { clientModrinthV2 } from '@/util/clients'
 import { getModrinthVersionKey } from '@/util/modrinth'
 import { get } from '@vueuse/core'
-import type { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 import { ProjectVersion } from '@xmcl/modrinth'
 import { Tasks } from '@xmcl/runtime-api'
 import { InjectionKey, Ref } from 'vue'

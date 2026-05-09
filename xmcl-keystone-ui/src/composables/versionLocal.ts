@@ -3,7 +3,7 @@ import { VersionServiceKey, LocalVersions, VersionHeader } from '@xmcl/runtime-a
 import { computed, InjectionKey } from 'vue'
 import { useState } from './syncableState'
 import { get } from '@vueuse/core'
-import type { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 import { BuiltinImages } from '@/constant'
 import { RuntimeVersions } from '@xmcl/instance'
 

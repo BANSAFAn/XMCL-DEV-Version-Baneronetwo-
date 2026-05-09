@@ -1,5 +1,5 @@
 import { get } from '@vueuse/core'
-import type { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 import { SWRVCache, mutate } from 'swrv'
 import { Ref } from 'vue'
 

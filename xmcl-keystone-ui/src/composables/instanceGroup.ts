@@ -1,7 +1,7 @@
 import { injection } from '@/util/inject'
 import { ref, onMounted } from 'vue'
 import { get, useEventBus } from '@vueuse/core'
-import type { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 import { InstanceGroupData, InstanceGroupDataOrString } from '@xmcl/runtime-api'
 import { kInstances } from './instances'
 import { kTheme } from './theme'
