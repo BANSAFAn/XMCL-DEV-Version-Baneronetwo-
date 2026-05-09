@@ -98,9 +98,9 @@ import { vFallbackImg } from '@/directives/fallbackImage'
 import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { getColor } from '@/util/color'
 import { injection } from '@/util/inject'
-import Vue from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 
-const btnElem = ref(null as Vue | null)
+const btnElem = ref(null as ComponentPublicInstance | null)
 
 const isOverflowed = computed(() => {
   const el = btnElem.value?.$el

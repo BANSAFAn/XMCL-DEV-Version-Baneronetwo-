@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { RuntimeVersions } from '@xmcl/instance';
+import { PartialRuntimeVersions, RuntimeVersions } from '@xmcl/instance';
 import { BuiltinImages } from '../constant'
 
 defineProps<{
   icon?: string
   name: string
-  runtime: RuntimeVersions
+  runtime: RuntimeVersions | PartialRuntimeVersions
   value?: boolean
   description?: string
 }>()

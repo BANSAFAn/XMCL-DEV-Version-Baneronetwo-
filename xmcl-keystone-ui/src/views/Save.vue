@@ -24,14 +24,16 @@
         :style="{ height: itemHeight + 'px' }"
       >
         {{
-          item === 'installed' ? t("save.selected") :
-          item === 'shared' ? t("save.unselected") :
-          t("modInstall.search")
+          item === 'installed'
+            ? t('save.selected')
+            : item === 'shared'
+              ? t('save.unselected')
+              : t('modInstall.search')
         }}
       </v-list-subheader>
       <SaveItem
         v-else
-        :item="item"
+        :item="item as ProjectEntry<InstanceSaveFile>"
         :item-height="itemHeight"
         :has-update="hasUpdate"
         :checked="checked"
@@ -43,12 +45,7 @@
       />
     </template>
     <template #content="{ selectedItem, selectedCurseforgeId, updating }">
-      <Hint
-        v-if="dragover"
-        icon="save_alt"
-        :text="t('save.dropHint')"
-        class="h-full"
-      />
+      <Hint v-if="dragover" icon="save_alt" :text="t('save.dropHint')" class="h-full" />
       <MarketProjectDetailCurseforge
         v-else-if="selectedItem && (selectedItem.curseforge || selectedCurseforgeId)"
         :curseforge="selectedItem.curseforge"
@@ -60,11 +57,7 @@
         :updating="updating"
         @category="curseforgeCategory = $event"
       />
-      <SaveDetail
-        v-else-if="isSaveProject(selectedItem)"
-        :save="selectedItem"
-        @delete="onDelete"
-      />
+      <SaveDetail v-else-if="isSaveProject(selectedItem)" :save="selectedItem" @delete="onDelete" />
       <MarketRecommendation
         v-else
         curseforge="worlds"
@@ -119,34 +112,34 @@ const { effect, items, sortBy, loadMore, loading, error: searchError } = injecti
 
 effect()
 
-const isSaveProject = (v: ProjectEntry | undefined): v is ProjectEntry<InstanceSaveFile> => !!v?.installed && v.installed.length > 0
+const isSaveProject = (v: ProjectEntry | undefined): v is ProjectEntry<InstanceSaveFile> =>
+  !!v?.installed && v.installed.length > 0
 
 const denseView = useLocalStorageCacheBool('savesDenseView', false)
-const itemHeight = computed(() => denseView.value ? 40 : 68)
+const itemHeight = computed(() => (denseView.value ? 40 : 68))
 
 const groupedItems = computed(() => {
   const result: (ProjectEntry | string)[] = []
 
-  const {
-    enabled,
-    disabled,
-    others,
-  } = items.value.reduce((arrays, item) => {
-    if (item.installed && item.installed.length > 0) {
-      if (item.disabled) {
-        arrays.disabled.push(item)
+  const { enabled, disabled, others } = items.value.reduce(
+    (arrays, item) => {
+      if (item.installed && item.installed.length > 0) {
+        if (item.disabled) {
+          arrays.disabled.push(item)
+        } else {
+          arrays.enabled.push(item)
+        }
       } else {
-        arrays.enabled.push(item)
+        arrays.others.push(item)
       }
-    } else {
-      arrays.others.push(item)
-    }
-    return arrays
-  }, {
-    enabled: [] as ProjectEntry[],
-    disabled: [] as ProjectEntry[],
-    others: [] as ProjectEntry[],
-  })
+      return arrays
+    },
+    {
+      enabled: [] as ProjectEntry[],
+      disabled: [] as ProjectEntry[],
+      others: [] as ProjectEntry[],
+    },
+  )
   if (enabled.length > 0) {
     result.push('enabled' as string)
     result.push(...enabled)
@@ -182,7 +175,12 @@ provide(kCurseforgeInstaller, {
   },
 })
 
-const { target: deleting, confirm: doDelete, model, show } = useSimpleDialog<InstanceSaveFile>((save) => save ? deleteSave(save) : undefined)
+const {
+  target: deleting,
+  confirm: doDelete,
+  model,
+  show,
+} = useSimpleDialog<InstanceSaveFile>((save) => (save ? deleteSave(save) : undefined))
 const onDelete = (save: InstanceSaveFile) => {
   show(save)
 }

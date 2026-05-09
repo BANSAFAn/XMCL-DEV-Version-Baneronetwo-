@@ -1,6 +1,5 @@
-import { InjectionKey, Ref } from 'vue'
+import { InjectionKey, Ref, CSSProperties } from 'vue'
 import { basename } from '@/util/basename'
-import { CSSProperties } from 'vue/types/jsx'
 import { injection } from '@/util/inject'
 import { kInstanceModsContext } from './instanceMods'
 import { InstanceFile } from '@xmcl/instance'

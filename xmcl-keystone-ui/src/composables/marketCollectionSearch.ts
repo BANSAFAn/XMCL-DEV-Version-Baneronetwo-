@@ -75,7 +75,6 @@ export function useMarketCollectionSearch<T extends ProjectEntry<any>>(projectTy
       if (source !== 'favorite') {
         return
       }
-      // @ts-expect-error
       items.value = await getProjects(id, follows, collections)
     }, { immediate: true })
   }

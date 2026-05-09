@@ -26,8 +26,8 @@ appInsights.addTelemetryInitializer((envelope) => {
       if (exception.message.includes('Failed to fetch')) {
         return false
       }
-      if (exception.message.include('SyntaxError: {"code":24}')) {
-        exception.locale = i18n.locale
+      if (exception.message.includes('SyntaxError: {"code":24}')) {
+        exception.locale = (i18n.global.locale as any).value
       }
     }
   }

@@ -56,10 +56,10 @@
     <template #item="{ item, hasUpdate, checked, selectionMode, selected, on }">
       <ModItem
         v-if="typeof item === 'object' && 'id' in item"
-        :item="item"
+        :item="(item as ProjectEntry<ModFile>)"
         :key="`item-${item.id}`"
-        :indent="!!isInGroup(item.installed?.[0]?.fileName)"
-        :indent-color="getGroupColor(item.installed?.[0]?.fileName)"
+        :indent="!!isInGroup(((item as ProjectEntry<ModFile>).installed?.[0]?.fileName))"
+        :indent-color="getGroupColor((item as ProjectEntry<ModFile>).installed?.[0]?.fileName)"
         :item-height="itemHeight"
         :has-update="hasUpdate"
         :checked="checked"
@@ -74,7 +74,7 @@
       <ModGroupEntryItem
         v-else-if="typeof item === 'object'"
         :key="`folder-${item.name}-${item.projects.length}`"
-        :items="item.projects"
+        :items="(item.projects as ProjectEntry<ModFile>[])"
         :height="itemHeight"
         :name="item.name"
         :expanded="!groupCollapsedState[item.name]"

@@ -121,7 +121,7 @@
                   hide-details
                   color="primary"
                   :model-value="enableModrinth"
-                  @update:model-value="emit('update:enableModrinth', $event)"
+                  @update:model-value="emit('update:enableModrinth', !!$event)"
                 />
               </div>
               <v-chip-group v-model="modrinthSelectModel" column multiple>
@@ -179,7 +179,7 @@
                   hide-details
                   color="primary"
                   :model-value="enableCurseforge"
-                  @update:model-value="emit('update:enableCurseforge', $event)"
+                  @update:model-value="emit('update:enableCurseforge', !!$event)"
                 />
               </div>
               <v-chip-group v-model="curseforgeSelectModel" column :disabled="!enableCurseforge">
@@ -278,19 +278,19 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'input', value: boolean): void
-  (event: 'update:curseforgeCategory', value: number | undefined): void
-  (event: 'update:modrinthCategories', value: string[]): void
-  (event: 'update:enableCurseforge', value: boolean): void
-  (event: 'update:enableModrinth', value: boolean): void
-  (event: 'update:keyword', value: string | undefined): void
-  (event: 'update:sort', value: number): void
-  (event: 'update:modloader', value: string): void
-  (event: 'update:localSort', value: 'alpha_asc' | 'alpha_desc' | 'time_asc' | 'time_desc'): void
-  (event: 'update:gameVersion', value: string): void
-  (event: 'update:mode', value: 'local' | 'remote' | 'favorite'): void
-  (event: 'update:collection', value: string): void
-  (event: 'update:modrinthEnvironment', value: '' | 'client' | 'server'): void
+  input: [value: boolean]
+  'update:curseforgeCategory': [value: number | undefined]
+  'update:modrinthCategories': [value: string[]]
+  'update:enableCurseforge': [value: boolean]
+  'update:enableModrinth': [value: boolean]
+  'update:keyword': [value: string | undefined]
+  'update:sort': [value: number]
+  'update:modloader': [value: string]
+  'update:localSort': [value: 'alpha_asc' | 'alpha_desc' | 'time_asc' | 'time_desc']
+  'update:gameVersion': [value: string]
+  'update:mode': [value: 'local' | 'remote' | 'favorite']
+  'update:collection': [value: string]
+  'update:modrinthEnvironment': [value: '' | 'client' | 'server']
 }>()
 
 const showMenu = ref(false)

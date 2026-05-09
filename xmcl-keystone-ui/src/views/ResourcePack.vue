@@ -23,38 +23,38 @@
         :style="{ height: itemHeight + 'px' }"
       >
         {{
-          item === 'enabled' ? t("resourcepack.selected") :
-          item === 'disabled' ? t("resourcepack.unselected") :
-          t("modInstall.search")
+          item === 'enabled'
+            ? t('resourcepack.selected')
+            : item === 'disabled'
+              ? t('resourcepack.unselected')
+              : t('modInstall.search')
         }}
       </v-list-subheader>
       <ResourcePackItem
-        v-else-if="(typeof item === 'object')"
-        :pack="item"
+        v-else-if="typeof item === 'object' && 'id' in item"
+        :pack="item as ResourcePackProject"
         :dense="denseView"
-        :draggable="currentView === 'local' && !item.disabled"
+        :draggable="currentView === 'local' && !(item as ResourcePackProject).disabled"
         :selection-mode="selectionMode"
         :item-height="itemHeight"
         :selected="selected"
         :has-update="hasUpdate"
         :checked="checked"
         :install="onInstallProject"
-        @drop="onDrop(item, $event)"
+        @drop="onDrop(item as ResourcePackProject, $event)"
         @click="on.click"
       />
     </template>
     <template #content="{ selectedModrinthId, selectedItem, selectedCurseforgeId }">
-      <Hint
-        v-if="dragover"
-        icon="save_alt"
-        :text="t('resourcepack.dropHint')"
-        class="h-full"
-      />
+      <Hint v-if="dragover" icon="save_alt" :text="t('resourcepack.dropHint')" class="h-full" />
       <MarketProjectDetailModrinth
         v-else-if="selectedItem?.modrinth || selectedModrinthId"
         :modrinth="selectedItem?.modrinth"
         :project-id="selectedModrinthId"
-        :installed="selectedItem?.installed || getInstalledModrinth(selectedItem?.modrinth?.project_id || selectedModrinthId)"
+        :installed="
+          selectedItem?.installed ||
+          getInstalledModrinth(selectedItem?.modrinth?.project_id || selectedModrinthId)
+        "
         :game-version="gameVersion"
         :categories="modrinthCategories"
         :all-files="files"
@@ -68,7 +68,10 @@
         v-else-if="selectedItem?.curseforge || selectedCurseforgeId"
         :curseforge="selectedItem?.curseforge"
         :curseforge-id="Number(selectedItem?.curseforge?.id || selectedCurseforgeId)"
-        :installed="selectedItem?.installed || getInstalledCurseforge(Number(selectedItem?.curseforge?.id || selectedCurseforgeId))"
+        :installed="
+          selectedItem?.installed ||
+          getInstalledCurseforge(Number(selectedItem?.curseforge?.id || selectedCurseforgeId))
+        "
         :game-version="gameVersion"
         :category="curseforgeCategory"
         :all-files="files"
@@ -98,7 +101,7 @@
   </MarketBase>
 </template>
 
-<script lang=ts setup>
+<script lang="ts" setup>
 import Hint from '@/components/Hint.vue'
 import MarketBase from '@/components/MarketBase.vue'
 import MarketListHeader from '@/components/MarketListHeader.vue'
@@ -129,13 +132,8 @@ import { sort } from '@/composables/sortBy'
 
 const { runtime, path } = injection(kInstance)
 const { files, enable, disable, insert } = injection(kInstanceResourcePacks)
-const {
-  keyword,
-  curseforgeCategory,
-  modrinthCategories,
-  currentView,
-  gameVersion,
-} = injection(kSearchModel)
+const { keyword, curseforgeCategory, modrinthCategories, currentView, gameVersion } =
+  injection(kSearchModel)
 const {
   error,
   loading,
@@ -154,26 +152,25 @@ const items = computed(() => {
   const result: (string | ProjectEntry)[] = []
 
   if (currentView.value === 'local') {
-    const {
-      enabled,
-      disabled,
-      others,
-    } = originalItems.value.reduce((arrays, item) => {
-      if (item.installed && item.installed.length > 0) {
-        if (item.disabled) {
-          arrays.disabled.push(item)
+    const { enabled, disabled, others } = originalItems.value.reduce(
+      (arrays, item) => {
+        if (item.installed && item.installed.length > 0) {
+          if (item.disabled) {
+            arrays.disabled.push(item)
+          } else {
+            arrays.enabled.push(item)
+          }
         } else {
-          arrays.enabled.push(item)
+          arrays.others.push(item)
         }
-      } else {
-        arrays.others.push(item)
-      }
-      return arrays
-    }, {
-      enabled: [] as ProjectEntry[],
-      disabled: [] as ProjectEntry[],
-      others: [] as ProjectEntry[],
-    })
+        return arrays
+      },
+      {
+        enabled: [] as ProjectEntry[],
+        disabled: [] as ProjectEntry[],
+        others: [] as ProjectEntry[],
+      },
+    )
     if (enabled.length > 0) {
       result.push('enabled' as string)
       result.push(...enabled)
@@ -200,11 +197,11 @@ const items = computed(() => {
 const onUninstall = (v: ProjectFile[]) => {
   const packs = v as InstanceResourcePack[]
   disable(packs)
-  uninstall({ path: path.value, files: packs.map(p => p.path) })
+  uninstall({ path: path.value, files: packs.map((p) => p.path) })
 }
 const onEnable = (f: ProjectFile) => {
   enable([f as InstanceResourcePack])
-  install({ path: path.value, files: [f.path]})
+  install({ path: path.value, files: [f.path] })
 }
 const onDisable = (f: ProjectFile) => {
   disable([f as InstanceResourcePack])
@@ -215,7 +212,7 @@ const onDrop = (item: ResourcePackProject, id: string) => {
     return
   }
   const target = _items.indexOf(item)
-  const from = _items.findIndex(e => typeof e === 'object' && e.id === id)
+  const from = _items.findIndex((e) => typeof e === 'object' && e.id === id)
   if (target !== -1 && from !== -1) {
     insert(from, target)
   }
@@ -260,13 +257,7 @@ const { dragover } = useGlobalDrop({
 })
 
 // modrinth installer
-const modrinthInstaller = useModrinthInstaller(
-  path,
-  runtime,
-  files,
-  installFromMarket,
-  onUninstall,
-)
+const modrinthInstaller = useModrinthInstaller(path, runtime, files, installFromMarket, onUninstall)
 provide(kModrinthInstaller, modrinthInstaller)
 
 // curseforge installer
@@ -299,7 +290,7 @@ const getInstalledCurseforge = (modId: number | undefined) => {
 
 // dense
 const denseView = useLocalStorageCacheBool('resource-pack-dense-view', false)
-const itemHeight = computed(() => denseView.value ? 48 : 76)
+const itemHeight = computed(() => (denseView.value ? 48 : 76))
 </script>
 
 <style scoped>
@@ -311,7 +302,7 @@ const itemHeight = computed(() => denseView.value ? 48 : 76)
   @apply w-full sticky top-0 z-10 flex-shrink-0 pl-0;
   text-transform: uppercase;
   text-indent: 0.0892857143em;
-  letter-spacing: .0892857143em;
+  letter-spacing: 0.0892857143em;
 }
 
 .list {

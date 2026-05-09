@@ -84,7 +84,7 @@
             <div class="grid w-full grid-cols-3 gap-4">
               <v-text-field
                 v-model="serverField"
-                :rules="[!serverField ? 'Required' : undefined]"
+                :rules="[!serverField ? 'Required' : true]"
                 variant="outlined"
                 persistent-hint
                 autofocus

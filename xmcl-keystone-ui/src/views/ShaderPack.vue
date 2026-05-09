@@ -27,7 +27,7 @@
       </v-list-subheader>
       <ShaderPackItem
         v-else
-        :pack="item"
+        :pack="(item as ShaderPackProject)"
         :selection-mode="selectionMode"
         :selected="selected"
         :dense="denseView"

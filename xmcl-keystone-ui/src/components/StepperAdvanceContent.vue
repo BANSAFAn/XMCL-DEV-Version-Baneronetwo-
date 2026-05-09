@@ -11,7 +11,7 @@
         :label="t('java.location')"
         :placeholder="t('java.allocatedLong')"
         :items="javaItems"
-        :menu-props="{ auto: true, overflowY: true }"
+        :menu-props="{ }"
         hide-details
         required
       />

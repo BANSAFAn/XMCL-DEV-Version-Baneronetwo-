@@ -12,7 +12,7 @@
     >
       <v-card
         elevation="0"
-        text
+        variant="text"
         color="transparent"
         :title="t('HomeLaunchMultiInstanceDialog.title')"
         :text="t('HomeLaunchMultiInstanceDialog.description')"

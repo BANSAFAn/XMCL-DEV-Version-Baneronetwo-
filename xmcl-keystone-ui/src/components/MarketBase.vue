@@ -48,10 +48,10 @@
                 name="item"
                 :item="item"
                 :index="index"
-                :has-update="typeof item === 'string' ? false : !!plans[item.id]"
-                :checked="typeof item === 'string' ? false : (selections[item.id] || false)"
-                :selection-mode="typeof item === 'string' ? false : (selectionMode && item.installed && item.installed.length > 0)"
-                :selected="typeof item === 'string' ? false : ((selectedItem && (selectedItem.id === item.id) || selections[item.id]) || false)"
+                :has-update="typeof item !== 'object' || !('id' in item) ? false : !!plans[item.id]"
+                :checked="typeof item !== 'object' || !('id' in item) ? false : (selections[item.id] || false)"
+                :selection-mode="typeof item !== 'object' || !('id' in item) ? false : (selectionMode && item.installed && item.installed.length > 0)"
+                :selected="typeof item !== 'object' || !('id' in item) ? false : ((selectedItem && (selectedItem.id === item.id) || selections[item.id]) || false)"
                 :on="{
                   // @ts-ignore
                   click: (event) => onSelect(event, item)

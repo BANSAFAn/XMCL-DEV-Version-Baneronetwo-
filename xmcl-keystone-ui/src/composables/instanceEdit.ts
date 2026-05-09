@@ -551,12 +551,8 @@ export function useInstanceEditVersions(
   }
   function onSelectLabyMod(version: string) {
     if (data.runtime) {
-      const runtime = data.runtime
-      if ('labyMod' in runtime) {
-        runtime.labyMod = version
-      } else {
-        runtime['labyMod'] = version
-      }
+      const runtime = data.runtime as Record<string, string>
+      runtime.labyMod = version
       if (version) {
         data.version = ''
         // Select all other to empty

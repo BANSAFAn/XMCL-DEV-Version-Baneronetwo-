@@ -75,7 +75,7 @@
                   v-for="m of manifest.instances"
                   :key="m.path"
                   :value="included.includes(m.path)"
-                  :runtime="m.options.runtime"
+                  :runtime="m.options.runtime || { minecraft: '' }"
                   :name="m.options.name"
                   @select="onEnableFolder(m.path)"
                 />

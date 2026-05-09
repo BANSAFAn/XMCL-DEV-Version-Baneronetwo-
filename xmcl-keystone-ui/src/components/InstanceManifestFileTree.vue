@@ -93,9 +93,11 @@ const isOpen = (item: TreeItem<InstanceFileNode<any>>) => {
   return result
 }
 
-const isSelected = (item: TreeItem<InstanceFileNode<any>> | undefined): boolean =>
-  !!item?.data &&
-  (checkedStates.value[(item.data.path)] === CheckedState.Checked)
+const isSelected = (item: TreeItem<InstanceFileNode<any>> | InstanceFileNode<any> | undefined): boolean => {
+  if (!item) return false
+  const data = ('data' in item) ? item.data : item
+  return !!data && checkedStates.value[data.path] === CheckedState.Checked
+}
 
 const isPartial = (item: TreeItem<InstanceFileNode<any>> | undefined): boolean =>
   !!item?.data &&
