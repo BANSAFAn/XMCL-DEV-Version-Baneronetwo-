@@ -1,7 +1,7 @@
 import { clientCurseforgeV1 } from '@/util/clients'
 import { SWRVModel, formatKey } from '@/util/swrvGet'
 import { get } from '@vueuse/core'
-import type { MaybeRef } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 import { File, FileModLoaderType, Mod, ModsSearchSortField } from '@xmcl/curseforge'
 import useSWRV from 'swrv'
 import { InjectionKey, Ref, computed, reactive, toRefs, watch } from 'vue'
@@ -207,7 +207,6 @@ export function useCurseforgeCategoryI18n() {
       case 'Adventure and RPG': return t('curseforgeCategory.Adventure and RPG')
       case 'Animated': return t('curseforgeCategory.Animated')
       case 'Armor, Tools, and Weapons': return t('curseforgeCategory.Armor, Tools, and Weapons')
-      case 'Armor， Tools， and Weapons': return t('curseforgeCategory.Armor， Tools， and Weapons')
       case 'Combat / PvP': return t('curseforgeCategory.Combat / PvP')
       case 'Cosmetic': return t('curseforgeCategory.Cosmetic')
       case 'Creation': return t('curseforgeCategory.Creation')

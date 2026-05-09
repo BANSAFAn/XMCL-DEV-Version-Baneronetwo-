@@ -71,7 +71,6 @@ curseforgeCategory:
   Adventure and RPG: 冒險與角色扮演
   Animated: 動畫
   Armor, Tools, and Weapons: 盔甲、工具和武器
-  Armor， Tools， and Weapons: 盔甲、工具和武器
   Combat / PvP: 競技/PVP
   Cosmetic: 外觀/裝飾
   Creation: 創造模式
@@ -1513,7 +1512,6 @@ userService:
   manageServices: 管理服務
   register: 註冊
   server: 伺服器
-  service:
   skinDomains: 皮膚網域
   title: 第三方玩家資訊服務
   version: 版本
