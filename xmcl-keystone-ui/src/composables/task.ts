@@ -268,3 +268,16 @@ export function useTask(finder: (i: Tasks) => boolean) {
     status,
   }
 }
+
+/**
+ * Same as {@link useTask} but takes the tasks list directly.
+ * Use this when you need to construct task views inside a computed/.map
+ * callback where Vue's `inject` is no longer available.
+ */
+export function useTaskFromList(tasks: Ref<Tasks[]>, finder: (i: Tasks) => boolean) {
+  const task = computed(() => tasks.value.find((i) => i.state === TaskState.Running && finder(i)))
+  const status = computed(() => task.value?.state)
+  const progress = computed(() => task.value?.progress?.progress ?? 0)
+  const total = computed(() => task.value?.progress?.total ?? -1)
+  return { task, progress, total, status }
+}

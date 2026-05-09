@@ -11,6 +11,7 @@ import { useProjectDetailEnable, useProjectDetailUpdate } from '@/composables/pr
 import { useService } from '@/composables/service'
 import { useLoading, useSWRVModel } from '@/composables/swrv'
 import { kSWRVConfig } from '@/composables/swrvConfig'
+import { kTaskManager } from '@/composables/taskManager'
 import { injection } from '@/util/inject'
 import { ProjectFile } from '@/util/search'
 import { SearchResultHit } from '@xmcl/modrinth'
@@ -71,6 +72,7 @@ const supportedVersions = computed(() => {
 // Dependencies
 const version = computed(() => versions.value?.find(v => v.id === selectedVersion.value?.id))
 const { data: deps, isValidating } = useSWRVModel(getModrinthDependenciesModel(version, modLoader), { revalidateOnFocus: false })
+const { tasks: taskManagerTasks } = injection(kTaskManager)
 const dependencies = computed(() => {
   if (!version.value) return []
   if (!deps.value) return []
@@ -93,7 +95,7 @@ const dependencies = computed(() => {
       }
       return undefined
     })
-    const { progress, total } = useModrinthTask(computed(() => recommendedVersion.id))
+    const { progress, total } = useModrinthTask(taskManagerTasks, computed(() => recommendedVersion.id))
     const dep: ProjectDependency = reactive({
       id: project.id,
       icon: project.icon_url,

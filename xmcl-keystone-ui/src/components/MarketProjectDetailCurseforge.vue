@@ -12,6 +12,7 @@ import { useInCollection, useModrinthFollow } from '@/composables/modrinthAuthen
 import { useProjectDetailEnable, useProjectDetailUpdate } from '@/composables/projectDetail'
 import { useService } from '@/composables/service'
 import { useLoading, useSWRVModel } from '@/composables/swrv'
+import { kTaskManager } from '@/composables/taskManager'
 import { basename } from '@/util/basename'
 import { getCurseforgeFileGameVersions, getCurseforgeRelationType, getCursforgeFileModLoaders, getCursforgeModLoadersFromString, getModLoaderTypesForFile } from '@/util/curseforge'
 import { injection } from '@/util/inject'
@@ -279,6 +280,7 @@ const { enabled, installed, hasInstalledVersion } = useProjectDetailEnable(
 )
 
 const curseforgeFile = computed(() => files.value.find(f => f.id === Number(selectedVersion.value?.id)))
+const { tasks: taskManagerTasks } = injection(kTaskManager)
 const { data: deps, error, isValidating: loadingDependencies } = useSWRVModel(
   getCurseforgeDependenciesModel(
     curseforgeFile,
@@ -291,7 +293,7 @@ const { data: deps, error, isValidating: loadingDependencies } = useSWRVModel(
 const dependencies = computed(() => !curseforgeFile.value
   ? []
   : deps.value?.map((resolvedDep) => {
-    const task = useCurseforgeTask(computed(() => resolvedDep.file.id))
+    const task = useCurseforgeTask(taskManagerTasks, computed(() => resolvedDep.file.id))
     const file = computed(() => {
       for (const file of props.allFiles) {
         if (file.curseforge?.fileId === resolvedDep.file.id) {

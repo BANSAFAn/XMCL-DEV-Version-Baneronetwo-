@@ -3,10 +3,11 @@ import { getModrinthVersionKey } from '@/util/modrinth'
 import { get } from '@vueuse/core'
 import type { MaybeRef } from '@vueuse/core'
 import { ProjectVersion } from '@xmcl/modrinth'
+import { Tasks } from '@xmcl/runtime-api'
 import { InjectionKey, Ref } from 'vue'
 import { useSWRVModel } from './swrv'
 import { kSWRVConfig } from './swrvConfig'
-import { useTask } from './task'
+import { useTaskFromList } from './task'
 
 export const kModrinthVersions: InjectionKey<ReturnType<typeof useModrinthVersions>> =
   Symbol('kModrinthVersions')
@@ -83,6 +84,6 @@ export function getModrinthVersionModel(
   }
 }
 
-export function useModrinthTask(versionId: Ref<string>) {
-  return useTask((t) => t.type === 'installModrinthFile' && t.versionId === versionId.value)
+export function useModrinthTask(tasks: Ref<Tasks[]>, versionId: Ref<string>) {
+  return useTaskFromList(tasks, (t) => t.type === 'installModrinthFile' && t.versionId === versionId.value)
 }
