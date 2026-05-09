@@ -131,7 +131,8 @@ const { show: showFeedbackDialog } = useDialog('feedback')
 const { show: showTaskDialog } = useDialog('task')
 const { t } = useI18n()
 const { count } = useTaskCount()
-const { status: networkStatus } = injection(kNetworkStatus)
+// Optional: the standalone multiplayer/app windows don't provide network status.
+const networkStatus = inject(kNetworkStatus, undefined)?.status ?? ref(null)
 const tutor = inject(kTutorial, undefined)
 
 const taskSpeedText = computed(() => networkStatus.value?.downloadSpeed

@@ -12,7 +12,7 @@
       class="relative flex h-full overflow-auto"
     >
       <main
-        class="relative inset-y-0 right-0 flex max-h-full flex-col overflow-auto"
+        class="relative inset-y-0 right-0 flex max-h-full flex-col overflow-auto w-full"
       >
         <Multiplayer />
       </main>

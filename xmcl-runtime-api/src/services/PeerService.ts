@@ -90,7 +90,7 @@ export class PeerState {
     if (this.connections.find(c => c.id === connection.id)) {
       return
     }
-    this.connections.push(connection)
+    this.connections = [...this.connections, connection]
   }
 
   connectionDrop(connectionId: string) {
