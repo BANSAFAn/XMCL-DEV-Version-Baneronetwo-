@@ -905,7 +905,12 @@ modrinth:
   projectId: Projekt Id
   projectMembers: Projekt tagok
   projectType:
+    mod: Mod
     modpack: Modcsomag
+    resourcepack: Forráscsomag
+    shader: Shader
+    datapack: Adatcsomag
+    plugin: Plugin
   projects: '{count} projektek'
   serverSide: Szerver oldali
   sort:

@@ -895,7 +895,12 @@ modrinth:
   projectId: ID проекта
   projectMembers: Участники проекта
   projectType:
+    mod: Мод
     modpack: Сборка модов
+    resourcepack: Набор ресурсов
+    shader: Шейдер
+    datapack: Набор данных
+    plugin: Плагин
   projects: '{count} проекты'
   serverSide: Серверная часть
   sort:

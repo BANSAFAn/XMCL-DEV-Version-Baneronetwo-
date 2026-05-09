@@ -32,6 +32,14 @@
         @keydown.esc="hide"
       />
 
+      <v-progress-linear
+        :active="isSearchingMarket"
+        indeterminate
+        height="2"
+        color="primary"
+        class="palette-progress"
+      />
+
       <v-divider />
 
       <v-list
@@ -157,12 +165,6 @@
             {{ query.trim() ? t('commandPalette.noResults') : t('commandPalette.empty') }}
           </v-list-item-title>
         </v-list-item>
-
-        <v-list-item v-if="isSearchingMarket" disabled>
-          <v-list-item-title class="text-medium-emphasis">
-            {{ t('commandPalette.searching') }}
-          </v-list-item-title>
-        </v-list-item>
       </v-list>
 
       <v-divider />
@@ -215,7 +217,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-const { t } = useI18n()
+const { t, te, locale } = useI18n()
 const isShown = ref(false)
 const query = ref('')
 const debouncedQuery = useDebounce(query, 250)
@@ -427,13 +429,13 @@ function invokeSelected() {
 
 const multiStepCommandIds = new Set(['instance.launch', 'instance.delete'])
 
-const projectTypeMeta: Record<string, { icon: string; color: string; label: string }> = {
-  mod: { icon: 'extension', color: 'primary', label: 'Mod' },
-  modpack: { icon: 'inventory_2', color: 'orange', label: 'Modpack' },
-  resourcepack: { icon: 'palette', color: 'purple', label: 'Resource Pack' },
-  shader: { icon: 'wb_sunny', color: 'amber', label: 'Shader' },
-  datapack: { icon: 'data_object', color: 'teal', label: 'Datapack' },
-  plugin: { icon: 'power', color: 'green', label: 'Plugin' },
+const projectTypeMeta: Record<string, { icon: string; color: string }> = {
+  mod: { icon: 'extension', color: 'primary' },
+  modpack: { icon: 'inventory_2', color: 'orange' },
+  resourcepack: { icon: 'palette', color: 'purple' },
+  shader: { icon: 'wb_sunny', color: 'amber' },
+  datapack: { icon: 'data_object', color: 'teal' },
+  plugin: { icon: 'power', color: 'green' },
 }
 
 function getProjectTypeIcon(type: string) {
@@ -443,7 +445,10 @@ function getProjectTypeColor(type: string) {
   return projectTypeMeta[type]?.color ?? 'grey'
 }
 function getProjectTypeLabel(type: string) {
-  return projectTypeMeta[type]?.label ?? type
+  // Read locale.value so this re-evaluates when the active language changes.
+  void locale.value
+  const key = `modrinth.projectType.${type}`
+  return te(key) ? t(key) : type
 }
 
 const instanceActionIcon = computed(() => pendingInstanceAction.value === 'instance.delete' ? 'delete' : 'play_arrow')
@@ -478,6 +483,11 @@ function onArrowLeft(e: KeyboardEvent) {
 <style scoped>
 .palette-card {
   border-radius: 18px;
+}
+
+.palette-progress {
+  position: relative;
+  z-index: 1;
 }
 
 .palette-list :deep(.v-list-item) {

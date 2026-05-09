@@ -745,7 +745,12 @@ modrinth:
   projectId: ID del Proyecto
   projectMembers: Miembros del Proyecto
   projectType:
+    mod: Mod
     modpack: Modpack
+    resourcepack: Paquete de recursos
+    shader: Shader
+    datapack: Paquete de datos
+    plugin: Plugin
   projects: '{count} Proyectos'
   serverSide: Lado del Servidor
   sort:

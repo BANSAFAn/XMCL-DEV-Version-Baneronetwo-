@@ -20,6 +20,17 @@ export function loadV1Theme(): UIThemeDataV1 | undefined {
   return transformed
 }
 
+/**
+ * Remove the legacy v0 localStorage entries that {@link loadV1Theme} reads
+ * from. After a successful one-shot migration the app should call this so
+ * future loads come from the backend instead of reviving the stale snapshot.
+ */
+export function clearLegacyThemeStorage() {
+  localStorage.removeItem('selectedThemeName')
+  localStorage.removeItem('darkTheme')
+  localStorage.removeItem('themes')
+}
+
 export function deserialize(data: ThemeData): UIThemeDataV1 {
   const theme: UIThemeDataV1 = {
     backgroundMusic: [],

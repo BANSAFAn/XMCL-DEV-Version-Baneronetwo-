@@ -867,7 +867,12 @@ modrinth:
   projectId: Жоба ID-і
   projectMembers: Жоба мүшелері
   projectType:
+    mod: Мод
     modpack: Мод-пак
+    resourcepack: Ресурстар жиынтығы
+    shader: Шейдер
+    datapack: Деректер жиынтығы
+    plugin: Плагин
   projects: '{count} жоба'
   serverSide: Сервер жағы
   sort:

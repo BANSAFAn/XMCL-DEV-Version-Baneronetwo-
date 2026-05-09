@@ -436,11 +436,16 @@ export class LocalVersions {
   localVersionAdd(local: VersionHeader) {
     Object.freeze(local)
     const found = this.local.findIndex(l => l.id === local.id)
+    // Always allocate a new array so that downstream renderers (which observe
+    // this collection through a shallowRef-backed computed) detect the change.
+    // Array.prototype.sort mutates in place and returns the same reference,
+    // so reassigning the result of sort still yields an identical array.
     if (found !== -1) {
-      this.local[found] = local
+      const next = [...this.local]
+      next[found] = local
+      this.local = next
     } else {
-      this.local.push(local as any)
-      this.local = this.local.sort((a, b) => a.id.localeCompare(b.id))
+      this.local = [...this.local, local].sort((a, b) => a.id.localeCompare(b.id))
     }
   }
 

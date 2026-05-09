@@ -857,7 +857,12 @@ modrinth:
   projectId: 專案 ID
   projectMembers: 專案成員
   projectType:
+    mod: 模組
     modpack: 模組包
+    resourcepack: 資源包
+    shader: 光影包
+    datapack: 數據包
+    plugin: 外掛
   projects: '{count} 個專案'
   serverSide: 伺服器
   sort:

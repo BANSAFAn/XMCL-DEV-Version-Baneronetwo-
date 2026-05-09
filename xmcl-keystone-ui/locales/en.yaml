@@ -882,7 +882,12 @@ modrinth:
   projectId: Project Id
   projectMembers: Project Members
   projectType:
+    mod: Mod
     modpack: Modpack
+    resourcepack: Resource Pack
+    shader: Shader
+    datapack: Datapack
+    plugin: Plugin
   projects: '{count} projects'
   serverSide: Server Side
   sort:

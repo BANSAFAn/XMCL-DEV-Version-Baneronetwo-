@@ -888,7 +888,12 @@ modrinth:
   projectId: 项目 ID
   projectMembers: 项目成员
   projectType:
+    mod: 模组
     modpack: 整合包
+    resourcepack: 资源包
+    shader: 光影包
+    datapack: 数据包
+    plugin: 插件
   projects: '{count}个项目'
   serverSide: 服务端
   sort:

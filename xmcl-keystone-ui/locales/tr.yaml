@@ -871,7 +871,12 @@ modrinth:
   projectId: Proje Kimliği
   projectMembers: Proje Üyeleri
   projectType:
+    mod: Mod
     modpack: Mod Paketi
+    resourcepack: Kaynak Paketi
+    shader: Gölgelendirici
+    datapack: Veri Paketi
+    plugin: Eklenti
   projects: '{count} proje'
   serverSide: Sunucu Tarafı
   sort:

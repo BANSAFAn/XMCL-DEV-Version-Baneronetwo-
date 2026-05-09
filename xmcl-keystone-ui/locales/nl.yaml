@@ -878,7 +878,12 @@ modrinth:
   projectId: Project Id
   projectMembers: Project Leden
   projectType:
+    mod: Mod
     modpack: Modpack
+    resourcepack: Resourcepack
+    shader: Shader
+    datapack: Datapack
+    plugin: Plugin
   projects: '{count} projecten'
   serverSide: Server Kant
   sort:

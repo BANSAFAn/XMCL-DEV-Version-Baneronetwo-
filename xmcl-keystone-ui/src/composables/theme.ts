@@ -1,5 +1,5 @@
 import { injection } from '@/util/inject'
-import { loadV1Theme } from '@/util/theme.v0'
+import { clearLegacyThemeStorage, loadV1Theme } from '@/util/theme.v0'
 import { deserialize, deserialize as deserializeV0, serialize } from '@/util/theme.v1'
 import { useDark, usePreferredDark, useStyleTag } from '@vueuse/core'
 import { InstanceThemeServiceKey, MediaData, StoredTheme, ThemeServiceKey } from '@xmcl/runtime-api'
@@ -768,12 +768,18 @@ export function useTheme(
   async function loadCurrentTheme() {
     // Try to load from localStorage first (v0 migration)
     let theme = loadV1Theme()
+    let migratedFromLegacy = false
     if (!theme) {
       // Load from backend
       const themeData = await getCurrentTheme()
       if (themeData) {
         theme = deserializeV0(themeData)
       }
+    } else {
+      // Legacy localStorage theme is a one-shot migration source; otherwise it
+      // would shadow any later backend updates and the UI would appear to
+      // "revert" on reload because saveCurrentTheme only persists to backend.
+      migratedFromLegacy = true
     }
     if (!theme) {
       theme = getDefaultTheme()
@@ -797,6 +803,17 @@ export function useTheme(
     theme.colors.lightCardColor = ensureRGBAHex(theme.colors.lightCardColor)
 
     currentTheme.value = theme
+
+    if (migratedFromLegacy) {
+      // Persist the migrated theme to the backend, then clear the legacy
+      // localStorage entries so future loads come from the backend.
+      try {
+        await saveCurrentTheme()
+        clearLegacyThemeStorage()
+      } catch (e) {
+        console.error('Failed to migrate legacy theme to backend', e)
+      }
+    }
   }
 
   async function saveCurrentTheme() {

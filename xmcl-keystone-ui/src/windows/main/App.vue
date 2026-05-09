@@ -188,16 +188,6 @@ useAuthProfileImportNotification(notify)
 </script>
 
 <style scoped>
-/*
-  Vuetify 4's <v-system-bar> is `position: fixed` (it registers with the
-  layout system, which only exposes the --v-layout-top offset on <v-main>,
-  which we don't use). Reserve the 32px top strip ourselves so the sidebar
-  and main content sit below the system bar.
- */
-.app-layout {
-  height: calc(100% - 32px);
-  margin-top: 32px;
-}
 
 .clip-head {
   clip-path: inset(0px 30px 30px 0px) !important;

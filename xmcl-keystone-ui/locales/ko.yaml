@@ -823,7 +823,12 @@ modrinth:
   projectId: 프로젝트 ID
   projectMembers: 프로젝트 멤버
   projectType:
+    mod: 모드
     modpack: 모드팩
+    resourcepack: 리소스 팩
+    shader: 셰이더
+    datapack: 데이터 팩
+    plugin: 플러그인
   projects: 프로젝트 {count}개
   serverSide: 서버 측
   sort:

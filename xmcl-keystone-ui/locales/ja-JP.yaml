@@ -852,7 +852,12 @@ modrinth:
   projectId: プロジェクトID
   projectMembers: プロジェクトメンバー
   projectType:
+    mod: Mod
     modpack: Modpack
+    resourcepack: リソースパック
+    shader: シェーダー
+    datapack: データパック
+    plugin: プラグイン
   projects: '{count}プロジェクト'
   serverSide: サーバーサイド
   sort:

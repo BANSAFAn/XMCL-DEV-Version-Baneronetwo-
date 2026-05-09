@@ -858,7 +858,12 @@ modrinth:
   projectId: PROJECT ID
   projectMembers: PROJECT MEMBERZ
   projectType:
+    mod: MOD
     modpack: MODPACK
+    resourcepack: RESOURCE PAK
+    shader: SHADERZ
+    datapack: DATA PAK
+    plugin: PLUGINZ
   projects: '{count} PROJECTS'
   serverSide: SERVER SIDE
   sort:
