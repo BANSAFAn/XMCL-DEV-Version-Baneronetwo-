@@ -87,7 +87,7 @@ describe('forge.browser', () => {
       })
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.20.1.html',
+        'https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html',
         expect.any(Object),
       )
       expect(result.mcversion).toBe('1.20.1')
@@ -199,7 +199,7 @@ describe('forge.browser', () => {
 
   describe('DEFAULT_FORGE_MAVEN', () => {
     test('should have correct default URL', () => {
-      expect(DEFAULT_FORGE_MAVEN).toBe('http://files.minecraftforge.net/maven')
+      expect(DEFAULT_FORGE_MAVEN).toBe('https://maven.minecraftforge.net')
     })
   })
 

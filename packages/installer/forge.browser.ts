@@ -41,7 +41,15 @@ export interface ForgeVersion {
   type: 'buggy' | 'recommended' | 'common' | 'latest'
 }
 
-export const DEFAULT_FORGE_MAVEN = 'http://files.minecraftforge.net/maven'
+/**
+ * The official Forge maven host.
+ *
+ * Forge moved off the legacy `http://files.minecraftforge.net/maven` host;
+ * newer Minecraft versions (1.21+ etc.) only publish their installer jars
+ * to `https://maven.minecraftforge.net`. The old URL continues to redirect
+ * for archival files but does not serve recent releases.
+ */
+export const DEFAULT_FORGE_MAVEN = 'https://maven.minecraftforge.net'
 
 /**
  * Query the webpage content from files.minecraftforge.net.
@@ -60,10 +68,12 @@ export async function getForgeVersionList(
   } = {},
 ): Promise<ForgeVersionList> {
   const mcversion = options.minecraft || ''
+  // Official site no longer hosts the index page under `/maven/`; modern
+  // Forge versions are listed at `https://files.minecraftforge.net/net/minecraftforge/forge/`.
   const url =
     mcversion === ''
-      ? 'http://files.minecraftforge.net/maven/net/minecraftforge/forge/index.html'
-      : `http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_${mcversion}.html`
+      ? 'https://files.minecraftforge.net/net/minecraftforge/forge/index.html'
+      : `https://files.minecraftforge.net/net/minecraftforge/forge/index_${mcversion}.html`
   const response = await doFetch(options, url)
   const body = parseForge(await response.text())
   return body as any

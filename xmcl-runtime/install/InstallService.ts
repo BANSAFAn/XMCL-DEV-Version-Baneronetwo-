@@ -703,13 +703,22 @@ export class InstallService extends AbstractService implements IInstallService {
         )
         let target: 'forge' | 'neoforge'
         let neoforgeVersion: string
-        if (options.version.startsWith('47.')) {
-          // Fix the neoforge version url
-          neoforgeVersion = `${options.minecraft}-${options.version}`
+        // Only the legacy NeoForge 47.x line (built for Minecraft 1.20.1) was
+        // published under the `forge` artifact name at `net/neoforged/forge/`.
+        // Every subsequent release uses the `neoforge` artifact at
+        // `net/neoforged/neoforge/`, including modern Minecraft versions
+        // (1.21.x, the 26.x snapshot series, etc.) whose version strings
+        // (e.g. `26.1.2.0-beta`) start with the Minecraft version.
+        const isLegacyForgeArtifact =
+          options.version.startsWith('47.') || /^1\.20\.1-47\./.test(options.version)
+        if (isLegacyForgeArtifact) {
+          neoforgeVersion = options.version.startsWith('47.')
+            ? `${options.minecraft}-${options.version}`
+            : options.version
           target = 'forge'
         } else {
           neoforgeVersion = options.version
-          target = options.version.startsWith(options.minecraft) ? 'forge' : 'neoforge'
+          target = 'neoforge'
         }
         const taskOps = this.getInstallOptions(
           { side: options.side, java: java.path, inheritsFrom: options.base ?? options.minecraft },
