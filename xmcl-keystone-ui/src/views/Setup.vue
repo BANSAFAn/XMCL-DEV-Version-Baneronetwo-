@@ -8,39 +8,39 @@
       class="non-moveable visible-scroll flex h-full flex-col overflow-auto bg-transparent"
     >
       <v-stepper-header>
-        <v-stepper-step
+        <v-stepper-item
           :complete="data.step > 1"
           :editable="data.step > 1"
           step="1"
         >
           {{ t('setup.locale.name') }}
-        </v-stepper-step>
+        </v-stepper-item>
 
         <v-divider />
 
-        <v-stepper-step
+        <v-stepper-item
           :complete="data.step > 2"
           :editable="data.step > 2"
           step="2"
         >
           {{ t('setup.appearance.name') }}
-        </v-stepper-step>
+        </v-stepper-item>
 
         <v-divider />
 
-        <v-stepper-step
+        <v-stepper-item
           :complete="data.step > 3"
           :editable="data.step > 3"
           step="3"
         >
           {{ t('setup.dataRoot.name') }}
-        </v-stepper-step>
+        </v-stepper-item>
 
         <v-divider />
 
-        <v-stepper-step step="4">
+        <v-stepper-item step="4">
           {{ t('setup.account.name') }}
-        </v-stepper-step>
+        </v-stepper-item>
       </v-stepper-header>
 
       <v-stepper-window class="h-full overflow-auto overflow-x-hidden">

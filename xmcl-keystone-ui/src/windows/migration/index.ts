@@ -10,11 +10,11 @@ const app = createApp(defineComponent({
     const preferDark = usePreferredDark()
     const updateTheme = (theme: string) => {
       if (theme === 'system') {
-        vuetify.theme.global.name.value = preferDark.value ? 'dark' : 'light'
+        vuetify.theme.change(preferDark.value ? 'dark' : 'light')
       } else if (theme === 'dark') {
-        vuetify.theme.global.name.value = 'dark'
+        vuetify.theme.change('dark')
       } else if (theme === 'light') {
-        vuetify.theme.global.name.value = 'light'
+        vuetify.theme.change('light')
       }
     }
     updateTheme('dark')

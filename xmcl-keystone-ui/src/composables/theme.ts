@@ -910,7 +910,7 @@ export function useTheme(
   watch(
     isDark,
     (dark) => {
-      framework.global.name.value = dark ? 'dark' : 'light'
+      framework.change(dark ? 'dark' : 'light')
     },
     { immediate: true },
   )
