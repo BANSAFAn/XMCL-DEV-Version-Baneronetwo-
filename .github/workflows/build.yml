@@ -27,10 +27,10 @@ jobs:
       - name: Fix node-gyp and Python
         if: ${{ runner.os == 'macOS' || runner.os == 'Windows' }}
         run: python3 -m pip install --break-system-packages --user packaging setuptools
-      - name: Use Node.js 20
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
       - name: Install
         run: pnpm install
@@ -258,10 +258,10 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 10.33.3
-      - name: Use Node.js 20
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Install
         run: |
           pnpm install --filter ./.github/actions
@@ -330,10 +330,10 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 10.33.3
-      - name: Use Node.js 20
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
       - name: Install
         run: |
