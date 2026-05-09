@@ -2,8 +2,10 @@
   <div class="flex gap-4">
     <v-btn
       :disabled="creating"
+      variant="text"
+      rounded="pill"
       @click="emit('quit')"
-     variant="text">
+    >
       {{ t('shared.cancel') }}
     </v-btn>
     <v-spacer />
@@ -11,6 +13,8 @@
     <v-btn
       v-if="next"
       color="primary"
+      variant="flat"
+      rounded="pill"
       :loading="creating"
       :disabled="disabled"
       @click="emit('next')"
@@ -20,6 +24,8 @@
     <v-btn
       v-if="create"
       color="primary"
+      variant="flat"
+      rounded="pill"
       :loading="creating"
       :disabled="disabled"
       @click="emit('create')"

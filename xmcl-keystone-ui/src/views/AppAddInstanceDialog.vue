@@ -4,32 +4,43 @@
     width="900"
     :persistent="true"
   >
-    <v-toolbar
-      elevation="4"
-      class="px-5"
+    <v-card
+      class="add-instance-card flex flex-col overflow-hidden"
+      rounded="xl"
+      elevation="24"
     >
-      <v-icon start>add</v-icon>
-      <v-toolbar-title class="flex items-center">
-        <template v-if="steps[step - 1] === 'config'">
-          {{ t('instances.add') }}
-        </template>
-        <template v-if="steps[step - 1] === 'server'">
-          {{ t('AppAddInstanceDialog.serverTitle') }}
-        </template>
-      </v-toolbar-title>
-      <div class="flex-grow" />
-      <v-btn
-        color="primary"
-        @click="onMigrateFromOther"
-        variant="text" border>
-        <v-icon start>
-          local_shipping
-        </v-icon>
-        {{ t("setting.migrateFromOther") }}
-      </v-btn>
-    </v-toolbar>
+      <v-toolbar
+        elevation="0"
+        color="transparent"
+        density="comfortable"
+        class="px-5"
+      >
+        <v-icon start>add</v-icon>
+        <v-toolbar-title class="flex items-center">
+          <template v-if="steps[step - 1] === 'config'">
+            {{ t('instances.add') }}
+          </template>
+          <template v-if="steps[step - 1] === 'server'">
+            {{ t('AppAddInstanceDialog.serverTitle') }}
+          </template>
+        </v-toolbar-title>
+        <div class="flex-grow" />
+        <v-btn
+          color="primary"
+          variant="tonal"
+          rounded="pill"
+          density="comfortable"
+          @click="onMigrateFromOther"
+        >
+          <v-icon start>
+            local_shipping
+          </v-icon>
+          {{ t("setting.migrateFromOther") }}
+        </v-btn>
+      </v-toolbar>
 
-    <v-card flat>
+      <v-divider />
+
       <v-window v-model="step" class="visible-scroll overflow-y-auto">
         <v-window-item
           v-for="(tStep, i) in steps"
@@ -65,8 +76,10 @@
         >
           <v-btn
             :loading="loading"
+            variant="text"
+            rounded="pill"
             @click="onImportModpack"
-           variant="text">
+          >
             <v-icon start>
               note_add
             </v-icon>
@@ -78,7 +91,9 @@
           class="pointer-events-none absolute left-0 flex w-full justify-center"
         >
           <v-alert
-            dense
+            density="compact"
+            variant="tonal"
+            rounded="lg"
             class="w-[50%]"
             type="error"
           >

@@ -127,11 +127,11 @@ export function useInstanceCreation(gameProfile: Ref<GameProfile>, instances: Re
           data.name = placeHolderName.value
         }
         const pendingFiles = [...files.value]
-        const payload = {
+        const payload = JSON.parse(JSON.stringify({
           ...data,
           resourcepacks: pendingFiles.some(f => f.path.startsWith('resourcepacks')),
           shaderpacks: pendingFiles.some(f => f.path.startsWith('shaderpacks')),
-        } as CreateInstanceOptions
+        })) as CreateInstanceOptions
         if (!payload.minMemory) payload.minMemory = undefined
         if (!payload.maxMemory) payload.maxMemory = undefined
         if (payload.vmOptions?.length === 0) payload.vmOptions = undefined
