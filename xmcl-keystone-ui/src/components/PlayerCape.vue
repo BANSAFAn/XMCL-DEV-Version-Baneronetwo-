@@ -42,8 +42,10 @@ export default defineComponent({
     }))
 
     function onload() {
-      data.textureWidth = image.value.naturalWidth
-      data.textureHeight = image.value.naturalHeight
+      const el = image.value
+      if (!el) return
+      data.textureWidth = el.naturalWidth
+      data.textureHeight = el.naturalHeight
     }
     return {
       ...toRefs(data),
