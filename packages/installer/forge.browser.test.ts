@@ -68,7 +68,7 @@ describe('forge.browser', () => {
       const result = await getForgeVersionList({ fetch: mockFetch })
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://files.minecraftforge.net/maven/net/minecraftforge/forge/index.html',
+        'https://files.minecraftforge.net/net/minecraftforge/forge/index.html',
         expect.any(Object),
       )
       expect(result).toHaveProperty('mcversion')
@@ -126,7 +126,7 @@ describe('forge.browser', () => {
       await getForgeVersionList({ fetch: mockFetch, minecraft: '' })
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://files.minecraftforge.net/maven/net/minecraftforge/forge/index.html',
+        'https://files.minecraftforge.net/net/minecraftforge/forge/index.html',
         expect.any(Object),
       )
     })
@@ -174,7 +174,7 @@ describe('forge.browser', () => {
         })
 
         expect(mockFetch).toHaveBeenCalledWith(
-          `http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_${version}.html`,
+          `https://files.minecraftforge.net/net/minecraftforge/forge/index_${version}.html`,
           expect.any(Object),
         )
       }
