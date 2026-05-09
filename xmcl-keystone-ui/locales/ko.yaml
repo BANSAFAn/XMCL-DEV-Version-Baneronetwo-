@@ -536,6 +536,7 @@ logsCrashes:
   logs: 로그
   placeholder: 파일이 없습니다
   title: 로그 또는 크래시 리포트
+  failures: 실행 실패
 me:
   news: 뉴스
   recentPlay: 최근 플레이
@@ -1199,6 +1200,12 @@ setting:
   useProxy: HTTP 프록시
   useProxyDescription: HTTP 요청을 위한 프록시 서버 주소
   viewBackgroundMusic: 음악 보기
+  setAsBackground:
+    global: 런처 배경으로 설정
+    instance: 인스턴스 배경으로 설정
+    successGlobal: 배경 이미지가 업데이트되었습니다.
+    successInstance: 인스턴스 배경 이미지가 업데이트되었습니다.
+    failed: 배경 이미지 설정에 실패했습니다
 settingLabel:
   global: 전체
   globalHint: 이 설정은 모든 인스턴스에 적용됩니다

@@ -37,6 +37,17 @@
             </v-btn>
           </template>
           <v-btn
+            v-if="hasTheme"
+            v-shared-tooltip="() => setBackgroundTooltip"
+            icon
+            :loading="settingBackground"
+            :disabled="!image"
+            @click.stop="setAsBackground"
+            size="small"
+          >
+            <v-icon>wallpaper</v-icon>
+          </v-btn>
+          <v-btn
             icon
             @click="isShown=false"
            size="small">
@@ -61,14 +72,124 @@
 <script lang="ts" setup>
 import { useDateString } from '@/composables/date'
 import { kImageDialog } from '@/composables/imageDialog'
+import { kInstance } from '@/composables/instance'
+import { kInstanceTheme } from '@/composables/instanceTheme'
+import { useNotifier } from '@/composables/notifier'
+import { useService } from '@/composables/service'
+import { BackgroundType, kTheme } from '@/composables/theme'
+import { vSharedTooltip } from '@/directives/sharedTooltip'
 import { injection } from '@/util/inject'
+import { InstanceThemeServiceKey, ThemeServiceKey } from '@xmcl/runtime-api'
 import AppImageControls from './AppImageControls.vue'
-import { onMounted, onUnmounted } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref } from 'vue'
 import { basename } from '@/util/basename'
 
 const { isShown, image, description, date, next, prev, hasMultipleImages, totalImages, currentIndex } = injection(kImageDialog)
 const { getDateString } = useDateString()
 const { t } = useI18n()
+const { notify } = useNotifier()
+
+// kTheme + kInstanceTheme + kInstance are only present in the main window.
+// The image dialog is only mounted there today, but we use `inject` (not
+// `injection`) so the dialog degrades gracefully (just hides the button)
+// if it's ever embedded in a window without theme context.
+const themeCtx = inject(kTheme, undefined)
+const instanceThemeCtx = inject(kInstanceTheme, undefined)
+const instanceCtx = inject(kInstance, undefined)
+
+// Pre-acquire services at setup time (useService -> inject is setup-only).
+const themeService = themeCtx ? useService(ThemeServiceKey) : undefined
+const instanceThemeService = themeCtx ? useService(InstanceThemeServiceKey) : undefined
+
+const hasTheme = computed(() => !!themeCtx)
+const hasInstanceTheme = computed(() => !!instanceThemeCtx?.instanceTheme.value)
+
+const settingBackground = ref(false)
+
+const setBackgroundTooltip = computed(() =>
+  hasInstanceTheme.value
+    ? t('setting.setAsBackground.instance')
+    : t('setting.setAsBackground.global'),
+)
+
+async function setAsBackground() {
+  if (!themeCtx || !themeService || !image.value || settingBackground.value) return
+  settingBackground.value = true
+  try {
+    const url = image.value
+    // Routing logic:
+    //  - If the user is currently focused on an instance that already has
+    //    its own theme, target the instance theme (the override that
+    //    kTheme renders takes precedence anyway).
+    //  - Otherwise target the global theme.
+    const targetInstancePath =
+      hasInstanceTheme.value && instanceCtx?.path.value
+        ? instanceCtx.path.value
+        : undefined
+
+    const isInstance = !!targetInstancePath
+    const targetTheme = isInstance
+      ? instanceThemeCtx!.instanceTheme.value!
+      : themeCtx.currentTheme.value
+    const isDark = themeCtx.isDark.value
+    const imageKey: 'backgroundImageDark' | 'backgroundImage' =
+      isDark ? 'backgroundImageDark' : 'backgroundImage'
+
+    // Local launcher media URLs (e.g. instance screenshots, market gallery
+    // already cached locally) carry the underlying file path -- copy via
+    // addMedia so the theme owns its own media file. Remote URLs go through
+    // a content-type sniff and direct URL ref, like the existing settings.
+    let media
+    if (url.startsWith('http://launcher/')) {
+      const parsedUrl = new URL(url)
+      const path = parsedUrl.searchParams.get('path')
+      if (path) {
+        media = isInstance
+          ? await instanceThemeService!.addMedia(targetInstancePath!, path)
+          : await themeService.addMedia(path)
+      } else {
+        media = { url, type: 'image' as const, mimeType: 'image/png' }
+      }
+    } else {
+      // For remote URLs, just point at them directly (matches the URL
+      // selection UI in AppearanceItems / SettingGlobalUI).
+      media = { url, type: 'image' as const, mimeType: 'image/png' }
+    }
+    if (media.type !== 'image') return
+
+    // Free the previously-stored local file (best-effort).
+    const old = targetTheme[imageKey]
+    if (old && old.url.startsWith('http://launcher/') && old.url !== media.url) {
+      const cleanup = isInstance
+        ? instanceThemeService!.removeMedia(targetInstancePath!, old.url)
+        : themeService.removeMedia(old.url)
+      cleanup.catch(() => {})
+    }
+
+    targetTheme[imageKey] = media
+    if ((targetTheme.backgroundType ?? BackgroundType.NONE) !== BackgroundType.IMAGE) {
+      targetTheme.backgroundType = BackgroundType.IMAGE
+    }
+
+    if (isInstance) {
+      await instanceThemeCtx!.saveTheme()
+    } else {
+      await themeCtx.saveCurrentTheme()
+    }
+
+    notify({
+      level: 'success',
+      title: isInstance
+        ? t('setting.setAsBackground.successInstance')
+        : t('setting.setAsBackground.successGlobal'),
+    })
+  } catch (e) {
+    console.error(e)
+    notify({ level: 'error', title: t('setting.setAsBackground.failed') })
+  } finally {
+    settingBackground.value = false
+  }
+}
 
 const onKeydown = (event: KeyboardEvent) => {
   if (!isShown.value) return

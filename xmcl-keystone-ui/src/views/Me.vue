@@ -22,7 +22,7 @@ import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 const { isDark } = injection(kTheme)
-const arrowColor = computed(() => isDark.value ? 'white' : 'black')
+const arrowColor = computed(() => (isDark.value ? 'white' : 'black'))
 const { news } = useMojangNews()
 const { news: launcherNews } = useLauncherNews()
 const { getDateString } = useDateString()
@@ -263,10 +263,20 @@ function openInBrowser(url: string) {
             class="news-carousel"
           >
             <template #prev="{ props: btnProps }">
-              <v-btn variant="plain" icon="chevron_left" :color="arrowColor" @click="btnProps.onClick" />
+              <v-btn
+                variant="plain"
+                icon="chevron_left"
+                :color="arrowColor"
+                @click="btnProps.onClick"
+              />
             </template>
             <template #next="{ props: btnProps }">
-              <v-btn variant="plain" icon="chevron_right" :color="arrowColor" @click="btnProps.onClick" />
+              <v-btn
+                variant="plain"
+                icon="chevron_right"
+                :color="arrowColor"
+                @click="btnProps.onClick"
+              />
             </template>
             <v-carousel-item v-for="(item, index) in allNews.slice(0, 8)" :key="index">
               <div class="news-slide" @click="openInBrowser(item.link)">
@@ -309,18 +319,18 @@ function openInBrowser(url: string) {
             <h2 class="section-title">{{ t('instance.current', 2) }}</h2>
           </div>
           <div class="d-flex align-center gap-2">
-            <v-btn-toggle v-model="instanceViewMode" mandatory dense class="mr-2">
+            <v-btn-toggle density="compact" v-model="instanceViewMode" mandatory class="mr-2">
               <v-btn value="folder" size="small">
                 <v-icon size="small">folder</v-icon>
               </v-btn>
               <v-btn value="date" size="small">
                 <v-icon size="small">schedule</v-icon>
               </v-btn>
-              <v-btn value="" size="small" variant="plain">
+              <v-btn value="" size="small">
                 <v-icon size="small">view_list</v-icon>
               </v-btn>
             </v-btn-toggle>
-            <v-btn color="primary" @click="openAddInstanceDialog" size="small" variant="flat">
+            <v-btn color="primary" @click="openAddInstanceDialog" size="small">
               <v-icon start size="small">add</v-icon>
               {{ t('instances.add') }}
             </v-btn>

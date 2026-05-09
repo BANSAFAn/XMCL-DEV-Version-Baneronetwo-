@@ -4,15 +4,19 @@
       <div class="flex flex-col gap-4">
         <BaseSettingGeneral />
         <BaseSettingVersions :isExpanded="isExpanded" />
+        <BaseSettingResolution />
+      </div>
+      <div class="flex flex-col gap-4">
         <BaseSettingJava />
         <BaseSettingSync />
         <BaseSettingLaunch />
-        <BaseSettingResolution />
       </div>
     </template>
     <template v-else-if="targetQuery === 'modpack'">
       <div class="flex flex-col gap-4">
         <BaseSettingModpack />
+      </div>
+      <div class="flex flex-col gap-4">
         <BaseSettingModpackFiles />
       </div>
     </template>
@@ -191,6 +195,9 @@ useTutorial(computed(() => [{
 
 .base-setting {
   background: transparent !important;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 /* only if width > 1360px */

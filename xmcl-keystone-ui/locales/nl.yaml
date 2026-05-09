@@ -585,6 +585,7 @@ logsCrashes:
   logs: Logs
   placeholder: Geen Bestanden Gevonden
   title: Logs of Crash Rapporten
+  failures: Startfouten
 me:
   news: Nieuws
   recentPlay: Onlangs Gespeeld
@@ -1276,6 +1277,12 @@ setting:
   useProxy: HTTP Proxy
   useProxyDescription: Het adres van de proxyserver voor het http-verzoek
   viewBackgroundMusic: Muziek Bekijken
+  setAsBackground:
+    global: Instellen als achtergrond van launcher
+    instance: Instellen als achtergrond van instantie
+    successGlobal: Achtergrondafbeelding bijgewerkt.
+    successInstance: Achtergrondafbeelding van instantie bijgewerkt.
+    failed: Kon achtergrondafbeelding niet instellen
 settingLabel:
   global: Globaal
   globalHint: Deze instelling volgt de globale instelling

@@ -572,6 +572,7 @@ logsCrashes:
   logs: Log
   placeholder: Nessun file trovato
   title: Log o report arresto anomalo
+  failures: Errori di avvio
 me:
   news: Notizie
   recentPlay: Giocato di recente
@@ -1267,6 +1268,12 @@ setting:
   useProxy: Proxy HTTP
   useProxyDescription: L'indirizzo del server proxy per la richiesta http
   viewBackgroundMusic: Visualizza musiche
+  setAsBackground:
+    global: Imposta come sfondo del launcher
+    instance: Imposta come sfondo dell'istanza
+    successGlobal: Immagine di sfondo aggiornata.
+    successInstance: Immagine di sfondo dell'istanza aggiornata.
+    failed: Impossibile impostare l'immagine di sfondo
 settingLabel:
   global: Globale
   globalHint: Questa impostazione seguirà le impostazioni globali

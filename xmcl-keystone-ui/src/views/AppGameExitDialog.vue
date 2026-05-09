@@ -1,7 +1,6 @@
 <template>
   <v-dialog
     v-model="data.isShown"
-    :persistent="true"
   >
     <v-card class="visible-scroll flex max-h-[80vh] flex-col overflow-auto">
       <v-toolbar color="error">
@@ -22,7 +21,7 @@
           icon
           @click="data.isShown=false"
         >
-          <v-icon>arrow_drop_down</v-icon>
+          <v-icon>close</v-icon>
         </v-btn>
       </v-toolbar>
       <v-card-text class="grid grid-cols-12 overflow-auto gap-4">

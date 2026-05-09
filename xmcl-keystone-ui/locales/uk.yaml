@@ -575,6 +575,7 @@ logsCrashes:
   logs: Логи
   placeholder: Файлів не знайдено
   title: Логи або звіти про збої
+  failures: Помилки запуску
 me:
   news: Новини
   recentPlay: Нещодавно грав
@@ -1251,6 +1252,12 @@ setting:
   useProxy: HTTP-проксі
   useProxyDescription: Адреса проксі-сервера для HTTP-запитів
   viewBackgroundMusic: Переглянути музику
+  setAsBackground:
+    global: Встановити як тло лаунчера
+    instance: Встановити як тло інстансу
+    successGlobal: Фонове зображення оновлено.
+    successInstance: Фонове зображення інстансу оновлено.
+    failed: Не вдалося встановити фонове зображення
 settingLabel:
   global: Глобальний
   globalHint: Це налаштування буде слідувати глобальним налаштуванням

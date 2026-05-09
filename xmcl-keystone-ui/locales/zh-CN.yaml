@@ -589,6 +589,7 @@ loginError:
   timeout: 登录超时，请重试或检查您的网络！
 logsCrashes:
   crashes: 崩溃报告
+  failures: 启动失败
   logs: 日志
   placeholder: 没有找到文件
   title: 日志或崩溃报告
@@ -1141,6 +1142,12 @@ setting:
   backgroundMusicUrlPlaceholder: 输入音乐的 HTTP/HTTPS URL
   backgroundType: 背景效果
   backgroundTypeDescription: 背景是否显示特效（如果觉得卡就可以关掉）
+  setAsBackground:
+    global: 设为启动器背景
+    instance: 设为实例背景
+    successGlobal: 已更新背景图片。
+    successInstance: 已更新实例背景图片。
+    failed: 设置背景图片失败
   backgroundTypes:
     halo: 光晕
     image: 图片

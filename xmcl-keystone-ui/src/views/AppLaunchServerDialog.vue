@@ -1,122 +1,344 @@
 <template>
-  <v-dialog v-model="isShown" width="800">
-    <v-card class="select-none overflow-hidden flex flex-col">
-      <v-toolbar class="flex-1 flex-grow-0 rounded-none" tabs color="green en">
-        <v-toolbar-title class="text-white">
+  <v-dialog
+    v-model="isShown"
+    width="820"
+    scrollable
+  >
+    <v-card class="launch-server-dialog select-none flex flex-col rounded-xl overflow-hidden">
+      <!-- Header -->
+      <v-card-item class="launch-server-dialog__header">
+        <template #prepend>
+          <v-avatar
+            color="primary"
+            variant="tonal"
+            size="44"
+            rounded="lg"
+          >
+            <v-icon size="24">dns</v-icon>
+          </v-avatar>
+        </template>
+        <v-card-title class="text-h6 font-weight-medium">
           {{ t('instance.launchServer') }}
-        </v-toolbar-title>
+        </v-card-title>
+        <v-card-subtitle class="pt-0">
+          {{ runtime.minecraft }}
+          <template v-if="runtime.forge">· Forge {{ runtime.forge }}</template>
+          <template v-else-if="runtime.neoForged">· NeoForge {{ runtime.neoForged }}</template>
+          <template v-else-if="runtime.fabricLoader">· Fabric {{ runtime.fabricLoader }}</template>
+          <template v-else-if="runtime.quiltLoader">· Quilt {{ runtime.quiltLoader }}</template>
+        </v-card-subtitle>
+        <template #append>
+          <v-btn
+            v-shared-tooltip="() => t('shared.cancel')"
+            class="non-moveable"
+            icon
+            variant="text"
+            density="comfortable"
+            @click="isShown = false"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
+        </template>
+      </v-card-item>
 
-        <v-spacer />
-        <v-btn class="non-moveable" icon @click="isShown = false">
-          <v-icon>arrow_drop_down</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <div class="visible-scroll flex flex-col max-h-[60vh] mx-0 overflow-y-auto overflow-x-hidden px-6 py-2">
-        <v-alert v-if="error" type="error" class="select-text">
-          {{ errorTitle }}
-          <br />
-          <div v-html="errorDescription">
-          </div>
+      <v-divider />
+
+      <!-- Body -->
+      <v-card-text
+        class="launch-server-dialog__body visible-scroll flex flex-col gap-5 max-h-[62vh] overflow-y-auto overflow-x-hidden px-6 py-5"
+      >
+        <v-alert
+          v-if="error"
+          type="error"
+          variant="tonal"
+          density="compact"
+          class="select-text"
+        >
+          <div class="font-weight-medium">{{ errorTitle }}</div>
+          <div
+            v-if="errorDescription"
+            class="text-caption opacity-90"
+            v-html="errorDescription"
+          />
         </v-alert>
-        <v-list-subheader>{{ t('baseSetting.title') }}</v-list-subheader>
-        <div class="grid grid-cols-3 gap-3 pt-2 px-2">
-          <v-text-field v-model="motd" :label="t('server.motd')" variant="outlined" hide-details />
-          <v-text-field v-model="port" :label="t('server.port')" variant="outlined" type="number" hide-details />
-          <v-text-field v-model="maxPlayers" :label="t('server.maxPlayers')" variant="outlined" type="number" hide-details />
-          <v-checkbox v-model="nogui" class="col-start-1" :label="t('server.nogui')" />
-          <v-checkbox v-model="onlineMode" class="col-start-3" :label="t('server.onlineMode')" />
-        </div>
-        <v-list-subheader>{{ t('save.name') }}</v-list-subheader>
-        <v-item-group v-model="selectedSave" mandatory class="pt-2 px-2">
-          <div class="grid grid-cols-3 gap-2 max-h-40 overflow-auto">
-            <v-item v-slot="{ isSelected, toggle }">
-              <v-card :color="isSelected ? 'primary' : ''" class="flex flex-col items-center justify-center h-[120px] gap-1"
-                @click="toggle">
-                <v-icon size="80">
-                  {{ rawWorldExists ? 'save' : 'add' }}
-                </v-icon>
-                {{ rawWorldExists ? t('save.useCurrent') : t('save.createNew') }}
-              </v-card>
-            </v-item>
-            <v-item v-for="s of saves" :key="s.path" v-slot="{ isSelected, toggle }">
-              <v-card :color="isSelected ? 'primary' : ''" class="flex flex-col items-center justify-center gap-1"
-                @click="toggle">
-                <img v-fallback-img="BuiltinImages.unknownServer" class="rounded-lg object-contain" :src="s.icon"
-                  width="80px" height="80px">
-                {{ s.name }}
-              </v-card>
-            </v-item>
-          </div>
-        </v-item-group>
 
-        <template v-if="enabled.length > 0">
-          <div class="flex items-center mt-4 gap-2">
-            <v-list-subheader class="">
+        <!-- Server settings -->
+        <section>
+          <div class="launch-server-dialog__section-header">
+            <v-icon
+              size="small"
+              color="primary"
+            >
+              tune
+            </v-icon>
+            <span class="text-subtitle-2 font-weight-medium">
+              {{ t('baseSetting.title') }}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <v-text-field
+              v-model="motd"
+              :label="t('server.motd')"
+              variant="outlined"
+              density="compact"
+              hide-details
+            />
+            <v-text-field
+              v-model="port"
+              :label="t('server.port')"
+              variant="outlined"
+              density="compact"
+              type="number"
+              hide-details
+            />
+            <v-text-field
+              v-model="maxPlayers"
+              :label="t('server.maxPlayers')"
+              variant="outlined"
+              density="compact"
+              type="number"
+              hide-details
+            />
+          </div>
+          <div class="flex items-center gap-6 pt-1">
+            <v-checkbox
+              v-model="nogui"
+              :label="t('server.nogui')"
+              density="compact"
+              hide-details
+            />
+            <v-checkbox
+              v-model="onlineMode"
+              :label="t('server.onlineMode')"
+              density="compact"
+              hide-details
+            />
+          </div>
+        </section>
+
+        <!-- Save selection -->
+        <section>
+          <div class="launch-server-dialog__section-header">
+            <v-icon
+              size="small"
+              color="primary"
+            >
+              public
+            </v-icon>
+            <span class="text-subtitle-2 font-weight-medium">
+              {{ t('save.name') }}
+            </span>
+          </div>
+
+          <v-item-group
+            v-model="selectedSave"
+            mandatory
+          >
+            <div class="grid grid-cols-3 gap-2 max-h-44 overflow-y-auto pr-1">
+              <v-item v-slot="{ isSelected, toggle }">
+                <button
+                  type="button"
+                  class="save-card"
+                  :class="{ 'save-card--selected': isSelected }"
+                  @click="toggle"
+                >
+                  <v-icon
+                    size="48"
+                    :color="isSelected ? 'primary' : ''"
+                  >
+                    {{ rawWorldExists ? 'save' : 'add_circle_outline' }}
+                  </v-icon>
+                  <span class="save-card__label">
+                    {{ rawWorldExists ? t('save.useCurrent') : t('save.createNew') }}
+                  </span>
+                </button>
+              </v-item>
+              <v-item
+                v-for="s of saves"
+                :key="s.path"
+                v-slot="{ isSelected, toggle }"
+              >
+                <button
+                  type="button"
+                  class="save-card"
+                  :class="{ 'save-card--selected': isSelected }"
+                  @click="toggle"
+                >
+                  <img
+                    v-fallback-img="BuiltinImages.unknownServer"
+                    class="save-card__image"
+                    :src="s.icon"
+                  >
+                  <span class="save-card__label">
+                    {{ s.name }}
+                  </span>
+                </button>
+              </v-item>
+            </div>
+          </v-item-group>
+        </section>
+
+        <!-- Mods -->
+        <section v-if="enabled.length > 0">
+          <div class="launch-server-dialog__section-header">
+            <v-icon
+              size="small"
+              color="primary"
+            >
+              extension
+            </v-icon>
+            <span class="text-subtitle-2 font-weight-medium">
               {{ t('mod.name') }}
-            </v-list-subheader>
-            <v-btn v-if="serverModsLocked" color="primary" @click="unlockServerMods()" size="small">
-              <v-icon start>
-                edit
-              </v-icon>
+            </span>
+            <v-chip
+              size="x-small"
+              variant="tonal"
+              label
+            >
+              {{ selectedMods.length }} / {{ enabled.length }}
+            </v-chip>
+            <v-btn
+              v-if="serverModsLocked"
+              color="primary"
+              size="small"
+              variant="tonal"
+              class="ml-2"
+              @click="unlockServerMods()"
+            >
+              <v-icon start>edit</v-icon>
               {{ t('shared.edit') }}
             </v-btn>
-            <div class="flex-grow" />
-            <v-btn v-shared-tooltip="() => t('env.select.all')" variant="text" icon @click="selectAll">
-              <v-icon>
-                select_all
-              </v-icon>
-            </v-btn>
-            <v-btn v-shared-tooltip="() => t('env.select.fit')" variant="text" icon @click="selectFit">
-              <v-icon>
-                tab_unselected
-              </v-icon>
-            </v-btn>
 
-            <v-btn v-shared-tooltip="() => t('env.select.none')" variant="text" icon @click="selectNone">
-              <v-icon>
-                deselect
-              </v-icon>
+            <v-spacer />
+
+            <v-btn
+              v-shared-tooltip="() => t('env.select.all')"
+              variant="text"
+              density="comfortable"
+              size="small"
+              icon
+              :disabled="serverModsLocked"
+              @click="selectAll"
+            >
+              <v-icon>select_all</v-icon>
             </v-btn>
-            <v-text-field v-model="search" class="max-w-50 pl-1" density="compact" variant="outlined" prepend-inner-icon="search"
-              hide-details />
+            <v-btn
+              v-shared-tooltip="() => t('env.select.fit')"
+              variant="text"
+              density="comfortable"
+              size="small"
+              icon
+              :disabled="serverModsLocked"
+              @click="selectFit"
+            >
+              <v-icon>tab_unselected</v-icon>
+            </v-btn>
+            <v-btn
+              v-shared-tooltip="() => t('env.select.none')"
+              variant="text"
+              density="comfortable"
+              size="small"
+              icon
+              :disabled="serverModsLocked"
+              @click="selectNone"
+            >
+              <v-icon>deselect</v-icon>
+            </v-btn>
+            <v-text-field
+              v-model="search"
+              class="ml-1 max-w-52"
+              density="compact"
+              variant="outlined"
+              prepend-inner-icon="search"
+              :placeholder="t('shared.search')"
+              hide-details
+              clearable
+            />
           </div>
 
-          <div class="pt-2 px-2">
-            <v-data-table v-model="selectedMods" :disabled="loadingSelectedMods || serverModsLocked" item-key="path" :show-select="!serverModsLocked"
-              :search="search" :headers="headers" :items="enabled">
-              <template #item.name="{ item }">
-                <v-avatar :size="30">
+          <v-data-table
+            v-model="selectedMods"
+            class="launch-server-dialog__mods rounded-lg"
+            :disabled="loadingSelectedMods || serverModsLocked"
+            item-key="path"
+            :show-select="!serverModsLocked"
+            :search="search"
+            :headers="headers"
+            :items="enabled"
+            :items-per-page="10"
+            density="compact"
+          >
+            <template #item.name="{ item }">
+              <div class="flex items-center gap-2">
+                <v-avatar
+                  :size="28"
+                  rounded="md"
+                >
                   <img :src="item.icon || BuiltinImages.unknownServer">
                 </v-avatar>
-
-                {{ item.name }}
-              </template>
-              <template #item.hash="{ item }">
-                {{ getSide(item) }}
-              </template>
-            </v-data-table>
-          </div>
-        </template>
-
-        <div class="flex items-center pt-2 px-2">
-          <v-checkbox v-model="isAcceptEula">
-            <template #label>
-              <i18n-t keypath="eula.body" tag="span">
-                <template #eula>
-                  <a href="https://aka.ms/MinecraftEULA" target="_blank" @click.stop>EULA</a>
-                </template>
-              </i18n-t>
+                <span class="text-body-2 truncate">{{ item.name }}</span>
+              </div>
             </template>
-          </v-checkbox>
-        </div>
-      </div>
+            <template #item.hash="{ item }">
+              <v-chip
+                size="x-small"
+                label
+                variant="tonal"
+                :color="sideColor(item)"
+              >
+                {{ getSide(item) }}
+              </v-chip>
+            </template>
+          </v-data-table>
+        </section>
+      </v-card-text>
+
       <v-divider />
-      <div class="flex p-4">
-        <div class="flex-grow" />
-        <v-btn color="primary" :disabled="!isAcceptEula" :loading="loading" @click="onPlay">
-          <v-icon>
-            play_arrow
-          </v-icon>
+
+      <!-- Footer -->
+      <div class="launch-server-dialog__footer flex items-center gap-3 px-6 py-3">
+        <v-checkbox
+          v-model="isAcceptEula"
+          density="compact"
+          hide-details
+          class="flex-shrink-0"
+        >
+          <template #label>
+            <i18n-t
+              keypath="eula.body"
+              tag="span"
+              class="text-body-2"
+            >
+              <template #eula>
+                <a
+                  href="https://aka.ms/MinecraftEULA"
+                  target="_blank"
+                  class="text-primary"
+                  @click.stop
+                >EULA</a>
+              </template>
+            </i18n-t>
+          </template>
+        </v-checkbox>
+
+        <v-spacer />
+
+        <v-btn
+          variant="text"
+          @click="isShown = false"
+        >
+          {{ t('shared.cancel') }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="flat"
+          rounded="pill"
+          prepend-icon="play_arrow"
+          :disabled="!isAcceptEula"
+          :loading="loading"
+          @click="onPlay"
+        >
           {{ t('instance.launchServer') }}
         </v-btn>
       </div>
@@ -307,6 +529,14 @@ function getSide(mod: ModFile) {
   return t('shared.client') + '/' + t('shared.server')
 }
 
+function sideColor(mod: ModFile) {
+  const side = sides.value[mod.hash]
+  if (side === 'CLIENT') return 'orange'
+  if (side === 'SERVER') return 'primary'
+  if (side === 'BOTH') return 'primary'
+  return undefined
+}
+
 const sortIndex = markRaw({
   CLIENT: 0,
   BOTH: 1,
@@ -444,3 +674,79 @@ watch(error, (e) => {
 })
 
 </script>
+
+<style scoped>
+.launch-server-dialog__header {
+  padding: 16px 16px 12px 20px;
+}
+
+.launch-server-dialog__body {
+  background-color: rgba(var(--v-theme-on-surface), 0.015);
+}
+
+.launch-server-dialog__section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 10px;
+}
+
+.launch-server-dialog__footer {
+  background-color: rgba(var(--v-theme-on-surface), 0.02);
+}
+
+/* Save selection cards */
+.save-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 110px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
+  background-color: rgba(var(--v-theme-on-surface), 0.02);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.save-card:hover {
+  border-color: rgba(var(--v-theme-primary), 0.4);
+  background-color: rgba(var(--v-theme-primary), 0.04);
+}
+
+.save-card--selected {
+  border-color: rgb(var(--v-theme-primary));
+  background-color: rgba(var(--v-theme-primary), 0.08);
+}
+
+.save-card__image {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.save-card__label {
+  font-size: 0.8125rem;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+
+/* Mod table */
+.launch-server-dialog__mods :deep(.v-data-table__th) {
+  background-color: rgba(var(--v-theme-on-surface), 0.04);
+}
+
+.launch-server-dialog__mods :deep(tbody tr:hover) {
+  background-color: rgba(var(--v-theme-primary), 0.04);
+}
+</style>

@@ -565,6 +565,7 @@ logsCrashes:
   logs: 日誌
   placeholder: 沒有找到檔案
   title: 日誌或當機報告
+  failures: 啟動失敗
 me:
   news: 最新消息
   recentPlay: 最近遊玩
@@ -1234,6 +1235,12 @@ setting:
   useProxy: HTTP 代理伺服器設定
   useProxyDescription: HTTP 請求的代理伺服器位址
   viewBackgroundMusic: 檢視背景音樂
+  setAsBackground:
+    global: 設為啟動器背景
+    instance: 設為實例背景
+    successGlobal: 背景圖片已更新。
+    successInstance: 實例背景圖片已更新。
+    failed: 設定背景圖片失敗
 settingLabel:
   global: 全域性設定
   globalHint: 此設定已使用全域性設定

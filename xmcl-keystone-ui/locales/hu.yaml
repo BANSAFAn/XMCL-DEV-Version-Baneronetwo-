@@ -604,6 +604,7 @@ logsCrashes:
   logs: Naplók
   placeholder: Nem találhatóak fájlok
   title: Napló vagy összeomlás jelentések
+  failures: Indítási hibák
 me:
   news: Hírek
   recentPlay: Legutóbbi játék
@@ -1318,6 +1319,12 @@ setting:
   useProxy: HTTP Proxy
   useProxyDescription: A http-kérés proxy-kiszolgálójának címe
   viewBackgroundMusic: Zenék megtekintése
+  setAsBackground:
+    global: Beállítás indító háttereként
+    instance: Beállítás példány háttereként
+    successGlobal: Háttérkép frissítve.
+    successInstance: Példány háttérképe frissítve.
+    failed: Nem sikerült beállítani a háttérképet
 settingLabel:
   global: Globális
   globalHint: Ez a beállítás követi a globális beállítást

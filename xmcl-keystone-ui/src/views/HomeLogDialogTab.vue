@@ -4,7 +4,7 @@
       <v-virtual-scroll
         v-if="content === '' && files.length !== 0"
         :key="0"
-        class="visible-scroll v-list h-full max-h-[70vh] overflow-auto"
+        class="visible-scroll v-list h-full max-h-[70vh] overflow-auto select-none"
         :bench="10"
         :items="files.map((name, index) => ({ name, id: `${name}-${index}` }))"
         :item-height="60"

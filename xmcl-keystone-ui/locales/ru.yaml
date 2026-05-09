@@ -595,6 +595,7 @@ logsCrashes:
   logs: Журналы
   placeholder: Файлы не найдены
   title: Журналы и отчёты об ошибках
+  failures: Ошибки запуска
 me:
   news: Новости
   recentPlay: Последние игры
@@ -1292,6 +1293,12 @@ setting:
   useProxy: HTTP-прокси
   useProxyDescription: Адрес прокси-сервера для http-запроса
   viewBackgroundMusic: Просмотр музыки
+  setAsBackground:
+    global: Сделать фоном лаунчера
+    instance: Сделать фоном экземпляра
+    successGlobal: Фоновое изображение обновлено.
+    successInstance: Фоновое изображение экземпляра обновлено.
+    failed: Не удалось установить фоновое изображение
 settingLabel:
   global: Глобальный
   globalHint: Это настройка будет следовать глобальной настройке.

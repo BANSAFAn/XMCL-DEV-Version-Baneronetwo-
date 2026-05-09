@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isShown" :width="1200">
     <v-card>
-      <v-toolbar color="warning">
+      <v-toolbar class="select-none" color="warning">
         <v-toolbar-title class="text-white">
           {{ t("logsCrashes.title") }}
         </v-toolbar-title>
@@ -15,6 +15,19 @@
             </v-tab>
             <v-tab :value="1" :disabled="data.loadingList" @click="goCrash">
               {{ t("logsCrashes.crashes") }}
+            </v-tab>
+            <v-tab :value="2" :disabled="data.loadingList" @click="goFailures">
+              {{ t("logsCrashes.failures") }}
+              <v-chip
+                v-if="data.failures.length > 0"
+                size="x-small"
+                class="ml-2"
+                color="white"
+                variant="tonal"
+                label
+              >
+                {{ data.failures.length }}
+              </v-chip>
             </v-tab>
           </v-tabs>
         </template>
@@ -41,6 +54,16 @@
             :show-file="_showCrashReport"
           />
         </v-tabs-window-item>
+        <v-tabs-window-item :value="2">
+          <TabItem
+            :visible="data.tab === 2 && isShown"
+            :files="data.failures"
+            :refreshing="data.loadingList"
+            :get-file-content="_getLogContent"
+            :remove-file="removeFailure"
+            :show-file="_showLog"
+          />
+        </v-tabs-window-item>
       </v-tabs-window>
     </v-card>
   </v-dialog>
@@ -56,6 +79,7 @@ import TabItem from "./HomeLogDialogTab.vue";
 
 const {
   listLogs,
+  listLaunchFailures,
   listCrashReports,
   removeLog: rmLog,
   removeCrashReport: rmCrash,
@@ -75,6 +99,7 @@ const data = reactive({
   loadingList: false,
   logs: [] as string[],
   crashes: [] as string[],
+  failures: [] as string[],
 });
 const _getLogContent = (name: string) => getLogContent(path.value, name);
 const _getCrashReportContent = (name: string) =>
@@ -102,6 +127,16 @@ function loadCrashes() {
       data.loadingList = false;
     });
 }
+function loadFailures() {
+  data.loadingList = true;
+  listLaunchFailures(path.value)
+    .then((l) => {
+      data.failures = l;
+    })
+    .finally(() => {
+      data.loadingList = false;
+    });
+}
 async function removeLog(name: string) {
   await rmLog(path.value, name);
   loadLogs();
@@ -110,13 +145,23 @@ async function removeCrashReport(name: string) {
   await rmCrash(path.value, name);
   loadCrashes();
 }
+async function removeFailure(name: string) {
+  // Failures live in the same `logs/` folder as regular logs, so the
+  // existing removeLog endpoint handles them.
+  await rmLog(path.value, name);
+  loadFailures();
+}
 watch(isShown, (s) => {
   if (s) {
     data.tab = 0;
     loadLogs();
+    // Eagerly load the failure list so the badge count on the tab is
+    // accurate even before the user clicks the tab.
+    loadFailures();
   } else {
     data.logs = [];
     data.crashes = [];
+    data.failures = [];
   }
 });
 function goLog() {
@@ -127,6 +172,10 @@ function goLog() {
 function goCrash() {
   data.tab = 1;
   loadCrashes();
+}
+function goFailures() {
+  data.tab = 2;
+  loadFailures();
 }
 </script>
 
