@@ -1,7 +1,7 @@
 import { ConnectionUserInfo, GameProfileAndTexture, PromiseSignal, createPromiseSignal } from '@xmcl/runtime-api'
 import { setTimeout } from 'timers/promises'
 import { PeerSession } from './connection'
-import type { InitiateOptions, Peers } from './multiplayerImpl'
+import type { InitiateOptions, Peers } from './peers'
 
 type DescriptionType = string
 

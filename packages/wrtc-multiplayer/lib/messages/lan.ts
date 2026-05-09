@@ -2,7 +2,7 @@ import { LanServerInfo } from '@xmcl/client'
 import { createServer } from 'net'
 import { defineMessage, MessageType } from './message'
 import { ServerProxy } from '../ServerProxy'
-import { listen } from '../../util/server'
+import { listen } from '../server'
 
 export const MessageLan: MessageType<LanServerInfo> = 'lan'
 

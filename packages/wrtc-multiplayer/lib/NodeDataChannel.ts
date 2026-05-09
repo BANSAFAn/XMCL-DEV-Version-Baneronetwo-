@@ -1,4 +1,4 @@
-import { NativeModuleLoader } from '../util/NativeModule'
+import { NativeModuleLoader } from '@xmcl/utils'
 import { dependencies } from '../package.json'
 
 type NodeDataChannel = typeof import('node-datachannel')

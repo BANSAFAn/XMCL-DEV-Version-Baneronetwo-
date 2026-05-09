@@ -1,6 +1,4 @@
 import { XMLParser } from 'fast-xml-parser'
-import { Client, request } from 'undici'
-import { IncomingMessage, request as hrequest } from 'http'
 import url from 'url'
 
 export interface ServiceInfo {
@@ -70,10 +68,8 @@ export class Device {
   private lastUpdate = 0
   private ttl: number = 60 * 1000
   private baseUrl = ''
-  private client: Client
 
   constructor(readonly url: string) {
-    this.client = new Client(new URL(url).origin)
     this.services = [
       'urn:schemas-upnp-org:service:WANIPConnection:1',
       'urn:schemas-upnp-org:service:WANIPConnection:2',
@@ -90,12 +86,12 @@ export class Device {
       }
     }
 
-    const res = await request(this.url, { method: 'GET', dispatcher: this.client })
-    if (res.statusCode !== 200) {
-      throw new Error('Request failed: ' + res.statusCode + ' ' + (await res.body.text()))
+    const res = await fetch(this.url, { method: 'GET' })
+    if (res.status !== 200) {
+      throw new Error('Request failed: ' + res.status + ' ' + (await res.text()))
     }
 
-    const data = await res.body.text()
+    const data = await res.text()
 
     const info = new XMLParser().parse(data)
 

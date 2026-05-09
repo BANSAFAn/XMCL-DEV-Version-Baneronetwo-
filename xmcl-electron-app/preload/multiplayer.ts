@@ -1,6 +1,5 @@
 import { AUTHORITY_MICROSOFT, PeerServiceKey, UserServiceKey } from '@xmcl/runtime-api'
-import { createMultiplayer } from '@xmcl/runtime/peer/multiplayerImpl'
-import { listen } from '@xmcl/runtime/util/server'
+import { createMultiplayer, listen } from '@xmcl/wrtc-multiplayer'
 import { contextBridge, ipcRenderer } from 'electron/renderer'
 import './controller'
 import { serviceChannels } from './service'

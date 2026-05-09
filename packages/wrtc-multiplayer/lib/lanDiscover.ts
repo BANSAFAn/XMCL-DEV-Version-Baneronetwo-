@@ -1,7 +1,7 @@
 import { LanServerInfo, MinecraftLanDiscover } from '@xmcl/client'
 import { createSocket } from 'dgram'
 import { MessageLan } from './messages/lan'
-import type { Peers } from './multiplayerImpl'
+import type { Peers } from './peers'
 import { EventEmitter } from 'stream'
 import { PromiseSignal } from '@xmcl/runtime-api'
 

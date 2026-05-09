@@ -1,14 +1,19 @@
-import { createPromiseSignal } from '@xmcl/runtime-api'
-import { AnyError } from '@xmcl/utils'
 import { writeFileSync } from 'fs-extra'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
 import { extract } from 'tar-stream'
 import { gunzipSync } from 'zlib'
+import { AnyError } from './AnyError'
 
+/**
+ * Lazily resolves a native (`*.node`) module from a directory, downloading
+ * a tarball release if the binary is missing. Used for `node-datachannel`
+ * inside the multiplayer preload, where the runtime can't rely on the
+ * normal `npm install` postinstall hook (e.g. portable launcher builds).
+ */
 export class NativeModuleLoader<T> {
   #retryCount = 0
-  #signal = createPromiseSignal<T>()
+  #signal = Promise.withResolvers<T>()
   #initPromise: Promise<void> | undefined
 
   constructor(

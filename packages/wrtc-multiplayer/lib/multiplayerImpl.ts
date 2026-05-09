@@ -15,70 +15,17 @@ import { raceNatType } from './nat'
 import { createPeerGroup } from './peerGorup'
 import { createPeerSharing } from './peerSharing'
 import { createPeerUserInfo } from './peerUserInfo'
+import { InitiateOptions, Peers } from './peers'
 import { getDeviceInfo, isSupported } from './ssdpClient'
 import debounce from 'lodash.debounce'
+
+export { InitiateOptions, Peers }
 
 const pBrotliDecompress = promisify(brotliDecompress)
 const pBrotliCompress = promisify(brotliCompress)
 
 async function decode(description: string): Promise<TransferDescription> {
   return JSON.parse((await pBrotliDecompress(Buffer.from(description, 'base64'))).toString('utf-8'))
-}
-
-export interface InitiateOptions {
-  /**
-   * Peer client id
-   */
-  remoteId?: string
-  /**
-   * Peer connection id
-   */
-  session?: string
-  /**
-   * Is the peer the initiator (create the offer)
-   */
-  initiate?: boolean
-  /**
-   * The using ice server
-   */
-  targetIceServer?: RTCIceServer
-  /**
-   * Use the ice server
-   */
-  preferredIceServers?: RTCIceServer[]
-}
-
-export class Peers {
-  private peers: Record<string, PeerSession> = {}
-
-  onremove: (id: string) => void = () => { }
-
-  add(peer: PeerSession) {
-    this.peers[peer.id] = peer
-  }
-
-  #validate(sess: PeerSession) {
-    if (sess && (sess.isClosed || sess.connection.connectionState === 'closed' || sess.connection.connectionState === 'disconnected')) {
-      delete this.peers[sess.id]
-      this.onremove(sess.id)
-      return undefined
-    }
-    return sess
-  }
-
-  get(id: string, remoteId?: string): PeerSession | undefined {
-    const sess = this.peers[id] || Object.values(this.peers).find(p => p.remoteId === (remoteId || id))
-
-    return this.#validate(sess)
-  }
-
-  remove(id: string) {
-    delete this.peers[id]
-  }
-
-  get entries() {
-    return Object.values(this.peers).map(p => this.#validate(p)).filter(v => !!v) as PeerSession[]
-  }
 }
 
 export function createMultiplayer() {
