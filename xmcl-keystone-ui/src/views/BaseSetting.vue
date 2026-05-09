@@ -31,26 +31,26 @@
       :color="snackbarColor"
       :class="{ 'shake-animation': hasAnimation }"
       :timeout="-1"
+      @update:model-value="() => {}"
     >
       <div class="text-button mr-4">
         {{ t('modified.unsaved') }}
       </div>
 
       <template #actions>
-        <div class="mr-2 flex gap-1">
-          <v-btn
-            variant="text"
-            @click="onReset"
-          >
-            {{ t('modified.reset') }}
-          </v-btn>
-          <v-btn
-            color="primary"
-            @click="onSave"
-          >
-            {{ t('modified.save') }}
-          </v-btn>
-        </div>
+        <v-btn
+          variant="text"
+          @click.stop="onReset"
+        >
+          {{ t('modified.reset') }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="flat"
+          @click.stop="onSave"
+        >
+          {{ t('modified.save') }}
+        </v-btn>
       </template>
     </v-snackbar>
     <BaseSettingModUpgradeDialog

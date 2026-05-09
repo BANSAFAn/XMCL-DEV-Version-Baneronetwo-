@@ -264,36 +264,17 @@ export function useInstanceEdit(
     if (!current) {
       return true
     }
-    if (current.name !== data.name) {
-      return true
-    }
-    if (current.version !== data.version) {
-      return true
-    }
-    if (current.runtime.minecraft !== data.runtime.minecraft) {
-      return true
-    }
-    if (current.runtime.forge !== data.runtime.forge) {
-      return true
-    }
-    if (current.runtime.neoForged !== data.runtime.neoForged) {
-      return true
-    }
-    if (current.runtime.labyMod !== data.runtime.labyMod) {
-      return true
-    }
-    if (current.runtime.fabricLoader !== data.runtime.fabricLoader) {
-      return true
-    }
-    if (current.runtime.quiltLoader !== data.runtime.quiltLoader) {
-      return true
-    }
-    if (current.runtime.optifine !== data.runtime.optifine) {
-      return true
-    }
-    if (current.icon !== data.icon) {
-      return true
-    }
+    const eq = (a: unknown, b: unknown) => (a ?? '') === (b ?? '')
+    if (!eq(current.name, data.name)) return true
+    if (!eq(current.version, data.version)) return true
+    if (!eq(current.runtime.minecraft, data.runtime.minecraft)) return true
+    if (!eq(current.runtime.forge, data.runtime.forge)) return true
+    if (!eq(current.runtime.neoForged, data.runtime.neoForged)) return true
+    if (!eq(current.runtime.labyMod, data.runtime.labyMod)) return true
+    if (!eq(current.runtime.fabricLoader, data.runtime.fabricLoader)) return true
+    if (!eq(current.runtime.quiltLoader, data.runtime.quiltLoader)) return true
+    if (!eq(current.runtime.optifine, data.runtime.optifine)) return true
+    if (!eq(current.icon, data.icon)) return true
     return false
   })
 

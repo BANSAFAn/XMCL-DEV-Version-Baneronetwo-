@@ -36,38 +36,42 @@ export function useInstances() {
     }
 
     override instanceEdit(settings: Partial<InstanceDataWithTime> & { path: string }) {
-      const inst = this.instances.find(i => i.path === (settings.path))!
-      if ('showLog' in settings) {
-        inst.showLog = settings.showLog
-      }
-      if ('hideLauncher' in settings) {
-        inst.hideLauncher = settings.hideLauncher
-      }
-      if ('fastLaunch' in settings) {
-        inst.fastLaunch = settings.fastLaunch
-      }
-      if ('maxMemory' in settings) {
-        inst.maxMemory = settings.maxMemory
-      }
-      if ('minMemory' in settings) {
-        inst.minMemory = settings.minMemory
-      }
-      if ('assignMemory' in settings) {
-        inst.assignMemory = settings.assignMemory
-      }
-      if ('vmOptions' in settings) {
-        inst.vmOptions = settings.vmOptions
-      }
-      if ('mcOptions' in settings) {
-        inst.mcOptions = settings.mcOptions
-      }
-      if ('preExecuteCommand' in settings) {
-        inst.preExecuteCommand = settings.preExecuteCommand
-      }
-      super.instanceEdit(settings)
+      const inst = this.instances.find(i => i.path === (settings.path))
+      if (!inst) return
 
+      // Apply the same JIT mutations the renderer used to do in-place, but
+      // produce a brand-new instance object reference instead. The previous
+      // implementation mutated a `markRaw`-wrapped object, which Vue cannot
+      // observe — downstream `watch(... { deep: true })` consumers therefore
+      // never re-evaluated after `editInstance`, leaving stale state in the UI.
+      const next = markRaw({ ...inst })
+      if ('showLog' in settings) next.showLog = settings.showLog
+      if ('hideLauncher' in settings) next.hideLauncher = settings.hideLauncher
+      if ('fastLaunch' in settings) next.fastLaunch = settings.fastLaunch
+      if ('maxMemory' in settings) next.maxMemory = settings.maxMemory
+      if ('minMemory' in settings) next.minMemory = settings.minMemory
+      if ('assignMemory' in settings) next.assignMemory = settings.assignMemory
+      if ('vmOptions' in settings) next.vmOptions = settings.vmOptions
+      if ('mcOptions' in settings) next.mcOptions = settings.mcOptions
+      if ('preExecuteCommand' in settings) next.preExecuteCommand = settings.preExecuteCommand
+
+      // Let the shared base apply the rest of the diff (runtime, icon, etc.)
+      // onto the new object so all downstream fields stay in sync.
+      const previousInstances = this.instances
+      this.instances = [next]
+      try {
+        super.instanceEdit(settings)
+      } finally {
+        this.instances = previousInstances
+      }
+
+      this.all[next.path] = next
       const idx = this.instances.indexOf(inst)
-      this.instances = markRaw([...this.instances.slice(0, idx), inst, ...this.instances.slice(idx + 1)])
+      this.instances = markRaw([
+        ...this.instances.slice(0, idx),
+        next,
+        ...this.instances.slice(idx + 1),
+      ])
     }
   })
   const instances = computed(() => state.value?.instances ?? [])
