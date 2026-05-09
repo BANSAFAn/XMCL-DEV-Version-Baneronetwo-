@@ -495,6 +495,12 @@ java:
 labyMod:
   disable: Desabilitar LabyMod
   empty: LabyMod não é compatível com a versão atual do Minecraft.
+unauthenticatedWarning:
+  title: Não conectado
+  description: Você não está conectado a nenhuma conta. O jogo será iniciado no modo demo. Entre para acessar todos os recursos.
+  cancel: Cancelar
+  login: Entrar
+  playAnyway: Jogar mesmo assim
 launch:
   cancel: Cancelar
   createShortcut: Crie atalho

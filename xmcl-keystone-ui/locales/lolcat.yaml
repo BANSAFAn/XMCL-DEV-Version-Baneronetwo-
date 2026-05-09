@@ -482,6 +482,12 @@ java:
 labyMod:
   disable: DISABL LABYMOD
   empty: LABYMOD DOES NOT SUPPORT CURREN MINECWAFT
+unauthenticatedWarning:
+  title: NO LOGZ
+  description: U IZ NO LOGGD IN. GAEM WIL STAR IN DEMO MOAD. SIGN IN 4 ALL TEH STUFF.
+  cancel: NUH UH
+  login: GIB LOGZ
+  playAnyway: PLAY ENYWAY
 launch:
   cancel: CANCEL
   createShortcut: MAKE SHORTCUT

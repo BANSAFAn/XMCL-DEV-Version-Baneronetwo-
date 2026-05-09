@@ -500,6 +500,12 @@ java:
 labyMod:
   disable: Disable LabyMod
   empty: LabyMod does not support current Minecraft
+unauthenticatedWarning:
+  title: Not Logged In
+  description: You are not logged into any account. The game will launch in demo mode. To access full features, please sign in.
+  cancel: Cancel
+  login: Sign In
+  playAnyway: Play Anyway
 launch:
   cancel: Cancel
   createShortcut: Create shortcut

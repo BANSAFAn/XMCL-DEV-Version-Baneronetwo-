@@ -468,6 +468,12 @@ java:
 labyMod:
   disable: Wyłącz LabyMod
   empty: LabyMod nie obsługuje aktualnej wersji Minecrafta
+unauthenticatedWarning:
+  title: Nie zalogowano
+  description: Nie jesteś zalogowany na żadne konto. Gra uruchomi się w trybie demo. Zaloguj się, aby uzyskać dostęp do wszystkich funkcji.
+  cancel: Anuluj
+  login: Zaloguj się
+  playAnyway: Mimo to uruchom
 launch:
   cancel: Anuluj
   createShortcut: Utwórz skrót

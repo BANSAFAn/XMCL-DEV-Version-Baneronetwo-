@@ -488,6 +488,12 @@ java:
 labyMod:
   disable: LabyMod'u Devre Dışı Bırak
   empty: LabyMod mevcut Minecraft'ı desteklemiyor
+unauthenticatedWarning:
+  title: Giriş yapılmadı
+  description: Herhangi bir hesaba giriş yapmadınız. Oyun demo modunda başlatılacak. Tüm özelliklere erişmek için giriş yapın.
+  cancel: İptal
+  login: Giriş yap
+  playAnyway: Yine de oyna
 launch:
   cancel: İptal
   createShortcut: Kısayol oluştur

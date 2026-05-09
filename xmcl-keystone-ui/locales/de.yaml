@@ -528,6 +528,12 @@ java:
 labyMod:
   disable: LabyMod ausschalten
   empty: LabyMod unterstützt nicht das aktuelle Minecraft
+unauthenticatedWarning:
+  title: Nicht angemeldet
+  description: Du bist mit keinem Konto angemeldet. Das Spiel startet im Demo-Modus. Melde dich an, um alle Funktionen zu nutzen.
+  cancel: Abbrechen
+  login: Anmelden
+  playAnyway: Trotzdem starten
 launch:
   cancel: Ablehnen
   createShortcut: Verknüpfung erstellen

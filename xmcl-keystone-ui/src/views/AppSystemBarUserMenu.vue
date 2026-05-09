@@ -1,6 +1,7 @@
 <template>
   <v-menu
     v-model="isShown"
+    eager
     :close-on-content-click="false"
     transition="slide-y-transition"
     location="bottom center"

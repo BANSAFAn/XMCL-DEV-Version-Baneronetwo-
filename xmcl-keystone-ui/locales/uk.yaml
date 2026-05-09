@@ -479,6 +479,12 @@ java:
 labyMod:
   disable: Вимкнути LabyMod
   empty: LabyMod не підтримує поточний Minecraft
+unauthenticatedWarning:
+  title: Не виконано вхід
+  description: Жоден обліковий запис не виконав вхід. Гру буде запущено в демо-режимі. Увійдіть, щоб отримати доступ до всіх можливостей.
+  cancel: Скасувати
+  login: Увійти
+  playAnyway: Усе одно запустити
 launch:
   cancel: Скасувати
   createShortcut: Створити ярлик

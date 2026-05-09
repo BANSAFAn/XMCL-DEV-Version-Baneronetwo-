@@ -510,6 +510,12 @@ java:
 labyMod:
   disable: 不使用 LabyMod
   empty: 当前 Minecraft 不支持 LabyMod
+unauthenticatedWarning:
+  title: 未登录
+  description: 当前未登录任何账号，游戏将以演示模式启动。如需完整功能，请先登录。
+  cancel: 取消
+  login: 登录
+  playAnyway: 仍要启动
 launch:
   cancel: 中止
   createShortcut: 创建快捷方式

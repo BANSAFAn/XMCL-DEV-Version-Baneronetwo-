@@ -507,6 +507,12 @@ java:
 labyMod:
   disable: LabyMod letiltása
   empty: A LabyMod nem támogatja a jelenlegi Minecraftot
+unauthenticatedWarning:
+  title: Nincs bejelentkezve
+  description: Egyik fiókba sem vagy bejelentkezve. A játék demó módban indul. A teljes funkcionalitáshoz jelentkezz be.
+  cancel: Mégse
+  login: Bejelentkezés
+  playAnyway: Indítás mindenképp
 launch:
   cancel: Mégsem
   createShortcut: Hozzon létre parancsikont

@@ -487,6 +487,12 @@ java:
 labyMod:
   disable: LabyMod-ты өшіру
   empty: LabyMod ағымдағы Minecraft-ты қолдамайды
+unauthenticatedWarning:
+  title: Кірмеген
+  description: Ешқандай аккаунтқа кірмегенсіз. Ойын демо режимінде іске қосылады. Барлық мүмкіндіктерді пайдалану үшін кіріңіз.
+  cancel: Бас тарту
+  login: Кіру
+  playAnyway: Сонда да ойнау
 launch:
   cancel: Болдырмау
   createShortcut: Тікенше жасау

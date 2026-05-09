@@ -497,6 +497,12 @@ java:
 labyMod:
   disable: LabyMod не выбран
   empty: LabyMod не поддерживает текущую версию Minecraft
+unauthenticatedWarning:
+  title: Вы не вошли в аккаунт
+  description: Ни один аккаунт не выполнил вход. Игра запустится в демо-режиме. Войдите, чтобы получить доступ ко всем возможностям.
+  cancel: Отмена
+  login: Войти
+  playAnyway: Всё равно запустить
 launch:
   cancel: Отменить
   createShortcut: Создать ярлык

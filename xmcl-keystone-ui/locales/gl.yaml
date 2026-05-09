@@ -488,6 +488,12 @@ java:
 labyMod:
   disable: Schakel LabyMod uit
   empty: LabyMod ondersteunt huidige Minecraft niet
+unauthenticatedWarning:
+  title: Sen sesión iniciada
+  description: Non iniciaches sesión con ningunha conta. O xogo abrirase en modo demo. Inicia sesión para acceder a todas as funcións.
+  cancel: Cancelar
+  login: Iniciar sesión
+  playAnyway: Xogar igualmente
 launch:
   cancel: Annuleren
   createShortcut: Snelkoppeling maken

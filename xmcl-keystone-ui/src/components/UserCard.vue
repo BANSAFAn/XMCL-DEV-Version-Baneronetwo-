@@ -186,7 +186,6 @@ watch(
     login.value = true
     addService.value = false
   },
-  { immediate: true },
 )
 
 const usersToSwitch = computed(() =>

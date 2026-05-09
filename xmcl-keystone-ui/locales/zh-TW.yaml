@@ -485,6 +485,12 @@ java:
 labyMod:
   disable: 不使用 LabyMod
   empty: 目前 Minecraft 不支援 LabyMod
+unauthenticatedWarning:
+  title: 尚未登入
+  description: 目前未登入任何帳號，遊戲將以試玩模式啟動。如需完整功能，請先登入。
+  cancel: 取消
+  login: 登入
+  playAnyway: 仍要啟動
 launch:
   cancel: 中止
   createShortcut: 建立捷徑

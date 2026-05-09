@@ -455,6 +455,12 @@ java:
 labyMod:
   disable: LabyMod 비활성화
   empty: 현재 마인크래프트 버전을 LabyMod가 지원하지 않습니다
+unauthenticatedWarning:
+  title: 로그인되지 않음
+  description: 어떠한 계정에도 로그인되지 않았습니다. 게임이 데모 모드로 실행됩니다. 모든 기능을 사용하려면 로그인하세요.
+  cancel: 취소
+  login: 로그인
+  playAnyway: 그래도 플레이
 launch:
   cancel: 취소
   createShortcut: 바로가기 만들기

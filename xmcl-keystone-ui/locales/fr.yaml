@@ -493,6 +493,12 @@ java:
   locationHint: Aucun Java sélectionné — utilisation de celui par défaut du système
   openFolder: Ouvrir le dossier Java
   presets: Préréglages
+unauthenticatedWarning:
+  title: Non connecté
+  description: Vous n’êtes connecté à aucun compte. Le jeu se lancera en mode démo. Connectez-vous pour accéder à toutes les fonctionnalités.
+  cancel: Annuler
+  login: Se connecter
+  playAnyway: Lancer quand même
 launch:
   createShortcut: Créer un raccourci
   killServer: Tuer le serveur Localhost

@@ -223,6 +223,10 @@ export function useLaunchButton() {
    * 1. User need to login
    * 2. User need to install java
    * 3. User need to install version and files
+   *
+   * Preclick listeners may reject to abort the launch chain (e.g. the
+   * unauthenticated-warning dialog rejects when the user picks "Cancel").
+   * Such rejections are intentional and not propagated.
    */
   async function onClick() {
     if (loading.value && !launching.value) {
@@ -236,7 +240,11 @@ export function useLaunchButton() {
       return
     }
     for (const listener of listeners) {
-      await listener()
+      try {
+        await listener()
+      } catch {
+        return
+      }
     }
     launchButtonFacade.value.onClick()
   }

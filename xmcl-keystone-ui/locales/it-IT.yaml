@@ -474,6 +474,12 @@ java:
 labyMod:
   disable: Disabilita LabyMod
   empty: LabyMod non supporta l'attuale versione di Minecraft
+unauthenticatedWarning:
+  title: Accesso non eseguito
+  description: Non hai effettuato l’accesso a nessun account. Il gioco verrà avviato in modalità demo. Accedi per usare tutte le funzioni.
+  cancel: Annulla
+  login: Accedi
+  playAnyway: Avvia comunque
 launch:
   cancel: Annulla
   createShortcut: Crea scorciatoia

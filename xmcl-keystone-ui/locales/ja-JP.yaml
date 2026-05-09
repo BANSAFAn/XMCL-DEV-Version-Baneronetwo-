@@ -476,6 +476,12 @@ java:
 labyMod:
   disable: LabyMod を使用しない
   empty: LabyMod は現在のMinecraftをサポートしていません
+unauthenticatedWarning:
+  title: ログインしていません
+  description: どのアカウントにもログインしていません。ゲームはデモモードで起動します。すべての機能を使うにはサインインしてください。
+  cancel: キャンセル
+  login: サインイン
+  playAnyway: それでもプレイ
 launch:
   cancel: キャンセル
   createShortcut: ショートカットを作成します

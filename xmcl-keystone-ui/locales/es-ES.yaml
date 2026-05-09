@@ -421,6 +421,12 @@ java:
   locationHint: Ningún Java seleccionado — usando el predeterminado del sistema
   openFolder: Abrir carpeta de Java
   presets: Predeterminados
+unauthenticatedWarning:
+  title: No has iniciado sesión
+  description: No has iniciado sesión en ninguna cuenta. El juego se ejecutará en modo demo. Inicia sesión para acceder a todas las funciones.
+  cancel: Cancelar
+  login: Iniciar sesión
+  playAnyway: Jugar de todos modos
 launch:
   createShortcut: Crear atajo
   killServer: Matar el servidor localhost
