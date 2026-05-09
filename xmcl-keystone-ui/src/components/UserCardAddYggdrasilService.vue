@@ -1,21 +1,23 @@
 <template>
   <div class="flex flex-col overflow-hidden">
-    <div class="relative flex items-center pr-4">
+    <div class="relative flex items-center px-4 pt-3">
       <v-btn
+        icon="arrow_back"
+        variant="text"
+        density="comfortable"
         @click="$emit('back')"
-       variant="text">
-        <v-icon size="small">
-          arrow_back
-        </v-icon>
-      </v-btn>
+      />
+      <span class="ml-2 text-base font-medium">{{ t('userService.title') }}</span>
     </div>
-    <div class="p-8 flex flex-col gap-6 text-left overflow-auto">
-      <div
+    <div class="p-6 flex flex-col gap-4 text-left overflow-auto">
+      <v-card
         v-for="(a, i) in items"
         :key="i"
-        class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-black/20 shadow-sm p-4 flex flex-col gap-4"
+        variant="outlined"
+        rounded="xl"
+        class="overflow-hidden"
       >
-        <div class="flex gap-3 flex-row items-center">
+        <div class="flex gap-3 flex-row items-center px-4 pt-4">
           <v-text-field
             v-if="a.new"
             v-model="a.url"
@@ -24,36 +26,44 @@
             variant="outlined"
             prepend-inner-icon="link"
             hide-details
+            density="comfortable"
             :label="t('userService.baseUrlHint')"
             class="flex-1"
           />
           <div
             v-else-if="resolvePreview(a.url)"
-            class="flex-grow rounded-lg border border-dashed border-gray-300 dark:border-gray-600 px-3 py-2 text-xs text-gray-600 dark:text-gray-300"
+            class="flex-grow rounded-lg border border-dashed border-outline-variant px-3 py-2 text-xs text-medium-emphasis"
           >
-            <div class="uppercase tracking-wide text-[11px] text-gray-400 dark:text-gray-500">{{ t('userService.baseUrlHint') }}</div>
+            <div class="text-[11px] uppercase tracking-wide text-disabled">
+              {{ t('userService.baseUrlHint') }}
+            </div>
             <div class="font-mono break-all text-sm">{{ resolvePreview(a.url) }}</div>
           </div>
           <v-btn
             v-if="a.new"
-            icon
+            icon="add"
+            variant="tonal"
+            density="comfortable"
+            color="primary"
             @click="save(a)"
-          >
-            <v-icon>add</v-icon>
-          </v-btn>
+          />
           <v-btn
             v-else
+            icon="delete"
+            variant="tonal"
+            density="comfortable"
             color="error"
-            icon
             @click="remove(a)"
-          >
-            <v-icon>delete</v-icon>
-          </v-btn>
+          />
         </div>
 
-        <div class="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-white/5 px-4 py-3">
+        <v-card
+          variant="tonal"
+          rounded="lg"
+          class="mx-4 my-4 px-4 py-3"
+        >
           <template v-if="a.authlibInjector">
-            <div class="text-sm font-medium text-gray-700 dark:text-gray-100 flex items-center gap-2">
+            <div class="text-sm font-medium flex items-center gap-2">
               <img
                 v-if="a.favicon"
                 :src="a.favicon"
@@ -62,73 +72,77 @@
               >
               {{ t('userService.authlibInjectorMetadata') }}
             </div>
-            <div class="mt-3 grid gap-2 text-sm text-gray-600 dark:text-gray-200 md:grid-cols-2">
+            <div class="mt-3 grid gap-2 text-sm md:grid-cols-2">
               <div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ t('userService.server') }}</div>
+                <div class="text-[11px] uppercase tracking-wide text-disabled">{{ t('userService.server') }}</div>
                 <div class="font-mono">{{ a.authlibInjector.meta?.serverName || '-' }}</div>
               </div>
               <div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ t('userService.implementation') }}</div>
+                <div class="text-[11px] uppercase tracking-wide text-disabled">{{ t('userService.implementation') }}</div>
                 <div class="font-mono">{{ a.authlibInjector.meta?.implementationName || '-' }}</div>
               </div>
               <div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ t('userService.version') }}</div>
+                <div class="text-[11px] uppercase tracking-wide text-disabled">{{ t('userService.version') }}</div>
                 <div class="font-mono">{{ a.authlibInjector.meta?.implementationVersion || '-' }}</div>
               </div>
               <div v-if="a.authlibInjector.skinDomains?.length">
-                <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ t('userService.skinDomains') }}</div>
+                <div class="text-[11px] uppercase tracking-wide text-disabled">{{ t('userService.skinDomains') }}</div>
                 <div class="font-mono break-words flex flex-wrap gap-1">
-                  <span
+                  <v-chip
                     v-for="(domain, idx) in getVisibleSkinDomains(a.authlibInjector.skinDomains)"
                     :key="domain + idx"
-                    class="inline-flex items-center rounded bg-white/70 dark:bg-white/10 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-100"
+                    size="x-small"
+                    variant="flat"
+                    label
                   >
                     {{ domain }}
-                  </span>
-                  <span
+                  </v-chip>
+                  <v-chip
                     v-if="getHiddenSkinDomains(a.authlibInjector.skinDomains).length"
-                    class="inline-flex items-center rounded bg-white/30 dark:bg-black/30 px-2 py-0.5 text-xs text-gray-600 dark:text-gray-200 cursor-help"
                     v-shared-tooltip="() => getHiddenSkinDomains(a.authlibInjector.skinDomains).join('\n')"
+                    size="x-small"
+                    variant="tonal"
+                    label
                   >
                     +{{ getHiddenSkinDomains(a.authlibInjector.skinDomains).length }}
-                  </span>
+                  </v-chip>
                 </div>
               </div>
             </div>
-            <div class="mt-3 grid gap-2 text-sm text-gray-600 dark:text-gray-200 md:grid-cols-2">
+            <div class="mt-3 grid gap-2 text-sm md:grid-cols-2">
               <div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ t('userService.homepage') }}</div>
+                <div class="text-[11px] uppercase tracking-wide text-disabled">{{ t('userService.homepage') }}</div>
                 <a
                   v-if="a.authlibInjector.meta?.links?.homepage"
                   :href="a.authlibInjector.meta.links.homepage"
-                  target="_blank"
-                  class="underline break-all"
+                  target="browser"
+                  class="text-primary underline break-all"
                 >
                   {{ a.authlibInjector.meta.links.homepage }}
                 </a>
-                <span v-else>-</span>
+                <span v-else class="text-disabled">-</span>
               </div>
               <div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ t('userService.register') }}</div>
+                <div class="text-[11px] uppercase tracking-wide text-disabled">{{ t('userService.register') }}</div>
                 <a
                   v-if="a.authlibInjector.meta?.links?.register"
                   :href="a.authlibInjector.meta.links.register"
-                  target="_blank"
-                  class="underline break-all"
+                  target="browser"
+                  class="text-primary underline break-all"
                 >
                   {{ a.authlibInjector.meta.links.register }}
                 </a>
-                <span v-else>-</span>
+                <span v-else class="text-disabled">-</span>
               </div>
             </div>
           </template>
           <template v-else>
-            <div class="text-sm text-gray-500 dark:text-gray-300">
-              {{ t('userService.title')  }}
+            <div class="text-sm text-medium-emphasis">
+              {{ t('userService.title') }}
             </div>
           </template>
-        </div>
-      </div>
+        </v-card>
+      </v-card>
     </div>
   </div>
 </template>

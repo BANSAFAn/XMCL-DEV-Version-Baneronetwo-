@@ -1,5 +1,11 @@
 import { useLocalStorageCache, useLocalStorageCacheStringValue } from '@/composables/cache'
-import { AUTHORITY_DEV, AUTHORITY_MICROSOFT, AUTHORITY_MOJANG, AuthorityMetadata, YggdrasilApi } from '@xmcl/runtime-api'
+import {
+  AUTHORITY_DEV,
+  AUTHORITY_MICROSOFT,
+  AUTHORITY_MOJANG,
+  AuthorityMetadata,
+  YggdrasilApi,
+} from '@xmcl/runtime-api'
 import { Ref } from 'vue'
 import { DialogKey } from './dialog'
 import { injection } from '@/util/inject'
@@ -8,14 +14,22 @@ import { kSettingsState } from './setting'
 import { useLocalStorage } from '@vueuse/core'
 
 export function useAccountSystemHistory() {
-  const authority = useLocalStorageCacheStringValue('loginLastAuthAuthority', AUTHORITY_MICROSOFT as string, { legacyKey: 'last-auth-service' })
-  const allHistoryRaw = useLocalStorage('loginAuthorityHistory', () => ([] as { name: string; authority: string }[]))
+  const authority = useLocalStorageCacheStringValue(
+    'loginLastAuthAuthority',
+    AUTHORITY_MICROSOFT as string,
+    { legacyKey: 'last-auth-service' },
+  )
+  const allHistoryRaw = useLocalStorage(
+    'loginAuthorityHistory',
+    () => [] as { name: string; authority: string }[],
+  )
   const history = computed({
-    get: () => allHistoryRaw.value.filter(v => v.authority === authority.value).map(v => v.name),
+    get: () =>
+      allHistoryRaw.value.filter((v) => v.authority === authority.value).map((v) => v.name),
     set: (v) => {
       allHistoryRaw.value = [
-        ...allHistoryRaw.value.filter(v => v.authority !== authority.value),
-        ...v.map(x => ({ name: x, authority: authority.value })),
+        ...allHistoryRaw.value.filter((v) => v.authority !== authority.value),
+        ...v.map((x) => ({ name: x, authority: authority.value })),
       ]
     },
   })
@@ -64,9 +78,9 @@ export function useAllowThirdparty() {
   const { state: setting } = injection(kSettingsState)
   const { users } = injection(kUserContext)
   const allowThirdParty = computed(() => {
-    if (users.value.some(u => u.authority === AUTHORITY_MICROSOFT)) return true
+    if (users.value.some((u) => u.authority === AUTHORITY_MICROSOFT)) return true
     if (setting.value?.developerMode) return true
-    const locale = (new Intl.NumberFormat()).resolvedOptions().locale
+    const locale = new Intl.NumberFormat().resolvedOptions().locale
     if (strictLocales.includes(locale)) return false
     return true
   })
@@ -87,19 +101,19 @@ export function useAuthorityItems(authorities: Ref<AuthorityMetadata[] | undefin
           text: t('userServices.microsoft.name'),
           icon: 'gavel',
         })
-      }
-      if (v.authority === AUTHORITY_DEV) {
+      } else if (v.authority === AUTHORITY_DEV) {
         result.push({
           value: AUTHORITY_DEV,
           text: t('userServices.offline.name'),
           icon: 'wifi_off',
         })
+      } else {
+        result.push({
+          value: v.authority,
+          text: v.authlibInjector?.meta.serverName ?? new URL(v.authority).host,
+          icon: v.favicon ?? '',
+        })
       }
-      result.push({
-        value: v.authority,
-        text: v.authlibInjector?.meta.serverName ?? new URL(v.authority).host,
-        icon: v.favicon ?? '',
-      })
     }
     return result
   })
@@ -107,4 +121,5 @@ export function useAuthorityItems(authorities: Ref<AuthorityMetadata[] | undefin
   return items
 }
 
-export const LoginDialog: DialogKey<{ username?: string; service?: string; error?: string }> = 'login'
+export const LoginDialog: DialogKey<{ username?: string; service?: string; error?: string }> =
+  'login'

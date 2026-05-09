@@ -6,11 +6,13 @@
   />
   <div
     v-else
-    class="min-w-100 m-20 text-center"
+    class="login-form mx-auto w-full max-w-md px-8 py-10 flex flex-col gap-4"
   >
     <UserLoginAuthoritySelect
       v-model="authority"
       :items="items"
+      density="default"
+      hide-details
       @add-service="$emit('add-service')"
     />
     <v-combobox
@@ -19,13 +21,14 @@
       v-model="data.username"
       :items="history"
       prepend-inner-icon="person"
-      outlined
+      variant="outlined"
+      density="default"
       required
       :label="getUserServiceAccount(authority)"
       :rules="usernameRules"
       :error="!!errorMessage"
       :error-messages="errorMessage"
-      @input="error = undefined"
+      @update:model-value="error = undefined"
       @keypress="error = undefined"
       @keypress.enter="onLogin"
     />
@@ -35,13 +38,14 @@
       v-model="data.username"
       prepend-inner-icon="person"
       variant="outlined"
+      density="default"
       required
       type="password"
       :label="getUserServiceAccount(authority)"
       :rules="usernameRules"
       :error="!!errorMessage"
       :error-messages="errorMessage"
-      @input="error = undefined"
+      @update:model-value="error = undefined"
       @keypress="error = undefined"
       @keypress.enter="onLogin"
     />
@@ -50,6 +54,7 @@
       v-model="data.password"
       prepend-inner-icon="lock"
       variant="outlined"
+      density="default"
       :type="passwordType"
       required
       :label="passwordLabel"
@@ -59,72 +64,80 @@
       :readonly="isPasswordReadonly"
       :error="!!errorMessage"
       :error-messages="errorMessage"
-      @input="error = undefined"
+      @update:model-value="error = undefined"
       @keypress.enter="onLogin"
     />
     <v-text-field
       v-else
       v-model="data.uuid"
       variant="outlined"
+      density="default"
       prepend-inner-icon="fingerprint"
       :placeholder="uuidLabel"
       :label="uuidLabel"
+      hide-details
       @keypress.enter="onLogin"
     />
 
-    <div
+    <v-checkbox
       v-if="allowDeviceCode"
-      class="flex"
-    >
-      <v-checkbox
-        v-model="data.useDeviceCode"
-        :label="t('userServices.microsoft.useDeviceCode')"
-      />
-    </div>
+      v-model="data.useDeviceCode"
+      density="compact"
+      hide-details
+      :label="t('userServices.microsoft.useDeviceCode')"
+    />
 
     <div
+      class="mt-2"
       @mouseenter="onMouseEnterLogin"
       @mouseleave="onMouseLeaveLogin"
     >
       <v-btn
         block
-        :loading="isLogining && (!hovered)"
-        color="primary"
+        size="large"
         rounded="pill"
-        class="text-white"
+        color="primary"
+        :loading="isLogining && (!hovered)"
+        :prepend-icon="isLogining ? undefined : 'login'"
         @click="onLogin"
-       size="large">
-        <span v-if="!isLogining">
+      >
+        <template v-if="!isLogining">
           {{ t("login.login") }}
-        </span>
-        <v-icon v-else>
-          close
-        </v-icon>
+        </template>
+        <template v-else>
+          <v-icon start>close</v-icon>
+          {{ t("shared.cancel") }}
+        </template>
       </v-btn>
       <slot />
     </div>
 
-    <div
+    <v-alert
       v-if="data.verificationUri"
-      class="mt-6"
+      density="compact"
+      variant="tonal"
+      color="info"
+      rounded="lg"
+      class="mt-2 text-left"
     >
       <a
         :href="data.verificationUri"
-        class="border-b border-dashed border-b-current"
+        target="browser"
+        class="text-info underline break-all text-sm"
       >
         {{ t('login.manualLoginUrl') }}
       </a>
-    </div>
+    </v-alert>
 
-    <div class="mt-4 flex flex-col gap-2 items-center text-sm">
+    <div class="mt-2 flex flex-col gap-1 items-center text-xs text-medium-emphasis">
       <a
         v-if="authority === AUTHORITY_MICROSOFT"
-        style="padding-right: 10px; z-index: 20"
         target="browser"
         href="https://my.minecraft.net/en-us/password/forgot/"
-      >{{
-        t("login.forgetPassword")
-      }}</a>
+        class="text-primary hover:underline"
+      >
+        {{ t("login.forgetPassword") }}
+      </a>
       <div
         v-if="signUpLink"
         class="flex items-center gap-2 flex-wrap justify-center"
@@ -132,12 +145,14 @@
         <a
           target="browser"
           :href="signUpLink"
+          class="text-primary hover:underline"
         >
           {{ t("login.signupDescription") }}
           {{ t("login.signup") }}
         </a>
+        <span class="text-disabled">·</span>
         <a
-          style="text-decoration: underline"
+          class="text-primary hover:underline cursor-pointer"
           @click.stop="$emit('add-service')"
         >
           {{ manageAuthorityLabel }}
