@@ -1009,6 +1009,19 @@ multiplayer:
   sharingNotificationTitle: A peer is sharing their game config
   start: Start
   startNewP2PConnection: Click the Start button to create a new peer connection
+  onlinePresenceActive: Online Presence Active
+  onlinePresenceInactive: Online Presence Inactive
+  friends: Microsoft Friends
+  online: Online
+  offline: Offline
+  microsoftRequired: Microsoft Account Required for Friends feature.
+  noFriends: No Minecraft friends added yet.
+  allOffline: All friends are currently offline.
+  playing: Playing
+  joinWorld: Join World
+  joinServer: Join Server
+  joiningProgress: Connecting to
+  groupRoom: P2P Multiplayer Group
 myStuff: My Stuff
 natType:
   blocked: Blocked
@@ -1582,6 +1595,7 @@ user:
   name: Username
   nameHint: The name display in game
   profile: Profile
+  info: User Profile Info
   tokenExpired: Expired
   tokenValidUntil: Token Valid Until
 userAccount:
