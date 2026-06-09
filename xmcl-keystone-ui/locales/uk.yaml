@@ -1004,6 +1004,19 @@ multiplayer:
     Не вдалося встановити з'єднання. Перевірте, чи мають обидві сторони сумісні типи NAT.
   natWarning: >-
     Ваш тип NAT може перешкоджати прямим з'єднанням. Спробуйте увімкнути ретрансляційний сервер у налаштуваннях або попросіть друга бути хостом.
+  onlinePresenceActive: Передача мережевого статусу активна
+  onlinePresenceInactive: Передача мережевого статусу вимкнена
+  friends: Друзі Microsoft
+  online: В мережі
+  offline: Поза мережею
+  microsoftRequired: Для використання списку друзів потрібен обліковий запис Microsoft.
+  noFriends: Друзів Minecraft ще не додано.
+  allOffline: Усі друзі наразі поза мережею.
+  playing: Грає
+  joinWorld: Увійти в світ
+  joinServer: На сервер
+  joiningProgress: Підключення до
+  groupRoom: Групова кімната P2P
 myStuff: Мої речі
 natType:
   blocked: Заблоковано
@@ -1585,6 +1598,7 @@ user:
   name: Ім'я користувача
   nameHint: Ім'я, що відображається в грі
   profile: Профіль
+  info: Інформація про користувача
   tokenExpired: Термін дії минув
   tokenValidUntil: Токен дійсний до
 userAccount:
