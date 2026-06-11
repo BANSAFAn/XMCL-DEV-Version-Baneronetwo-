@@ -59,11 +59,12 @@ import InstanceManifestFileItem from './InstanceManifestFileItem.vue'
 import { flatTree, treeItemKey, TreeItem } from '@/util/tree'
 import { useVModel } from '@vueuse/core'
 
-enum CheckedState {
-  Unchecked = 0,
-  Checked = 1,
-  Partial = 2
-}
+const CheckedState = {
+  Unchecked: 0,
+  Checked: 1,
+  Partial: 2,
+} as const
+type CheckedState = typeof CheckedState[keyof typeof CheckedState]
 
 const props = withDefaults(defineProps<{
   modelValue?: string[]

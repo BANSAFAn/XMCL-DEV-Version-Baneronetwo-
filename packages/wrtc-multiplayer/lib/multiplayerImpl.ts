@@ -76,11 +76,14 @@ export function createMultiplayer() {
     state.then(s => s.pingSet({ ping, timestamp }))
   })
 
+  let exposedPorts = [] as number[]
   state.then((s) => {
     s.subscribe('exposedPortsSet', (ports) => {
-      discover.setExposedPorts(ports.map(p => p[0]))
+      exposedPorts = ports.map(p => p[0])
+      discover.setExposedPorts(exposedPorts)
     })
-    discover.setExposedPorts(s.exposedPorts.map(p => p[0]))
+    exposedPorts = s.exposedPorts.map(p => p[0])
+    discover.setExposedPorts(exposedPorts)
   })
 
   peers.onremove = (id) => {
@@ -124,6 +127,8 @@ export function createMultiplayer() {
     },
   }
 
+  const serverPings = new Map<string, number>()
+
   const iceServers = createIceServersProvider(
     facotry,
     (server, ping) => {
@@ -131,6 +136,9 @@ export function createMultiplayer() {
       state.then(s => s.validIceServerSet(Array.from(new Set([...s.validIceServers, getKey(server)]))))
       if (ping) {
         const rawKey = getKey(server)
+        if (typeof ping === 'number') {
+          serverPings.set(rawKey, ping)
+        }
         const key = rawKey.split(':')[1] || rawKey
         state.then(s => s.iceServerPingSet({ server: key, ping }))
       }
@@ -169,13 +177,24 @@ export function createMultiplayer() {
         const [stuns, turns] = iceServers.get(preferredIceServers)
         if (isAllowTurn() && turns.length > 0) {
           const preferredTurn = localStorage.getItem('peerPreferredTurn')
-          if (preferredTurn) {
+          if (preferredTurn && preferredTurn !== 'auto') {
             const index = turns.findIndex(s => s.urls.includes(preferredTurn))
             if (index !== -1) {
               const cur = turns[index]
               current = cur
               return cur
             }
+          }
+
+          if (!preferredTurn || preferredTurn === 'auto') {
+            const sortedTurns = [...turns].sort((a, b) => {
+              const pingA = serverPings.get(getKey(a)) ?? 999999
+              const pingB = serverPings.get(getKey(b)) ?? 999999
+              return pingA - pingB
+            })
+            const cur = sortedTurns[0]
+            current = cur
+            return cur
           }
           const cur = turns[turnIndex]
           turnIndex = (turnIndex + 1) % turns.length
@@ -259,6 +278,7 @@ export function createMultiplayer() {
       getSharedAssetsPath: sharing.getSharedAssetsPath,
       getSharedLibrariesPath: sharing.getSharedLibrariesPath,
       getSharedImagePath: sharing.getSharedImagePath,
+      getExposedPorts: () => exposedPorts,
     }
   }
 

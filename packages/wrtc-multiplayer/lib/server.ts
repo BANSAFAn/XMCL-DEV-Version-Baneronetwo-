@@ -20,7 +20,7 @@ export async function listen(server: Server, port: number, nextPort: (cur: numbe
         }
       }
       server.addListener('error', handleError)
-      server.listen(port, () => {
+      server.listen(port, '127.0.0.1', () => {
         server.removeListener('error', handleError)
         resolve(true)
       })

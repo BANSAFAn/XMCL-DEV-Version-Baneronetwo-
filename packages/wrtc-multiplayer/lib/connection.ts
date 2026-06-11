@@ -2,7 +2,7 @@ import { ConnectionUserInfo, RTCSessionDescription } from '@xmcl/runtime-api'
 import { createReadStream, existsSync } from 'fs'
 import debounce from 'lodash.debounce'
 import { createConnection } from 'net'
-import { join } from 'path'
+import { join, relative, isAbsolute } from 'path'
 import { Readable, Writable, finished } from 'stream'
 import { PeerContext } from './PeerContext'
 import { ServerProxy } from './ServerProxy'
@@ -124,7 +124,17 @@ export class PeerSession {
       const label = channel.label
       if (channel.protocol === 'minecraft') {
         // this is a minecraft game connection
-        const port = Number.parseInt(channel.label)!
+        const port = Number.parseInt(channel.label)
+        if (Number.isNaN(port)) {
+          console.warn(`Invalid port requested: ${channel.label}`)
+          channel.close()
+          return
+        }
+        if (!this.context.getExposedPorts().includes(port)) {
+          console.warn(`Blocked unauthorized connection to port: ${port}`)
+          channel.close()
+          return
+        }
         console.log(`Receive minecraft game connection: ${port}`)
         const socket = createConnection(port)
         const id = channel.id
@@ -197,7 +207,12 @@ export class PeerSession {
       if (!file) {
         return 'NO_PERMISSION'
       }
-      const absPath = join(this.context.getShadedInstancePath(), file.path)
+      const baseDir = this.context.getShadedInstancePath()
+      const absPath = join(baseDir, file.path)
+      const rel = relative(baseDir, absPath)
+      if (rel.startsWith('..') || isAbsolute(rel)) {
+        return 'NO_PERMISSION'
+      }
       if (!existsSync(absPath)) {
         return 'NOT_FOUND'
       }
@@ -209,17 +224,50 @@ export class PeerSession {
       if (filePath.startsWith('/')) {
         filePath = filePath.substring(1)
       }
-      return createReadStream(this.context.getSharedImagePath(filePath), {
+      const baseDir = this.context.getSharedImagePath('')
+      const absPath = this.context.getSharedImagePath(filePath)
+      const rel = relative(baseDir, absPath)
+      if (rel.startsWith('..') || isAbsolute(rel)) {
+        return 'NO_PERMISSION'
+      }
+      if (!existsSync(absPath)) {
+        return 'NOT_FOUND'
+      }
+      return createReadStream(absPath, {
         highWaterMark: 16 * 1024,
       })
     } else if (filePath.startsWith('/assets')) {
       filePath = filePath.substring('/assets'.length)
-      return createReadStream(join(this.context.getSharedAssetsPath(), filePath), {
+      if (filePath.startsWith('/')) {
+        filePath = filePath.substring(1)
+      }
+      const baseDir = this.context.getSharedAssetsPath()
+      const absPath = join(baseDir, filePath)
+      const rel = relative(baseDir, absPath)
+      if (rel.startsWith('..') || isAbsolute(rel)) {
+        return 'NO_PERMISSION'
+      }
+      if (!existsSync(absPath)) {
+        return 'NOT_FOUND'
+      }
+      return createReadStream(absPath, {
         highWaterMark: 16 * 1024,
       })
     } else if (filePath.startsWith('/libraries')) {
       filePath = filePath.substring('/libraries'.length)
-      return createReadStream(join(this.context.getSharedLibrariesPath(), filePath), {
+      if (filePath.startsWith('/')) {
+        filePath = filePath.substring(1)
+      }
+      const baseDir = this.context.getSharedLibrariesPath()
+      const absPath = join(baseDir, filePath)
+      const rel = relative(baseDir, absPath)
+      if (rel.startsWith('..') || isAbsolute(rel)) {
+        return 'NO_PERMISSION'
+      }
+      if (!existsSync(absPath)) {
+        return 'NOT_FOUND'
+      }
+      return createReadStream(absPath, {
         highWaterMark: 16 * 1024,
       })
     }

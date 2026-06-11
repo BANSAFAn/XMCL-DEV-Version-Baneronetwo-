@@ -3,15 +3,20 @@ import { join } from 'path'
 import { PeerConnectionFactory } from './PeerConnectionFactory'
 
 const BUILTIN = [
+  'global.stun.twilio.com:3478',
+  'stun.nextcloud.com:443',
+  'stun.sipgate.net:3478',
+  'stun.ekiga.net:3478',
+  'stun.l.google.com:19302',
+  'stun1.l.google.com:19302',
+  'stun2.l.google.com:19302',
+  'stun3.l.google.com:19302',
+  'stun4.l.google.com:19302',
   'stun.voipbuster.com:3478',
   'stun.voipstunt.com:3478',
   'stun.internetcalls.com:3478',
   'stun.voip.aebc.com:3478',
   'stun.qq.com:3478',
-  'stun.l.google.com:19302',
-  'stun2.l.google.com:19302',
-  'stun3.l.google.com:19302',
-  'stun4.l.google.com:19302',
 ].map(s => ({
   urls: `stun:${s}`,
 }))
@@ -79,8 +84,12 @@ export async function loadIceServers(cachePath: string) {
         })
     }
     return []
-  } catch (e) {
-    console.error(e as any)
+  } catch (e: any) {
+    if (e?.code === 'ENOENT') {
+      console.log('No cached ice servers found (this is normal on first startup)')
+    } else {
+      console.error(e)
+    }
     return []
   }
 }
@@ -100,19 +109,22 @@ async function test(factory: PeerConnectionFactory, iceServer: RTCIceServer, por
     }
     co.onicecandidate = (ice) => {
       const candidate = ice.candidate
-      if (iceServer.credential) {
-        if (!ping && ice.candidate?.type === 'relay') {
+      if (candidate) {
+        const isRelay = candidate.type === 'relay' || candidate.candidate.includes('typ relay')
+        const isSrflx = candidate.type === 'srflx' || candidate.candidate.includes('typ srflx')
+
+        if (iceServer.credential && !ping && isRelay) {
           ping = Date.now() - start
         }
-      }
 
-      if (candidate && candidate.type === 'srflx') {
-        // parse candidate for public ip
-        const ip = candidate.candidate.split(' ')[4]
-        ips.add(ip)
+        if (isSrflx) {
+          // parse candidate for public ip
+          const ip = candidate.candidate.split(' ')[4]
+          if (ip) ips.add(ip)
 
-        if (!iceServer.credential && !ping) {
-          ping = Date.now() - start
+          if (!iceServer.credential && !ping) {
+            ping = Date.now() - start
+          }
         }
       }
     }
@@ -147,16 +159,20 @@ async function testIceServers(
       return
     }
     const [ips, ping] = await test(factory, server, portBegin).catch(() => [])
-    // console.log('Test ice server', server, ips)
     const key = getKey(server)
-    if (ips.length > 0) {
+    const isTurn = typeof server.urls === 'string' ? server.urls.startsWith('turn') : server.urls.some((u) => u.startsWith('turn'))
+    const isValid = (ips && ips.length > 0) || (isTurn && typeof ping === 'number')
+
+    if (isValid) {
       passed[key] = server
       delete blocked[key]
       onValidIceServer(server, ping)
-      for (const ip of ips) {
-        if (!ipSet.has(ip)) {
-          ipSet.add(ip)
-          onIp(ip)
+      if (ips) {
+        for (const ip of ips) {
+          if (!ipSet.has(ip)) {
+            ipSet.add(ip)
+            onIp(ip)
+          }
         }
       }
     } else {

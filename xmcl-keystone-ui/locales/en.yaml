@@ -1002,6 +1002,8 @@ multiplayer:
   receiveRemoteTokenHint: Please enter the token from your peer here.
   remoteToken: Remote Token
   routerInfo: Router Info
+  preferredTurn: Preferred Relay Location
+  autoPreferredTurn: Auto (Lowest Ping)
   sendTokenToRemote: Send Token to Remote
   share: Share Instance Config
   sharing: Sharing files...
@@ -1015,6 +1017,9 @@ multiplayer:
   online: Online
   offline: Offline
   microsoftRequired: Microsoft Account Required for Friends feature.
+  licenseRequiredDescription: A licensed Minecraft account is required to view friends and sync online status.
+  loginMicrosoft: Login with Microsoft
+  buyLicense: Buy Minecraft License
   noFriends: No Minecraft friends added yet.
   allOffline: All friends are currently offline.
   playing: Playing
@@ -1032,6 +1037,15 @@ natType:
   symmetricNat: Symmetric NAT
   symmetricUDPFirewall: Symmetric UDP Firewall
   unknown: Unknown
+  explanations:
+    openInternet: "Perfect connection! You can host and join multiplayer games without any restrictions. Everything is ideal."
+    fullCone: "Excellent connection! Your router allows easy gaming. You can host and join friends without any issues."
+    restrictNat: "Normal connection. You can play without issues. If you can't connect to a friend, try hosting yourself or ask them to host."
+    restrictPortNat: "Secure connection. You can play, but connecting might take a bit longer. If it fails, let the friend with a better NAT type host."
+    symmetricUDPFirewall: "Firewall blocks the connection. Direct P2P is difficult. Check Windows Firewall or turn on 'Relay server' in the settings tab."
+    symmetricNat: "Strict router (mobile network or public Wi-Fi). Direct connection is impossible. To play, you must enable 'Relay server' in the settings tab."
+    blocked: "No internet or connection blocked. You cannot play multiplayer right now. Please check your network connection."
+    unknown: "Network not checked yet. Click the refresh button (circular arrow) next to it to find out if you can play."
 neoForgedVersion:
   disable: Disable NeoForged
   empty: NeoForged does not support {version}
@@ -1528,7 +1542,7 @@ transportType:
   relay: Relay Candidate
   srflx: Server Reflexive Candidate
 turnRegion:
-  fr: Frence
+  fr: France
   guangzhou: Guangzhou, China
   hk: Hong Kong
   liaoning: Liaoning, China

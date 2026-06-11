@@ -1,5 +1,5 @@
-import { PeerState, createPromiseSignal } from '@xmcl/runtime-api'
-import { UnblockedNatInfo, getNatInfoUDP, sampleNatType } from '@xmcl/stun-client'
+import { PeerState, NatType, createPromiseSignal } from '@xmcl/runtime-api'
+import { NatType as StunNatType, UnblockedNatInfo, getNatInfoUDP, sampleNatType } from '@xmcl/stun-client'
 
 export async function raceNatType(state: PeerState, iceServers: RTCIceServer[]) {
   console.log('Start to sample the nat type')
@@ -28,15 +28,15 @@ export async function raceNatType(state: PeerState, iceServers: RTCIceServer[]) 
     state.natTypeSet(info.type)
     console.log('Fast nat detection: %o', info)
 
-    let result: string | undefined
+    let result: StunNatType | null = null
     try {
       result = await sampleNatType({
         sampleCount: 3,
         retryInterval: 3_000,
         stun,
       })
-      if (result && result !== 'Blocked') {
-        state.natTypeSet(result)
+      if (result && result !== StunNatType.BLOCKED) {
+        state.natTypeSet(result as NatType)
       }
       console.log(`Refresh nat type ${result}`)
     } catch (e) {

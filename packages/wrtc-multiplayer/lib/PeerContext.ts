@@ -8,6 +8,7 @@ export interface PeerContext {
   getSharedImagePath(image: string): string
   getSharedLibrariesPath(): string
   getSharedAssetsPath(): string
+  getExposedPorts(): number[]
 
   onIdentity(session: string, info: ConnectionUserInfo): void
   onInstanceShared(session: string, manifest?: InstanceManifest): void

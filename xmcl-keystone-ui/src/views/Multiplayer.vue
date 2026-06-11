@@ -36,7 +36,7 @@
           </v-card>
 
           <!-- Microsoft Friends Presence List -->
-          <v-card class="surface-card-subsection pa-4 flex-grow flex flex-column min-h-[350px]" :elevation="tokens.cardSubsectionElevation.value">
+          <v-card class="surface-card-subsection pa-4 flex-grow flex flex-column min-h-[350px] relative overflow-hidden" :elevation="tokens.cardSubsectionElevation.value">
             <div class="flex items-center justify-between pb-3 border-b border-neutral-500/10 mb-3 flex-shrink-0">
               <div class="flex items-center gap-2">
                 <v-icon color="primary" size="20">people</v-icon>
@@ -46,79 +46,141 @@
             </div>
 
             <!-- Friends scrollable area -->
-            <div class="flex-grow overflow-y-auto visible-scroll flex flex-column gap-2 pr-1" style="max-height: 320px;">
-              <div v-if="!isMicrosoftUser" class="flex flex-column items-center justify-center h-full text-center p-6 opacity-60 gap-2">
-                <v-icon size="40">lock</v-icon>
-                <div class="text-xs">{{ t('multiplayer.microsoftRequired') }}</div>
-              </div>
-              
-              <div v-else-if="friendsList.length === 0" class="flex flex-column items-center justify-center h-full text-center p-6 opacity-60 gap-2">
-                <v-icon size="40">person_add</v-icon>
-                <div class="text-xs">{{ t('multiplayer.noFriends') }}</div>
-              </div>
-
-              <!-- Friend Cards -->
-              <template v-else>
-                <div
-                  v-for="friend in allFriendsWithPresence"
-                  :key="friend.profileId"
-                  class="surface-card-row pa-3 flex items-center gap-3"
-                  :class="{ 'opacity-65': friend.status === 'offline' }"
-                >
-                  <v-avatar size="38" class="bg-transparent">
-                    <PlayerAvatar :dimension="34" :src="friend.avatar" />
-                  </v-avatar>
-                  
-                  <div class="flex-grow min-w-0">
-                    <div class="flex items-center gap-1.5">
-                      <span class="text-sm font-bold truncate">{{ friend.name }}</span>
-                      <span class="w-2 h-2 rounded-full" :class="friend.status === 'playing' ? 'bg-amber-500' : friend.status === 'online' ? 'bg-emerald-500' : 'bg-neutral-500'" />
-                    </div>
-                    
-                    <!-- Game state text -->
-                    <div class="text-xs opacity-70 truncate mt-0.5">
-                      <span v-if="friend.status === 'playing'">
-                        {{ t('multiplayer.playing') }} {{ friend.instanceName || 'Minecraft' }} ({{ friend.version }})
-                        <span v-if="friend.serverAddress" class="block text-[10px] text-amber-500 font-medium">on {{ friend.serverAddress }}</span>
-                        <span v-else-if="friend.p2pGroupId" class="block text-[10px] text-emerald-500 font-medium">hosting P2P World</span>
-                      </span>
-                      <span v-else-if="friend.status === 'online'">{{ t('multiplayer.online') }}</span>
-                      <span v-else>{{ t('multiplayer.offline') }}</span>
+            <div class="flex-grow overflow-y-auto visible-scroll flex flex-column gap-2 pr-1 relative" style="max-height: 320px;">
+              <div :class="{ 'filter blur-sm select-none pointer-events-none opacity-40': !isLicensed }" class="flex flex-column gap-2 h-full">
+                <!-- Mock friends for blur preview when offline/no license -->
+                <template v-if="!isLicensed">
+                  <div class="surface-card-row pa-3 flex items-center gap-3">
+                    <v-avatar size="38" class="bg-neutral-800"></v-avatar>
+                    <div class="flex-grow min-w-0">
+                      <div class="h-3.5 bg-neutral-700 rounded w-24"></div>
+                      <div class="h-2.5 bg-neutral-700/50 rounded w-16 mt-2"></div>
                     </div>
                   </div>
+                  <div class="surface-card-row pa-3 flex items-center gap-3">
+                    <v-avatar size="38" class="bg-neutral-800"></v-avatar>
+                    <div class="flex-grow min-w-0">
+                      <div class="h-3.5 bg-neutral-700 rounded w-28"></div>
+                      <div class="h-2.5 bg-neutral-700/50 rounded w-20 mt-2"></div>
+                    </div>
+                  </div>
+                  <div class="surface-card-row pa-3 flex items-center gap-3">
+                    <v-avatar size="38" class="bg-neutral-800"></v-avatar>
+                    <div class="flex-grow min-w-0">
+                      <div class="h-3.5 bg-neutral-700 rounded w-20"></div>
+                      <div class="h-2.5 bg-neutral-700/50 rounded w-14 mt-2"></div>
+                    </div>
+                  </div>
+                </template>
 
-                  <!-- Connect/Join Action Button -->
-                  <div v-if="friend.status === 'playing'" class="flex-shrink-0">
-                    <!-- Join P2P Game -->
-                    <v-btn
-                      v-if="friend.p2pGroupId"
-                      size="small"
-                      color="primary"
-                      variant="flat"
-                      class="text-xs font-bold px-3 rounded-md"
-                      :loading="joiningFriend?.profileId === friend.profileId"
-                      @click="onJoinFriendP2P(friend)"
+                <template v-else>
+                  <div v-if="friendsList.length === 0" class="flex flex-column items-center justify-center h-full text-center p-6 opacity-60 gap-2">
+                    <v-icon size="40">person_add</v-icon>
+                    <div class="text-xs">{{ t('multiplayer.noFriends') }}</div>
+                  </div>
+
+                  <!-- Friend Cards -->
+                  <template v-else>
+                    <div
+                      v-for="friend in allFriendsWithPresence"
+                      :key="friend.profileId"
+                      class="surface-card-row pa-3 flex items-center gap-3"
+                      :class="{ 'opacity-65': friend.status === 'offline' }"
                     >
-                      <v-icon start size="14">sports_esports</v-icon>
-                      {{ t('multiplayer.joinWorld') }}
+                      <v-avatar size="38" class="bg-transparent">
+                        <PlayerAvatar :dimension="34" :src="friend.avatar" />
+                      </v-avatar>
+                      
+                      <div class="flex-grow min-w-0">
+                        <div class="flex items-center gap-1.5">
+                          <span class="text-sm font-bold truncate">{{ friend.name }}</span>
+                          <span class="w-2 h-2 rounded-full" :class="friend.status === 'playing' ? 'bg-amber-500' : friend.status === 'online' ? 'bg-emerald-500' : 'bg-neutral-500'" />
+                        </div>
+                        
+                        <!-- Game state text -->
+                        <div class="text-xs opacity-70 truncate mt-0.5">
+                          <span v-if="friend.status === 'playing'">
+                            {{ t('multiplayer.playing') }} {{ friend.instanceName || 'Minecraft' }} ({{ friend.version }})
+                            <span v-if="friend.serverAddress" class="block text-[10px] text-amber-500 font-medium">on {{ friend.serverAddress }}</span>
+                            <span v-else-if="friend.p2pGroupId" class="block text-[10px] text-emerald-500 font-medium">hosting P2P World</span>
+                          </span>
+                          <span v-else-if="friend.status === 'online'">{{ t('multiplayer.online') }}</span>
+                          <span v-else>{{ t('multiplayer.offline') }}</span>
+                        </div>
+                      </div>
+
+                      <!-- Connect/Join Action Button -->
+                      <div v-if="friend.status === 'playing'" class="flex-shrink-0">
+                        <!-- Join P2P Game -->
+                        <v-btn
+                          v-if="friend.p2pGroupId"
+                          size="small"
+                          color="primary"
+                          variant="flat"
+                          class="text-xs font-bold px-3 rounded-md"
+                          :loading="joiningFriend?.profileId === friend.profileId"
+                          @click="onJoinFriendP2P(friend)"
+                        >
+                          <v-icon start size="14">sports_esports</v-icon>
+                          {{ t('multiplayer.joinWorld') }}
+                        </v-btn>
+
+                        <!-- Join Server Game -->
+                        <v-btn
+                          v-else-if="friend.serverAddress"
+                          size="small"
+                          color="amber"
+                          variant="flat"
+                          class="text-xs font-bold px-3 rounded-md"
+                          :loading="joiningFriend?.profileId === friend.profileId"
+                          @click="onJoinFriendServer(friend)"
+                        >
+                          <v-icon start size="14">dns</v-icon>
+                          {{ t('multiplayer.joinServer') }}
+                        </v-btn>
+                      </div>
+                    </div>
+                  </template>
+                </template>
+              </div>
+
+              <!-- Premium Overlay Prompt when not a Microsoft User -->
+              <div 
+                v-if="!isLicensed" 
+                class="absolute inset-0 flex flex-column items-center justify-center p-4 text-center bg-black/40 backdrop-blur-[2px]"
+              >
+                <div class="max-w-[280px] flex flex-column items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <v-icon size="24">lock</v-icon>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold uppercase tracking-wider mb-1">{{ t('multiplayer.microsoftRequired') }}</h3>
+                    <p class="text-xs opacity-70 leading-relaxed">{{ t('multiplayer.licenseRequiredDescription') }}</p>
+                  </div>
+                  <div class="flex flex-column gap-2 w-full mt-2">
+                    <v-btn 
+                      color="primary" 
+                      size="small" 
+                      variant="flat" 
+                      class="text-xs font-bold w-full rounded-lg"
+                      @click="showLogin()"
+                    >
+                      <v-icon start size="16">login</v-icon>
+                      {{ t('multiplayer.loginMicrosoft') }}
                     </v-btn>
-
-                    <!-- Join Server Game -->
-                    <v-btn
-                      v-else-if="friend.serverAddress"
-                      size="small"
-                      color="amber"
-                      variant="flat"
-                      class="text-xs font-bold px-3 rounded-md"
-                      :loading="joiningFriend?.profileId === friend.profileId"
-                      @click="onJoinFriendServer(friend)"
+                    <v-btn 
+                      color="secondary" 
+                      size="small" 
+                      variant="outlined" 
+                      class="text-xs font-bold w-full rounded-lg text-neutral-200 border-neutral-500/20"
+                      @click="buyLicense()"
                     >
-                      <v-icon start size="14">dns</v-icon>
-                      {{ t('multiplayer.joinServer') }}
+                      <v-icon start size="16">shopping_cart</v-icon>
+                      {{ t('multiplayer.buyLicense') }}
                     </v-btn>
                   </div>
                 </div>
-              </template>
+              </div>
             </div>
           </v-card>
 
@@ -312,12 +374,15 @@
 
               <div class="flex flex-column gap-3">
                 <!-- NAT Type -->
-                <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center justify-between text-xs cursor-help relative">
                   <span class="opacity-60">{{ t('multiplayer.currentNatTitle') }}</span>
-                  <span class="font-bold flex items-center gap-1.5" :style="{ color: natColors[natType] }">
-                    <span>{{ natIcons[natType] }}</span>
-                    <span>{{ tNatType[natType] }}</span>
+                  <span class="font-bold flex items-center gap-1.5" :style="{ color: refreshingNatType ? 'inherit' : natColors[natType] }">
+                    <span v-if="!refreshingNatType">{{ natIcons[natType] }}</span>
+                    <span>{{ refreshingNatType ? '***' : tNatType[natType] }}</span>
                   </span>
+                  <v-tooltip activator="parent" location="top" max-width="300" class="text-xs">
+                    {{ natTooltipText }}
+                  </v-tooltip>
                 </div>
 
                 <!-- IP Addresses -->
@@ -325,17 +390,17 @@
                   <span class="opacity-60">{{ t('multiplayer.currentIpTitle') }}</span>
                   <div class="flex items-center gap-2">
                     <span class="font-mono bg-neutral-500/10 px-2 py-0.5 rounded border border-neutral-500/20">
-                      {{ hideIp ? '***.***.***.***' : ips.join(', ') }}
+                      {{ refreshingNatType ? '***.***.***.***' : (hideIp ? '***.***.***.***' : ips.join(', ')) }}
                     </span>
-                    <v-btn :icon="!hideIp ? 'visibility' : 'visibility_off'" size="x-small" variant="text" @click="hideIp = !hideIp" />
+                    <v-btn :disabled="refreshingNatType" :icon="!hideIp ? 'visibility' : 'visibility_off'" size="x-small" variant="text" @click="hideIp = !hideIp" />
                   </div>
                 </div>
 
                 <!-- Router details -->
-                <div v-if="device" class="flex items-center justify-between text-xs pt-1.5 border-t border-neutral-500/10">
+                <div v-if="device || refreshingNatType" class="flex items-center justify-between text-xs pt-1.5 border-t border-neutral-500/10">
                   <span class="opacity-60">{{ t('multiplayer.routerInfo') }}</span>
-                  <span class="font-medium truncate max-w-[200px]" :title="device.friendlyName">
-                    {{ device.friendlyName }} ({{ device.modelName }})
+                  <span class="font-medium truncate max-w-[200px]" :title="refreshingNatType ? '***' : device?.friendlyName">
+                    {{ refreshingNatType ? '***' : (device ? `${device.friendlyName} (${device.modelName})` : '') }}
                   </span>
                 </div>
               </div>
@@ -469,7 +534,7 @@
                   hide-details
                   color="primary"
                   item-title="text"
-                  class="text-xs rounded-lg max-w-[200px]"
+                  class="text-xs rounded-lg max-w-[240px]"
                   :items="turnserversItems"
                   :placeholder="turnserversItems[0].text"
                 />
@@ -666,6 +731,10 @@ const { show } = useDialog('peer-initiate')
 const { show: showShareInstance } = useDialog('share-instance')
 const { show: showAddInstasnce } = useDialog(AddInstanceDialogKey)
 const { show: showReceive } = useDialog('peer-receive')
+const { show: showLogin } = useDialog('login')
+const buyLicense = () => {
+  window.open('https://www.minecraft.net/store/minecraft-java-bedrock-edition-pc', 'browser')
+}
 const navigation = ref('connections' as 'connections' | 'settings')
 
 const hideIp = ref(true)
@@ -735,13 +804,22 @@ function getIceServerPingText(value: number | 'timeout' | undefined) {
   return ` (${value}ms)`
 }
 
-const preferredTurnserver = useLocalStorageCacheStringValue('peerPreferredTurn', '')
-const turnserversItems = computed(() =>
-  Object.entries(turnservers.value).map(([key, value]) => ({
-    value: key,
-    text: `${tLocale.value[value as string] || value}${getIceServerPingText(icePings.value[key])}`,
-  })),
-)
+const preferredTurnserver = useLocalStorageCacheStringValue('peerPreferredTurn', 'auto')
+const turnserversItems = computed(() => {
+  const items = Object.entries(turnservers.value).map(([key, value]) => {
+    const pingKey = key.split(':')[1] || key
+    const pingVal = icePings.value[pingKey]
+    return {
+      value: key,
+      text: `${tLocale.value[value as string] || value}${getIceServerPingText(pingVal)}`,
+    }
+  })
+  items.unshift({
+    value: 'auto',
+    text: t('multiplayer.autoPreferredTurn') || 'Automatic (Lowest Ping)',
+  })
+  return items
+})
 const tLocale = computed(
   () =>
     ({
@@ -799,6 +877,25 @@ const tNatType = computed(() => ({
   Blocked: t('natType.blocked'),
   Unknown: t('natType.unknown'),
 }))
+
+const natTooltipKeys: Record<string, string> = {
+  'Open Internet': 'openInternet',
+  'Full Cone': 'fullCone',
+  'Restrict NAT': 'restrictNat',
+  'Restrict Port NAT': 'restrictPortNat',
+  'Symmetric UDP Firewall': 'symmetricUDPFirewall',
+  'Symmetric NAT': 'symmetricNat',
+  Blocked: 'blocked',
+  Unknown: 'unknown',
+}
+
+const natTooltipText = computed(() => {
+  if (refreshingNatType.value) {
+    return t('natType.explanations.unknown')
+  }
+  const key = natTooltipKeys[natType.value] || 'unknown'
+  return t(`natType.explanations.${key}`)
+})
 
 const groupId = ref(group.value || '')
 const deletingName = computed(
@@ -892,10 +989,10 @@ const onJoin = () => {
 }
 
 // Microsoft Friends Presence Integration
-const { onlineFriends, enabled: presenceEnabled, friendsList, isMicrosoftUser } = useFriendsPresence()
+const { onlineFriends, enabled: presenceEnabled, friendsList, isMicrosoftUser, isLicensed } = useFriendsPresence()
 
 const allFriendsWithPresence = computed(() => {
-  if (!isMicrosoftUser.value) return []
+  if (!isLicensed.value) return []
   return friendsList.value.map((f) => {
     const onlineInfo = onlineFriends.value[f.profileId]
     if (onlineInfo) {

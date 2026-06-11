@@ -17,6 +17,18 @@ export interface FriendPresenceInfo {
   lastActive: number
 }
 
+/**
+ * Presence system using the existing XMCL group WebSocket relay.
+ *
+ * Architecture:
+ * - Each user joins their OWN presence room: `presence-{myUUID}`
+ * - To check if a friend is online, we connect to `presence-{friendUUID}`
+ * - We send WHO and they respond with ME containing their game status
+ * - Both sides handle WHO/ME so it's bidirectional
+ *
+ * Important: friend sockets include reconnection logic and periodic
+ * WHO polling to detect when friends come online or change status.
+ */
 export function useFriendsPresence() {
   const { getSessionId } = useService(BaseServiceKey)
   const { userProfile, gameProfile } = injection(kUserContext)
@@ -27,23 +39,22 @@ export function useFriendsPresence() {
   const onlineFriends = ref<Record<string, FriendPresenceInfo>>({})
   const enabled = ref(true)
 
-  const isPlaying = ref(localStorage.getItem('peerIsPlaying') === 'true')
-  const playingInstanceName = ref(localStorage.getItem('peerPlayingInstanceName') || '')
-  const playingVersion = ref(localStorage.getItem('peerPlayingVersion') || '')
-  const playingServer = ref(localStorage.getItem('peerPlayingServer') || '')
+  const isPlaying = ref(false)
+  const playingInstanceName = ref('')
+  const playingVersion = ref('')
+  const playingServer = ref('')
 
+  // Listen for game start/exit events from the backend
   onLaunchEvent('minecraft-start', (event: any) => {
     isPlaying.value = true
-    playingInstanceName.value = event.name || ''
-    playingVersion.value = event.version || ''
+    // Extract instance name from gameDirectory path
+    const gameDir = event.gameDirectory || ''
+    playingInstanceName.value = gameDir ? gameDir.split(/[\\/]/).pop() || '' : ''
+    playingVersion.value = event.version || event.minecraft || ''
     playingServer.value = event.server ? `${event.server.host}:${event.server.port ?? 25565}` : ''
-    
-    localStorage.setItem('peerIsPlaying', 'true')
-    localStorage.setItem('peerPlayingInstanceName', playingInstanceName.value)
-    localStorage.setItem('peerPlayingVersion', playingVersion.value)
-    localStorage.setItem('peerPlayingServer', playingServer.value)
-    
-    setupMyPresenceSocket()
+
+    // Broadcast updated presence to all connected rooms
+    broadcastPresence()
   })
 
   onLaunchEvent('minecraft-exit', () => {
@@ -51,28 +62,15 @@ export function useFriendsPresence() {
     playingInstanceName.value = ''
     playingVersion.value = ''
     playingServer.value = ''
-    
-    localStorage.setItem('peerIsPlaying', 'false')
-    localStorage.removeItem('peerPlayingInstanceName')
-    localStorage.removeItem('peerPlayingVersion')
-    localStorage.removeItem('peerPlayingServer')
-    
-    setupMyPresenceSocket()
+
+    broadcastPresence()
   })
 
   // WebSockets references
   let myPresenceSocket: WebSocket | null = null
   const friendSockets = new Map<string, WebSocket>()
   let heartbeatInterval: any = null
-
-  // Helper to convert UUID to Uint8Array for binary heartbeats
-  function convertUUIDToUint8Array(id: string) {
-    const cleaned = id.replace(/-/g, '')
-    const matches = cleaned.match(/.{2}/g)
-    if (!matches) return new Uint8Array(16)
-    const ints = matches.map((v) => parseInt(v, 16))
-    return new Uint8Array(ints)
-  }
+  let whoPollingInterval: any = null
 
   // Get friends list
   const friendsList = computed(() => friendsData.value?.friends ?? [])
@@ -80,28 +78,19 @@ export function useFriendsPresence() {
   // Check if active user is Microsoft user
   const isMicrosoftUser = computed(() => userProfile.value?.authority === AUTHORITY_MICROSOFT)
 
+  // Check if active user has a valid Minecraft license (Microsoft account + valid game profile)
+  const isLicensed = computed(() => isMicrosoftUser.value && !!gameProfile.value?.id && gameProfile.value.id !== '')
+
   // Initialize client token
   getSessionId().then((id) => {
     clientToken.value = id
   })
 
-  // Start binary heartbeats for a socket
-  function startHeartbeats(socket: WebSocket, id: string) {
-    const idBinary = convertUUIDToUint8Array(id)
-    const heartbeatMessage = new Uint8Array(16 + 8)
-    heartbeatMessage.set(idBinary)
-    const heartbeatView = new DataView(heartbeatMessage.buffer)
-
-    heartbeatView.setFloat64(16, Date.now())
-    if (socket.readyState === socket.OPEN) {
-      socket.send(heartbeatMessage)
-    }
-  }
-
   // Build the presence profile containing current game activity
   function getMyPresenceProfile() {
     const profile = gameProfile.value
-    
+    if (!profile) return null
+
     // Check if we are hosting P2P
     const p2pGroupId = localStorage.getItem('peerGroup') || undefined
 
@@ -110,11 +99,28 @@ export function useFriendsPresence() {
       name: profile.name,
       textures: profile.textures,
       avatar: profile.textures?.SKIN?.url ?? '',
-      status: isPlaying.value ? 'playing' : 'online',
+      status: isPlaying.value ? 'playing' as const : 'online' as const,
       instanceName: playingInstanceName.value || undefined,
       version: playingVersion.value || undefined,
       serverAddress: playingServer.value || undefined,
-      p2pGroupId,
+      p2pGroupId: p2pGroupId && p2pGroupId.length > 0 ? p2pGroupId : undefined,
+    }
+  }
+
+  // Broadcast ME to all active sockets (my own room + friend rooms)
+  function broadcastPresence() {
+    const profile = getMyPresenceProfile()
+    if (!profile) return
+
+    const msg = JSON.stringify({
+      type: 'ME',
+      sender: clientToken.value,
+      profile,
+    })
+
+    // Broadcast to my own presence room
+    if (myPresenceSocket && myPresenceSocket.readyState === WebSocket.OPEN) {
+      myPresenceSocket.send(msg)
     }
   }
 
@@ -129,46 +135,173 @@ export function useFriendsPresence() {
     if (!myUUID || !clientToken.value || !enabled.value || !isMicrosoftUser.value) return
 
     const url = `wss://api.xmcl.app/group/presence-${myUUID}?client=${clientToken.value}`
-    const ws = new WebSocket(url)
-    myPresenceSocket = ws
 
-    ws.onmessage = async (event) => {
-      const { data } = event
-      if (typeof data === 'string') {
+    try {
+      const ws = new WebSocket(url)
+      myPresenceSocket = ws
+
+      ws.onopen = () => {
+        console.log('[Presence] My presence room connected')
+        // Broadcast our presence immediately on connect
+        broadcastPresence()
+      }
+
+      ws.onmessage = (event) => {
+        const { data } = event
+        // Skip binary heartbeat messages
+        if (typeof data !== 'string') return
+
         try {
           const payload = JSON.parse(data)
           if (payload.type === 'WHO' && payload.sender) {
+            // Check if the sender is a friend
+            const senderProfile = payload.profile
+            if (!senderProfile || !senderProfile.id) {
+              console.warn('[Presence] WHO request rejected: missing profile')
+              return
+            }
+
+            const normalizedSenderId = senderProfile.id.replace(/-/g, '').toLowerCase()
+            const isFriend = friendsList.value.some(f => f.profileId.replace(/-/g, '').toLowerCase() === normalizedSenderId)
+            
+            if (!isFriend) {
+              console.warn('[Presence] WHO request rejected: sender is not in friends list:', senderProfile.id)
+              return
+            }
+
             // A friend is asking who we are. Send our presence profile
             const profile = getMyPresenceProfile()
+            if (!profile) return
             ws.send(JSON.stringify({
               type: 'ME',
               receiver: payload.sender,
               sender: clientToken.value,
               profile,
             }))
+          }
+          // We can also receive ME messages if someone broadcasts in our room
+        } catch (e) {
+          // Ignore malformed messages
+        }
+      }
+
+      ws.onerror = () => {
+        console.warn('[Presence] My presence socket error, will reconnect')
+      }
+
+      ws.onclose = () => {
+        console.log('[Presence] My presence socket closed')
+        // Auto-reconnect after delay if not intentionally closed
+        if (enabled.value && isMicrosoftUser.value) {
+          setTimeout(() => {
+            if (myPresenceSocket === ws) {
+              setupMyPresenceSocket()
+            }
+          }, 5000)
+        }
+      }
+    } catch (e) {
+      console.error('[Presence] Failed to create my presence socket', e)
+    }
+  }
+
+  // Create a monitored WebSocket for a single friend's presence room
+  function createFriendSocket(friendId: string) {
+    // Clean up existing socket for this friend
+    const existing = friendSockets.get(friendId)
+    if (existing) {
+      existing.close()
+      friendSockets.delete(friendId)
+    }
+
+    if (!clientToken.value || !enabled.value || !isMicrosoftUser.value) return
+
+    const url = `wss://api.xmcl.app/group/presence-${friendId}?client=${clientToken.value}`
+
+    try {
+      const ws = new WebSocket(url)
+      friendSockets.set(friendId, ws)
+
+      ws.onopen = () => {
+        // Send WHO to ask for their identity/presence, including our own profile for verification
+        const myProfile = gameProfile.value
+        ws.send(JSON.stringify({
+          type: 'WHO',
+          sender: clientToken.value,
+          profile: myProfile ? {
+            id: myProfile.id,
+            name: myProfile.name,
+          } : undefined,
+        }))
+      }
+
+      ws.onmessage = (event) => {
+        const { data } = event
+        // Skip binary heartbeat messages (they indicate someone is in the room)
+        if (typeof data !== 'string') {
+          // Binary data = heartbeat from the friend, they're alive
+          // Update lastActive for liveness tracking
+          const existing = onlineFriends.value[friendId]
+          if (existing) {
+            existing.lastActive = Date.now()
+          }
+          return
+        }
+
+        try {
+          const payload = JSON.parse(data)
+          if (payload.type === 'WHO') {
+            // The friend is asking who we are in their room — respond with our profile
+            const profile = getMyPresenceProfile()
+            if (!profile) return
+            ws.send(JSON.stringify({
+              type: 'ME',
+              sender: clientToken.value,
+              profile,
+            }))
           } else if (payload.type === 'ME' && payload.profile) {
-            // We received a profile from someone in our room.
-            // Check if they are actually our friend
-            const isFriend = friendsList.value.some((f) => f.profileId.replace(/-/g, '').toLowerCase() === payload.profile.id.replace(/-/g, '').toLowerCase())
-            if (isFriend) {
-              // Update their presence status
-              onlineFriends.value[payload.profile.id] = {
-                profileId: payload.profile.id,
-                name: payload.profile.name,
-                avatar: payload.profile.avatar,
-                status: payload.profile.status || 'online',
-                instanceName: payload.profile.instanceName,
-                version: payload.profile.version,
-                serverAddress: payload.profile.serverAddress,
-                p2pGroupId: payload.profile.p2pGroupId,
-                lastActive: Date.now(),
+            // Verify that the profile ID matches the friend we connected to
+            const normalizedProfileId = (payload.profile.id || '').replace(/-/g, '').toLowerCase()
+            const normalizedFriendId = friendId.replace(/-/g, '').toLowerCase()
+            if (normalizedProfileId === normalizedFriendId) {
+              onlineFriends.value = {
+                ...onlineFriends.value,
+                [friendId]: {
+                  profileId: friendId,
+                  name: payload.profile.name,
+                  avatar: payload.profile.avatar,
+                  status: payload.profile.status || 'online',
+                  instanceName: payload.profile.instanceName,
+                  version: payload.profile.version,
+                  serverAddress: payload.profile.serverAddress,
+                  p2pGroupId: payload.profile.p2pGroupId,
+                  lastActive: Date.now(),
+                },
               }
             }
           }
         } catch (e) {
-          console.error('Error handling my presence message', e)
+          // Ignore malformed messages
         }
       }
+
+      ws.onerror = () => {
+        // Will trigger onclose
+      }
+
+      ws.onclose = () => {
+        // Auto-reconnect if the friend is still in our list
+        const stillFriend = friendsList.value.some((f) => f.profileId === friendId)
+        if (stillFriend && enabled.value && isMicrosoftUser.value) {
+          setTimeout(() => {
+            if (friendSockets.get(friendId) === ws) {
+              createFriendSocket(friendId)
+            }
+          }, 8000) // Reconnect with longer backoff to avoid hammering
+        }
+      }
+    } catch (e) {
+      console.error(`[Presence] Failed to create socket for friend ${friendId}`, e)
     }
   }
 
@@ -187,62 +320,17 @@ export function useFriendsPresence() {
       if (!currentFriendIds.has(friendId)) {
         ws.close()
         friendSockets.delete(friendId)
-        delete onlineFriends.value[friendId]
+        const updated = { ...onlineFriends.value }
+        delete updated[friendId]
+        onlineFriends.value = updated
       }
     }
 
-    // Open sockets for new friends
+    // Open sockets for new friends (only if not already connected)
     for (const friend of currentFriends) {
       const friendId = friend.profileId
       if (!friendSockets.has(friendId)) {
-        const url = `wss://api.xmcl.app/group/presence-${friendId}?client=${clientToken.value}`
-        const ws = new WebSocket(url)
-        friendSockets.set(friendId, ws)
-
-        ws.onopen = () => {
-          // Send WHO to ask for their identity/presence
-          ws.send(JSON.stringify({
-            type: 'WHO',
-            sender: clientToken.value,
-          }))
-        }
-
-        ws.onmessage = (event) => {
-          const { data } = event
-          if (typeof data === 'string') {
-            try {
-              const payload = JSON.parse(data)
-              if (payload.type === 'WHO') {
-                // Respond to WHO requests
-                const profile = getMyPresenceProfile()
-                ws.send(JSON.stringify({
-                  type: 'ME',
-                  sender: clientToken.value,
-                  profile,
-                }))
-              } else if (payload.type === 'ME' && payload.profile) {
-                // Verify that they match the friend ID of this socket
-                const normalizedProfileId = payload.profile.id.replace(/-/g, '').toLowerCase()
-                const normalizedFriendId = friendId.replace(/-/g, '').toLowerCase()
-                if (normalizedProfileId === normalizedFriendId) {
-                  onlineFriends.value[friendId] = {
-                    profileId: friendId,
-                    name: payload.profile.name,
-                    avatar: payload.profile.avatar,
-                    status: payload.profile.status || 'online',
-                    instanceName: payload.profile.instanceName,
-                    version: payload.profile.version,
-                    serverAddress: payload.profile.serverAddress,
-                    p2pGroupId: payload.profile.p2pGroupId,
-                    lastActive: Date.now(),
-                  }
-                }
-              }
-            } catch (e) {
-              console.error('Error handling friend presence message', e)
-            }
-          }
-        }
+        createFriendSocket(friendId)
       }
     }
   }
@@ -259,27 +347,39 @@ export function useFriendsPresence() {
     onlineFriends.value = {}
   }
 
-  // Periodic heartbeats and offline cleanup
+  // Periodic WHO polling — ask friends for their presence status every 10s
+  // This handles cases where the friend connects after we do
+  whoPollingInterval = setInterval(() => {
+    const myProfile = gameProfile.value
+    for (const [friendId, ws] of friendSockets.entries()) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'WHO',
+          sender: clientToken.value,
+          profile: myProfile ? {
+            id: myProfile.id,
+            name: myProfile.name,
+          } : undefined,
+        }))
+      }
+    }
+  }, 10_000)
+
+  // Periodic offline cleanup — remove friends who haven't been seen in 30s
   heartbeatInterval = setInterval(() => {
     const now = Date.now()
-
-    // Send heartbeats
-    if (myPresenceSocket && myPresenceSocket.readyState === WebSocket.OPEN && gameProfile.value?.id) {
-      startHeartbeats(myPresenceSocket, gameProfile.value.id)
-    }
-    for (const [friendId, ws] of friendSockets.entries()) {
-      if (ws.readyState === WebSocket.OPEN && gameProfile.value?.id) {
-        startHeartbeats(ws, gameProfile.value.id)
+    let changed = false
+    const updated = { ...onlineFriends.value }
+    for (const [friendId, info] of Object.entries(updated)) {
+      if (now - info.lastActive > 30_000) {
+        delete updated[friendId]
+        changed = true
       }
     }
-
-    // Clean up offline friends (no activity/heartbeat for 15s)
-    for (const [friendId, info] of Object.entries(onlineFriends.value)) {
-      if (now - info.lastActive > 15_000) {
-        delete onlineFriends.value[friendId]
-      }
+    if (changed) {
+      onlineFriends.value = updated
     }
-  }, 4_000)
+  }, 5_000)
 
   // Watchers to trigger setup
   watch([clientToken, enabled, isMicrosoftUser, () => gameProfile.value?.id], () => {
@@ -294,6 +394,7 @@ export function useFriendsPresence() {
   // Cleanup on destroy
   onScopeDispose(() => {
     clearInterval(heartbeatInterval)
+    clearInterval(whoPollingInterval)
     clearAllSockets()
   })
 
@@ -302,5 +403,6 @@ export function useFriendsPresence() {
     enabled,
     friendsList,
     isMicrosoftUser,
+    isLicensed,
   }
 }
