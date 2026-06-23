@@ -21,14 +21,14 @@
             variant="text"
             @click="cancelPrompt"
           >
-            {{ $t('gamepad.cancelBtn') }}
+            {{ $t('gamepad.cancelBtn', { btn: buttonBLabel }) }}
           </v-btn>
           <v-btn
             color="primary"
             variant="elevated"
             @click="enableGamepad"
           >
-            {{ $t('gamepad.enableBtn') }}
+            {{ $t('gamepad.enableBtn', { btn: buttonALabel }) }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -92,6 +92,11 @@ const gamepadActive = ref(localStorage.getItem('gamepad_enabled') === 'true')
 
 let animationFrameId: number | null = null
 const promptDismissedSession = ref(sessionStorage.getItem('gamepad_prompt_dismissed') === 'true')
+
+// Dynamic gamepad layout / button label detection (SteamDeck/Xbox vs PlayStation)
+const gamepadType = ref<'xbox' | 'playstation'>('xbox')
+const buttonALabel = computed(() => gamepadType.value === 'playstation' ? '✖' : 'A')
+const buttonBLabel = computed(() => gamepadType.value === 'playstation' ? '●' : 'B')
 
 // Virtual Keyboard State
 const keyboardShown = ref(false)
@@ -336,7 +341,7 @@ function enableGamepad() {
   dialogShown.value = false
   notify({
     title: t('gamepad.detectedTitle'),
-    body: t('gamepad.enabledNotify'),
+    body: t('gamepad.enabledNotify', { btnA: buttonALabel.value, btnB: buttonBLabel.value }),
     level: 'success'
   })
 }
@@ -372,6 +377,23 @@ function pollGamepads() {
   }
 
   if (activeGamepad) {
+    // Detect PlayStation vs Xbox/SteamDeck
+    const idLower = activeGamepad.id.toLowerCase()
+    if (
+      idLower.includes('sony') ||
+      idLower.includes('playstation') ||
+      idLower.includes('dualsense') ||
+      idLower.includes('dualshock') ||
+      idLower.includes('ps5') ||
+      idLower.includes('ps4') ||
+      idLower.includes('ps3') ||
+      idLower.includes('wireless controller')
+    ) {
+      gamepadType.value = 'playstation'
+    } else {
+      gamepadType.value = 'xbox'
+    }
+
     // If not enabled and not dismissed in session, show the prompt
     if (!gamepadActive.value && !promptDismissedSession.value && !dialogShown.value) {
       const anyButtonPressed = activeGamepad.buttons.some(b => b.pressed)
