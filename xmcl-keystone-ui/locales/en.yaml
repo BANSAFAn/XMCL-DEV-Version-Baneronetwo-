@@ -1963,3 +1963,11 @@ versionType:
   beta: Beta
   name: Status
   release: Release
+
+gamepad:
+  detectedTitle: Gamepad Detected
+  detectedBody: A controller has been connected. Would you like to enable gamepad navigation (useful for Steam Deck / TV)?
+  enableBtn: Enable (A)
+  cancelBtn: Cancel (B)
+  enabledNotify: Gamepad controls enabled! Use D-pad/Left stick to navigate, (A) to select, (B) to go back.
+
