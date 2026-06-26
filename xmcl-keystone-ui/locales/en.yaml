@@ -1970,5 +1970,14 @@ gamepad:
   enableBtn: Enable ({btn})
   cancelBtn: Cancel ({btn})
   enabledNotify: Gamepad controls enabled! Use D-pad/Left stick to navigate, {btnA} to select, {btnB} to go back.
-
-
+  modSuggestTitle: Controller Mod
+  modSuggestBody: >-
+    To use your gamepad inside Minecraft, a controller mod is recommended.
+    Would you like to install the appropriate mod for your modloader?
+  modLoader: Modloader
+  modInstall: Install Mod
+  modSkip: Skip
+  modDone: Done
+  modInstalled: Controller mod installed successfully! It will be active next time you launch Minecraft.
+  modInstalledNotify: '{name} has been installed for in-game controller support.'
+  modNotFound: 'No compatible version found for {loader} on Minecraft {version}.'
