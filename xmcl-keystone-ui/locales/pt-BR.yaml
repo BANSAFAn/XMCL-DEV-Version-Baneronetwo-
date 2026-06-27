@@ -644,6 +644,7 @@ migrationWindow:
   error: Falha na migração
 minecraftVersion:
   name: Versão do Minecraft
+  all: Todas as Versões
   release: Lançamento
   showAlpha: Mostrar Snapshot
   snapshot: Snapshot
@@ -1314,6 +1315,8 @@ setting:
     light: Tema Claro
     system: Usar Tema do Sistemas
   themeExport: Exportar tema
+  themeBorderRadius: Cantos arredondados
+  themeBorderRadiusDescription: Ative ou desative cantos arredondados para cartoes, dialogos, menus e paineis.
   themeFont: Fonte
   themeFontDescription: Alterar a fonte do launcher
   themeFontUrl: URL da fonte

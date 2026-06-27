@@ -7,7 +7,7 @@
     transition="fade-transition"
     content-class="elevation-0"
   >
-    <div class="flex flex-col overflow-hidden">
+    <div class="surface-dialog-shell flex flex-col overflow-hidden">
       <!-- Header -->
       <div class="flex items-center px-6 pt-6 pb-4">
         <div class="flex items-center gap-3 flex-grow">
@@ -64,11 +64,12 @@
           <v-btn
             data-testid="add-instance-import"
             :loading="loading"
-            variant="text"
+            variant="tonal"
+            color="primary"
             rounded="pill"
             @click="onImportModpack"
           >
-            <v-icon start> note_add </v-icon>
+            <v-icon start> folder_zip </v-icon>
             {{ t('importModpack.name') }}
           </v-btn>
         </div>

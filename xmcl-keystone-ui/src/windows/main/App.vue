@@ -2,8 +2,8 @@
   <v-app v-if="!showSetup" class="h-full max-h-screen overflow-hidden" :class="{ 'dark': isDark }">
     <AppBackground />
     <div class="w-full h-full absolute left-0 header-overlay" :style="{
-      height: headerHeight + (compact ? 30 : 70) + 'px',
-      'background-image': `linear-gradient(${appBarColor}, transparent)`
+      height: headerHeight + 70 + 'px',
+      'background-image': `linear-gradient(${appBarColor} 0%, color-mix(in srgb, ${appBarColor}, transparent) 65%, transparent 100%)`
     }">
     </div>
     <AppSystemBar :back="sidebarStyle === 'notch'" />
@@ -35,13 +35,11 @@
     <AppUnauthenticatedWarningDialog />
     <AppImageDialog />
     <AppJoinServerDialog />
-    <AppLaunchServerDialog />
     <AppSharedTooltip />
     <AppInstallSkipDialog />
     <AppMigrateWizardDialog />
     <AppMinecraftFriendsDialog />
     <UserProfileDialog :value="userProfileDialogShown" @input="userProfileDialogShown = $event" />
-    <AppExportServerDialog />
     <AppModrinthLoginDialog />
     <InstanceLauncherPage />
     <AppSideBarGroupSettingDialog :default-color="defaultColor" />
@@ -85,7 +83,6 @@ import AppBackground from '@/views/AppBackground.vue'
 import AppAgentChat from '@/views/AppAgentChat.vue'
 import AppCommandPalette from '@/views/AppCommandPalette.vue'
 import AppContextMenu from '@/views/AppContextMenu.vue'
-import AppExportServerDialog from '@/views/AppExportServerDialog.vue'
 import AppFeedbackDialog from '@/views/AppFeedbackDialog.vue'
 import AppGameExitDialog from '@/views/AppGameExitDialog.vue'
 import AppInstallSkipDialog from '@/views/AppInstallSkipDialog.vue'
@@ -93,7 +90,6 @@ import AppInstanceDeleteDialog from '@/views/AppInstanceDeleteDialog.vue'
 import AppLaunchBlockedDialog from '@/views/AppLaunchBlockedDialog.vue'
 import AppUnauthenticatedWarningDialog from '@/views/AppUnauthenticatedWarningDialog.vue'
 import AppJoinServerDialog from '@/views/AppJoinServerDialog.vue'
-import AppLaunchServerDialog from '@/views/AppLaunchServerDialog.vue'
 import AppMigrateWizardDialog from '@/views/AppMigrateWizardDialog.vue'
 import AppMinecraftFriendsDialog from '@/views/AppMinecraftFriendsDialog.vue'
 import UserProfileDialog from '@/components/UserProfileDialog.vue'

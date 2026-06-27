@@ -682,6 +682,7 @@ migrationWindow:
   error: فشل النقل
 minecraftVersion:
   name: 'نسخة ماينكرافت'
+  all: 'كل الإصدارات'
   release: 'يطلق'
   showAlpha: 'عرض لقطة'
   snapshot: 'لقطة'
@@ -1401,6 +1402,8 @@ setting:
     light: 'موضوع الضوء'
     system: 'استخدام موضوع النظام'
   themeExport: 'تصدير الموضوع'
+  themeBorderRadius: 'الزوايا المستديرة'
+  themeBorderRadiusDescription: 'تفعيل أو تعطيل الزوايا المستديرة للبطاقات ومربعات الحوار والقوائم واللوحات.'
   themeFont: 'الخط'
   themeFontDescription: 'تغيير خط المشغل.'
   themeFontUrl: 'عنوان URL للخط'

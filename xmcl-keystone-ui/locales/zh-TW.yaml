@@ -627,6 +627,7 @@ migrationWindow:
   error: 遷移失敗
 minecraftVersion:
   name: Minecraft 版本
+  all: 所有版本
   release: 正式版
   showAlpha: 顯示快照版
   snapshot: 快照版
@@ -1317,6 +1318,8 @@ setting:
     light: 亮色主題
     system: 跟隨系統
   themeExport: 匯出主題
+  themeBorderRadius: 圓角
+  themeBorderRadiusDescription: 為卡片、對話框、選單和面板啟用或停用圓角。
   themeFont: 字體
   themeFontDescription: 更改啟動器的字體。
   themeFontUrl: 字體網址

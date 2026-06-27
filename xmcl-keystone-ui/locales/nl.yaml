@@ -640,6 +640,7 @@ migrationWindow:
   error: Migratie mislukt
 minecraftVersion:
   name: Minecraft Versie
+  all: Alle versies
   release: Release
   showAlpha: Toon Snapshots
   snapshot: Snapshot
@@ -1315,6 +1316,8 @@ setting:
     light: Licht Thema
     system: Gebruik Systeem Thema
   themeExport: Thema Exporteren
+  themeBorderRadius: Afgeronde hoeken
+  themeBorderRadiusDescription: Schakel afgeronde hoeken in of uit voor kaarten, dialogen, menus en panelen.
   themeFont: Lettertype
   themeFontDescription: Wijzig het lettertype van de launcher.
   themeFontUrl: Lettertype URL

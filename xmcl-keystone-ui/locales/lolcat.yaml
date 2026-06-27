@@ -624,6 +624,7 @@ migrationWindow:
   error: MUVIN BROKE
 minecraftVersion:
   name: MINECWAFT VERSHUN
+  all: ALL VERSHUNZ
   release: RELEASE
   showAlpha: SHOW SNAPSHOT
   snapshot: SNAPSHOT
@@ -1290,6 +1291,8 @@ setting:
     light: LIGHT THEEM
     system: USE SYSTEM THEEM
   themeExport: EXPORT THEEM
+  themeBorderRadius: ROUNDED CORNERZ
+  themeBorderRadiusDescription: TOGGLE ROUNDED CORNERZ FOR CARDZ, DIALOGZ, MENUZ, AN PANELS.
   themeFont: FONT
   themeFontDescription: CHANGE DA FONT OF DA LAUNCHER.
   themeFontUrl: FONT URL

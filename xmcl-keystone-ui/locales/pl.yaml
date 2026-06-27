@@ -619,6 +619,7 @@ migrationWindow:
   error: Migracja nie powiodła się
 minecraftVersion:
   name: Wersja Minecraft
+  all: Wszystkie wersje
   release: Zwolnienie
   showAlpha: Pokaż snapshot
   snapshot: Migawka
@@ -1295,6 +1296,8 @@ setting:
     light: Motyw świetlny
     system: Umotyw systemowy
   themeExport: Motyw eksportu
+  themeBorderRadius: Zaokrąglone rogi
+  themeBorderRadiusDescription: Wlacz lub wylacz zaokraglone rogi dla kart, okien dialogowych, menu i paneli.
   themeFont: Czcionka
   themeFontDescription: Zmiana czcionki programu uruchamiającego.
   themeFontUrl: Adres URL czcionki

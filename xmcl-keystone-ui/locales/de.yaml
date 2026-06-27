@@ -689,6 +689,7 @@ migrationWindow:
   error: Migration fehlgeschlagen
 minecraftVersion:
   name: Minecraft-Version
+  all: Alle Versionen
   release: Freigabe
   showAlpha: Schnappschuss snapshot
   snapshot: Snapshot
@@ -1406,6 +1407,8 @@ setting:
     light: Thema Licht
     system: Verwenden Sie das Systemthema
   themeExport: Ein Thema exportieren
+  themeBorderRadius: Abgerundete Ecken
+  themeBorderRadiusDescription: Abgerundete Ecken fur Karten, Dialoge, Menus und Panels ein- oder ausschalten.
   themeFont: Schriftart
   themeFontDescription: Ändern Sie die Schriftart des Launchers.
   themeFontUrl: Schriftart-URL

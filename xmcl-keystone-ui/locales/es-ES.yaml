@@ -497,6 +497,7 @@ migrationWindow:
   error: Error en la migración
 minecraftVersion:
   name: Versión de Minecraft
+  all: Todas las versiones
   release: Versión Estable
   showAlpha: Mostrar Versiones Snapshot
   snapshot: Versión Snapshot
@@ -1117,6 +1118,8 @@ setting:
     light: Tema Claro
     system: Usar Tema del Sistema
   themeExport: Exportar un tema
+  themeBorderRadius: Esquinas redondeadas
+  themeBorderRadiusDescription: Activa o desactiva las esquinas redondeadas para tarjetas, dialogos, menus y paneles.
   themeFont: Fuente
   themeFontDescription: Cambia la fuente del lanzador.
   themeFontUrl: URL de fuente

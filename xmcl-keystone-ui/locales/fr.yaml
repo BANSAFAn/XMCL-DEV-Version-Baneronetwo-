@@ -664,6 +664,7 @@ migrationWindow:
   error: Échec de la migration
 minecraftVersion:
   name: Version Minecraft
+  all: Toutes les versions
   release: Sortie
   showAlpha: Afficher les Snapshots
   snapshot: Snapshot
@@ -1334,6 +1335,8 @@ setting:
     dark: Thème sombre
     light: Thème clair
     system: Utiliser le thème système
+  themeBorderRadius: Coins arrondis
+  themeBorderRadiusDescription: Activer ou désactiver les coins arrondis pour les cartes, boîtes de dialogue, menus et panneaux.
   themeFont: Police de caractère
   themeFontDescription: Changez la police du lanceur.
   themeFontUrl: URL de la police
