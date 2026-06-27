@@ -30,13 +30,14 @@ export async function raceNatType(state: PeerState, iceServers: RTCIceServer[]) 
 
     let result: string | undefined
     try {
-      result = await sampleNatType({
+      const sample = await sampleNatType({
         sampleCount: 3,
         retryInterval: 3_000,
         stun,
       })
+      result = sample ?? undefined
       if (result && result !== 'Blocked') {
-        state.natTypeSet(result)
+        state.natTypeSet(result as any)
       }
       console.log(`Refresh nat type ${result}`)
     } catch (e) {
