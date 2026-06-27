@@ -34,58 +34,97 @@
       </v-card>
     </v-dialog>
 
-    <!-- Gamepad On-Screen Virtual Keyboard -->
+    <!-- Suggest Controller Mod Dialog -->
     <v-dialog
-      v-model="keyboardShown"
-      max-width="850"
-      persistent
-      no-click-animation
-      content-class="gamepad-keyboard-dialog"
+      v-model="modSuggestShown"
+      max-width="550"
     >
-      <v-card class="gamepad-keyboard-card pa-4">
-        <div class="d-flex align-center mb-4">
-          <v-icon color="primary" class="mr-2">mdi-keyboard-outline</v-icon>
-          <span class="text-h6 font-weight-medium">On-Screen Keyboard</span>
+      <v-card class="gamepad-prompt-card">
+        <v-card-title class="headline d-flex align-center">
+          <v-icon left color="primary" class="mr-2">mdi-gamepad-variant</v-icon>
+          {{ $t('gamepad.modSuggestTitle') }}
+        </v-card-title>
+        <v-card-text class="py-4">
+          <p class="mb-3">{{ $t('gamepad.modSuggestBody') }}</p>
+          <v-card
+            v-if="suggestedMod"
+            variant="outlined"
+            class="pa-3 d-flex align-center"
+          >
+            <v-icon size="36" color="primary" class="mr-3">mdi-puzzle</v-icon>
+            <div>
+              <div class="text-subtitle-1 font-weight-bold">{{ suggestedMod.name }}</div>
+              <div class="text-body-2 opacity-70">{{ suggestedMod.description }}</div>
+              <div class="text-caption mt-1 opacity-50">{{ $t('gamepad.modLoader') }}: {{ suggestedMod.loader }}</div>
+            </div>
+          </v-card>
+          <v-alert
+            v-if="modInstallError"
+            type="error"
+            variant="tonal"
+            density="compact"
+            class="mt-3"
+          >
+            {{ modInstallError }}
+          </v-alert>
+          <v-alert
+            v-if="modInstallSuccess"
+            type="success"
+            variant="tonal"
+            density="compact"
+            class="mt-3"
+          >
+            {{ $t('gamepad.modInstalled') }}
+          </v-alert>
+        </v-card-text>
+        <v-card-actions>
           <v-spacer />
-          <v-btn icon="mdi-close" variant="text" size="small" @click="closeKeyboard(false)" />
-        </div>
-        
-        <v-text-field
-          v-model="keyboardText"
-          readonly
-          variant="outlined"
-          class="mb-4 text-h5 text-center font-mono"
-          :type="isPassword ? 'password' : 'text'"
-          hide-details
-          focused
-        />
-        
-        <div class="keyboard-grid">
-          <div v-for="(row, rIdx) in (isShiftActive ? rowsUpper : rowsLower)" :key="rIdx" class="keyboard-row">
-            <v-btn
-              v-for="key in row"
-              :key="key"
-              :color="getKeyColor(key)"
-              :class="['keyboard-key', getKeyClass(key)]"
-              variant="flat"
-              @click="onKeyPress(key)"
-            >
-              {{ key }}
-            </v-btn>
-          </div>
-        </div>
+          <v-btn
+            variant="text"
+            @click="modSuggestShown = false"
+          >
+            {{ $t('gamepad.modSkip') }}
+          </v-btn>
+          <v-btn
+            v-if="!modInstallSuccess"
+            color="primary"
+            variant="elevated"
+            :loading="modInstalling"
+            @click="installSuggestedMod"
+          >
+            {{ $t('gamepad.modInstall') }}
+          </v-btn>
+          <v-btn
+            v-else
+            color="primary"
+            variant="elevated"
+            @click="modSuggestShown = false"
+          >
+            {{ $t('gamepad.modDone') }}
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useNotifier } from '@/composables/notifier'
+import { useService } from '@/composables/service'
+import { kInstance } from '@/composables/instance'
+import { injection } from '@/util/inject'
 import { useI18n } from 'vue-i18n'
+import {
+  InstanceModsServiceKey,
+  MarketType,
+} from '@xmcl/runtime-api'
+import { clientModrinthV2 } from '@/util/clients'
 
 const { t } = useI18n()
 const { notify } = useNotifier()
+const { installFromMarket } = useService(InstanceModsServiceKey)
+const { instance, runtime, path: instancePath } = injection(kInstance)
 
 const dialogShown = ref(false)
 const gamepadActive = ref(localStorage.getItem('gamepad_enabled') === 'true')
@@ -98,112 +137,115 @@ const gamepadType = ref<'xbox' | 'playstation'>('xbox')
 const buttonALabel = computed(() => gamepadType.value === 'playstation' ? '✖' : 'A')
 const buttonBLabel = computed(() => gamepadType.value === 'playstation' ? '●' : 'B')
 
-// Virtual Keyboard State
-const keyboardShown = ref(false)
-const keyboardText = ref('')
-const isShiftActive = ref(false)
-const activeInput = ref<HTMLInputElement | HTMLTextAreaElement | null>(null)
+// Controller mod suggestion state
+const modSuggestShown = ref(false)
+const modInstalling = ref(false)
+const modInstallError = ref('')
+const modInstallSuccess = ref(false)
 
-const isPassword = computed(() => activeInput.value?.type === 'password')
-
-// Keyboard Layouts
-const rowsLower = [
-  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Backspace'],
-  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'Enter'],
-  ['Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '@', '.', '_'],
-  ['Space', 'Clear', 'Done']
-]
-
-const rowsUpper = [
-  ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', 'Backspace'],
-  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Enter'],
-  ['Shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?'],
-  ['Space', 'Clear', 'Done']
-]
-
-function getKeyColor(key: string): string {
-  if (key === 'Done') return 'success'
-  if (key === 'Backspace' || key === 'Clear') return 'error'
-  if (key === 'Shift') return isShiftActive.value ? 'primary' : 'grey-darken-3'
-  return 'grey-darken-4'
+// Known controller mods on Modrinth
+const CONTROLLER_MODS: Record<string, { slug: string; name: string; description: string; loader: string }> = {
+  fabric: {
+    slug: 'midnightcontrols',
+    name: 'MidnightControls',
+    description: 'Full controller support with on-screen hints for Fabric/Quilt',
+    loader: 'Fabric',
+  },
+  quilt: {
+    slug: 'midnightcontrols',
+    name: 'MidnightControls',
+    description: 'Full controller support with on-screen hints for Fabric/Quilt',
+    loader: 'Quilt',
+  },
+  forge: {
+    slug: 'controllable',
+    name: 'Controllable',
+    description: 'Xbox / PlayStation controller support for Forge',
+    loader: 'Forge',
+  },
+  neoforge: {
+    slug: 'controllable',
+    name: 'Controllable',
+    description: 'Xbox / PlayStation controller support for NeoForge',
+    loader: 'NeoForge',
+  },
 }
 
-function getKeyClass(key: string): string {
-  if (key === 'Space') return 'key-space'
-  if (key === 'Done') return 'key-done'
-  if (key === 'Shift') return 'key-shift'
-  if (key === 'Backspace') return 'key-backspace'
-  return ''
+const detectedLoader = computed(() => {
+  const rt = runtime.value
+  if (rt.fabricLoader) return 'fabric'
+  if (rt.quiltLoader) return 'quilt'
+  if (rt.neoForged) return 'neoforge'
+  if (rt.forge) return 'forge'
+  return null
+})
+
+const suggestedMod = computed(() => {
+  const loader = detectedLoader.value
+  if (!loader) return null
+  return CONTROLLER_MODS[loader] ?? null
+})
+
+async function installSuggestedMod() {
+  const mod = suggestedMod.value
+  const loader = detectedLoader.value
+  if (!mod || !loader) return
+
+  modInstalling.value = true
+  modInstallError.value = ''
+  modInstallSuccess.value = false
+
+  try {
+    const mcVersion = runtime.value.minecraft
+    const loaderFilter = loader === 'neoforge' ? 'neoforge' : loader
+
+    // Find the correct version from Modrinth
+    const versions = await clientModrinthV2.getProjectVersions(
+      mod.slug,
+      { loaders: [loaderFilter], gameVersions: [mcVersion] },
+    )
+
+    if (!versions || versions.length === 0) {
+      modInstallError.value = t('gamepad.modNotFound', { loader: mod.loader, version: mcVersion })
+      return
+    }
+
+    // Pick the first (latest) compatible version
+    const version = versions[0]
+
+    await installFromMarket({
+      market: MarketType.Modrinth,
+      version: { versionId: version.id },
+      instancePath: instancePath.value,
+    })
+
+    modInstallSuccess.value = true
+    // Remember that we offered for this instance
+    localStorage.setItem(`gamepad_mod_offered_${instancePath.value}`, 'installed')
+
+    notify({
+      title: t('gamepad.modSuggestTitle'),
+      body: t('gamepad.modInstalledNotify', { name: mod.name }),
+      level: 'success',
+    })
+  } catch (e: any) {
+    modInstallError.value = e?.message ?? String(e)
+  } finally {
+    modInstalling.value = false
+  }
 }
 
-// Input listener to trigger on-screen keyboard
-function handleFocusIn(e: FocusEvent) {
+// Show mod suggestion after enabling gamepad
+function maybeSuggestControllerMod() {
   if (!gamepadActive.value) return
-  const target = e.target as HTMLElement
-  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
-    const input = target as HTMLInputElement
-    // Avoid triggering on buttons/checkboxes that are natively styled as inputs
-    if (['button', 'checkbox', 'radio', 'submit', 'file', 'range'].includes(input.type)) {
-      return
-    }
-    // Prevent infinite loop if focusing virtual keyboard text field
-    if (input.closest('.gamepad-keyboard-card')) {
-      return
-    }
-    
-    activeInput.value = input
-    keyboardText.value = input.value
-    isShiftActive.value = false
-    keyboardShown.value = true
-    
-    // Focus the first key of the virtual keyboard on open
-    nextTick(() => {
-      setTimeout(() => {
-        const firstKey = document.querySelector('.gamepad-keyboard-card .keyboard-key') as HTMLElement
-        if (firstKey) {
-          firstKey.focus()
-        }
-      }, 100)
-    })
-  }
-}
-
-function onKeyPress(key: string) {
-  if (key === 'Backspace') {
-    keyboardText.value = keyboardText.value.slice(0, -1)
-  } else if (key === 'Clear') {
-    keyboardText.value = ''
-  } else if (key === 'Space') {
-    keyboardText.value += ' '
-  } else if (key === 'Shift') {
-    isShiftActive.value = !isShiftActive.value
-  } else if (key === 'Enter' || key === 'Done') {
-    closeKeyboard(true)
-  } else {
-    keyboardText.value += key
-  }
-}
-
-function closeKeyboard(apply: boolean) {
-  if (apply && activeInput.value) {
-    activeInput.value.value = keyboardText.value
-    // Dispatch input and change events for reactive frameworks (Vue, Vuetify)
-    activeInput.value.dispatchEvent(new Event('input', { bubbles: true }))
-    activeInput.value.dispatchEvent(new Event('change', { bubbles: true }))
-  }
-  
-  const oldInput = activeInput.value
-  keyboardShown.value = false
-  activeInput.value = null
-  
-  // Return focus to the original input field
-  if (oldInput) {
-    nextTick(() => {
-      oldInput.focus()
-    })
-  }
+  if (!suggestedMod.value) return
+  const key = `gamepad_mod_offered_${instancePath.value}`
+  if (localStorage.getItem(key)) return
+  // Mark as offered so we don't spam the user
+  localStorage.setItem(key, 'offered')
+  modInstallError.value = ''
+  modInstallSuccess.value = false
+  modSuggestShown.value = true
 }
 
 // Cooldown tracker for repeated inputs
@@ -216,24 +258,20 @@ const prevButtonsState = ref<boolean[]>([])
 
 // Helper to find all visible, focusable elements
 function getFocusableElements(): HTMLElement[] {
-  // Query standard elements + Vuetify interactive lists, cards, tabs, and clickable controls
   const selector = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"]), .v-list-item, .v-tab, .v-card, [role="button"], .cursor-pointer, .v-selection-control, .v-switch'
   const elements = Array.from(document.querySelectorAll<HTMLElement>(selector))
-  
+
   return elements.filter(el => {
-    // Check if visible and interactive
     const style = window.getComputedStyle(el)
     if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
       return false
     }
-    
-    // Check bounding rect
+
     const rect = el.getBoundingClientRect()
     if (rect.width === 0 || rect.height === 0) {
       return false
     }
-    
-    // Check parents for display: none
+
     let parent = el.parentElement
     while (parent) {
       const parentStyle = window.getComputedStyle(parent)
@@ -243,7 +281,6 @@ function getFocusableElements(): HTMLElement[] {
       parent = parent.parentElement
     }
 
-    // Ensure it can be focused by setting tabIndex if it doesn't have one
     if (el.tabIndex === undefined || el.tabIndex < 0) {
       el.tabIndex = 0
     }
@@ -258,7 +295,6 @@ function moveFocus(direction: 'up' | 'down' | 'left' | 'right') {
 
   const current = document.activeElement as HTMLElement
   if (!current || !elements.includes(current)) {
-    // Default to the first focusable element
     elements[0].focus()
     return
   }
@@ -283,18 +319,16 @@ function moveFocus(direction: 'up' | 'down' | 'left' | 'right') {
     const dx = center.x - curCenter.x
     const dy = center.y - curCenter.y
 
-    // Direction constraints
     if (direction === 'up' && dy >= -1) continue
     if (direction === 'down' && dy <= 1) continue
     if (direction === 'left' && dx >= -1) continue
     if (direction === 'right' && dx <= 1) continue
 
-    // Distance metric: prioritize directional alignment
     let score = 0
     if (direction === 'up' || direction === 'down') {
-      score = dy * dy + dx * dx * 5 // penalize horizontal offset
+      score = dy * dy + dx * dx * 5
     } else {
-      score = dx * dx + dy * dy * 5 // penalize vertical offset
+      score = dx * dx + dy * dy * 5
     }
 
     if (score < minScore) {
@@ -307,7 +341,6 @@ function moveFocus(direction: 'up' | 'down' | 'left' | 'right') {
     bestCandidate.focus()
     bestCandidate.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   } else {
-    // Linear navigation fallback
     const index = elements.indexOf(current)
     if (direction === 'down' || direction === 'right') {
       const nextIndex = (index + 1) % elements.length
@@ -344,16 +377,16 @@ function enableGamepad() {
     body: t('gamepad.enabledNotify', { btnA: buttonALabel.value, btnB: buttonBLabel.value }),
     level: 'success'
   })
+  // Suggest controller mod after a short delay
+  setTimeout(() => maybeSuggestControllerMod(), 500)
 }
 
 // Check if any gamepad is plugged in on mount
 function checkInitialGamepads() {
   const gamepads = navigator.getGamepads ? navigator.getGamepads() : []
   for (const gp of gamepads) {
-    if (gp) {
-      if (gamepadActive.value) {
-        break
-      }
+    if (gp && gamepadActive.value) {
+      break
     }
   }
 }
@@ -368,7 +401,7 @@ function cancelPrompt() {
 function pollGamepads() {
   const gamepads = navigator.getGamepads ? navigator.getGamepads() : []
   let activeGamepad: Gamepad | null = null
-  
+
   for (const gp of gamepads) {
     if (gp) {
       activeGamepad = gp
@@ -414,11 +447,6 @@ function pollGamepads() {
     if (buttons[0] && buttons[0].pressed && !prevButtonsState.value[0]) {
       if (dialogShown.value) {
         enableGamepad()
-      } else if (keyboardShown.value) {
-        const current = document.activeElement as HTMLElement
-        if (current && current.closest('.gamepad-keyboard-card')) {
-          current.click()
-        }
       } else if (gamepadActive.value) {
         const current = document.activeElement as HTMLElement
         if (current) {
@@ -431,8 +459,6 @@ function pollGamepads() {
     if (buttons[1] && buttons[1].pressed && !prevButtonsState.value[1]) {
       if (dialogShown.value) {
         cancelPrompt()
-      } else if (keyboardShown.value) {
-        closeKeyboard(false)
       } else if (gamepadActive.value) {
         window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
       }
@@ -488,6 +514,13 @@ watch(gamepadActive, (active) => {
   }
 }, { immediate: true })
 
+// When instance changes and gamepad is active, suggest the mod if applicable
+watch(instancePath, () => {
+  if (gamepadActive.value) {
+    maybeSuggestControllerMod()
+  }
+})
+
 onMounted(() => {
   checkInitialGamepads()
   animationFrameId = requestAnimationFrame(pollGamepads)
@@ -495,14 +528,16 @@ onMounted(() => {
     promptDismissedSession.value = false
     sessionStorage.removeItem('gamepad_prompt_dismissed')
   })
-  window.addEventListener('focusin', handleFocusIn)
+  // On mount, suggest mod if gamepad was already enabled
+  if (gamepadActive.value) {
+    setTimeout(() => maybeSuggestControllerMod(), 1000)
+  }
 })
 
 onUnmounted(() => {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId)
   }
-  window.removeEventListener('focusin', handleFocusIn)
 })
 </script>
 
@@ -524,57 +559,5 @@ onUnmounted(() => {
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(30, 30, 30, 0.85) !important;
   backdrop-filter: blur(10px);
-}
-
-/* Virtual Keyboard Styling */
-.gamepad-keyboard-dialog {
-  align-items: flex-end !important;
-  margin-bottom: 24px !important;
-}
-
-.gamepad-keyboard-card {
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  background: rgba(25, 25, 25, 0.9) !important;
-  backdrop-filter: blur(15px);
-  border-radius: 16px !important;
-  width: 100%;
-}
-
-.keyboard-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.keyboard-row {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  justify-content: center;
-}
-
-.keyboard-key {
-  min-width: 45px !important;
-  height: 48px !important;
-  text-transform: none !important;
-  font-size: 1.1rem !important;
-  border-radius: 6px !important;
-  padding: 0 8px !important;
-}
-
-.key-space {
-  min-width: 250px !important;
-}
-
-.key-done {
-  min-width: 100px !important;
-}
-
-.key-shift {
-  min-width: 80px !important;
-}
-
-.key-backspace {
-  min-width: 100px !important;
 }
 </style>
