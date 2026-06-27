@@ -1,110 +1,189 @@
 <template>
   <div>
-    <!-- Connection / Enable Prompt -->
+    <!-- Gamepad Detection / Enable Prompt -->
     <v-dialog
       v-model="dialogShown"
-      max-width="500"
+      max-width="480"
       persistent
+      transition="fade-transition"
+      content-class="elevation-0"
     >
-      <v-card class="gamepad-prompt-card">
-        <v-card-title class="headline d-flex align-center">
-          <v-icon left color="primary" class="mr-2">mdi-gamepad-variant</v-icon>
-          {{ $t('gamepad.detectedTitle') }}
-        </v-card-title>
-        <v-card-text class="py-4">
-          {{ $t('gamepad.detectedBody') }}
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="secondary"
-            variant="text"
-            @click="cancelPrompt"
-          >
-            {{ $t('gamepad.cancelBtn', { btn: buttonBLabel }) }}
-          </v-btn>
-          <v-btn
-            color="primary"
-            variant="elevated"
-            @click="enableGamepad"
-          >
-            {{ $t('gamepad.enableBtn', { btn: buttonALabel }) }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      <div class="gp-dialog">
+        <!-- Animated header glow -->
+        <div class="gp-dialog__glow gp-dialog__glow--primary" />
+
+        <div class="gp-dialog__content">
+          <!-- Icon badge -->
+          <div class="gp-dialog__icon-wrap">
+            <div class="gp-dialog__icon-badge gp-dialog__icon-badge--primary">
+              <v-icon size="28" color="primary">mdi-gamepad-variant</v-icon>
+            </div>
+          </div>
+
+          <div class="text-lg font-bold tracking-tight mt-4 mb-1" style="color: rgba(var(--v-theme-on-surface), 0.95)">
+            {{ $t('gamepad.detectedTitle') }}
+          </div>
+
+          <p class="text-sm mb-6" style="color: rgba(var(--v-theme-on-surface), 0.55); line-height: 1.6;">
+            {{ $t('gamepad.detectedBody') }}
+          </p>
+
+          <!-- Controller type badge -->
+          <div class="gp-chip mb-6">
+            <v-icon size="14" class="mr-1" style="opacity:0.7">
+              {{ gamepadType === 'playstation' ? 'mdi-sony-playstation' : 'mdi-microsoft-xbox-controller' }}
+            </v-icon>
+            <span class="text-xs font-medium" style="opacity:0.7">
+              {{ gamepadType === 'playstation' ? 'PlayStation' : 'Xbox / Steam Deck' }}
+            </span>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3 w-full">
+            <v-btn
+              class="flex-1 gp-btn gp-btn--secondary"
+              variant="flat"
+              size="large"
+              @click="cancelPrompt"
+            >
+              <span class="gp-btn__key mr-2">{{ buttonBLabel }}</span>
+              {{ $t('gamepad.cancelBtn', { btn: '' }).replace('()', '').trim() }}
+            </v-btn>
+            <v-btn
+              class="flex-1 gp-btn gp-btn--primary"
+              variant="flat"
+              size="large"
+              @click="enableGamepad"
+            >
+              <span class="gp-btn__key gp-btn__key--primary mr-2">{{ buttonALabel }}</span>
+              {{ $t('gamepad.enableBtn', { btn: '' }).replace('()', '').trim() }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
     </v-dialog>
 
     <!-- Suggest Controller Mod Dialog -->
     <v-dialog
       v-model="modSuggestShown"
-      max-width="550"
+      max-width="500"
+      transition="fade-transition"
+      content-class="elevation-0"
     >
-      <v-card class="gamepad-prompt-card">
-        <v-card-title class="headline d-flex align-center">
-          <v-icon left color="primary" class="mr-2">mdi-gamepad-variant</v-icon>
-          {{ $t('gamepad.modSuggestTitle') }}
-        </v-card-title>
-        <v-card-text class="py-4">
-          <p class="mb-3">{{ $t('gamepad.modSuggestBody') }}</p>
-          <v-card
-            v-if="suggestedMod"
-            variant="outlined"
-            class="pa-3 d-flex align-center"
-          >
-            <v-icon size="36" color="primary" class="mr-3">mdi-puzzle</v-icon>
-            <div>
-              <div class="text-subtitle-1 font-weight-bold">{{ suggestedMod.name }}</div>
-              <div class="text-body-2 opacity-70">{{ suggestedMod.description }}</div>
-              <div class="text-caption mt-1 opacity-50">{{ $t('gamepad.modLoader') }}: {{ suggestedMod.loader }}</div>
+      <div class="gp-dialog">
+        <div class="gp-dialog__glow gp-dialog__glow--accent" />
+
+        <div class="gp-dialog__content">
+          <!-- Icon badge -->
+          <div class="gp-dialog__icon-wrap">
+            <div class="gp-dialog__icon-badge gp-dialog__icon-badge--accent">
+              <v-icon size="28">mdi-puzzle-outline</v-icon>
             </div>
-          </v-card>
-          <v-alert
-            v-if="modInstallError"
-            type="error"
-            variant="tonal"
-            density="compact"
-            class="mt-3"
+          </div>
+
+          <div class="text-lg font-bold tracking-tight mt-4 mb-1" style="color: rgba(var(--v-theme-on-surface), 0.95)">
+            {{ $t('gamepad.modSuggestTitle') }}
+          </div>
+
+          <p class="text-sm mb-5" style="color: rgba(var(--v-theme-on-surface), 0.55); line-height: 1.6;">
+            {{ $t('gamepad.modSuggestBody') }}
+          </p>
+
+          <!-- Mod card -->
+          <div
+            v-if="suggestedMod"
+            class="gp-mod-card mb-5"
           >
-            {{ modInstallError }}
-          </v-alert>
-          <v-alert
-            v-if="modInstallSuccess"
-            type="success"
-            variant="tonal"
-            density="compact"
-            class="mt-3"
-          >
-            {{ $t('gamepad.modInstalled') }}
-          </v-alert>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            variant="text"
-            @click="modSuggestShown = false"
-          >
-            {{ $t('gamepad.modSkip') }}
-          </v-btn>
-          <v-btn
-            v-if="!modInstallSuccess"
-            color="primary"
-            variant="elevated"
-            :loading="modInstalling"
-            @click="installSuggestedMod"
-          >
-            {{ $t('gamepad.modInstall') }}
-          </v-btn>
-          <v-btn
-            v-else
-            color="primary"
-            variant="elevated"
-            @click="modSuggestShown = false"
-          >
-            {{ $t('gamepad.modDone') }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+            <div class="gp-mod-card__icon">
+              <v-icon size="24" color="primary">mdi-puzzle</v-icon>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-bold mb-0.5" style="color: rgba(var(--v-theme-on-surface), 0.9)">
+                {{ suggestedMod.name }}
+              </div>
+              <div class="text-xs" style="color: rgba(var(--v-theme-on-surface), 0.5); line-height: 1.5;">
+                {{ suggestedMod.description }}
+              </div>
+              <div class="flex items-center gap-2 mt-2">
+                <span class="gp-tag">
+                  <v-icon size="11" class="mr-0.5">mdi-cog</v-icon>
+                  {{ suggestedMod.loader }}
+                </span>
+                <span class="gp-tag">
+                  <v-icon size="11" class="mr-0.5">mdi-earth</v-icon>
+                  Modrinth
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status alerts -->
+          <Transition name="gp-fade">
+            <div
+              v-if="modInstallError"
+              class="gp-status gp-status--error mb-4"
+            >
+              <v-icon size="16" color="error" class="mr-2 flex-shrink-0">mdi-alert-circle</v-icon>
+              <span class="text-xs">{{ modInstallError }}</span>
+            </div>
+          </Transition>
+
+          <Transition name="gp-fade">
+            <div
+              v-if="modInstallSuccess"
+              class="gp-status gp-status--success mb-4"
+            >
+              <v-icon size="16" color="success" class="mr-2 flex-shrink-0">mdi-check-circle</v-icon>
+              <span class="text-xs">{{ $t('gamepad.modInstalled') }}</span>
+            </div>
+          </Transition>
+
+          <!-- Actions -->
+          <div class="flex gap-3 w-full">
+            <v-btn
+              class="flex-1 gp-btn gp-btn--secondary"
+              variant="flat"
+              size="large"
+              @click="modSuggestShown = false"
+            >
+              {{ $t('gamepad.modSkip') }}
+            </v-btn>
+            <v-btn
+              v-if="!modInstallSuccess"
+              class="flex-1 gp-btn gp-btn--primary"
+              variant="flat"
+              size="large"
+              :loading="modInstalling"
+              @click="installSuggestedMod"
+            >
+              <v-icon size="16" class="mr-1.5">mdi-download</v-icon>
+              {{ $t('gamepad.modInstall') }}
+            </v-btn>
+            <v-btn
+              v-else
+              class="flex-1 gp-btn gp-btn--success"
+              variant="flat"
+              size="large"
+              @click="modSuggestShown = false"
+            >
+              <v-icon size="16" class="mr-1.5">mdi-check</v-icon>
+              {{ $t('gamepad.modDone') }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
     </v-dialog>
+
+    <!-- Gamepad HUD indicator (bottom-right) -->
+    <Transition name="gp-slide-up">
+      <div
+        v-if="gamepadActive && !dialogShown && !modSuggestShown"
+        class="gp-hud"
+      >
+        <v-icon size="14" class="mr-1.5" style="opacity: 0.6">mdi-gamepad-variant</v-icon>
+        <span class="text-[11px] font-medium" style="opacity: 0.5">Gamepad</span>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -541,23 +620,242 @@ onUnmounted(() => {
 })
 </script>
 
+<style scoped>
+/* ─── Dialog container ─── */
+.gp-dialog {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 18, 22, 0.92);
+  backdrop-filter: blur(24px) saturate(1.8);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+.gp-dialog__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 28px 24px;
+}
+
+/* Decorative top glow */
+.gp-dialog__glow {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 120px;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.gp-dialog__glow--primary {
+  background: rgb(var(--v-theme-primary));
+}
+.gp-dialog__glow--accent {
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+}
+
+/* Icon badge */
+.gp-dialog__icon-wrap {
+  position: relative;
+}
+.gp-dialog__icon-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.gp-dialog__icon-badge--primary {
+  background: rgba(var(--v-theme-primary), 0.12);
+  box-shadow: 0 0 24px rgba(var(--v-theme-primary), 0.15);
+}
+.gp-dialog__icon-badge--accent {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.15));
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.12);
+}
+
+/* Chip (controller type) */
+.gp-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: rgba(var(--v-theme-on-surface), 0.06);
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.06);
+}
+
+/* Buttons */
+.gp-btn {
+  border-radius: 12px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.gp-btn--primary {
+  background: rgba(var(--v-theme-primary), 1) !important;
+  color: rgba(var(--v-theme-on-primary), 1) !important;
+}
+.gp-btn--primary:hover {
+  box-shadow: 0 4px 20px rgba(var(--v-theme-primary), 0.35) !important;
+  transform: translateY(-1px);
+}
+.gp-btn--secondary {
+  background: rgba(var(--v-theme-on-surface), 0.06) !important;
+  color: rgba(var(--v-theme-on-surface), 0.7) !important;
+}
+.gp-btn--secondary:hover {
+  background: rgba(var(--v-theme-on-surface), 0.1) !important;
+}
+.gp-btn--success {
+  background: rgba(var(--v-theme-success), 1) !important;
+  color: #fff !important;
+}
+.gp-btn--success:hover {
+  box-shadow: 0 4px 20px rgba(var(--v-theme-success), 0.35) !important;
+}
+
+/* Button key indicator (A / B / ✖ / ●) */
+.gp-btn__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.85);
+}
+.gp-btn__key--primary {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mod card */
+.gp-mod-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(var(--v-theme-on-surface), 0.04);
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.06);
+  text-align: left;
+  transition: all 0.2s ease;
+}
+.gp-mod-card:hover {
+  background: rgba(var(--v-theme-on-surface), 0.06);
+  border-color: rgba(var(--v-theme-primary), 0.2);
+}
+
+.gp-mod-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(var(--v-theme-primary), 0.1);
+}
+
+/* Tags */
+.gp-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(var(--v-theme-on-surface), 0.06);
+  color: rgba(var(--v-theme-on-surface), 0.55);
+  letter-spacing: 0.02em;
+}
+
+/* Status messages */
+.gp-status {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-align: left;
+  line-height: 1.5;
+}
+.gp-status--error {
+  background: rgba(var(--v-theme-error), 0.08);
+  border: 1px solid rgba(var(--v-theme-error), 0.15);
+  color: rgb(var(--v-theme-error));
+}
+.gp-status--success {
+  background: rgba(var(--v-theme-success), 0.08);
+  border: 1px solid rgba(var(--v-theme-success), 0.15);
+  color: rgb(var(--v-theme-success));
+}
+
+/* HUD indicator */
+.gp-hud {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(18, 18, 22, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+/* Transitions */
+.gp-fade-enter-active,
+.gp-fade-leave-active {
+  transition: all 0.25s ease;
+}
+.gp-fade-enter-from,
+.gp-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.gp-slide-up-enter-active,
+.gp-slide-up-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gp-slide-up-enter-from,
+.gp-slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(12px);
+}
+</style>
+
 <style>
-/* Global gamepad active styling */
+/* Global gamepad active styling — unscoped so it applies globally */
 .gamepad-active :focus-visible,
 .gamepad-active :focus,
 .gamepad-active .v-btn:focus,
 .gamepad-active .v-list-item:focus,
 .gamepad-active .v-card:focus {
-  outline: 3px solid #ffaa00 !important;
+  outline: 2px solid rgba(var(--v-theme-primary), 0.8) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 10px rgba(255, 170, 0, 0.6) !important;
+  box-shadow: 0 0 0 4px rgba(var(--v-theme-primary), 0.15), 0 0 16px rgba(var(--v-theme-primary), 0.1) !important;
   border-radius: 4px !important;
-  transition: outline-offset 0.1s ease, box-shadow 0.1s ease !important;
-}
-
-.gamepad-prompt-card {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(30, 30, 30, 0.85) !important;
-  backdrop-filter: blur(10px);
+  transition: outline 0.15s ease, box-shadow 0.15s ease !important;
 }
 </style>
