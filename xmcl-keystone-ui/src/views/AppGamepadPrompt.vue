@@ -16,7 +16,7 @@
           <!-- Icon badge -->
           <div class="gp-dialog__icon-wrap">
             <div class="gp-dialog__icon-badge gp-dialog__icon-badge--primary">
-              <v-icon size="28" color="primary">mdi-gamepad-variant</v-icon>
+              <v-icon size="28" color="primary">sports_esports</v-icon>
             </div>
           </div>
 
@@ -28,13 +28,13 @@
             {{ $t('gamepad.detectedBody') }}
           </p>
 
-          <!-- Controller type badge -->
+          <!-- Controller name badge -->
           <div class="gp-chip mb-6">
-            <v-icon size="14" class="mr-1" style="opacity:0.7">
-              {{ gamepadType === 'playstation' ? 'mdi-sony-playstation' : 'mdi-microsoft-xbox-controller' }}
+            <v-icon size="14" class="mr-1.5" style="opacity:0.7">
+              {{ gamepadType === 'playstation' ? 'sports_esports' : 'videogame_asset' }}
             </v-icon>
             <span class="text-xs font-medium" style="opacity:0.7">
-              {{ gamepadType === 'playstation' ? 'PlayStation' : 'Xbox / Steam Deck' }}
+              {{ gamepadName || (gamepadType === 'playstation' ? 'PlayStation Controller' : 'Xbox / Steam Deck Controller') }}
             </span>
           </div>
 
@@ -77,7 +77,7 @@
           <!-- Icon badge -->
           <div class="gp-dialog__icon-wrap">
             <div class="gp-dialog__icon-badge gp-dialog__icon-badge--accent">
-              <v-icon size="28">mdi-puzzle-outline</v-icon>
+              <v-icon size="28">extension</v-icon>
             </div>
           </div>
 
@@ -95,7 +95,7 @@
             class="gp-mod-card mb-5"
           >
             <div class="gp-mod-card__icon">
-              <v-icon size="24" color="primary">mdi-puzzle</v-icon>
+              <v-icon size="24" color="primary">extension</v-icon>
             </div>
             <div class="flex-1 min-w-0">
               <div class="text-sm font-bold mb-0.5" style="color: rgba(var(--v-theme-on-surface), 0.9)">
@@ -106,11 +106,11 @@
               </div>
               <div class="flex items-center gap-2 mt-2">
                 <span class="gp-tag">
-                  <v-icon size="11" class="mr-0.5">mdi-cog</v-icon>
+                  <v-icon size="11" class="mr-0.5">settings</v-icon>
                   {{ suggestedMod.loader }}
                 </span>
                 <span class="gp-tag">
-                  <v-icon size="11" class="mr-0.5">mdi-earth</v-icon>
+                  <v-icon size="11" class="mr-0.5">public</v-icon>
                   Modrinth
                 </span>
               </div>
@@ -123,7 +123,7 @@
               v-if="modInstallError"
               class="gp-status gp-status--error mb-4"
             >
-              <v-icon size="16" color="error" class="mr-2 flex-shrink-0">mdi-alert-circle</v-icon>
+              <v-icon size="16" color="error" class="mr-2 flex-shrink-0">error</v-icon>
               <span class="text-xs">{{ modInstallError }}</span>
             </div>
           </Transition>
@@ -133,7 +133,7 @@
               v-if="modInstallSuccess"
               class="gp-status gp-status--success mb-4"
             >
-              <v-icon size="16" color="success" class="mr-2 flex-shrink-0">mdi-check-circle</v-icon>
+              <v-icon size="16" color="success" class="mr-2 flex-shrink-0">check_circle</v-icon>
               <span class="text-xs">{{ $t('gamepad.modInstalled') }}</span>
             </div>
           </Transition>
@@ -146,6 +146,7 @@
               size="large"
               @click="modSuggestShown = false"
             >
+              <span class="gp-btn__key mr-2">{{ buttonBLabel }}</span>
               {{ $t('gamepad.modSkip') }}
             </v-btn>
             <v-btn
@@ -156,7 +157,7 @@
               :loading="modInstalling"
               @click="installSuggestedMod"
             >
-              <v-icon size="16" class="mr-1.5">mdi-download</v-icon>
+              <span class="gp-btn__key gp-btn__key--primary mr-2">{{ buttonALabel }}</span>
               {{ $t('gamepad.modInstall') }}
             </v-btn>
             <v-btn
@@ -166,7 +167,7 @@
               size="large"
               @click="modSuggestShown = false"
             >
-              <v-icon size="16" class="mr-1.5">mdi-check</v-icon>
+              <span class="gp-btn__key gp-btn__key--primary mr-2">{{ buttonALabel }}</span>
               {{ $t('gamepad.modDone') }}
             </v-btn>
           </div>
@@ -180,8 +181,8 @@
         v-if="gamepadActive && !dialogShown && !modSuggestShown"
         class="gp-hud"
       >
-        <v-icon size="14" class="mr-1.5" style="opacity: 0.6">mdi-gamepad-variant</v-icon>
-        <span class="text-[11px] font-medium" style="opacity: 0.5">Gamepad</span>
+        <v-icon size="14" class="mr-1.5" style="opacity: 0.6">sports_esports</v-icon>
+        <span class="text-[11px] font-medium" style="opacity: 0.5">{{ gamepadName || 'Gamepad Connected' }}</span>
       </div>
     </Transition>
   </div>
@@ -192,8 +193,11 @@ import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useNotifier } from '@/composables/notifier'
 import { useService } from '@/composables/service'
 import { kInstance } from '@/composables/instance'
+import { kInstances } from '@/composables/instances'
+import { kInstanceLaunch } from '@/composables/instanceLaunch'
 import { injection } from '@/util/inject'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import {
   InstanceModsServiceKey,
   MarketType,
@@ -202,11 +206,16 @@ import { clientModrinthV2 } from '@/util/clients'
 
 const { t } = useI18n()
 const { notify } = useNotifier()
+const router = useRouter()
+
 const { installFromMarket } = useService(InstanceModsServiceKey)
 const { instance, runtime, path: instancePath } = injection(kInstance)
+const { instances, selectedInstance } = injection(kInstances)
+const { launch: launchGame } = injection(kInstanceLaunch)
 
 const dialogShown = ref(false)
 const gamepadActive = ref(localStorage.getItem('gamepad_enabled') === 'true')
+const gamepadName = ref('')
 
 let animationFrameId: number | null = null
 const promptDismissedSession = ref(sessionStorage.getItem('gamepad_prompt_dismissed') === 'true')
@@ -476,6 +485,39 @@ function cancelPrompt() {
   sessionStorage.setItem('gamepad_prompt_dismissed', 'true')
 }
 
+// Navigate routes using LB / RB
+function navigateRoute(direction: 'prev' | 'next') {
+  const routes = ['/', '/store', '/mod', '/resource-pack', '/save', '/setting', '/me']
+  const currentPath = router.currentRoute.value.path
+  let idx = routes.indexOf(currentPath)
+  if (idx === -1) {
+    idx = routes.findIndex(r => r !== '/' && currentPath.startsWith(r))
+    if (idx === -1) idx = 0
+  }
+
+  if (direction === 'next') {
+    idx = (idx + 1) % routes.length
+  } else {
+    idx = (idx - 1 + routes.length) % routes.length
+  }
+  router.push(routes[idx])
+}
+
+// Switch instances using LT / RT
+function switchInstance(direction: 'prev' | 'next') {
+  if (!instances.value || instances.value.length <= 1) return
+  const currentPath = selectedInstance.value
+  let idx = instances.value.findIndex(i => i.path === currentPath)
+  if (idx === -1) idx = 0
+
+  if (direction === 'next') {
+    idx = (idx + 1) % instances.value.length
+  } else {
+    idx = (idx - 1 + instances.value.length) % instances.value.length
+  }
+  selectedInstance.value = instances.value[idx].path
+}
+
 // Polling loop
 function pollGamepads() {
   const gamepads = navigator.getGamepads ? navigator.getGamepads() : []
@@ -489,8 +531,16 @@ function pollGamepads() {
   }
 
   if (activeGamepad) {
-    // Detect PlayStation vs Xbox/SteamDeck
+    // Dynamic gamepad model detection
     const idLower = activeGamepad.id.toLowerCase()
+    
+    // Clean up name by extracting clean vendor info
+    gamepadName.value = activeGamepad.id
+      .replace(/\s*\(Vendor:.*?\)/i, '')
+      .replace(/\s*\(Input:.*?\)/i, '')
+      .replace(/\s*\(Standard\s*Gamepad\)/i, '')
+      .trim()
+
     if (
       idLower.includes('sony') ||
       idLower.includes('playstation') ||
@@ -526,6 +576,12 @@ function pollGamepads() {
     if (buttons[0] && buttons[0].pressed && !prevButtonsState.value[0]) {
       if (dialogShown.value) {
         enableGamepad()
+      } else if (modSuggestShown.value) {
+        if (!modInstallSuccess.value) {
+          installSuggestedMod()
+        } else {
+          modSuggestShown.value = false
+        }
       } else if (gamepadActive.value) {
         const current = document.activeElement as HTMLElement
         if (current) {
@@ -538,13 +594,42 @@ function pollGamepads() {
     if (buttons[1] && buttons[1].pressed && !prevButtonsState.value[1]) {
       if (dialogShown.value) {
         cancelPrompt()
+      } else if (modSuggestShown.value) {
+        modSuggestShown.value = false
       } else if (gamepadActive.value) {
         window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
       }
     }
 
-    // Directional inputs (Navigation)
-    if (gamepadActive.value && !dialogShown.value) {
+    // Navigations & advanced integrations when gamepad is active and dialogs are closed
+    if (gamepadActive.value && !dialogShown.value && !modSuggestShown.value) {
+      // 1. LB (Button 4) / RB (Button 5) -> Navigate Routes
+      if (buttons[4] && buttons[4].pressed && !prevButtonsState.value[4]) {
+        navigateRoute('prev')
+      }
+      if (buttons[5] && buttons[5].pressed && !prevButtonsState.value[5]) {
+        navigateRoute('next')
+      }
+
+      // 2. LT (Button 6) / RT (Button 7) -> Switch Profiles/Instances
+      if (buttons[6] && buttons[6].pressed && !prevButtonsState.value[6]) {
+        switchInstance('prev')
+      }
+      if (buttons[7] && buttons[7].pressed && !prevButtonsState.value[7]) {
+        switchInstance('next')
+      }
+
+      // 3. Start (Button 9) -> Launch Game
+      if (buttons[9] && buttons[9].pressed && !prevButtonsState.value[9]) {
+        launchGame()
+      }
+
+      // 4. Select (Button 8) -> Go to Home
+      if (buttons[8] && buttons[8].pressed && !prevButtonsState.value[8]) {
+        router.push('/')
+      }
+
+      // 5. D-Pad & Left Stick Navigation
       const dpadUp = buttons[12]?.pressed
       const dpadDown = buttons[13]?.pressed
       const dpadLeft = buttons[14]?.pressed
@@ -565,7 +650,7 @@ function pollGamepads() {
         lastInputTime.value = now
       }
 
-      // Right stick scrolling
+      // 6. Right stick scrolling
       const rStickY = axes[3] || axes[2]
       if (rStickY && Math.abs(rStickY) > 0.2) {
         const scrollContainer = getScrollParent(document.activeElement as HTMLElement)
@@ -690,10 +775,10 @@ onUnmounted(() => {
 .gp-chip {
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
+  padding: 6px 16px;
   border-radius: 100px;
   background: rgba(var(--v-theme-on-surface), 0.06);
-  border: 1px solid rgba(var(--v-theme-on-surface), 0.06);
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
 }
 
 /* Buttons */
